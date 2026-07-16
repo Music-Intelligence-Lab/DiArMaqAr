@@ -196,7 +196,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   const handleSave = async (e: FormEvent) => {
     e.preventDefault();
-    const idUse = `Sayr ${sourceId}`;
+    const idUse = `sayr${sourceId}`;
 
     const newSayr: Sayr = {
       id: idUse,

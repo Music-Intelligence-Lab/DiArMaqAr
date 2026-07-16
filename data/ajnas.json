@@ -98,21 +98,6 @@
     "version": "2025-10-18T19:34:26.343Z"
   },
   {
-    "id": "8",
-    "idName": "jins_hijaz_(binsir)",
-    "name": "jins ḥijāz (binṣir)",
-    "noteNames": [
-      "rāst",
-      "tīk zīrgūleh",
-      "būselīk/ʿushshāq",
-      "chahārgāh"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
     "id": "9",
     "idName": "jins_saba_zamzam",
     "name": "jins ṣabā zamzam",
@@ -239,14 +224,14 @@
     "name": "jins kurd (binṣir)",
     "noteNames": [
       "rāst",
-      "tīk zīrgūleh",
+      "zīrgūleh",
       "kurdī",
       "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
+    "version": "2026-07-15T18:48:46.437Z"
   },
   {
     "id": "18",
@@ -355,21 +340,6 @@
     "version": "2025-10-18T19:34:26.343Z"
   },
   {
-    "id": "25",
-    "idName": "jins_kurd_(binsir)",
-    "name": "jins kurd (binṣir)",
-    "noteNames": [
-      "rāst",
-      "zīrgūleh",
-      "kurdī",
-      "chahārgāh"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
     "id": "26",
     "idName": "jins_iraq",
     "name": "jins ʿirāq",
@@ -392,51 +362,6 @@
       "qarār ḥiṣār",
       "nīm kawasht",
       "rāst"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
-    "id": "28",
-    "idName": "jins_bayyat_ushayran",
-    "name": "jins bayyāt ʿushayrān",
-    "noteNames": [
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst",
-      "dūgāh"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
-    "id": "29",
-    "idName": "jins_hijaz_ushayran",
-    "name": "jins ḥijāz ʿushayrān",
-    "noteNames": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
-      "zīrgūleh",
-      "dūgāh"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
-    "id": "30",
-    "idName": "jins_kurd_ushayran",
-    "name": "jins kurd ʿushayrān",
-    "noteNames": [
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
-      "rāst",
-      "dūgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
