@@ -6,7 +6,10 @@
   flex-direction: column;
   z-index: 1001;
   top: 0; // ensure sticky works in Safari
-  padding-bottom: 30px !important;
+  // The navbar's bottom breathing room IS the standard block gap: since it
+  // paints in the page background, it reads as the space above whatever
+  // block follows on every page.
+  padding-bottom: $space-block !important;
   background-color: $background;
   position: sticky;
   position: -webkit-sticky;

@@ -5,6 +5,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import JinsData from "@/models/Jins";
+import CarouselFilterRail from "./carousel-filter-rail";
 import React, { useState, useEffect, useMemo } from "react";
 // Transpositions now provided via TranspositionsContext
 // import { calculateJinsTranspositions } from "@/functions/transpose";
@@ -136,23 +137,16 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const numberOfRows = 3; // Fixed number of rows
   const numberOfColumns = Math.ceil(filteredAjnas.length / numberOfRows); // Calculate columns dynamically
 
+  // Filter-rail items: label + count per starting note, in tab order.
+  const filterItems = useMemo(() => tabs.map((tab) => ({
+    key: tab,
+    label: tab === "all" ? t('jins.all') : getDisplayName(tab, 'note'),
+    count: tab === "all" ? sortedAjnas.length : sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length,
+  })), [tabs, sortedAjnas, language]);
+
   return (
     <div className="jins-manager" key={language}>
-      <div className="jins-manager__tabs">
-        {tabs.map((tab) => {
-          let count = 0;
-          if (tab === "all") {
-            count = sortedAjnas.length;
-          } else {
-            count = sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === tab.toLowerCase()).length;
-          }
-          return (
-            <button key={tab} className={"jins-manager__tab" + (ajnasFilter === tab ? " jins-manager__tab_active" : "")} onClick={() => setAjnasFilter(tab)}>
-              {tab === "all" ? t('jins.all') : getDisplayName(tab, 'note')} <span className="jins-manager__tab-count">({count})</span>
-            </button>
-          );
-        })}
-      </div>
+      <CarouselFilterRail items={filterItems} activeKey={ajnasFilter} onSelect={setAjnasFilter} />
       <div className="jins-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"

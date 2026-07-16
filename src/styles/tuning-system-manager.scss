@@ -964,33 +964,6 @@
     }
   }
 
-  &__tabs {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 0px;
-    margin-left: 25px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 25px;
-      direction: rtl;
-    }
-  }
-
-  // fit-content (vs the shared max-content) kept until the buttons pass
-  // decides a canonical; raw 13px/400 were token equivalents already.
-  &__tab {
-    @include manager-tab($width: fit-content);
-  }
-
-  &__tab_active {
-    @include manager-tab-active;
-  }
-
-  &__tab-count {
-    @include manager-tab-count;
-  }
 }
 
 .tuning-system-manager__row-header {

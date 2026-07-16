@@ -1,0 +1,62 @@
+@use "./variables" as *;
+
+// The shared carousel filter band (see carousel-filter-rail.tsx): one
+// surface used above the jins, maqam, and tuning-system carousels. All role
+// styling lives in the manager-filter-* mixins in variables.scss; this file
+// only binds them to the component's classes and lays out the band.
+.carousel-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  // The band is its own full-width surface sitting flush on the carousel
+  // block, subtly darker than the page background so it reads as a zone;
+  // 25px side padding keeps the content aligned with the inner edges of
+  // the carousel's ‹ › buttons. No vertical padding — the rail (and the
+  // active item's black tab) runs the band's full height. No top margin:
+  // the gap above comes from the navbar's $space-block bottom padding.
+  margin: 0;
+  padding: 0 25px;
+  background: rgba($black, 0.35);
+
+  &__rail-wrap {
+    @include manager-filter-rail-wrap;
+
+    // Only when trailing controls follow (e.g. the maqam group-by): the end
+    // chevron overhangs 25px past the rail, and this margin plus the 20px
+    // flex gap leaves exactly 10px between the chevron button and the next
+    // control. When the rail is the band's last child, the chevron
+    // overhangs into the band's own 25px padding, mirroring the start side.
+    &:not(:last-child) {
+      margin-inline-end: 15px;
+    }
+  }
+
+  &__rail {
+    @include manager-filter-rail;
+  }
+
+  &__chevron {
+    @include manager-filter-chevron;
+  }
+
+  &__chevron_start {
+    @include manager-filter-chevron-start;
+  }
+
+  &__chevron_end {
+    @include manager-filter-chevron-end;
+  }
+
+  &__tab {
+    @include manager-filter-item;
+  }
+
+  &__tab_active {
+    @include manager-filter-item-active;
+  }
+
+  &__tab-count {
+    @include manager-filter-count;
+  }
+}

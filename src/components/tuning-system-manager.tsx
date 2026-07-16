@@ -6,6 +6,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import TuningSystem from "@/models/TuningSystem";
+import CarouselFilterRail from "./carousel-filter-rail";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue from "@/functions/convertPitchClass";
 import NoteName, {
@@ -988,8 +989,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
       )}
 
       {!admin && (
-        <div className="tuning-system-manager__tabs">
-          {tabs.map((tab) => {
+        <CarouselFilterRail
+          items={tabs.map((tab) => {
             let count = 0;
             if (tab.label === "All") {
               count = sortedTuningSystems.length;
@@ -999,25 +1000,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 return y >= tab.min && y <= tab.max;
               }).length;
             }
-            return (
-              <button
-                key={tab.label}
-                className={
-                  "tuning-system-manager__tab" +
-                  (tuningSystemsFilter === tab.label
-                    ? " tuning-system-manager__tab_active"
-                    : "")
-                }
-                onClick={() => setTuningSystemsFilter(tab.label)}
-              >
-                {t(tab.labelKey)}{" "}
-                <span className="tuning-system-manager__tab-count">
-                  ({count})
-                </span>
-              </button>
-            );
+            return { key: tab.label, label: t(tab.labelKey), count };
           })}
-        </div>
+          activeKey={tuningSystemsFilter}
+          onSelect={setTuningSystemsFilter}
+        />
       )}
 
       {!admin && (
