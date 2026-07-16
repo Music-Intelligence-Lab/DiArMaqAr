@@ -305,11 +305,7 @@ export async function updateSources(sources: Source[], modifiedIds?: string[]) {
     const response = await fetch("/api/sources", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(
-        sources.map((source) => {
-          return { ...source.convertToJSON(), id: stringifySource(source, true, null)};
-        })
-      ),
+      body: JSON.stringify(sources.map((source) => source.convertToJSON())),
     });
     if (!response.ok) {
       const errorText = await response.text();

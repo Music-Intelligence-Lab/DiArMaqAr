@@ -398,7 +398,12 @@ export default class MaqamData {
       newsuyur,
       this.commentsEnglish,
       this.commentsArabic,
-      this.sourcePageReferences
+      this.sourcePageReferences,
+      this.version,
+      this.primaryJinsDegree,
+      this.secondaryJinsDegree,
+      this.tertiaryJinsDegree,
+      this.ghammaz
     );
   }
 
@@ -417,7 +422,12 @@ export default class MaqamData {
       this.suyur,
       this.commentsEnglish,
       this.commentsArabic,
-      newSourcePageReferences
+      newSourcePageReferences,
+      this.version,
+      this.primaryJinsDegree,
+      this.secondaryJinsDegree,
+      this.tertiaryJinsDegree,
+      this.ghammaz
     );
   }
 

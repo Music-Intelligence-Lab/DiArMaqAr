@@ -169,7 +169,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       commentsEnglishLocal,
       commentsArabicLocal,
       selectedMaqamData.getSourcePageReferences(),
-      selectedMaqamData.getVersion()
+      selectedMaqamData.getVersion(),
+      selectedMaqamData.getPrimaryJinsDegree(),
+      selectedMaqamData.getSecondaryJinsDegree(),
+      selectedMaqamData.getTertiaryJinsDegree(),
+      selectedMaqamData.getGhammaz()
     );
     handleSaveMaqam(updated);
   };
@@ -186,7 +190,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       commentsEnglishLocal,
       commentsArabicLocal,
       selectedMaqamData.getSourcePageReferences(),
-      selectedMaqamData.getVersion()
+      selectedMaqamData.getVersion(),
+      selectedMaqamData.getPrimaryJinsDegree(),
+      selectedMaqamData.getSecondaryJinsDegree(),
+      selectedMaqamData.getTertiaryJinsDegree(),
+      selectedMaqamData.getGhammaz()
     );
     handleSaveMaqam(updated);
   };
@@ -384,7 +392,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                     selectedMaqamData.getSuyur(),
                     selectedMaqamData.getCommentsEnglish(), // comments unchanged
                     selectedMaqamData.getCommentsArabic(),
-                    selectedMaqamData.getSourcePageReferences()
+                    selectedMaqamData.getSourcePageReferences(),
+                    selectedMaqamData.getVersion(),
+                    selectedMaqamData.getPrimaryJinsDegree(),
+                    selectedMaqamData.getSecondaryJinsDegree(),
+                    selectedMaqamData.getTertiaryJinsDegree(),
+                    selectedMaqamData.getGhammaz()
                   )
                 )
               }
@@ -402,7 +415,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   selectedMaqamData.getSuyur(),
                   commentsEnglishLocal,
                   commentsArabicLocal,
-                  selectedMaqamData.getSourcePageReferences()
+                  selectedMaqamData.getSourcePageReferences(),
+                  selectedMaqamData.getVersion(),
+                  selectedMaqamData.getPrimaryJinsDegree(),
+                  selectedMaqamData.getSecondaryJinsDegree(),
+                  selectedMaqamData.getTertiaryJinsDegree(),
+                  selectedMaqamData.getGhammaz()
                 );
                 handleSaveMaqam(updated);
               }}
