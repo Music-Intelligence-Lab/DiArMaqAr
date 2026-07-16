@@ -14,7 +14,9 @@
     border: solid 1px $grey;
     position: sticky;
     position: -webkit-sticky;
-    top: $top-navbar-height + 20px;
+    // Stick flush under the top navbar (the old +20px was tuned to the
+    // 90px-era bar and happened to equal today's 110px).
+    top: $top-navbar-height;
     margin-bottom: 20px;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
     z-index: 10;
