@@ -263,7 +263,7 @@
       font-weight: $font-weight-regular;
       font-variant-numeric: tabular-nums;
       line-height: $line-height-snug;
-      color: rgba($text, 0.55);
+      color: $text-quiet;
     }
 
     // Line-height budget: 13×1.25 + 12×1.4 + 11×1.25 + two 4px gaps +
@@ -276,7 +276,7 @@
       font-size: $font-size-xs;
       font-weight: $font-weight-regular;
       font-variant-numeric: tabular-nums;
-      color: rgba($text, 0.55);
+      color: $text-quiet;
       margin-left: 6px;
 
       [dir="rtl"] & {

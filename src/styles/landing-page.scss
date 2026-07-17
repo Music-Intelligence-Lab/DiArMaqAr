@@ -265,7 +265,7 @@ body {
     width: 48px;
     height: 48px;
     margin: $space-lg auto 0;
-    border: 1px solid rgba($text, 0.35);
+    border: 1px solid $text-disabled;
     border-radius: 50%;
     // !important counters the global `a { color: $link !important }`.
     color: rgba($text, 0.5) !important;

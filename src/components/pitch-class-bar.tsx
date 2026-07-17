@@ -118,6 +118,24 @@ export default function PitchClassBar() {
   const isDragging = useRef(false);
   const dragThreshold = 5; // pixels - minimum movement to consider it a drag
 
+  // Publish the bar's actual (content-driven) height as a CSS variable on
+  // the scroll container: the transpositions sticky header sticks at
+  // exactly this height + $space-block, and no constant can track an
+  // auto-sized bar across languages and tuning systems.
+  useEffect(() => {
+    const bar = rowRef.current;
+    const main = bar?.closest<HTMLElement>(".main-content");
+    if (!bar || !main) return;
+    const publish = () => main.style.setProperty("--pitch-bar-height", `${bar.offsetHeight}px`);
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(bar);
+    return () => {
+      observer.disconnect();
+      main.style.removeProperty("--pitch-bar-height");
+    };
+  }, []);
+
   useEffect(() => {
     if (!rowRef.current) return;
     const container = rowRef.current;
@@ -197,34 +215,28 @@ export default function PitchClassBar() {
           return;
         }
         
+        // Selection is set in one shot (no clear-then-set staging): the old
+        // 20ms+10ms dance added three renders before the scroll's debounce
+        // clock even started, so pitch-bar clicks scrolled visibly later
+        // than carousel clicks. One commit = same rhythm as the carousel.
         if (maqamTransposition && selectedMaqamData) {
-          setSelectedPitchClasses([]); // Clear first
-          setTimeout(() => {
-            setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
-            setSelectedMaqam(maqamTransposition);
-            setTimeout(() => {
-              window.dispatchEvent(
-                new CustomEvent("maqamTranspositionChange", {
-                  detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName },
-                })
-              );
-            }, 10);
-          }, 20);
+          setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
+          setSelectedMaqam(maqamTransposition);
+          window.dispatchEvent(
+            new CustomEvent("maqamTranspositionChange", {
+              detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName },
+            })
+          );
           return;
         }
         if (jinsTransposition && selectedJinsData) {
-          setSelectedPitchClasses([]); // Clear first
-          setTimeout(() => {
-            setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
-            setSelectedJins(jinsTransposition);
-            setTimeout(() => {
-              window.dispatchEvent(
-                new CustomEvent("jinsTranspositionChange", {
-                  detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName },
-                })
-              );
-            }, 10);
-          }, 20);
+          setSelectedPitchClasses(jinsTransposition.jinsPitchClasses);
+          setSelectedJins(jinsTransposition);
+          window.dispatchEvent(
+            new CustomEvent("jinsTranspositionChange", {
+              detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName },
+            })
+          );
         }
       };
 

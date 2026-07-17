@@ -25,10 +25,11 @@ const getHeaderId = (noteName: string): string => {
   return `maqam-transpositions__header--${standardizeText(noteName).toLowerCase()}`;
 };
 
-export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) {
-  const HEADER_SCROLL_MARGIN_TOP_PX = 215; // scroll margin for headers (matches $total-navbar-height)
+export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any, onComplete?: () => void) {
+  // Live stuck-stack height (pitch bar + gap + sticky header + breathing)
+  const HEADER_SCROLL_MARGIN_TOP_PX = transpositionsScrollMargin();
   const SCROLL_DURATION_MS = 800; // Duration for smooth scrolling (increased for smoother feel)
-  
+
   if (!firstNote && selectedMaqamData) {
     firstNote = selectedMaqamData.getAscendingNoteNames?.()?.[0];
   }
@@ -37,83 +38,7 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any) 
   const el = document.getElementById(id);
   if (!el) return;
 
-  // Compute deterministic scroll position so the header lands at the same offset
-  function getScrollableAncestor(
-    node: HTMLElement | null
-  ): HTMLElement | Window {
-    let elNode: HTMLElement | null = node;
-    while (
-      elNode &&
-      elNode !== document.body &&
-      elNode !== document.documentElement
-    ) {
-      const style = window.getComputedStyle(elNode);
-      const overflowY = style.overflowY;
-      const isScrollable = overflowY === "auto" || overflowY === "scroll";
-      if (isScrollable && elNode.scrollHeight > elNode.clientHeight)
-        return elNode;
-      elNode = elNode.parentElement;
-    }
-    return window;
-  }
-
-  // Custom smooth scroll with easing function for smoother animation
-  function smoothScrollTo(
-    container: HTMLElement | Window,
-    target: number,
-    duration: number
-  ) {
-    const start = container === window 
-      ? window.pageYOffset || document.documentElement.scrollTop
-      : (container as HTMLElement).scrollTop;
-    const distance = target - start;
-    const startTime = performance.now();
-
-    // Easing function: easeInOutCubic for smooth acceleration/deceleration
-    function easeInOutCubic(t: number): number {
-      return t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function animateScroll(currentTime: number) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = easeInOutCubic(progress);
-      const current = start + distance * eased;
-
-      if (container === window) {
-        window.scrollTo(0, current);
-      } else {
-        (container as HTMLElement).scrollTop = current;
-      }
-
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      }
-    }
-
-    requestAnimationFrame(animateScroll);
-  }
-
-  const scrollContainer = getScrollableAncestor(el as HTMLElement);
-  const rect = el.getBoundingClientRect();
-
-  if (scrollContainer === window) {
-    const absoluteTop = rect.top + window.pageYOffset;
-    const target = Math.max(0, absoluteTop - HEADER_SCROLL_MARGIN_TOP_PX);
-    smoothScrollTo(window, target, SCROLL_DURATION_MS);
-  } else {
-    const container = scrollContainer as HTMLElement;
-    const containerRect = container.getBoundingClientRect();
-    const offsetTopWithinContainer =
-      rect.top - containerRect.top + container.scrollTop;
-    const target = Math.max(
-      0,
-      offsetTopWithinContainer - HEADER_SCROLL_MARGIN_TOP_PX
-    );
-    smoothScrollTo(container, target, SCROLL_DURATION_MS);
-  }
+  smoothScrollIntoPosition(el, HEADER_SCROLL_MARGIN_TOP_PX, SCROLL_DURATION_MS, onComplete);
 }
 import { Maqam } from "@/models/Maqam";
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
@@ -121,12 +46,13 @@ import shiftPitchClassByOctave, { shiftPitchClassByOctaveExtended } from "@/func
 import Link from "next/link";
 import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
+import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
+import smoothScrollIntoPosition from "@/functions/smoothScrollIntoPosition";
 
 const MaqamTranspositions: React.FC = () => {
   // Configurable constants (previous magic numbers)
-  const SCROLL_TIMEOUT_MS = 150; // short timeout before scrolling after event (increased for smoother scroll)
   const URL_SCROLL_TIMEOUT_MS = 350; // timeout used when scrolling from URL param (increased for DOM readiness)
-  const ANALYSIS_SCROLL_MARGIN_TOP_PX = 170; // scroll margin for top analysis header
+  const ANALYSIS_SCROLL_MARGIN_TOP_PX = transpositionsScrollMargin(); // live stuck-stack height for the top analysis header
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // prefetch root margin
   const BATCH_SIZE = 10; // number of transpositions to load at once
   const PREFETCH_OFFSET = 5; // how many before end to prefetch more
@@ -170,7 +96,25 @@ const MaqamTranspositions: React.FC = () => {
   const [targetFirstNote, setTargetFirstNote] = useState<string | null>(null);
   // Track pending scroll timeout so we can cancel if maqam changes
   const scrollTimeoutRef = useRef<number | null>(null);
+  const urlScrollDoneRef = useRef(false);
   const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
+  // A transposition mid-close: its rows stay mounted under the --closing
+  // modifier so they fade out before unmounting (see the choreography
+  // block in _maqam-jins-shared-ui.scss)
+  const [closingTransposition, setClosingTransposition] = useState<string | null>(null);
+  const openTranspositionsRef = useRef<string[]>([]);
+  openTranspositionsRef.current = openTranspositions;
+  const CLOSE_FADE_MS = 200;
+
+  // Close whatever is open with the fade-out choreography
+  const closeOpenTranspositionsWithFade = useCallback(() => {
+    const closing = openTranspositionsRef.current[0];
+    if (closing) {
+      setClosingTransposition(closing);
+      window.setTimeout(() => setClosingTransposition((current) => (current === closing ? null : current)), CLOSE_FADE_MS);
+    }
+    setOpenTranspositions([]);
+  }, []);
   const [isToggling, setIsToggling] = useState<string | null>(null);
   const skipAutoOpenRef = useRef(false);
 
@@ -295,35 +239,41 @@ const MaqamTranspositions: React.FC = () => {
         // Find the transposition in the list
         const transpositionIndex = maqamTranspositions.findIndex((m) => m.name === selectedTranspositionName);
 
-        // Skip analysis table at index 0
-        // Auto-open the transposition
-        setOpenTranspositions([selectedTranspositionName]);
+        // Scroll-then-open: fade the old transposition closed, scroll to
+        // the target's collapsed header (a stable row whose position can't
+        // drift mid-animation), and open the transposition only when the
+        // scroll lands, so content grows downward from the landed anchor
+        // instead of shuffling the viewport before travel.
+        closeOpenTranspositionsWithFade();
 
         // Ensure it's visible
         const needed = transpositionIndex;
         setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
 
-        // Scroll to it after a short delay
-        setTimeout(() => {
+        // Scroll via the shared debounced slot: the transposition-change
+        // event schedules the same scroll, and two timers would mean two
+        // animations (the second restarting mid-flight — a visible hitch)
+        if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = window.setTimeout(() => {
           const firstNote = selectedMaqam.ascendingPitchClasses[0]?.noteName;
           if (firstNote) {
-            scrollToMaqamHeader(firstNote, selectedMaqamData);
+            scrollToMaqamHeader(firstNote, selectedMaqamData, () => setOpenTranspositions([selectedTranspositionName]));
           }
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
-        // Case 2: No maqam is selected (tahlil case)
-        // Open the tahlil (first element)
+        // Case 2: No maqam is selected (tahlil case) — same scroll-then-open
         const tahlilName = maqamTranspositions[0].name;
-        setOpenTranspositions([tahlilName]);
+        closeOpenTranspositionsWithFade();
 
         // Ensure first batch is visible
         setVisibleCount(BATCH_SIZE);
 
-        // Scroll to tahlil
-        setTimeout(() => {
+        // Scroll to tahlil (same shared debounced slot as above)
+        if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = window.setTimeout(() => {
           if (maqamTranspositions[0].ascendingPitchClasses?.length > 0) {
             const firstNote = maqamTranspositions[0].ascendingPitchClasses[0].noteName;
-            scrollToMaqamHeader(firstNote, selectedMaqamData);
+            scrollToMaqamHeader(firstNote, selectedMaqamData, () => setOpenTranspositions([tahlilName]));
           }
         }, URL_SCROLL_TIMEOUT_MS);
       }
@@ -861,7 +811,8 @@ const MaqamTranspositions: React.FC = () => {
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedMaqamData?.getAscendingNoteNames()[0];
       const oppositePitchClasses = ascending ? descendingTranspositionPitchClasses : ascendingTranspositionPitchClasses;
       const intervals = ascending ? ascendingIntervals : descendingIntervals;
-      const open = openTranspositions.includes(maqam.name);
+      // A closing transposition renders as still-open (its rows are mid-fade)
+      const open = openTranspositions.includes(maqam.name) || closingTransposition === maqam.name;
 
       // Highlight logic: notes triggered from the QWERTY keyboard or pattern
       // playback carry a melodic direction (asdf/zxcv rows and ascending
@@ -1393,9 +1344,10 @@ const MaqamTranspositions: React.FC = () => {
             />
             <div className={`maqam-jins-transpositions-shared__sticky-header${isHeaderStuck ? ' maqam-jins-transpositions-shared__sticky-header_stuck' : ''}`}>
               <div className="maqam-jins-transpositions-shared__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
-                {t("maqam.analysis")}: <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(selectedMaqamData?.getName() || "", "maqam")}</span>
-                {" "}
-                / {t("maqam.centsTolerance")}: <CentsToleranceInput />
+                <span className="maqam-jins-transpositions-shared__section-furniture">{t("maqam.analysis")}</span>
+                <span className="maqam-jins-transpositions-shared__title-controls">
+                  <span className="maqam-jins-transpositions-shared__section-furniture">{t("maqam.centsTolerance")}</span> <CentsToleranceInput />
+                </span>
               </div>
 
               <div className="maqam-jins-transpositions-shared__filter-menu">
@@ -1408,13 +1360,13 @@ const MaqamTranspositions: React.FC = () => {
                   "fraction",
                   "cents",
                   "centsFromZero",
+                  "frequency",
                   "centsDeviation",
                   "decimalRatio",
                   "stringLength",
                   "fretDivision",
                   "midiNote",
                   "midiNoteDeviation",
-                  "frequency",
                   "staffNotation",
                 ].map((filterKey) => {
                   const isDisabled =
@@ -1498,8 +1450,8 @@ const MaqamTranspositions: React.FC = () => {
               
               return (
                 <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${maqam.name}-${firstNoteName}`}>
-                  <table 
-                    className={`maqam-jins-transpositions-shared__table ${isAnalysis ? 'maqam-jins-transpositions-shared__table--analysis' : 'maqam-jins-transpositions-shared__table--transposition'}`}
+                  <table
+                    className={`maqam-jins-transpositions-shared__table ${isAnalysis ? 'maqam-jins-transpositions-shared__table--analysis' : 'maqam-jins-transpositions-shared__table--transposition'}${closingTransposition === maqam.name ? ' maqam-jins-transpositions-shared__table--closing' : ''}`}
                     data-table-type={isAnalysis ? "analysis" : "transposition"}
                     data-maqam-name={maqam.name}
                     data-first-note={firstNoteName}
@@ -1619,6 +1571,7 @@ const MaqamTranspositions: React.FC = () => {
   }, [
     maqamConfig,
     openTranspositions,
+    closingTransposition,
     isToggling,
     maqamTranspositions,
     sortedTables,
@@ -1658,37 +1611,53 @@ const MaqamTranspositions: React.FC = () => {
         scrollTimeoutRef.current = window.setTimeout(() => {
           // Only scroll if the maqam still matches the target (avoid stale scroll after maqam change)
           scrollToMaqamHeader(firstNote, selectedMaqamData);
-        }, SCROLL_TIMEOUT_MS);
+        }, URL_SCROLL_TIMEOUT_MS);
       }
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
+    // Cleanup removes ONLY the listener. It must not clear the shared
+    // scroll slot: this effect's deps churn on every selection change, and
+    // clearing here killed scrolls scheduled by the selection effect.
+    // (Unmount clearing lives in its own dedicated effect below.)
     return () => {
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current);
-        scrollTimeoutRef.current = null;
-      }
       window.removeEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
     };
   }, [selectedMaqamData, maqamTranspositions]);
 
-  // Scroll to header on mount if maqamFirstNote is in the URL
+  // Clear any pending scroll only when the component actually unmounts
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
+
+  // Scroll to header once, on arrival, if maqamFirstNote is in the URL.
+  // Guarded to a single run: the deps only exist so the effect can WAIT for
+  // the transpositions to load — without the guard it re-fired on every
+  // selection change, hijacking the shared scroll slot with a stale target.
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (urlScrollDoneRef.current) return;
     const params = new URLSearchParams(window.location.search);
     const maqamFirstNote = params.get("maqamFirstNote");
-    if (maqamFirstNote) {
-      const decoded = decodeURIComponent(maqamFirstNote);
-      setTargetFirstNote(decoded);
-      const index = maqamTranspositions.findIndex((m) => m.ascendingPitchClasses?.[0]?.noteName === decoded);
-      if (index > 0) {
-        const needed = index; // number of rows in slice(1) we need
-        setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
-      }
-      if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = window.setTimeout(() => {
-        scrollToMaqamHeader(decoded, selectedMaqamData);
-      }, URL_SCROLL_TIMEOUT_MS);
+    if (!maqamFirstNote) {
+      urlScrollDoneRef.current = true;
+      return;
     }
+    if (!maqamTranspositions || maqamTranspositions.length === 0) return; // data not ready yet
+    urlScrollDoneRef.current = true;
+    const decoded = decodeURIComponent(maqamFirstNote);
+    setTargetFirstNote(decoded);
+    const index = maqamTranspositions.findIndex((m) => m.ascendingPitchClasses?.[0]?.noteName === decoded);
+    if (index > 0) {
+      const needed = index; // number of rows in slice(1) we need
+      setVisibleCount((prev) => (needed > prev ? Math.ceil(needed / BATCH_SIZE) * BATCH_SIZE : prev));
+    }
+    if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = window.setTimeout(() => {
+      const match = maqamTranspositions.find((m) => m.ascendingPitchClasses?.[0]?.noteName === decoded);
+      scrollToMaqamHeader(decoded, selectedMaqamData, match ? () => setOpenTranspositions([match.name]) : undefined);
+    }, URL_SCROLL_TIMEOUT_MS);
   }, [selectedMaqamData, maqamTranspositions]);
 
   // If targetFirstNote changes later (e.g., filters changing re-render), ensure still visible
@@ -1701,12 +1670,12 @@ const MaqamTranspositions: React.FC = () => {
     }
   }, [targetFirstNote, maqamTranspositions]);
 
-  // When the selected maqam changes, cancel any pending scroll from previous maqam & reset target note
+  // When the selected maqam changes, reset the target note. Deliberately
+  // does NOT clear the shared scroll slot: the selection effect schedules
+  // the new maqam's scroll in this same flush (and every scheduler
+  // overwrites the slot itself), so clearing here killed that scroll —
+  // this effect runs after the selection effect in declaration order.
   useEffect(() => {
-    if (scrollTimeoutRef.current) {
-      window.clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = null;
-    }
     setTargetFirstNote(null);
     // Optionally scroll to top so user starts at analysis of new maqam
     if (typeof window !== "undefined") {

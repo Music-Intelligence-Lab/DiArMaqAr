@@ -4,9 +4,8 @@
 .jins-transpositions {
   width: 100%;
   font-size: $font-size-sm;
-  margin-top: 10px;
-  scroll-margin-top: 450px;
-    margin-bottom: 40px;
+  // Rhythm (margins) comes from the shared wrapper class — see
+  // .maqam-jins-transpositions-shared in _maqam-jins-shared-ui.scss
 
 
   // Sticky header, title row and filter menu use the shared

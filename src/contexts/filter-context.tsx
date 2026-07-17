@@ -21,6 +21,7 @@ export interface FilterSettings {
   frequency: boolean;
   staffNotation: boolean;
   centsDeviation: boolean;
+  intervalsMatrix: boolean;
 }
 
 /**
@@ -42,7 +43,7 @@ const defaultFilters: FilterSettings = {
   midiNoteDeviation: false,
   frequency: false,
   staffNotation: false,
-  
+  intervalsMatrix: false,
 };
 
 /**

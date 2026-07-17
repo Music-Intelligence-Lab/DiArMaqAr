@@ -54,6 +54,12 @@ a {
 body {
   font-family: 'Readex Pro', sans-serif;
   font-weight: 200;
+  // Only 200/300/400/500 are real loaded weights (both scripts). Anything
+  // requesting more (UA-bolded <strong>/<b>, a stray 600/700) must fall to
+  // the nearest real weight, never a synthesized faux-bold — which is what
+  // Arabic text was getting. `style` stays allowed: bibliography titles use
+  // italic, which Readex Pro only has as a synthesized oblique.
+  font-synthesis: style;
   display: flex;
   flex-direction: column;
   align-items: center;

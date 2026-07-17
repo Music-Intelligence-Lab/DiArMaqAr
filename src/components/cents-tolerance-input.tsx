@@ -6,8 +6,8 @@ import React, { useEffect, useState } from "react";
 /**
  * Cents-tolerance input that only commits (and thereby triggers transposition
  * recalculation) on Enter or blur — never per keystroke. Renders as the
- * shared 27px black value box (same as the Hz and string-length fields) with
- * the ± and ¢ symbols inside the box.
+ * shared 27px value box (same as the Hz and string-length fields) with the ¢
+ * unit inside the box and the ± on the label side, outside it.
  */
 export default function CentsToleranceInput() {
   const { centsTolerance, setCentsTolerance } = useAppContext();
@@ -28,8 +28,11 @@ export default function CentsToleranceInput() {
   };
 
   return (
-    <span className="maqam-jins-transpositions-shared__cents-tolerance-box">
-      <span className="maqam-jins-transpositions-shared__cents-tolerance-unit">±</span>
+    <>
+      {/* The ± closes the label side ("cents tolerance ±"), outside the
+          value box, inheriting the title row's quiet label colour */}
+      <span className="maqam-jins-transpositions-shared__cents-tolerance-unit">±</span>{" "}
+      <span className="maqam-jins-transpositions-shared__cents-tolerance-box">
       <input
         className="maqam-jins-transpositions-shared__cents-tolerance-input"
         type="number"
@@ -46,6 +49,7 @@ export default function CentsToleranceInput() {
         }}
       />
       <span className="maqam-jins-transpositions-shared__cents-tolerance-unit">¢</span>
-    </span>
+      </span>
+    </>
   );
 }
