@@ -39,7 +39,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamData?.getCommentsArabic() ?? "");
 
   // Toggle state for filtering mode: 'note' or 'jins' - default to 'jins'
-  const [filterMode, setFilterMode] = useState<'note' | 'jins'>('jins');
+  const [filterMode, setFilterMode] = useState<'note' | 'jins'>('note');
 
   // Use cached map from context to avoid recomputation
   const { allMaqamTranspositionsMap } = useTranspositionsContext();
