@@ -1,8 +1,21 @@
 @use "sass:color";
 
+// ---------------------------------------------------------------------------
+// Spacing
+// ---------------------------------------------------------------------------
+
+// Vertical rhythm between the app's stacked page blocks (navbar → filter
+// band → carousel → pitch-class bar → tables…). One role token, not one
+// value per place: use it wherever a block meets the next, replacing
+// scattered one-off margins as they're touched.
+$space-block: 20px;
+
 $top-navbar-height: 110px;
 $bottom-navbar-height: 72px;
-$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - 30px);
+// The navbar occupies its two bars plus a $space-block bottom padding; the
+// trailing 10px keeps the page's pre-existing breathing gap above the
+// viewport bottom (the old literal 30px silently bundled both).
+$page-height: calc(100svh - $top-navbar-height - $bottom-navbar-height - $space-block - 10px);
 
 $background: #222222;
 $primary: #5a2585;
@@ -31,16 +44,6 @@ $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 
 $link: $gold; // Default link color
 $link-visited: color.adjust($link, $saturation: -30%);
-
-// ---------------------------------------------------------------------------
-// Spacing
-// ---------------------------------------------------------------------------
-
-// Vertical rhythm between the app's stacked page blocks (navbar → filter
-// band → carousel → pitch-class bar → tables…). One role token, not one
-// value per place: use it wherever a block meets the next, replacing
-// scattered one-off margins as they're touched.
-$space-block: 20px;
 
 // ---------------------------------------------------------------------------
 // Interactive surface fills
