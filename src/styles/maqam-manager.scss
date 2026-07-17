@@ -79,11 +79,11 @@
 
   // $align/$justify: left is invalid CSS preserved verbatim (see mixin note)
   &__item {
-    @include manager-item($align: left);
+    @include manager-item;
   }
 
   &__item-name {
-    @include manager-item-name($align: left, $justify: left);
+    @include manager-item-name;
   }
 
   &__play-button {

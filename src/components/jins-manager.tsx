@@ -168,6 +168,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                 <div
                   key={index}
                   className={"jins-manager__item " + (jinsData.getName() === selectedJinsData?.getName() ? "jins-manager__item_selected " : "") + (selectable ? "jins-manager__item_active" : "")}
+                  aria-disabled={selectable ? undefined : true}
                   data-tooltip={!selectable ? t("jins.tooltip.itemNotAvailable") : undefined}
                   onClick={() => {
                     if (selectable) {
@@ -183,7 +184,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   }}
                 >
                   <div className="jins-manager__item-name">
-                    <strong>{getDisplayName(jinsData.getName(), 'jins')}</strong>
+                    {getDisplayName(jinsData.getName(), 'jins')}
                     {selectable && <strong className="jins-manager__item-name-transpositions">{`${t('jins.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                   </div>
                 </div>

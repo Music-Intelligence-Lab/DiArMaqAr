@@ -37,7 +37,7 @@
   }
 
   &__item-name {
-    @include manager-item-name($transpositions-color: rgba(255, 255, 255, 1), $transpositions-size: $font-size-md);
+    @include manager-item-name;
   }
 
   &__play-button {

@@ -476,9 +476,10 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 5px 10px;
-    background-color: rgba($primary, 0.4);
-    font-size: 14px;
+    padding: 6px 10px;
+    // Every tuning system is selectable, so the resting fill is already the
+    // available tier (jins/maqam items rest on $surface-rest instead).
+    background-color: $surface-available;
     // Shared tooltip on unavailable items; same row-aware flip as the
     // jins/maqam item grids (3 rows per column)
     position: relative;
@@ -497,47 +498,65 @@
       text-align: right;
     }
 
-    &_disabled {
-      background-color: rgba($primary, 0.1) !important;
-      color: $text;
+    // One disabled treatment sitewide (matches buttons); disabled systems
+    // are also unclickable in the component, while the explanatory tooltip
+    // keeps working. Child lines carry their own colors (e.g. the dimmed
+    // work-title), so a disabled card greys them uniformly too.
+    &[aria-disabled="true"] {
+      @include interactive-disabled;
 
-      &:hover {
-        background-color: rgba($primary, 0.5);
-        box-shadow: none;
-        color: $text;
+      > * {
+        color: rgba($text, 0.35);
       }
     }
 
     &_active {
-      background-color: rgba($primary, 0.4);
+      background-color: $surface-available;
 
       &:hover {
-        background-color: rgba($primary, 0.9);
+        background-color: $surface-available-hover;
       }
     }
 
     &_selected {
-      background-color: $tertiary;
+      background-color: $surface-selected;
 
       &:hover {
-        background-color: $tertiary;
+        background-color: $surface-selected;
       }
     }
 
     &:hover {
-      background-color: rgba($primary, 0.9);
+      background-color: $surface-available-hover;
     }
 
+    // Same lockup roles as the jins/maqam cards: creator = item-title
+    // (13px/400), work title = quiet secondary line.
     &-english-creator {
-      font-size: 14px;
-      margin-bottom: 0px;
-      font-weight: 300;
+      font-size: $font-size-md;
+      font-weight: $font-weight-regular;
+      line-height: $line-height-snug;
+      letter-spacing: $letter-spacing-translit;
+
+      [dir="rtl"] & {
+        letter-spacing: $letter-spacing-normal;
+      }
     }
 
+    // Secondary card line — same role values as the jins/maqam
+    // transpositions line (12px/300 at 55%), so all three carousels carry
+    // one two-line lockup: 13px/300 name over a 12px/300 quiet line.
     &-english-title {
-      font-size: 14px;
-      margin-top: 3px;
-      font-weight: 200;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-regular;
+      line-height: $line-height-snug;
+      margin-top: 4px;
+      color: rgba($text, 0.55);
+      letter-spacing: $letter-spacing-translit;
+
+      [dir="rtl"] & {
+        letter-spacing: $letter-spacing-normal;
+      }
     }
   }
 
