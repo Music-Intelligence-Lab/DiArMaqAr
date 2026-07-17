@@ -692,14 +692,13 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 "solfege",
                 "fraction",
                 "cents",
-                "centsFromZero",
+                "frequency",
                 "centsDeviation",
                 "decimalRatio",
                 "stringLength",
                 "fretDivision",
                 "midiNote",
                 "midiNoteDeviation",
-                "frequency",
                 "staffNotation",
               ].map((filterKey) => {
                 const isDisabled =
@@ -707,8 +706,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   (filterKey === "cents" && pitchClassType === "cents") ||
                   (filterKey === "decimalRatio" && pitchClassType === "decimalRatio") ||
                   (filterKey === "stringLength" && pitchClassType === "stringLength") ||
-                  (filterKey === "fretDivision" && pitchClassType === "fretDivision") ||
-                  (filterKey === "centsFromZero" && pitchClassType === "cents");
+                  (filterKey === "fretDivision" && pitchClassType === "fretDivision");
 
                 if (isDisabled) return null;
 

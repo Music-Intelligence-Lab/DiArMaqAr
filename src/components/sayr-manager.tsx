@@ -238,6 +238,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
   return (
     <div className="sayr-manager">
+      {/* Stacked section lockup: furniture eyebrow over the maqam's name */}
+      <div className="sayr-manager__page-header">
+        <span className="sayr-manager__page-header-furniture">{t("tabs.suyur")}</span>
+        <span className="sayr-manager__page-header-name">{getDisplayName(selectedMaqamData?.getName() || "", "maqam")}</span>
+      </div>
       {admin && (
         <div className="sayr-manager__group">
           <div className="sayr-manager__input-container">

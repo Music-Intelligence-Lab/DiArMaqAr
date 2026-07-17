@@ -4,6 +4,19 @@
   width: 100%;
   margin-top: 20px;
 
+  // Page-level section lockup (shared stacked role)
+  &__page-header {
+    @include section-page-header;
+  }
+
+  &__page-header-furniture {
+    @include section-furniture($font-size-lg);
+  }
+
+  &__page-header-name {
+    @include section-page-header-name;
+  }
+
   &__header {
     @include type-heading-h2; // panel-header tier — was 26px/semibold, converged to 21px
     margin-bottom: 1rem;

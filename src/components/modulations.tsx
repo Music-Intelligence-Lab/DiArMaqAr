@@ -365,6 +365,13 @@ export default function Modulations() {
 
   return (
     <div className="modulations__container">
+      {/* Stacked section lockup: furniture eyebrow over the chain root's name */}
+      <div className="modulations__page-header">
+        <span className="modulations__page-header-furniture">{t("tabs.intiqalat")}</span>
+        {sourceMaqamStack[0]?.name && (
+          <span className="modulations__page-header-name">{getDisplayName(sourceMaqamStack[0].name, "maqam")}</span>
+        )}
+      </div>
       {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
         const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
         const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();

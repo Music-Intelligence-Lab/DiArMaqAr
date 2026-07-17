@@ -11,6 +11,19 @@
 
   }
 
+  // Page-level section lockup (shared stacked role)
+  &__page-header {
+    @include section-page-header;
+  }
+
+  &__page-header-furniture {
+    @include section-furniture($font-size-lg);
+  }
+
+  &__page-header-name {
+    @include section-page-header-name;
+  }
+
   &__header {
     font-weight: $font-weight-regular;
     margin-bottom: 10px;

@@ -129,7 +129,7 @@ const translations = {
 
     // Jins Transpositions
     "jins.analysis": "Taḥlīl (analysis)",
-    "jins.centsTolerance": "Cents Tolerance",
+    "jins.centsTolerance": "cents tolerance",
     "jins.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
     "jins.selectLoadToKeyboard": "Select & Load",
     "jins.playJins": "Play jins",
@@ -201,7 +201,7 @@ const translations = {
 
     // Maqam Transpositions
     "maqam.analysis": "Taḥlīl (analysis)",
-    "maqam.centsTolerance": "Cents Tolerance",
+    "maqam.centsTolerance": "cents tolerance",
     "maqam.darajatAlIstiqrar": "Darajat al-Istiqrār al-Taqlīdīya (conventional tonic/finalis)",
     "maqam.selectLoadToKeyboard": "Select & Load",
     "maqam.ascendingDescending": "Asc > Desc",
@@ -312,7 +312,7 @@ const translations = {
     // Selected Pitch Classes Transpositions
     "analysis.title": "Taḥlīl (analysis)",
     "analysis.selectedPitchClasses": "Selected Pitch Classes",
-    "analysis.centsTolerance": "Cents Tolerance",
+    "analysis.centsTolerance": "cents tolerance",
     "analysis.playSelectedPitchClasses": "Play Selections",
     "analysis.copyTable": "Copy Table",
     "analysis.copyTableToClipboard": "Copy Table to Clipboard",

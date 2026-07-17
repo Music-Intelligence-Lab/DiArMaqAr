@@ -4,8 +4,16 @@
 // The manager panels share code through the manager-* mixins in
 // variables.scss instead.
 
-@use "sass:color";
 @use "./variables" as *;
+
+// The analysis-header surface — shared by the sticky header and the tuning
+// page's static analysis header, so the twins can't drift again. The role
+// colour straight from the palette (the old −5% darken was a one-off tint).
+@mixin transpositions-header-surface {
+  background-color: $secondary;
+  color: $text;
+  border: solid 1px $grey;
+}
 
 // ============================================================================
 // TRANSPOSITIONS SHARED STYLES
@@ -15,8 +23,12 @@
 .maqam-jins-transpositions-shared {
   width: 100%;
   font-size: 0.9rem;
-  margin-top: 10px;
-  margin-bottom: 40px;
+  // The page rhythm has ONE source: the bar→header gap is the sticky
+  // header's own $space-block margin-top (below); the root contributes
+  // nothing, and the per-page wrappers (.maqam-transpositions,
+  // .jins-transpositions) no longer carry competing margins.
+  margin-top: 0;
+  margin-bottom: 2 * $space-block;
   scroll-margin-top: 450px;
 
   // -------------------------
@@ -24,31 +36,37 @@
   // -------------------------
   &__sticky-header {
     width: 100%;
-    background-color: darken($color: $secondary, $amount: 5);
-    color: $text;
-    border: solid 1px $grey;
+    @include transpositions-header-surface;
     position: sticky;
     position: -webkit-sticky;
-    // Stick 10px above the top navbar's bottom edge so the header tucks
-    // slightly under it instead of sitting flush.
-    top: $top-navbar-height - 10px;
-    margin-bottom: 20px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 1);
+    // Sticky offsets resolve inside .main-content (which starts below the
+    // navbar), so the header sticks one $space-block below the stuck
+    // pitch-class bar — whose content-driven height the bar itself
+    // publishes as --pitch-bar-height. The ::before pseudo masks the gap.
+    top: calc(var(--pitch-bar-height, 90px) + #{$space-block});
+    margin-bottom: $space-block;
+    // Same strength as the navbar's shadow — one separation vocabulary for
+    // surfaces that float over scrolling content (was a full-black 1.0).
+    box-shadow: 0px 10px 20px rgba($black, 0.6);
     z-index: 10;
-    margin-top: 10px;
+    // The one in-flow gap between the pitch-class bar and this header —
+    // equal to the stuck offset's gap, so sticking is seamless
+    margin-top: $space-block;
     // Compact, even rhythm: 8px frame, 6px between title and filters — the
     // sticky is a working surface and should cost as little height as possible
     padding: 8px 20px;
 
-    // Pseudo-element to fill the gap above when sticky
+    // Fills the $space-block gap above the stuck header with the page
+    // ground so content scrolls behind it unseen (sized to the gap plus
+    // the 1px border it hides behind)
     &::before {
       content: "";
       position: absolute;
-      top: -22px;
+      top: -($space-block + 2px);
       left: -1px;
       right: 0;
       width: calc(100% + 2px);
-      height: 21px;
+      height: $space-block + 1px;
       background-color: $dark-grey;
       z-index: -1;
 
@@ -60,23 +78,43 @@
     }
   }
 
+  // Run-in section lockup: furniture eyebrow, then the entity name, with
+  // the cents control pushed to the row's end — one line, since the sticky
+  // is a working surface and every pixel of height counts.
   &__title-row {
-    // Section-header tier (same as the Comments/Sources h3s) — a step of
-    // hierarchy over the 16px table titles
-    @include type-heading-h3;
-    text-align: left;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
     margin-bottom: 6px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
   }
 
-  // Entity names (jins/maqam names) in the Taḥlīl header and table titles
-  // are wrapped in __entity-name spans (TSX). No styling for now — gold was
-  // tried and rejected; they render in the inherited text colour. The spans
-  // stay as the hook if a differentiation device is wanted later.
+  // Duet partner of the entity name beside it (16px — Readex Pro reads
+  // clumsy at 18px and above, so the header tier caps at lg)
+  &__section-furniture {
+    @include section-furniture($font-size-lg);
+  }
+
+  // The variable subject of the title row (jins/maqam name, wrapped in an
+  // __entity-name span in TSX): the shared entity-name identity at this
+  // surface's step on the size ladder.
+  &__entity-name {
+    @include type-entity-name;
+    font-size: $font-size-lg;
+    line-height: $line-height-tight;
+  }
+
+  // The cents control group at the row's end: its label (and the ±) speak
+  // the furniture voice at the row's full furniture size; the value box
+  // keeps its own data styling.
+  &__title-controls {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-light;
+    color: $light-grey;
+  }
 
   // -------------------------
   // Analysis header (non-sticky variant of sticky header from jins-transpositions)
@@ -84,49 +122,38 @@
   // -------------------------
   &__analysis-header {
     width: 100%;
-    background-color: darken($color: $secondary, $amount: 5);
-    color: $text;
-    border: solid 1px $grey;
+    @include transpositions-header-surface;
     margin-top: 0px;
-    padding: 10px 20px;
+    // Same compact frame as the sticky variant (had drifted to 10px)
+    padding: 8px 20px;
   }
 
   // -------------------------
   // Filter menu
   // -------------------------
   &__filter-menu {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px 8px;
-    align-items: center;
+    @include filter-menu;
   }
 
   &__filter-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    padding: 3px 0px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.2s;
+    @include filter-item;
   }
 
   &__intervals-matrix-unit-select {
-    font-size: 12px;
+    font-size: $font-size-sm;
     padding: 2px 2px;
     border: 0px none;
     border-image: none;
     border-radius: 3px;
-    background-color: rgba(0, 0, 0, 1);
-    color: rgba(240, 240, 240, 1);
+    background-color: $black;
+    color: $text;
     cursor: pointer;
     margin-left: -8px;
     margin-right: -8px;
     min-width: 100px;
-    
+
     &:focus {
-      outline: 1px solid #666;
+      outline: 1px solid $grey;
       outline-offset: -1px;
     }
   }
@@ -138,32 +165,18 @@
 
 
   &__filter-checkbox {
-    cursor: pointer;
-    margin: 0;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin: 0;
-    }
+    @include filter-checkbox;
   }
 
   &__filter-label {
-    cursor: pointer;
-    user-select: none;
-    padding-right: 5px;
-
-    // RTL support
-    [dir="rtl"] & {
-      padding-right: 0;
-      padding-left: 5px;
-    }
+    @include filter-label;
   }
 
   // -------------------------
   // Icons
   // -------------------------
   &__play-circle-icon.MuiSvgIcon-root {
-    color: white;
+    color: $text;
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
@@ -186,7 +199,7 @@
   }
 
   &__export-icon.MuiSvgIcon-root {
-    color: white;
+    color: $text;
     padding: 0px;
     margin: 0px;
     margin-right: 5px;
@@ -353,12 +366,13 @@
     }
   }
 
+  // The conventional-tonic annotation under the taḥlīl table title: the
+  // section-furniture voice one size below the 16px title it annotates
+  // (the old bespoke 14px/200/opacity predates the furniture system).
   [class*="__darajat-al-istiqrar"] {
+    @include section-furniture($font-size-md);
     display: block;
-    font-size: 14px;
-    font-weight: 200;
     margin-top: 2px;
-    opacity: 0.85;
   }
 
   // -------------------------
@@ -647,13 +661,19 @@
     }
   }
 
-  // Cents-tolerance control — the same 27px black value box as the Hz and
-  // string-length fields, with the ± and ¢ symbols inside the box
+  // Cents-tolerance control — the same 27px value box as the Hz and
+  // string-length fields, ¢ unit inside the box; the ± sits outside on the
+  // label side and inherits the title row's quiet label styling
   // (rendered by cents-tolerance-input.tsx on every page it appears).
   &__cents-tolerance-box {
     @include input-value-box;
     gap: 2px;
-    direction: ltr; // the ± n ¢ lockup reads LTR even in Arabic contexts
+    direction: ltr; // the n ¢ lockup reads LTR even in Arabic contexts
+    // Reset the furniture voice inherited from the title controls — the box
+    // is a data value, not a label
+    letter-spacing: $letter-spacing-normal;
+    text-transform: none;
+    color: $text;
   }
 
   &__cents-tolerance-unit {
@@ -664,6 +684,12 @@
   &__cents-tolerance-input {
     @include type-data-value;
     width: 3ch;
+    // The inner number field also hugs its digits where supported
+    @supports (field-sizing: content) {
+      field-sizing: content;
+      width: auto;
+      min-width: 1ch;
+    }
     text-align: center;
     background: transparent;
     border: none;
@@ -900,5 +926,48 @@
   [class*="__table--rotated"] [class*="__jins-button"] {
     text-align: center;
     justify-content: center;
+  }
+}
+
+// ============================================================================
+// OPEN/CLOSE CHOREOGRAPHY
+// Detail rows fade-and-rise in as a transposition opens (they mount fresh,
+// so a plain mount animation covers it); a closing table keeps its rows
+// mounted briefly (closingTransposition state in the components) under the
+// --closing modifier so they fade out before unmounting.
+// ============================================================================
+
+.maqam-jins-transpositions-shared,
+.jins-transpositions,
+.maqam-transpositions {
+  [class*="__table"] tr[data-row-type] > th,
+  [class*="__table"] tr[data-row-type] > td {
+    animation: transposition-unfold 240ms ease-out backwards;
+  }
+
+  [class*="__table--closing"] tr[data-row-type] > th,
+  [class*="__table--closing"] tr[data-row-type] > td {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [class*="__table"] tr[data-row-type] > th,
+    [class*="__table"] tr[data-row-type] > td {
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+@keyframes transposition-unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

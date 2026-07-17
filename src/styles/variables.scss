@@ -59,6 +59,16 @@ $surface-available-hover: rgba($primary, 0.9); // its hover intensification
 $surface-selected:        $tertiary;           // the selected item — solid role colour
 
 // ---------------------------------------------------------------------------
+// Text inks
+// ---------------------------------------------------------------------------
+
+// The text counterpart of the surface tiers: three inks, no ad-hoc alphas.
+// (2026-07 inventory: ten different rgba($text, …) variants across the app —
+// converge onto these as files are touched.)
+$text-quiet:    rgba($text, 0.65); // furniture — inline labels, units, counts, note-identity lines
+$text-disabled: rgba($text, 0.35); // disabled content (pairs with interactive-disabled)
+
+// ---------------------------------------------------------------------------
 // Typography
 // ---------------------------------------------------------------------------
 
@@ -149,6 +159,100 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     font-size: $font-size-sm;
     font-weight: $font-weight-regular;
     line-height: $line-height-normal;
+}
+
+// The selected entity's name (maqām/jins/tuning system) wherever it appears —
+// navbar tab, carousel item, sticky analysis header, table titles. One
+// identity everywhere: regular weight, full ink, transliteration tracking
+// (RTL-zeroed). SIZE is deliberately not part of the role — it is the only
+// contextual variable, each surface choosing its step on the scale
+// (navbar 12 → carousel 14 → table titles 16 → analysis header 20).
+@mixin type-entity-name {
+    font-weight: $font-weight-regular;
+    color: $text;
+    letter-spacing: $letter-spacing-translit;
+
+    [dir="rtl"] & {
+        letter-spacing: $letter-spacing-normal;
+    }
+}
+
+// Section furniture — the WEIGHT DUET (chosen from the script-neutral
+// samples): fixed structural labels (the analysis headers' "taḥlīl" and
+// "cents tolerance", the dīwān/octave headers, the Suyūr/Intiqālāt page
+// headers) share their payload's size, and hierarchy comes purely from
+// weight and ink — the true drawn 200 in quiet ink against the payload's
+// 300 in full ink. No case, no tracking, no marks: identical in both
+// scripts by construction. Pass the surface's payload size.
+@mixin section-furniture($size: $font-size-md) {
+    font-size: $size;
+    font-weight: $font-weight-light;
+    line-height: $line-height-tight;
+    // Brighter than $text-quiet (the counts/note-lines ink): the duet's
+    // separation lives in the weight step, the ink only assists
+    color: $light-grey;
+}
+
+// The stacked page-header lockup (furniture eyebrow above, entity name
+// below) — used by the Suyūr and Intiqālāt pages; height-critical surfaces
+// (the sticky analysis header) run the same two voices inline instead.
+@mixin section-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; // the tag hugs its text instead of stretching
+    gap: 4px;
+    width: 100%;
+    margin-bottom: $space-block;
+}
+
+@mixin section-page-header-name {
+    @include type-entity-name;
+    // 16px cap: Readex Pro reads clumsy at 18px+ (per ruling), so entity
+    // names top out at lg everywhere in the section-header system
+    font-size: $font-size-lg;
+    line-height: $line-height-tight;
+}
+
+// Filter chips — the checkbox+label row toggles under the analysis headers
+// and the dīwān (octave) tables. One voice everywhere: 12px UI text, the
+// checkbox in the app's role colour; checked state is the checkbox itself,
+// not a colour shift on the text.
+@mixin filter-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 8px;
+    align-items: center;
+}
+
+@mixin filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 0px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-snug;
+    transition: background-color 0.2s;
+}
+
+@mixin filter-checkbox {
+    cursor: pointer;
+    margin: 0;
+    // App role colour instead of the UA default blue
+    accent-color: $tertiary;
+}
+
+@mixin filter-label {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 5px;
+
+    [dir="rtl"] & {
+        padding-right: 0;
+        padding-left: 5px;
+    }
 }
 
 @mixin type-button-label {
@@ -273,13 +377,13 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // cursor, no hover/pressed reaction.
 @mixin interactive-disabled {
     background-color: rgba($black, 0.5) !important;
-    color: rgba($text, 0.35);
+    color: $text-disabled;
     cursor: default;
 
     &:hover {
         background-color: rgba($black, 0.5);
         box-shadow: none;
-        color: rgba($text, 0.35);
+        color: $text-disabled;
     }
 
     &:active {
@@ -423,8 +527,21 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     padding: 3px 8px;
     border: none;
     border-radius: 2px;
-    background: $black;
+    // Translucent rest-tier fill, not solid black: the box darkens whatever
+    // ground it sits on (page, pink analysis header) instead of punching a
+    // hard black hole in it.
+    background: $surface-rest;
     color: $text;
+
+    // Content-based width: the box hugs its value instead of reserving a
+    // fixed slot. $width demotes to a fallback for engines without
+    // field-sizing (and is harmless on non-input wrappers, where width:auto
+    // hugs the children directly).
+    @supports (field-sizing: content) {
+        field-sizing: content;
+        width: auto;
+        min-width: 40px;
+    }
 }
 
 // Manager-panel shared blocks — extracted verbatim from the byte-identical
@@ -659,7 +776,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         @include interactive-disabled;
 
         > * {
-            color: rgba($text, 0.35);
+            color: $text-disabled;
         }
     }
 }
@@ -688,7 +805,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         font-weight: $font-weight-regular;
         font-variant-numeric: tabular-nums;
         line-height: $line-height-snug;
-        color: rgba($text, 0.55);
+        color: $text-quiet;
         // Re-declare so the em value computes against 11px (inherited
         // letter-spacing arrives as the parent's computed 13px-based length)
         letter-spacing: $letter-spacing-translit;

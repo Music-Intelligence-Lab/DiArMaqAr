@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
 import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
+import useFilterContext from "@/contexts/filter-context";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -21,25 +22,10 @@ export default function SelectedPitchClassesAnalysis() {
 
   const { t, getDisplayName } = useLanguageContext();
 
-  // Local filter state - independent from global filter context
-  const [localFilters, setLocalFilters] = useState({
-    abjadName: false,
-    englishName: false,
-    solfege: false,
-    fraction: false,
-    cents: false,
-    centsFromZero: false,
-    centsDeviation: false,
-    decimalRatio: false,
-    stringLength: false,
-    fretDivision: false,
-    midiNote: false,
-    midiNoteDeviation: false,
-    frequency: false,
-    staffNotation: false,
-    pitchClass: false,
-    intervalsMatrix: false,
-  });
+  // One shared filter state app-wide: this table follows the same filter
+  // context as the transpositions tables and the dīwān/octave tables (it
+  // used to hold an independent local copy that silently drifted).
+  const { filters, setFilters } = useFilterContext();
 
   // Unit selection for intervals matrix - default to cents
   // Use a ref to track if we've initialized the unit based on valueType
@@ -71,7 +57,7 @@ export default function SelectedPitchClassesAnalysis() {
         availableValueTypes.add(pc.originalValueType);
       });
 
-      setLocalFilters((prev) => {
+      setFilters((prev) => {
         const updated = { ...prev };
         
         // Uncheck value types that aren't in the current tuning system
@@ -163,7 +149,7 @@ export default function SelectedPitchClassesAnalysis() {
       rows.push(noteNamesRow);
 
       // Pitch Class row (if filter enabled)
-      if (localFilters["pitchClass"]) {
+      if (filters["pitchClass"]) {
         const pitchClassRow = [t("analysis.pitchClass")];
         pitchClasses.forEach((pitchClass, i) => {
           if (i > 0) pitchClassRow.push(''); // Empty cell for interval column
@@ -173,7 +159,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // Abjad names row (if filter enabled)
-      if (localFilters["abjadName"]) {
+      if (filters["abjadName"]) {
         const abjadRow = [t("analysis.abjadName")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) abjadRow.push(''); // Empty cell for interval column
@@ -183,7 +169,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // English names row (if filter enabled)
-      if (localFilters["englishName"]) {
+      if (filters["englishName"]) {
         const englishRow = [t("analysis.englishName")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) englishRow.push(''); // Empty cell for interval column
@@ -193,7 +179,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // Solfege row (if filter enabled)
-      if (localFilters["solfege"]) {
+      if (filters["solfege"]) {
         const solfegeRow = [t("analysis.solfege")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) solfegeRow.push(''); // Empty cell for interval column
@@ -203,7 +189,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // Primary value type row (if filter enabled)
-      if (localFilters[valueType as keyof typeof localFilters]) {
+      if (filters[valueType as keyof typeof filters]) {
         const valueRow = [t(`analysis.${valueType}`)];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -217,7 +203,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // Additional filter rows
-      if (valueType !== "fraction" && localFilters["fraction"]) {
+      if (valueType !== "fraction" && filters["fraction"]) {
         const fractionRow = [t("analysis.fraction")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -229,7 +215,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(fractionRow);
       }
 
-      if (valueType !== "cents" && localFilters["cents"]) {
+      if (valueType !== "cents" && filters["cents"]) {
         const centsRow = [t("analysis.cents")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -241,7 +227,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(centsRow);
       }
 
-      if (localFilters["centsFromZero"]) {
+      if (filters["centsFromZero"]) {
         const centsFromZeroRow = [t("analysis.centsFromZero")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -254,7 +240,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(centsFromZeroRow);
       }
 
-      if (localFilters["centsDeviation"]) {
+      if (filters["centsDeviation"]) {
         const centsDeviationRow = [t("analysis.centsDeviation")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) centsDeviationRow.push(''); // Empty cell for interval column
@@ -265,7 +251,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(centsDeviationRow);
       }
 
-      if (valueType !== "decimalRatio" && localFilters["decimalRatio"]) {
+      if (valueType !== "decimalRatio" && filters["decimalRatio"]) {
         const decimalRow = [t("analysis.decimalRatio")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -277,7 +263,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(decimalRow);
       }
 
-      if (valueType !== "stringLength" && localFilters["stringLength"]) {
+      if (valueType !== "stringLength" && filters["stringLength"]) {
         const stringLengthRow = [t("analysis.stringLength")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -289,7 +275,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(stringLengthRow);
       }
 
-      if (valueType !== "fretDivision" && localFilters["fretDivision"]) {
+      if (valueType !== "fretDivision" && filters["fretDivision"]) {
         const fretDivisionRow = [t("analysis.fretDivision")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) {
@@ -301,7 +287,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(fretDivisionRow);
       }
 
-      if (localFilters["midiNote"]) {
+      if (filters["midiNote"]) {
         const midiRow = [t("analysis.midiNote")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) midiRow.push(''); // Empty cell for interval column
@@ -310,7 +296,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(midiRow);
       }
 
-      if (localFilters["midiNoteDeviation"]) {
+      if (filters["midiNoteDeviation"]) {
         const midiDeviationRow = [t("analysis.midiNoteDeviation")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) midiDeviationRow.push(''); // Empty cell for interval column
@@ -321,7 +307,7 @@ export default function SelectedPitchClassesAnalysis() {
         rows.push(midiDeviationRow);
       }
 
-      if (localFilters["frequency"]) {
+      if (filters["frequency"]) {
         const frequencyRow = [t("analysis.frequency")];
         pitchClasses.forEach((pc, i) => {
           if (i > 0) frequencyRow.push(''); // Empty cell for interval column
@@ -331,7 +317,7 @@ export default function SelectedPitchClassesAnalysis() {
       }
 
       // Intervals matrix rows (if filter enabled)
-      if (localFilters["intervalsMatrix"]) {
+      if (filters["intervalsMatrix"]) {
         // Build list of all intervals to display (one per row)
         const intervalsToShow: Array<{ fromPc: typeof pitchClasses[0], fromIndex: number, toPc: typeof pitchClasses[0], toIndex: number }> = [];
         
@@ -452,8 +438,8 @@ export default function SelectedPitchClassesAnalysis() {
     const valueType = allPitchClasses[0].originalValueType;
     const useRatio = valueType === "fraction" || valueType === "decimalRatio";
 
-      const numberOfFilterRows = Object.keys(localFilters).filter(
-        (key) => !disabledFilters.includes(key) && key !== valueType && key !== "intervalsMatrix" && localFilters[key as keyof typeof localFilters]
+      const numberOfFilterRows = Object.keys(filters).filter(
+        (key) => !disabledFilters.includes(key) && key !== valueType && key !== "intervalsMatrix" && filters[key as keyof typeof filters]
       ).length;
       const pitchClassIntervals = getPitchClassIntervals(selectedPitchClasses);
       function renderTable() {
@@ -462,7 +448,7 @@ export default function SelectedPitchClassesAnalysis() {
         const intervals = pitchClassIntervals;
         // Intervals matrix rows: count all ascending intervals
         let intervalsMatrixRows = 0;
-        if (localFilters["intervalsMatrix"]) {
+        if (filters["intervalsMatrix"]) {
           pitchClasses.slice(0, -1).forEach((fromPc, sliceIndex) => {
             const fromIndex = sliceIndex;
             pitchClasses.slice(1).forEach((toPc, toIndex) => {
@@ -528,7 +514,7 @@ export default function SelectedPitchClassesAnalysis() {
               </React.Fragment>
             ))}
           </tr>
-          {localFilters["pitchClass"] && (
+          {filters["pitchClass"] && (
             <tr data-row-type="pitchClass">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.pitchClass')}</th>
               {pitchClasses.map((pitchClass, i) => (
@@ -539,7 +525,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["abjadName"] && (
+          {filters["abjadName"] && (
             <tr data-row-type="abjadName">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.abjadName')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].abjadName || "--"}</th>
@@ -551,7 +537,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["englishName"] && (
+          {filters["englishName"] && (
             <tr data-row-type="englishName">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.englishName')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].englishName}</th>
@@ -563,7 +549,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["solfege"] && (
+          {filters["solfege"] && (
             <tr data-row-type="solfege">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.solfege')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</th>
@@ -575,7 +561,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters[valueType as keyof typeof localFilters] && (
+          {filters[valueType as keyof typeof filters] && (
             <tr data-row-type={valueType}>
               <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`analysis.${valueType}`)}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</th>
@@ -589,7 +575,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {valueType !== "fraction" && localFilters["fraction"] && (
+          {valueType !== "fraction" && filters["fraction"] && (
             <tr data-row-type="fraction">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.fraction')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[0].fraction}</th>
@@ -601,7 +587,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {valueType !== "cents" && localFilters["cents"] && (
+          {valueType !== "cents" && filters["cents"] && (
             <tr data-row-type="cents">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.cents')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
@@ -613,7 +599,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["centsFromZero"] && (
+          {filters["centsFromZero"] && (
             <tr data-row-type="centsFromZero">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.centsFromZero')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">0.000</th>
@@ -625,7 +611,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["centsDeviation"] && (
+          {filters["centsDeviation"] && (
             <tr data-row-type="centsDeviation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.centsDeviation')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
@@ -643,7 +629,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {valueType !== "decimalRatio" && localFilters["decimalRatio"] && (
+          {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr data-row-type="decimalRatio">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.decimalRatio')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
@@ -655,7 +641,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {valueType !== "stringLength" && localFilters["stringLength"] && (
+          {valueType !== "stringLength" && filters["stringLength"] && (
             <tr data-row-type="stringLength">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.stringLength')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
@@ -667,7 +653,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {valueType !== "fretDivision" && localFilters["fretDivision"] && (
+          {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr data-row-type="fretDivision">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.fretDivision')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
@@ -679,7 +665,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["midiNote"] && (
+          {filters["midiNote"] && (
             <tr data-row-type="midiNote">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNote')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</th>
@@ -691,7 +677,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["midiNoteDeviation"] && (
+          {filters["midiNoteDeviation"] && (
             <tr data-row-type="midiNoteDeviation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNoteDeviation')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
@@ -707,7 +693,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["frequency"] && (
+          {filters["frequency"] && (
             <tr data-row-type="frequency">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.frequency')}</th>
               <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
@@ -719,7 +705,7 @@ export default function SelectedPitchClassesAnalysis() {
               ))}
             </tr>
           )}
-          {localFilters["staffNotation"] && (
+          {filters["staffNotation"] && (
             <tr data-row-type="staffNotation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.staffNotation')}</th>
               <td className="staff-notation-cell" colSpan={pitchClasses.length * 2 - 1}>
@@ -727,7 +713,7 @@ export default function SelectedPitchClassesAnalysis() {
               </td>
             </tr>
           )}
-          {localFilters["intervalsMatrix"] && (() => {
+          {filters["intervalsMatrix"] && (() => {
             // Build list of all intervals to display (one per row)
             const intervalsToShow: Array<{ fromPc: typeof pitchClasses[0], fromIndex: number, toPc: typeof pitchClasses[0], toIndex: number }> = [];
             
@@ -899,10 +885,10 @@ export default function SelectedPitchClassesAnalysis() {
         <div className="tuning-system-pitch-classes-analysis maqam-jins-transpositions-shared">
           <div className="maqam-jins-transpositions-shared__analysis-header">
             <div className="maqam-jins-transpositions-shared__title-row">
-              {t('analysis.title')}
-              {" "}
-              / {t('analysis.centsTolerance')}:{" "}
-              <CentsToleranceInput />
+              <span className="maqam-jins-transpositions-shared__section-furniture">{t('analysis.title')}</span>
+              <span className="maqam-jins-transpositions-shared__title-controls">
+                <span className="maqam-jins-transpositions-shared__section-furniture">{t('analysis.centsTolerance')}</span> <CentsToleranceInput />
+              </span>
             </div>
               <div className="maqam-jins-transpositions-shared__filter-menu">
               {/* Filter order matches table row appearance order */}
@@ -914,13 +900,13 @@ export default function SelectedPitchClassesAnalysis() {
                 "fraction",
                 "cents",
                 "centsFromZero",
+                "frequency",
                 "centsDeviation",
                 "decimalRatio",
                 "stringLength",
                 "fretDivision",
                 "midiNote",
                 "midiNoteDeviation",
-                "frequency",
                 "staffNotation",
                 "intervalsMatrix",
               ].map((filterKey) => {
@@ -943,20 +929,20 @@ export default function SelectedPitchClassesAnalysis() {
                     <React.Fragment key={filterKey}>
                       <label
                         className={`maqam-jins-transpositions-shared__filter-item ${
-                          localFilters[filterKey as keyof typeof localFilters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
+                          filters[filterKey as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setLocalFilters((prev) => ({
+                          setFilters((prev) => ({
                             ...prev,
-                            [filterKey as keyof typeof localFilters]: !prev[filterKey as keyof typeof localFilters],
+                            [filterKey as keyof typeof filters]: !prev[filterKey as keyof typeof filters],
                           }));
                         }}
                       >
                         <input
                           type="checkbox"
                           className="maqam-jins-transpositions-shared__filter-checkbox"
-                          checked={localFilters[filterKey as keyof typeof localFilters]}
+                          checked={filters[filterKey as keyof typeof filters]}
                           onChange={() => {}}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -966,7 +952,7 @@ export default function SelectedPitchClassesAnalysis() {
                           {t(`filter.${filterKey}`)}
                         </span>
                       </label>
-                      {localFilters[filterKey as keyof typeof localFilters] && (
+                      {filters[filterKey as keyof typeof filters] && (
                         <select
                           className="maqam-jins-transpositions-shared__intervals-matrix-unit-select"
                           value={intervalsMatrixUnit}
@@ -994,22 +980,22 @@ export default function SelectedPitchClassesAnalysis() {
                   <label
                     key={filterKey}
                     className={`maqam-jins-transpositions-shared__filter-item ${
-                      localFilters[filterKey as keyof typeof localFilters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
+                      filters[filterKey as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
                     }`}
                     // prevent the drawer (or parent) click handler from firing
                     onClick={(e) => {
                       e.stopPropagation();
                       // Manually toggle the checkbox
-                      setLocalFilters((prev) => ({
+                      setFilters((prev) => ({
                         ...prev,
-                        [filterKey as keyof typeof localFilters]: !prev[filterKey as keyof typeof localFilters],
+                        [filterKey as keyof typeof filters]: !prev[filterKey as keyof typeof filters],
                       }));
                     }}
                   >
                     <input
                       type="checkbox"
                       className="maqam-jins-transpositions-shared__filter-checkbox"
-                      checked={localFilters[filterKey as keyof typeof localFilters]}
+                      checked={filters[filterKey as keyof typeof filters]}
                       disabled={isDisabled}
                       onChange={() => {
                         // Handled by label onClick to avoid scroll jump
@@ -1032,20 +1018,20 @@ export default function SelectedPitchClassesAnalysis() {
                       <label
                         key={`originalValue-${valueType}`}
                         className={`maqam-jins-transpositions-shared__filter-item ${
-                          localFilters[valueType as keyof typeof localFilters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
+                          filters[valueType as keyof typeof filters] ? "maqam-jins-transpositions-shared__filter-item_active" : ""
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setLocalFilters((prev) => ({
+                          setFilters((prev) => ({
                             ...prev,
-                            [valueType as keyof typeof localFilters]: !prev[valueType as keyof typeof localFilters],
+                            [valueType as keyof typeof filters]: !prev[valueType as keyof typeof filters],
                           }));
                         }}
                       >
                         <input
                           type="checkbox"
                           className="maqam-jins-transpositions-shared__filter-checkbox"
-                          checked={localFilters[valueType as keyof typeof localFilters]}
+                          checked={filters[valueType as keyof typeof filters]}
                           onChange={() => {
                             // Handled by label onClick to avoid scroll jump
                           }}
@@ -1082,7 +1068,7 @@ export default function SelectedPitchClassesAnalysis() {
         </div>
       </>
     );
-  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, localFilters, intervalsMatrixUnit, soundSettings, t, getDisplayName]);
+  }, [selectedTuningSystem, allPitchClasses, selectedPitchClasses, centsTolerance, filters, intervalsMatrixUnit, soundSettings, t, getDisplayName]);
 
   return transpositionTables;
 }

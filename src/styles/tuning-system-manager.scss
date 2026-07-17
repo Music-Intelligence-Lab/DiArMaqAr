@@ -269,7 +269,7 @@
   }
 
   &__starting-note-input {
-    // Same value box as the Hz field; wider to fit string-length values
+    // Same value box as the Hz field; wider floor to fit string-length values
     @include input-value-box($width: 90px);
 
     &:focus {
@@ -510,7 +510,7 @@
       @include interactive-disabled;
 
       > * {
-        color: rgba($text, 0.35);
+        color: $text-disabled;
       }
     }
 
@@ -555,7 +555,7 @@
       font-weight: $font-weight-regular;
       line-height: $line-height-snug;
       margin-top: 4px;
-      color: rgba($text, 0.55);
+      color: $text-quiet;
       letter-spacing: $letter-spacing-translit;
 
       [dir="rtl"] & {
@@ -632,6 +632,9 @@
   }
 
   &__octave-summary-title {
+    // Dīwān headers speak the section-furniture weight duet at the table
+    // tier's size
+    @include section-furniture($font-size-lg);
     display: inline-flex;
     align-items: center;
     align-self: center;
@@ -643,7 +646,8 @@
     // the shorter button height (28px) would leave the single-line case with
     // leftover slack and reintroduce the shift.
     min-height: 34.5px;
-    color: $text;
+    // line-height 1 (not the eyebrow's normal) keeps the fixed band's
+    // vertical centering exact
     line-height: 1;
     user-select: none;
     cursor: pointer;
@@ -717,70 +721,34 @@
     }
   }
 
+  // Filter chips: the shared system roles; only the layout situation is
+  // local (the menu drops onto its own full-width row under the dīwān
+  // title, order:1 keeping the copy button up on the title row).
   &__filter-menu {
-    // Full width forces flex-wrap to drop the menu onto its own row, directly
-    // under the Octave 1 title rather than floating beside it. order:1 keeps it
-    // last so the copy button stays up on the title row.
+    @include filter-menu;
     order: 1;
     flex-basis: 100%;
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 10px;
     margin: 0;
   }
 
   &__filter-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0px;
-    // background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    color: $text;
-    cursor: pointer;
-    transition: 0s;
-    // Spacing between items comes from the filter-menu flex gap
-    margin: 0;
-    font-size: 14px;
+    @include filter-item;
 
-    // RTL support
-    [dir="rtl"] & {
-      margin: 0;
-    }
-
-    // hover (when not disabled)
-    &:hover {
-      // background-color: rgba($primary, 0.5);
-      color: white;
-      // box-shadow: 0 1px 15px rgba(0, 0, 0, 0.6);
-    }
-
-    // active state (checked)
-    &_active {
-      // background-color: $primary;
-      color: white;
-    }
-
-    // disabled state via :has() (modern browsers)
+    // Disabled chips (a value type serving as the base can't be toggled):
+    // the uniform disabled ink, no bespoke fills
     &:has(> .tuning-system-manager__filter-checkbox:disabled) {
-      background-color: $secondary;
-      color: $text;
+      color: $text-disabled;
       cursor: not-allowed;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.3);
-        box-shadow: none;
-        color: $text;
-      }
     }
   }
 
+  &__filter-checkbox {
+    @include filter-checkbox;
+  }
+
   &__filter-label {
-    user-select: none;
-    font-size: 13px;
-    /* inherit color from parent label */
+    @include filter-label;
   }
 
   &__octave-table {
