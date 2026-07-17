@@ -17,7 +17,7 @@
   // the gap above comes from the navbar's $space-block bottom padding.
   margin: 0;
   padding: 0 25px;
-  background: rgba($black, 0.35);
+  background: $surface-rest;
 
   &__rail-wrap {
     @include manager-filter-rail-wrap;

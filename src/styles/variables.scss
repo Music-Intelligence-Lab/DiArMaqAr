@@ -43,6 +43,19 @@ $link-visited: color.adjust($link, $saturation: -30%);
 $space-block: 20px;
 
 // ---------------------------------------------------------------------------
+// Interactive surface fills
+// ---------------------------------------------------------------------------
+
+// The carousel items' fill percentages are the CANONICAL tiers. The app has
+// accumulated one-off rgba() tints of the role colours (2026-07 inventory:
+// seven different alphas of $primary alone, ten of $text) — converge onto
+// these tokens as files are touched instead of minting new percentages.
+$surface-rest:            rgba($black, 0.3);   // resting zone / unavailable item on dark ground
+$surface-available:       rgba($primary, 0.4); // available interactive item
+$surface-available-hover: rgba($primary, 0.9); // its hover intensification
+$surface-selected:        $tertiary;           // the selected item — solid role colour
+
+// ---------------------------------------------------------------------------
 // Typography
 // ---------------------------------------------------------------------------
 
@@ -130,8 +143,8 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 }
 
 @mixin type-tooltip {
-    font-size: $font-size-base;
-    font-weight: $font-weight-medium;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
     line-height: $line-height-normal;
 }
 
@@ -326,19 +339,19 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         top: calc(100% + 8px);
         left: 50%;
         transform: translateX(-50%);
-        padding: 10px 16px;
-        background-color: $secondary;
+        padding: 6px 12px;
+        background-color: $black;
+        border: 1px solid $grey;
         color: $text;
         @include type-tooltip;
-        min-width: 200px;
-        max-width: 400px;
+        max-width: 275px;
         width: max-content;
         white-space: normal;
         word-wrap: break-word;
         text-align: center;
-        border-radius: 6px;
+        border-radius: 2px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        z-index: 10000;
+        z-index: 40000; // above every overlay (export modal 30000, settings 11000)
         pointer-events: none;
 
         @if $align == start {
@@ -362,8 +375,8 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         width: 0;
         height: 0;
         border: 6px solid transparent;
-        border-bottom-color: $secondary;
-        z-index: 10001;
+        border-bottom-color: $grey;
+        z-index: 40001;
         pointer-events: none;
     }
 }
@@ -375,13 +388,18 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     &[data-tooltip]:hover::after {
         top: auto;
         bottom: calc(100% + 8px);
+        // These bubbles live inside overflow-clipped item grids with tight
+        // vertical headroom (row 2 has ~65px): let them run wide and short
+        // instead of wrapping tall and getting cut at the grid's top edge,
+        // which read as the bubble sliding under the filter band.
+        max-width: 400px;
     }
 
     &[data-tooltip]:hover::before {
         top: auto;
         bottom: calc(100% - 3px);
         border-color: transparent;
-        border-top-color: $secondary;
+        border-top-color: $grey;
     }
 }
 
@@ -566,19 +584,16 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     }
 }
 
-// List item + its name lockup for the jins/maqam manager grids. maqam
-// currently passes the invalid `left` for $align/$justify (browsers drop it,
-// falling back to stretch/normal) — preserved verbatim for now; fixing it to
-// flex-start is a deliberate, visible alignment change handled in the
-// unification pass, not silently here. tuning-system-manager's __item is a
-// different design (primary-tinted bg, disabled state) and stays its own.
-@mixin manager-item($align: flex-start) {
+// List item + its name lockup for the jins/maqam manager grids. Fills come
+// from the canonical $surface-* tiers. (The old invalid `left` alignment
+// maqam passed, and jins' raw-white transpositions override, were resolved
+// in the carousel-items unification pass — everyone uses the shared roles.)
+@mixin manager-item {
     display: flex;
     flex-direction: column;
-    align-items: $align;
-    padding: 5px 10px;
-    background-color: rgba($black, 0.3);
-    font-size: $font-size-md;
+    align-items: flex-start;
+    padding: 6px 10px;
+    background-color: $surface-rest;
     color: $text;
     cursor: pointer;
     transition: 0.2s;
@@ -600,50 +615,70 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     }
 
     &_active {
-        background-color: rgba($primary, 0.4);
+        background-color: $surface-available;
 
         &:hover {
-            background-color: rgba($primary, 0.9);
+            background-color: $surface-available-hover;
+
+            strong {
+                color: rgba($text, 0.85);
+            }
         }
     }
 
     &_selected {
-        background-color: $tertiary;
+        background-color: $surface-selected;
 
         &:hover {
-            background-color: $tertiary;
+            background-color: $surface-selected;
+        }
+
+        strong {
+            color: rgba($text, 0.85);
+        }
+    }
+
+    // One disabled treatment sitewide, hooked exactly like buttons get it
+    // (aria-disabled also carries the semantics; clicks are guarded in the
+    // components, and the explanatory tooltip keeps working). Child lines
+    // that carry their own colors grey uniformly with the card.
+    &[aria-disabled="true"] {
+        @include interactive-disabled;
+
+        > * {
+            color: rgba($text, 0.35);
         }
     }
 }
 
-@mixin manager-item-name($align: flex-start, $justify: flex-start, $transpositions-color: null, $transpositions-size: null) {
+// Card name lockup: name line one step ABOVE the filter rail's 13px items
+// (cards are content, the rail is navigation — the size step is the
+// distinction), at 300 since 400 reads bold at card size. Transpositions
+// count in the quiet role the tab-notes and rail counts use.
+@mixin manager-item-name {
     display: flex;
     flex-direction: column;
-    align-items: $align;
-    justify-content: $justify;
-    font-weight: $font-weight-medium;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-variation-settings: "wght" #{$font-weight-medium};
-    font-synthesis: none;
+    align-items: flex-start;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-snug;
+    letter-spacing: $letter-spacing-translit;
 
     [dir="rtl"] & {
         text-align: right;
+        letter-spacing: $letter-spacing-normal;
     }
 
     &-transpositions {
-        @if $transpositions-color {
-            color: $transpositions-color;
-        }
-        @if $transpositions-size {
-            font-size: $transpositions-size;
-        }
-        margin-top: 3px;
-        font-weight: $font-weight-light;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-variation-settings: "wght" #{$font-weight-light};
-        font-synthesis: none;
+        margin-top: 4px;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-regular;
+        font-variant-numeric: tabular-nums;
+        line-height: $line-height-snug;
+        color: rgba($text, 0.55);
+        // Re-declare so the em value computes against 11px (inherited
+        // letter-spacing arrives as the parent's computed 13px-based length)
+        letter-spacing: $letter-spacing-translit;
 
         [dir="rtl"] & {
             text-align: right;

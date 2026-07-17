@@ -1043,17 +1043,17 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   key={index}
                   className={
                     "tuning-system-manager__item " +
-                    (isTuningSystemDisabled(
+                    (tuningSystem.getId() === selectedTuningSystem?.getId()
+                      ? "tuning-system-manager__item_selected "
+                      : "")
+                  }
+                  aria-disabled={
+                    isTuningSystemDisabled(
                       tuningSystem,
                       selectedJinsData,
                       selectedMaqamData,
                       selectedMaqam
-                    ).disabled
-                      ? "tuning-system-manager__item_disabled "
-                      : "") +
-                    (tuningSystem.getId() === selectedTuningSystem?.getId()
-                      ? "tuning-system-manager__item_selected "
-                      : "")
+                    ).disabled || undefined
                   }
                   data-tooltip={
                     isTuningSystemDisabled(
@@ -1068,6 +1068,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       : undefined
                   }
                   onClick={() => {
+                    // Disabled systems are not clickable (uniform with the
+                    // sitewide disabled treatment)
+                    if (
+                      isTuningSystemDisabled(
+                        tuningSystem,
+                        selectedJinsData,
+                        selectedMaqamData,
+                        selectedMaqam
+                      ).disabled
+                    ) {
+                      return;
+                    }
                     // Toggle functionality: if clicking the same tuning system, deselect it
                     if (
                       selectedTuningSystem?.getId() === tuningSystem.getId()

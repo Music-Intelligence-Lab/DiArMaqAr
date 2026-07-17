@@ -355,6 +355,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               <div
                 key={idx}
                 className={`maqam-manager__item ${maqamData.getName() === selectedMaqamData?.getName() ? "maqam-manager__item_selected " : ""}${selectable ? "maqam-manager__item_active" : ""}`}
+                aria-disabled={selectable ? undefined : true}
                 data-tooltip={!selectable ? t("maqam.tooltip.itemNotAvailable") : undefined}
                 onClick={() => {
                   if (selectable) {
@@ -370,7 +371,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 }}
               >
                 <div className="maqam-manager__item-name">
-                  <strong>{`${getDisplayName(maqamData.getName(), 'maqam')}${!maqamData.isMaqamSymmetric() ? "*" : ""}`}</strong>
+                  {`${getDisplayName(maqamData.getName(), 'maqam')}${!maqamData.isMaqamSymmetric() ? "*" : ""}`}
                   {selectable && <strong className="maqam-manager__item-name-transpositions">{`${t('maqam.transpositions')}: ${numberOfTranspositions}/${numberOfPitchClasses}`}</strong>}
                 </div>
               </div>
