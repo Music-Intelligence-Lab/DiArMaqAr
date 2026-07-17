@@ -68,8 +68,21 @@ export default function CarouselFilterRail({
   }, [updateRailState, items]);
 
   // Keep the active filter in view when it changes (e.g. restored from URL).
+  // Scrolls the rail's own axis only — never scrollIntoView, which also
+  // scrolls scrollable ANCESTORS vertically: this effect re-fires whenever
+  // the manager re-renders (items gets a new identity on every played note),
+  // and scrollIntoView would yank the page back up to the rail mid-playback.
   useEffect(() => {
-    railRef.current?.querySelector(".carousel-filter__tab_active")?.scrollIntoView({ inline: "nearest", block: "nearest" });
+    const rail = railRef.current;
+    const tab = rail?.querySelector<HTMLElement>(".carousel-filter__tab_active");
+    if (!rail || !tab) return;
+    const railRect = rail.getBoundingClientRect();
+    const tabRect = tab.getBoundingClientRect();
+    if (tabRect.left < railRect.left) {
+      rail.scrollBy({ left: tabRect.left - railRect.left });
+    } else if (tabRect.right > railRect.right) {
+      rail.scrollBy({ left: tabRect.right - railRect.right });
+    }
   }, [activeKey, items]);
 
   const scrollRail = (direction: 1 | -1) => {
