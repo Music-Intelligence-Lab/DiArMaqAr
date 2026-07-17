@@ -28,6 +28,10 @@
     @include manager-item-list;
   }
 
+  &__item-grid {
+    @include manager-item-grid;
+  }
+
   &__carousel {
     @include manager-carousel;
   }

@@ -13,6 +13,7 @@ import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { getBaseJinsName, getFirstJinsNameForMaqamData } from "@/functions/classifyMaqamFamily";
+import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
@@ -294,9 +295,6 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // sorted list's declaration, evaluated here where it exists).
   const filterItems = useMemo(buildFilterItems, [tabs, sortedMaqamat, filterMode, allMaqamTranspositionsMap, language]);
 
-  const numberOfRows = 3; // Fixed number of rows
-  const numberOfColumns = Math.ceil(filteredMaqamat.length / numberOfRows); // Calculate columns dynamically
-
   return (
     <div className="maqam-manager" key={language}>
       {/* Shared filter band, with the maqam group-by control as trailing content */}
@@ -335,19 +333,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       <div className="maqam-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
-          onClick={() => {
-            const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
-          }}
+          onClick={() => scrollCarouselByColumns(document.querySelector(".maqam-manager__list"), -1, isRTL)}
         >
           ‹
         </button>
-        <div
-          className="maqam-manager__list"
-          style={{
-            gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))`,
-          }}
-        >
+        <div className="maqam-manager__list">
+          <div className="maqam-manager__item-grid">
           {filteredMaqamat.map((maqamData, idx) => {
             const selectable = maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
             const numberOfTranspositions = allMaqamTranspositionsMap.get(maqamData.getId())?.filter((transposition: any) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
@@ -377,13 +368,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               </div>
             );
           })}
+          </div>
         </div>
         <button
           className="carousel-button carousel-button-next"
-          onClick={() => {
-            const c = document.querySelector(".maqam-manager__list");
-            if (c) c.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
-          }}
+          onClick={() => scrollCarouselByColumns(document.querySelector(".maqam-manager__list"), 1, isRTL)}
         >
           ›
         </button>

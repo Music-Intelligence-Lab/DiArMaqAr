@@ -74,7 +74,11 @@
   }
 
   &__list {
-    @include manager-item-list($columns: repeat(16, minmax(250px, 1fr)));
+    @include manager-item-list;
+  }
+
+  &__item-grid {
+    @include manager-item-grid;
   }
 
   // $align/$justify: left is invalid CSS preserved verbatim (see mixin note)

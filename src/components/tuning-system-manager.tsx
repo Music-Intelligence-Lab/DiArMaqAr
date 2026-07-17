@@ -32,6 +32,7 @@ import Link from "next/link";
 import { canTransposeMaqamToNote } from "@/functions/transpose";
 import FrequencyKnob from "./frequency-knob";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
+import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -1011,30 +1012,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         <div className="tuning-system-manager__carousel">
           <button
             className="carousel-button carousel-button-prev"
-            onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__list"
-              );
-              // In Arabic (RTL) mode many browsers invert the meaning of scrollLeft; to keep UX intuitive,
-              // treat the "prev" button as moving visually right in RTL (positive delta) and left in LTR (negative delta).
-              // Distance and smooth behavior match the jins/maqam carousels exactly.
-              if (container)
-                container.scrollBy({
-                  left: language === "ar" ? 670 : -670,
-                  behavior: "smooth",
-                });
-            }}
+            onClick={() => scrollCarouselByColumns(document.querySelector(".tuning-system-manager__list"), -1, language === "ar")}
           >
             ‹
           </button>
-          <div
-            className="tuning-system-manager__list"
-            style={{
-              gridTemplateColumns: `repeat(${Math.ceil(
-                filteredTuningSystems.length / 3
-              )}, minmax(430px, 1fr))`,
-            }}
-          >
+          <div className="tuning-system-manager__list">
+            <div className="tuning-system-manager__item-grid">
             {filteredTuningSystems.length === 0 ? (
               <p>{t("tuningSystem.noSystemsAvailable")}</p>
             ) : (
@@ -1112,21 +1095,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </div>
               ))
             )}
+            </div>
           </div>
           <button
             className="carousel-button carousel-button-next"
-            onClick={() => {
-              const container = document.querySelector(
-                ".tuning-system-manager__list"
-              );
-              // Mirror logic of prev button for RTL so "next" always moves visually left in RTL and right in LTR.
-              // Distance and smooth behavior match the jins/maqam carousels exactly.
-              if (container)
-                container.scrollBy({
-                  left: language === "ar" ? -520 : 520,
-                  behavior: "smooth",
-                });
-            }}
+            onClick={() => scrollCarouselByColumns(document.querySelector(".tuning-system-manager__list"), 1, language === "ar")}
           >
             ›
           </button>
