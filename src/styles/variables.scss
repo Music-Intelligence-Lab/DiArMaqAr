@@ -723,15 +723,11 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     gap: var(--manager-filter-gap);
     flex: 1 1 auto;
     min-width: 0;
-    // The rail is the band's full height; items stretch through it so the
-    // active tab's black fill runs from the band's top edge into the black
-    // carousel block below.
+    // The rail is the band's full height; items center on its axis.
     height: 47px;
-    align-items: stretch;
-    // Exactly the active tab's bleed (half the gap), so the first item's
-    // black tab edge sits flush on the rail edge — which the consumer
-    // aligns with the carousel items' edge.
-    padding-inline: calc(var(--manager-filter-gap) / 2);
+    align-items: center;
+    // First/last item text aligns with the card text inset (10px) below.
+    padding-inline: 10px;
     overflow-x: auto;
     scrollbar-width: none;
 
@@ -755,35 +751,32 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     }
 }
 
-// State levels, kept simple: quiet grey at rest, the whole item (name and
-// count) brightens to white on hover, and the active item becomes a
-// full-band-height black tab that fuses with the carousel block below.
-// Items stretch through the band; horizontal padding is cancelled by
-// negative margins so state changes never shift the line.
+// State levels: quiet grey at rest, full text with a gold underline on
+// hover, and the active item distinguished by its gold count — text stays
+// $text, the underline is the gold marker, and no fill boxes anywhere.
+// Plain inline content (no flex) so the text-decoration draws under the
+// name and count together.
 @mixin manager-filter-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     background: none;
     border: none;
-    border-radius: 0;
-    // Horizontal padding is half the rail gap (cancelled by the negative
-    // margins), so the tab fill always meets its neighbours' midline. The
     // 2px bottom padding is a measured optical correction: Readex Pro's
-    // ascent-heavy metrics place the 13px text ink ~1px below the true
-    // center of the stretched item; this lifts it dead-center.
-    padding: 0 calc(var(--manager-filter-gap) / 2) 2px;
-    margin: 0 calc(var(--manager-filter-gap) / -2);
+    // ascent-heavy metrics place the 13px text ink ~1px low.
+    padding: 0 0 2px;
     font-size: $font-size-base;
     font-weight: $font-weight-regular;
     color: rgba($text, 0.62);
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: color 120ms ease, background-color 120ms ease;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 9px;
+    text-decoration-thickness: 1px;
+    transition: color 120ms ease, text-decoration-color 120ms ease;
 
     &:hover {
         color: $text;
+        text-decoration-color: $gold;
 
         span {
             color: $text;
@@ -794,38 +787,41 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         outline: none;
         color: $text;
         text-decoration: underline dotted $gold;
-        text-underline-offset: 6px;
     }
 }
 
+// Active filter: gold underline + gold count; the name stays $text, so
+// hue on the numeral (not brightness) separates it from a hovered
+// neighbour.
 @mixin manager-filter-item-active {
     color: $text;
-    background: $black;
+    text-decoration-color: $gold;
 
     &:hover {
         color: $text;
-        background: $black;
+        text-decoration-color: $gold;
 
         span {
-            color: rgba($text, 0.85);
+            color: $gold;
         }
     }
 
     span {
-        color: rgba($text, 0.85);
+        color: $gold;
     }
 }
 
-// Plain small tabular numeral riding with the name; brightens with its item.
+// Plain small tabular numeral riding with the name; brightens with its
+// item on hover, goes gold when active. Inline, so it shares the name's
+// baseline and underline.
 @mixin manager-filter-count {
     font-size: $font-size-xs;
     font-variant-numeric: tabular-nums;
     color: rgba($text, 0.5);
-    // Measured optical correction: flex-centering the smaller 11px line box
-    // leaves the digits' baseline 0.75px above the name's — drop them onto
-    // the shared baseline.
-    position: relative;
-    top: 1px;
+    margin-inline-start: 6px;
+    // Atomic inline box: ancestor text-decoration doesn't propagate into
+    // inline-blocks, so the underline stops at the name.
+    display: inline-block;
     transition: color 120ms ease;
 }
 

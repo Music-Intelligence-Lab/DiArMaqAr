@@ -157,7 +157,7 @@ const translations = {
     "jins.comments": "Comments",
     "jins.sources": "Sources",
     "jins.transpositionsTitle": "Taṣāwīr (transpositions)",
-    "jins.all": "All Ajnas",
+    "jins.all": "All Ajnās",
 
     // Value types
     "valueType.fraction": "Fraction",
@@ -233,7 +233,7 @@ const translations = {
     "maqam.comments": "Comments",
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
-    "maqam.all": "All Maqamat",
+    "maqam.all": "All Maqāmāt",
     "maqam.groupBy": "Group by",
     "maqam.byTonic": "Tonic",
     "maqam.byJins": "Jins",
