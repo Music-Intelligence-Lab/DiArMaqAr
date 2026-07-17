@@ -12,6 +12,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
+import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsData, setSelectedJinsData, handleClickJins, selectedPitchClasses, clearJinsSelections, allPitchClasses, sources } = useAppContext();
@@ -134,8 +135,6 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     return sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === ajnasFilter.toLowerCase());
   }, [sortedAjnas, ajnasFilter, language]);
 
-  const numberOfRows = 3; // Fixed number of rows
-  const numberOfColumns = Math.ceil(filteredAjnas.length / numberOfRows); // Calculate columns dynamically
 
   // Filter-rail items: label + count per starting note, in tab order.
   const filterItems = useMemo(() => tabs.map((tab) => ({
@@ -150,14 +149,12 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       <div className="jins-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
-          onClick={() => {
-            const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: isRTL ? 670 : -670, behavior: "smooth" });
-          }}
+          onClick={() => scrollCarouselByColumns(document.querySelector(".jins-manager__list"), -1, isRTL)}
         >
           ‹
         </button>
-        <div className="jins-manager__list" style={{ gridTemplateColumns: `repeat(${numberOfColumns}, minmax(250px, 1fr))` }}>
+        <div className="jins-manager__list">
+          <div className="jins-manager__item-grid">
           {filteredAjnas.length === 0 ? (
             <p>{t('jins.noAjnasAvailable')}</p>
           ) : (
@@ -191,13 +188,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
               );
             })
           )}
+          </div>
         </div>
         <button
           className="carousel-button carousel-button-next"
-          onClick={() => {
-            const container = document.querySelector(".jins-manager__list");
-            if (container) container.scrollBy({ left: isRTL ? -520 : 520, behavior: "smooth" });
-          }}
+          onClick={() => scrollCarouselByColumns(document.querySelector(".jins-manager__list"), 1, isRTL)}
         >
           ›
         </button>

@@ -540,27 +540,18 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     resize: vertical;
 }
 
-// Scrollable 3-row item grid shared by the jins/maqam/tuning-system
-// managers. Only maqam constrains column tracks; the others let columns
-// auto-size, so $columns is optional.
-@mixin manager-item-list($columns: null) {
+// Scroll viewport for the jins/maqam/tuning-system manager carousels. The
+// grid itself is manager-item-grid on an inner element — the split exists
+// because intrinsic (max-content) track sizing is impossible while the grid
+// is also the scroll container, whose definite width would resolve the
+// tracks instead.
+@mixin manager-item-list {
     width: 100%;
     background-color: $black;
-    display: grid;
-    @if $columns {
-        grid-template-columns: $columns;
-    }
-    grid-template-rows: repeat(3, auto);
-    grid-auto-flow: column;
-    gap: 10px;
     height: 200px;
     overflow-x: scroll;
     overflow-y: hidden;
     position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
 
     [dir="rtl"] & {
         direction: rtl;
@@ -582,6 +573,25 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         cursor: pointer;
         position: relative;
     }
+}
+
+// The 3-row column-flow grid inside manager-item-list. width: max-content
+// sizes the grid under a max-content constraint, where 1fr auto-columns
+// resolve to the widest track's content width (css-grid §12.7.1): every
+// item in a carousel gets the width of that carousel's widest item, from
+// the browser's own layout — no measured pixels, no magic column counts.
+// min-width keeps the tracks filling the viewport (still equal) when the
+// collection is narrower than it.
+@mixin manager-item-grid {
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 10px;
+    width: max-content;
+    min-width: 100%;
+    height: 100%;
+    padding: 10px 25px;
 }
 
 // List item + its name lockup for the jins/maqam manager grids. Fills come
