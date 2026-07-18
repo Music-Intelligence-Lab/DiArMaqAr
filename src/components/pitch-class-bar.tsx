@@ -136,6 +136,9 @@ export default function PitchClassBar() {
     };
   }, []);
 
+  // Glide the bar to the selection on the browser's native smooth scroll —
+  // fast and immediate (per ruling: the slow shared-clock version read as
+  // sluggish; native also cancels automatically when the user drags).
   useEffect(() => {
     if (!rowRef.current) return;
     const container = rowRef.current;
@@ -153,12 +156,7 @@ export default function PitchClassBar() {
       });
 
       const containerWidth = container.offsetWidth;
-      const targetScrollLeft = maxRight - containerWidth + 30;
-
-      container.scrollTo({
-        left: targetScrollLeft,
-        behavior: "smooth",
-      });
+      container.scrollTo({ left: maxRight - containerWidth + 30, behavior: "smooth" });
     } else {
       // In LTR, find leftmost selected element and position at left edge
       let minLeft = Infinity;
@@ -167,12 +165,7 @@ export default function PitchClassBar() {
         if (elLeft < minLeft) minLeft = elLeft;
       });
 
-      const targetScrollLeft = minLeft - 30;
-
-      container.scrollTo({
-        left: targetScrollLeft,
-        behavior: "smooth",
-      });
+      container.scrollTo({ left: minLeft - 30, behavior: "smooth" });
     }
   }, [selectedPitchClasses, language]);
 
@@ -219,12 +212,19 @@ export default function PitchClassBar() {
         // 20ms+10ms dance added three renders before the scroll's debounce
         // clock even started, so pitch-bar clicks scrolled visibly later
         // than carousel clicks. One commit = same rhythm as the carousel.
+        // selectionChange tells the transpositions listener whether the
+        // selection effect will run (and own the scroll): re-clicking the
+        // already-selected tonic changes no state, so only then does the
+        // event itself need to schedule the scroll-back.
         if (maqamTransposition && selectedMaqamData) {
           setSelectedPitchClasses(maqamTransposition.ascendingPitchClasses);
           setSelectedMaqam(maqamTransposition);
           window.dispatchEvent(
             new CustomEvent("maqamTranspositionChange", {
-              detail: { firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName },
+              detail: {
+                firstNote: maqamTransposition.ascendingPitchClasses[0]?.noteName,
+                selectionChange: selectedMaqam?.name !== maqamTransposition.name,
+              },
             })
           );
           return;
@@ -234,7 +234,10 @@ export default function PitchClassBar() {
           setSelectedJins(jinsTransposition);
           window.dispatchEvent(
             new CustomEvent("jinsTranspositionChange", {
-              detail: { firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName },
+              detail: {
+                firstNote: jinsTransposition.jinsPitchClasses[0]?.noteName,
+                selectionChange: selectedJins?.name !== jinsTransposition.name,
+              },
             })
           );
         }

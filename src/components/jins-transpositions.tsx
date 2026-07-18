@@ -24,12 +24,12 @@ import ExportModal from "./export-modal";
 import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
-import smoothScrollIntoPosition from "@/functions/smoothScrollIntoPosition";
+import smoothScrollIntoPosition, { SCROLL_DURATION_MS as SHARED_SCROLL_DURATION_MS, SCROLL_SCHEDULE_DELAY_MS } from "@/functions/smoothScrollIntoPosition";
 
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
   const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
-  const URL_SCROLL_TIMEOUT_MS = 350; // delay for initial scroll from URL param (increased for DOM readiness)
+  const URL_SCROLL_TIMEOUT_MS = SCROLL_SCHEDULE_DELAY_MS; // the app-wide scroll schedule delay
   const HEADER_SCROLL_MARGIN_TOP_PX = transpositionsScrollMargin(); // live stuck-stack height for first headers
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // observer root margin
   const BATCH_SIZE = 10; // batch size for lazy loading
@@ -62,7 +62,7 @@ export default function JinsTranspositions() {
   function scrollToJinsHeader(firstNote: string, selectedJinsData?: any, onComplete?: () => void) {
     // Live stuck-stack height (pitch bar + gap + sticky header + breathing)
     const HEADER_SCROLL_MARGIN_TOP_PX = transpositionsScrollMargin();
-    const SCROLL_DURATION_MS = 800; // Duration for smooth scrolling (increased for smoother feel)
+    const SCROLL_DURATION_MS = SHARED_SCROLL_DURATION_MS; // the app-wide scroll clock (see smoothScrollIntoPosition)
 
     if (!firstNote && selectedJinsData) {
       firstNote = selectedJinsData.getNoteNames?.()?.[0];
@@ -83,23 +83,6 @@ export default function JinsTranspositions() {
   const scrollTimeoutRef = useRef<number | null>(null);
   const urlScrollDoneRef = useRef(false);
   const [openTranspositions, setOpenTranspositions] = useState<string[]>([]);
-  // A transposition mid-close: its rows stay mounted under the --closing
-  // modifier so they fade out before unmounting (see the choreography
-  // block in _maqam-jins-shared-ui.scss)
-  const [closingTransposition, setClosingTransposition] = useState<string | null>(null);
-  const openTranspositionsRef = useRef<string[]>([]);
-  openTranspositionsRef.current = openTranspositions;
-  const CLOSE_FADE_MS = 200;
-
-  // Close whatever is open with the fade-out choreography
-  const closeOpenTranspositionsWithFade = useCallback(() => {
-    const closing = openTranspositionsRef.current[0];
-    if (closing) {
-      setClosingTransposition(closing);
-      window.setTimeout(() => setClosingTransposition((current) => (current === closing ? null : current)), CLOSE_FADE_MS);
-    }
-    setOpenTranspositions([]);
-  }, []);
   const [isToggling, setIsToggling] = useState<string | null>(null);
 
   // Ensure current value type is always checked, uncheck value types not in current tuning system
@@ -483,10 +466,10 @@ export default function JinsTranspositions() {
         // Find the transposition in the sorted list
         const transpositionIndex = sortedTables.findIndex((t) => t.jins.name === selectedTranspositionName);
 
-        // Scroll-then-open: fade the old transposition closed, scroll to
-        // the target's collapsed header (a stable row whose position can't
-        // drift mid-animation), and open only when the scroll lands.
-        closeOpenTranspositionsWithFade();
+        // Open immediately (per ruling: instant open/close felt better than
+        // the scroll-then-open choreography); the scroll then measures the
+        // post-open layout, so landings stay exact.
+        setOpenTranspositions([selectedTranspositionName]);
 
         // Ensure it's visible
         const needed = transpositionIndex;
@@ -499,7 +482,7 @@ export default function JinsTranspositions() {
         scrollTimeoutRef.current = window.setTimeout(() => {
           const firstNote = selectedJins.jinsPitchClasses[0]?.noteName;
           if (firstNote) {
-            scrollToJinsHeader(firstNote, selectedJinsData, () => setOpenTranspositions([selectedTranspositionName]));
+            scrollToJinsHeader(firstNote, selectedJinsData);
           }
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
@@ -511,8 +494,8 @@ export default function JinsTranspositions() {
         const analysisTable = sortedTables.find((t) => t.jins.name === tahlilName);
         if (analysisTable) {
           const analysisIndex = sortedTables.findIndex((t) => t.jins.name === tahlilName);
-          // Same scroll-then-open sequencing as Case 1
-          closeOpenTranspositionsWithFade();
+          // Same immediate open as Case 1
+          setOpenTranspositions([analysisTable.jins.name]);
 
           // Ensure first batch is visible (or enough to include the analysis table)
           const needed = Math.max(BATCH_SIZE, analysisIndex + 1);
@@ -523,7 +506,7 @@ export default function JinsTranspositions() {
           scrollTimeoutRef.current = window.setTimeout(() => {
             if (analysisTable.jins.jinsPitchClasses?.length > 0) {
               const firstNote = analysisTable.jins.jinsPitchClasses[0].noteName;
-              scrollToJinsHeader(firstNote, selectedJinsData, () => setOpenTranspositions([analysisTable.jins.name]));
+              scrollToJinsHeader(firstNote, selectedJinsData);
             }
           }, URL_SCROLL_TIMEOUT_MS);
         }
@@ -590,8 +573,7 @@ export default function JinsTranspositions() {
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
       const intervals = jins.jinsPitchClassIntervals;
       const colCount = 2 + (pitchClasses.length - 1) * 2;
-      // A closing transposition renders as still-open (its rows are mid-fade)
-      const open = openTranspositions.includes(jins.name) || closingTransposition === jins.name;
+      const open = openTranspositions.includes(jins.name);
       const rowSpan = open ? 4 + numberOfFilterRows : 1;
 
       return (
@@ -1055,7 +1037,7 @@ export default function JinsTranspositions() {
             return (
               <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${jins.name}`}>
                 <table
-                  className={`jins-transpositions__table ${isAnalysis ? 'jins-transpositions__table--analysis' : 'jins-transpositions__table--transposition'}${closingTransposition === jins.name ? ' jins-transpositions__table--closing' : ''}`}
+                  className={`jins-transpositions__table ${isAnalysis ? 'jins-transpositions__table--analysis' : 'jins-transpositions__table--transposition'}`}
                   data-table-type={isAnalysis ? "analysis" : "transposition"}
                   data-jins-name={jins.name}
                   data-first-note={firstNoteName}
@@ -1167,7 +1149,6 @@ export default function JinsTranspositions() {
   }, [
     selectedTuningSystem,
     openTranspositions,
-    closingTransposition,
     isToggling,
     sortedTables,
     visibleCount,
@@ -1193,6 +1174,13 @@ export default function JinsTranspositions() {
   useEffect(() => {
     function handleJinsTranspositionChange(e: CustomEvent) {
       const firstNote: string | undefined = e.detail?.firstNote;
+      // When the event accompanies a selection change, the selection effect
+      // owns the scroll — scheduling here too would race it at the short
+      // schedule delay (the double-animation restart hitch).
+      if (firstNote && e.detail?.selectionChange) {
+        setTargetFirstNote(firstNote);
+        return;
+      }
       if (firstNote) {
         setTargetFirstNote(firstNote);
         const index = sortedTables.findIndex((t) => t.jins.jinsPitchClasses?.[0]?.noteName === firstNote);
@@ -1247,8 +1235,7 @@ export default function JinsTranspositions() {
     }
     if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
     scrollTimeoutRef.current = window.setTimeout(() => {
-      const match = sortedTables.find((t) => t.jins.jinsPitchClasses?.[0]?.noteName === decoded);
-      scrollToJinsHeader(decoded, selectedJinsData, match ? () => setOpenTranspositions([match.jins.name]) : undefined);
+      scrollToJinsHeader(decoded, selectedJinsData);
     }, URL_SCROLL_TIMEOUT_MS);
   }, [selectedJinsData, sortedTables]);
 
