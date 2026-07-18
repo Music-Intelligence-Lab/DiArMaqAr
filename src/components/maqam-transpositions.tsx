@@ -1463,73 +1463,39 @@ const MaqamTranspositions: React.FC = () => {
                       )}
                     </tbody>
                   </table>
-
-                  {/* Spacer after each table */}
-                  <div className="maqam-jins-transpositions-shared__transposition-spacer" aria-hidden="true" />
                 </React.Fragment>
               );
             })}
           </>
         )}
-        {/* COMMENTS AND SOURCES */}
-        {selectedMaqamData && (selectedMaqamData.getCommentsEnglish()?.trim() || selectedMaqamData.getCommentsArabic()?.trim() || selectedMaqamData.getSourcePageReferences()?.length > 0) && (
-          <>
-            <div className="maqam-jins-transpositions-shared__comments-sources-container">
-              {language === "ar" ? (
-                <>
-                  {selectedMaqamData.getSourcePageReferences()?.length > 0 && (
-                    <div className="maqam-jins-transpositions-shared__sources-english">
-                      <h3>{t("maqam.sources")}:</h3>
-                      <div className="maqam-jins-transpositions-shared__sources-text">
-                        {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
-                          const source = sources.find((s) => s.getId() === sourceRef.sourceId);
-                          return source ? (
-                            <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
-                              {stringifySource(source, false, sourceRef.page)}
-                              <br />
-                            </Link>
-                          ) : null;
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedMaqamData.getCommentsArabic()?.trim() && (
-                    <div className="maqam-jins-transpositions-shared__comments-arabic">
-                      <h3>{t("maqam.comments")}:</h3>
-                      <div className="maqam-jins-transpositions-shared__comments-text">{selectedMaqamData.getCommentsArabic()}</div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  {selectedMaqamData.getCommentsEnglish()?.trim() && (
-                    <div className="maqam-jins-transpositions-shared__comments-english">
-                      <h3>{t("maqam.comments")}:</h3>
-                      <div className="maqam-jins-transpositions-shared__comments-text">{selectedMaqamData.getCommentsEnglish()}</div>
-                    </div>
-                  )}
-
-                  {selectedMaqamData.getSourcePageReferences()?.length > 0 && (
-                    <div className="maqam-jins-transpositions-shared__sources-english">
-                      <h3>{t("maqam.sources")}:</h3>
-                      <div className="maqam-jins-transpositions-shared__sources-text">
-                        {selectedMaqamData.getSourcePageReferences().map((sourceRef, idx) => {
-                          const source = sources.find((s) => s.getId() === sourceRef.sourceId);
-                          return source ? (
-                            <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
-                              {stringifySource(source, true, sourceRef.page)}
-                              <br />
-                            </Link>
-                          ) : null;
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
+        {/* COMMENTS AND SOURCES — always rendered (headers included) once a
+            maqam is selected; comments 3/4, sources 1/4, RTL mirrors via the
+            row's writing direction. Arabic mode falls back to the English
+            comments when no Arabic text exists. */}
+        {selectedMaqamData && (
+          <div className="maqam-jins-transpositions-shared__comments-sources-container">
+            <div className="maqam-jins-transpositions-shared__comments-section">
+              <h3>{t("maqam.comments")}:</h3>
+              <div className="maqam-jins-transpositions-shared__comments-text">
+                {language === "ar" ? selectedMaqamData.getCommentsArabic()?.trim() || selectedMaqamData.getCommentsEnglish() : selectedMaqamData.getCommentsEnglish()}
+              </div>
             </div>
-          </>
+
+            <div className="maqam-jins-transpositions-shared__sources-section">
+              <h3>{t("maqam.sources")}:</h3>
+              <div className="maqam-jins-transpositions-shared__sources-text">
+                {selectedMaqamData.getSourcePageReferences()?.map((sourceRef, idx) => {
+                  const source = sources.find((s) => s.getId() === sourceRef.sourceId);
+                  return source ? (
+                    <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
+                      {stringifySource(source, language !== "ar", sourceRef.page)}
+                      <br />
+                    </Link>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          </div>
         )}
         {/* Load More button */}
         {visibleCount < sortedTables.length && (

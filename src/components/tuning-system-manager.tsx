@@ -1336,35 +1336,34 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       <TuningSystemOctaveTables admin={admin} />
 
-      {selectedTuningSystem &&
-        (selectedTuningSystem.getCommentsEnglish().trim() ||
-          selectedTuningSystem.getCommentsArabic().trim() ||
-          (sourcePageReferences && sourcePageReferences.length > 0)) && (
+      {/* COMMENTS AND SOURCES — always rendered (headers included) once a
+          tuning system is selected; shared 3/4 + 1/4 layout, RTL mirrors
+          via the row's writing direction. Arabic mode falls back to the
+          English comments when no Arabic text exists. */}
+      {selectedTuningSystem && (
           <div className="tuning-system-manager__comments-sources-container">
-            {(selectedTuningSystem.getCommentsEnglish().trim() ||
-              selectedTuningSystem.getCommentsArabic().trim()) && (
-              <div className="tuning-system-manager__comments-english">
-                <h3>{t("tuningSystem.comments")}</h3>
-                <div>
-                  {(language === "ar" &&
-                  selectedTuningSystem.getCommentsArabic().trim()
-                    ? selectedTuningSystem.getCommentsArabic()
-                    : selectedTuningSystem.getCommentsEnglish()
-                  )
-                    .split("\n")
-                    .map((line, index) => (
-                      <span key={index}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
-                </div>
+            <div className="tuning-system-manager__comments-section">
+              <h3>{t("tuningSystem.comments")}</h3>
+              <div>
+                {(language === "ar" &&
+                selectedTuningSystem.getCommentsArabic().trim()
+                  ? selectedTuningSystem.getCommentsArabic()
+                  : selectedTuningSystem.getCommentsEnglish()
+                )
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index}>
+                      {line}
+                      <br />
+                    </span>
+                  ))}
               </div>
-            )}
+            </div>
 
-            {sourcePageReferences && sourcePageReferences.length > 0 && (
-              <div className="tuning-system-manager__sources-english">
-                <h3>{t("tuningSystem.sources")}</h3>
+            <div className="tuning-system-manager__sources-section">
+              <h3>{t("tuningSystem.sources")}</h3>
+              {sourcePageReferences && sourcePageReferences.length > 0 && (
+                <>
                 {[...sourcePageReferences]
                   .sort((a, b) => {
                     const srcA = sources.find((s) => s.getId() === a.sourceId);
@@ -1398,8 +1397,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                       </Link>
                     );
                   })}
-              </div>
-            )}
+                </>
+              )}
+            </div>
           </div>
         )}
 
