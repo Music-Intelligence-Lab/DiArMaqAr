@@ -60,100 +60,10 @@
     }
   }
 
-  // Comments/Sources section labels — the app-wide section-header tier.
-  h3 {
-    @include type-heading-h3;
-    margin-bottom: 10px;
-  }
-
-  &__comments-sources-container {
-    display: flex;
-    width: 100%;
-    margin-top: 0px;
-
-    // RTL support - reverse flex direction for Arabic
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
-  }
-
-  &__comments-english {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
-    margin-bottom: 0px;
-    line-height: $line-height-normal;
-
-    // RTL support - when in Arabic mode, adjust alignment and padding
-    [dir="rtl"] & {
-      direction: rtl;
-      text-align: right;
-      padding-right: 0px;
-      padding-left: 30px;
-      float: right;
-    }
-  }
-
-  &__sources-english {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    direction: ltr;
-    text-align: left;
-    vertical-align: top;
-    padding-right: 30px;
-    float: left;
-
-    // RTL support - when in Arabic mode, adjust alignment and padding
-    [dir="rtl"] & {
-      direction: rtl;
-      text-align: right;
-      padding-right: 0px;
-      padding-left: 30px;
-      float: right;
-    }
-  }
-
-  &__comments-arabic {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
-  }
-
-  &__sources-arabic {
-    font-size: $font-size-md;
-    width: 50%;
-    min-height: 80px;
-    text-align: right;
-    direction: rtl;
-    vertical-align: top;
-    padding-left: 30px;
-    float: right;
-  }
-
-  
-  &__comments-sources-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 30px;
-    margin-top: 40px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-      padding: 0 30px;
-    }
-  }
+  // (comments/sources foot block: the TSX uses the shared
+  // maqam-jins-transpositions-shared__* classes — see the
+  // comments-sources mixins in variables.scss; the old duplicated
+  // per-direction variants lived here and were deleted)
 
   &__sources {
     width: 100%;
@@ -166,9 +76,5 @@
     }
   }
 
-  &__transposition-spacer {
-    padding: 10px !important;
-    border: 0px !important;
-  }
 }
 

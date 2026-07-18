@@ -143,8 +143,10 @@
     gap: 0px;
     padding-left: 0px;
     padding-right: 0px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    // Block rhythm: one $space-block above (to the carousel) and below
+    // (to the first dīwān table)
+    margin-top: $space-block;
+    margin-bottom: $space-block;
     font-size: 14px;
     font-weight: 300;
     width: 100%;
@@ -331,60 +333,23 @@
     }
   }
 
-  // Comments/Sources section labels — the app-wide section-header tier
-  // (18px light heading; ruled a header type, not an eyebrow).
-  h3 {
-    @include type-heading-h3;
-    margin-bottom: 10px;
-  }
-
+  // Comments/sources foot block — the shared system roles (3/4 + 1/4 row,
+  // furniture headers; RTL mirrors via writing direction)
   &__comments-sources-container {
-    display: inline-block;
-    width: 100%;
-    margin-top: 0px;
-    margin-bottom: 50px;
-    padding: 0px 20px;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
-    }
+    @include comments-sources-container;
+    // One block step down to the taḥlīl analysis section that follows
+    margin-bottom: $space-block;
   }
 
-  &__comments-english {
-    @include manager-latin-column($width: 60%);
-    margin-bottom: 0px;
-    line-height: calc(20px);
-
-    // RTL support - when Arabic is selected, adjust layout
-    [dir="rtl"] & {
-      float: right;
-      padding-right: 0;
-      padding-left: 30px;
-      text-align: right;
-      direction: rtl;
-    }
+  &__comments-section {
+    @include comments-sources-section(3);
   }
 
-  &__comments-arabic {
-    @include manager-arabic-column($width: 60%);
-  }
-
-  &__sources-english {
-    @include manager-latin-column($width: 40%);
-
-    // RTL support - when Arabic is selected, adjust layout
-    [dir="rtl"] & {
-      float: right;
-      padding-right: 0;
-      padding-left: 30px;
-      text-align: right;
-      direction: rtl;
-    }
-  }
-
-  &__sources-arabic {
-    @include manager-arabic-column($width: 40%);
+  &__sources-section {
+    @include comments-sources-section(1);
+    // The source links stack as a column list
+    display: flex;
+    flex-direction: column;
   }
 
   &__list {
@@ -571,7 +536,11 @@
   &__grid {
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    // Sibling rhythm between the dīwān rows lives on the container: gap
+    // spaces BETWEEN rows only, so no trailing margin gets trapped after
+    // the last one (a margin-bottom there added a stray 10px before the
+    // comments section)
+    gap: $space-block-half;
     width: 100%;
     max-width: 100%;
     overflow: auto;
@@ -591,9 +560,9 @@
   &__octave-details {
     width: 100%;
     padding: 10px 20px;
-    background-color: rgba($black, 0.3);
+    background-color: $surface-rest;
     border-radius: 0px;
-    margin-bottom: 10px;
+    // (sibling rhythm comes from the parent __grid's gap)
     position: relative; // needed for the pseudo-element positioning
   }
 
@@ -942,16 +911,6 @@
     svg {
       display: block;
       font-size: 16px !important;
-    }
-  }
-
-  &__sources-english {
-    display: flex;
-    flex-direction: column;
-
-    // RTL support
-    [dir="rtl"] & {
-      direction: rtl;
     }
   }
 

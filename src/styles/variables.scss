@@ -9,6 +9,10 @@
 // value per place: use it wherever a block meets the next, replacing
 // scattered one-off margins as they're touched.
 $space-block: 20px;
+// The half step: rhythm between SIBLING rows of one block family (e.g.
+// the dīwān/octave rows), which sit closer to each other than distinct
+// blocks do. Always derived, never redefined independently.
+$space-block-half: $space-block * 0.5;
 
 $top-navbar-height: 110px;
 $bottom-navbar-height: 72px;
@@ -252,6 +256,36 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     [dir="rtl"] & {
         padding-right: 0;
         padding-left: 5px;
+    }
+}
+
+// Comments & sources foot block (jins/maqam/tuning pages): one row,
+// comments at 3/4 and sources at 1/4 (flex ratios, so the column gap can
+// never break the sum), headers in the section-furniture voice. The row
+// follows the page's writing direction, so RTL mirrors itself — no
+// per-direction class variants.
+@mixin comments-sources-container {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    gap: 2 * $space-block;
+    // One standard block step to whatever sits above (was a legacy 40px
+    // that broke the page rhythm)
+    margin-top: $space-block;
+    padding: 0 30px;
+}
+
+@mixin comments-sources-section($grow) {
+    flex: $grow 1 0;
+    min-width: 0;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-normal;
+    color: $text;
+
+    h3 {
+        @include section-furniture($font-size-lg);
+        margin-bottom: $space-block-half;
     }
 }
 

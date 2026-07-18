@@ -572,7 +572,6 @@ export default function JinsTranspositions() {
       // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
       const intervals = jins.jinsPitchClassIntervals;
-      const colCount = 2 + (pitchClasses.length - 1) * 2;
       const open = openTranspositions.includes(jins.name);
       const rowSpan = open ? 4 + numberOfFilterRows : 1;
 
@@ -918,9 +917,6 @@ export default function JinsTranspositions() {
               )}
             </>
           )}
-          <tr>
-            <td className="jins-transpositions__transposition-spacer" colSpan={colCount} />
-          </tr>
         </>
       );
     }
@@ -1084,64 +1080,35 @@ export default function JinsTranspositions() {
             </div>
           )}
 
-          {selectedJinsData && (selectedJinsData.getCommentsEnglish()?.trim() || selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getSourcePageReferences()?.length > 0) && (
-            <>
-              <div className="jins-transpositions__comments-sources-container">
-                {language === "ar" ? (
-                  <>
-                    {selectedJinsData.getSourcePageReferences()?.length > 0 && (
-                      <div className="jins-transpositions__sources-english">
-                        <h3>{t("jins.sources")}:</h3>
-                        <div className="jins-transpositions__sources-text">
-                          {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                            const source = sources.find((s) => s.getId() === sourceRef.sourceId);
-                            return source ? (
-                              <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
-                                {stringifySource(source, false, sourceRef.page)}
-                                <br />
-                              </Link>
-                            ) : null;
-                          })}
-                        </div>
-                      </div>
-                    )}
-
-                    {selectedJinsData.getCommentsArabic()?.trim() && (
-                      <div className="jins-transpositions__comments-arabic">
-                        <h3>{t("jins.comments")}:</h3>
-                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsArabic()}</div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {selectedJinsData.getCommentsEnglish()?.trim() && (
-                      <div className="jins-transpositions__comments-english">
-                        <h3>{t("jins.comments")}:</h3>
-                        <div className="jins-transpositions__comments-text">{selectedJinsData.getCommentsEnglish()}</div>
-                      </div>
-                    )}
-
-                    {selectedJinsData.getSourcePageReferences()?.length > 0 && (
-                      <div className="jins-transpositions__sources-english">
-                        <h3>{t("jins.sources")}:</h3>
-                        <div className="jins-transpositions__sources-text">
-                          {selectedJinsData.getSourcePageReferences().map((sourceRef, idx) => {
-                            const source = sources.find((s) => s.getId() === sourceRef.sourceId);
-                            return source ? (
-                              <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
-                                {stringifySource(source, true, sourceRef.page)}
-                                <br />
-                              </Link>
-                            ) : null;
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+          {/* COMMENTS AND SOURCES — always rendered (headers included) once
+              a jins is selected; the shared classes carry the 3/4 + 1/4
+              layout, and RTL mirrors via the row's writing direction.
+              Arabic mode falls back to the English comments when no Arabic
+              text exists. */}
+          {selectedJinsData && (
+            <div className="maqam-jins-transpositions-shared__comments-sources-container">
+              <div className="maqam-jins-transpositions-shared__comments-section">
+                <h3>{t("jins.comments")}:</h3>
+                <div className="maqam-jins-transpositions-shared__comments-text">
+                  {language === "ar" ? selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getCommentsEnglish() : selectedJinsData.getCommentsEnglish()}
+                </div>
               </div>
-            </>
+
+              <div className="maqam-jins-transpositions-shared__sources-section">
+                <h3>{t("jins.sources")}:</h3>
+                <div className="maqam-jins-transpositions-shared__sources-text">
+                  {selectedJinsData.getSourcePageReferences()?.map((sourceRef, idx) => {
+                    const source = sources.find((s) => s.getId() === sourceRef.sourceId);
+                    return source ? (
+                      <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
+                        {stringifySource(source, language !== "ar", sourceRef.page)}
+                        <br />
+                      </Link>
+                    ) : null;
+                  })}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </>
