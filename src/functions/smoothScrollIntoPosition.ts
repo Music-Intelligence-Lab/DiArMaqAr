@@ -10,6 +10,18 @@
  * Shared by the maqam and jins transposition headers — one copy of the
  * ancestor-finding, easing, and animation, not one per component.
  */
+// The app's scroll clock for the page's travel to a transposition — one
+// duration, easing, and schedule delay, imported by every scheduler.
+// (The pitch-class bar's horizontal glide deliberately stays on the
+// browser's fast native smooth scroll, per ruling.)
+export const SCROLL_DURATION_MS = 800;
+// Short enough to read as immediate (the pitch bar's native glide starts
+// instantly), long enough to coalesce same-interaction schedulers. Timers
+// queue behind the render, so the target row always exists by fire time.
+export const SCROLL_SCHEDULE_DELAY_MS = 100;
+
+const easeInOutCubic = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
 let animationGeneration = 0;
 
 export default function smoothScrollIntoPosition(el: HTMLElement, marginTop: number, duration: number, onComplete?: () => void): void {
@@ -41,7 +53,6 @@ export default function smoothScrollIntoPosition(el: HTMLElement, marginTop: num
 
   const distance = target - start;
   const startTime = performance.now();
-  const easeInOutCubic = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
   const animateScroll = (currentTime: number) => {
     if (generation !== animationGeneration) return; // preempted by a newer scroll
