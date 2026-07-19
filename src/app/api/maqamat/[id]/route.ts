@@ -400,7 +400,9 @@ export async function GET(
       "midiNoteNumber",
       "midiNoteDeviation",
       "centsDeviation",
-      "referenceNoteName"
+      "referenceNoteName",
+      "pitchClassIndex",
+      "scaleDegree"
     ];
 
     // Validate pitchClassDataType if provided (it's optional for discovery mode, required for data retrieval)

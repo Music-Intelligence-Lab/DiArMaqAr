@@ -55,6 +55,7 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
         frequency: pitchClass.frequency,
         octave: pitchClass.octave,
         ...(pitchClass.englishName && { englishName: pitchClass.englishName }),
+        ...(pitchClass.solfege && { solfege: pitchClass.solfege }),
         ...(pitchClass.abjadName && { abjadName: pitchClass.abjadName }),
         ...(pitchClass.stringLength !== undefined && { stringLength: pitchClass.stringLength }),
         ...(pitchClass.fretDivision !== undefined && { fretDivision: pitchClass.fretDivision }),
@@ -65,6 +66,8 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
       });
     case "englishName":
       return addArabic({ ...baseFields, englishName: pitchClass.englishName || null });
+    case "solfege":
+      return addArabic({ ...baseFields, solfege: pitchClass.solfege || null });
     case "fraction":
       return addArabic({ ...baseFields, fraction: pitchClass.fraction });
     case "cents":
@@ -445,6 +448,7 @@ export async function GET(request: Request) {
           octave: pitchClass.octave,
           // Additional fields for "all" format
           englishName: pitchClass.englishName,
+          solfege: pitchClass.solfege,
           abjadName: pitchClass.abjadName,
           stringLength: pitchClass.stringLength,
           fretDivision: pitchClass.fretDivision,

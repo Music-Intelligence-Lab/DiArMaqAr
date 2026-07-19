@@ -518,9 +518,10 @@ paths:
             - When provided, returns the specified data type for all pitch classes in the maqām
             - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
+            - `pitchClassIndex` and `scaleDegree` return the minimal field set explicitly
           schema:
             type: string
-            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName, pitchClassIndex, scaleDegree]
           example: "cents"
         - name: transposeTo
           in: query
@@ -2281,6 +2282,7 @@ paths:
             enum:
               - all
               - englishName
+              - solfege
               - fraction
               - cents
               - decimalRatio
@@ -6655,6 +6657,7 @@ paths:
             enum:
               - all
               - englishName
+              - solfege
               - fraction
               - cents
               - decimalRatio

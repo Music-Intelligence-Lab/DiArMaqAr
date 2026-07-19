@@ -191,6 +191,37 @@ export async function GET(
     const intervalsParam = searchParams.get("includeIntervals");
     const transposeToNote = searchParams.get("transposeTo");
 
+    // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
+    // default branch and silently returns the bare note-name shape instead of erroring.
+    const validPitchClassDataTypes = [
+      "all",
+      "englishName",
+      "solfege",
+      "fraction",
+      "cents",
+      "decimalRatio",
+      "stringLength",
+      "frequency",
+      "abjadName",
+      "fretDivision",
+      "midiNoteNumber",
+      "midiNoteDeviation",
+      "centsDeviation",
+      "referenceNoteName"
+    ];
+    if (!validPitchClassDataTypes.includes(pitchClassDataType)) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `Invalid pitchClassDataType '${pitchClassDataType}'`,
+            validOptions: validPitchClassDataTypes,
+            hint: `Valid options: ${validPitchClassDataTypes.join(", ")}`
+          },
+          { status: 400 }
+        )
+      );
+    }
+
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
     const centsToleranceParam = searchParams.get("centsTolerance");

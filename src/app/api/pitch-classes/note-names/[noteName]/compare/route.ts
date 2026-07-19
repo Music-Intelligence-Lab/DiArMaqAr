@@ -38,6 +38,7 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
         noteNameDisplay: pitchClass.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pitchClass.noteName) }),
         englishName: pitchClass.englishName,
+        solfege: pitchClass.solfege,
         abjadName: pitchClass.abjadName,
         fraction: pitchClass.fraction,
         cents: parseFloat(pitchClass.cents),
@@ -94,6 +95,7 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
         noteNameDisplay: pitchClass.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pitchClass.noteName) }),
         ...(format === "englishName" && { englishName: pitchClass.englishName }),
+        ...(format === "solfege" && { solfege: pitchClass.solfege }),
         ...(format === "abjadName" && { abjadName: pitchClass.abjadName }),
         ...(format === "stringLength" && { stringLength: parseFloat(pitchClass.stringLength) }),
         ...(format === "fretDivision" && { fretDivision: pitchClass.fretDivision }),
@@ -129,7 +131,38 @@ export async function GET(
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
-    
+
+    // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
+    // default branch and silently returns the bare note-name shape instead of erroring.
+    const validPitchClassDataTypes = [
+      "all",
+      "englishName",
+      "solfege",
+      "fraction",
+      "cents",
+      "decimalRatio",
+      "stringLength",
+      "frequency",
+      "abjadName",
+      "fretDivision",
+      "midiNoteNumber",
+      "midiNoteDeviation",
+      "centsDeviation",
+      "referenceNoteName"
+    ];
+    if (!validPitchClassDataTypes.includes(pitchClassDataType)) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `Invalid pitchClassDataType '${pitchClassDataType}'`,
+            validOptions: validPitchClassDataTypes,
+            hint: `Valid options: ${validPitchClassDataTypes.join(", ")}`
+          },
+          { status: 400 }
+        )
+      );
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
