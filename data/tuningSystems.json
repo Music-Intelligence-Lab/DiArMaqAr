@@ -4279,8 +4279,8 @@
         "dūgāh",
         "nīm kurdī/nahāwand",
         "kurdī",
-        "nīm būselīk",
         "būselīk/ʿushshāq",
+        "tīk būselīk",
         "chahārgāh",
         "ḥijāz"
       ],
@@ -4299,12 +4299,12 @@
         "tīk chahārgāh",
         "ḥijāz",
         "nawā",
+        "nīm ḥiṣār",
         "ḥiṣār",
         "ḥusaynī",
         "ʿajam",
-        "jawāb nayrūz",
-        "māhūr",
-        "tīk māhūr"
+        "awj",
+        "māhūr"
       ]
     ],
     "abjadNames": [
@@ -4356,7 +4356,7 @@
       "ʿushayrān": 110,
       "rāst": 130.665
     },
-    "version": "2025-11-06T00:24:06.628Z"
+    "version": "2026-07-19T10:36:01.383Z"
   },
   {
     "id": "mokhtarandmosharrafa_1937",
