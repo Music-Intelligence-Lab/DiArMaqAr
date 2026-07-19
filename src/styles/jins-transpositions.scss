@@ -11,53 +11,28 @@
   // Sticky header, title row and filter menu use the shared
   // maqam-jins-transpositions-shared__* classes (see _maqam-jins-shared-ui.scss)
 
+  // In-button icons: size only; spacing + centering come from the button's
+  // flex layout (button-functional). The shared play-cell selector restores
+  // the solo size for the standalone play glyph.
   &__play-circle-icon.MuiSvgIcon-root {
-    //    background-color: $tertiary;
     color: white;
     padding: 0px;
-    margin: 0px;
-    font-size: 21px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
   &__export-icon.MuiSvgIcon-root {
-    //    background-color: $tertiary;
     color: white;
     padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
   &__copy-icon.MuiSvgIcon-root {
     color: white;
     padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
   // (comments/sources foot block: the TSX uses the shared
