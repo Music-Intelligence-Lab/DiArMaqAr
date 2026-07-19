@@ -235,6 +235,46 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     }
 }
 
+// The app's one scrollbar voice for a scrolling surface: a 6px rail, the
+// thumb in the app's own colour on a $medium-grey track. Extracted so the
+// manager carousels and the sayr contour scroll identically instead of
+// carrying two hand-rolled copies of the same three rules.
+@mixin scrollbar-thin($size: 6px) {
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: $size;
+        height: $size;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $primary;
+        cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $medium-grey;
+        cursor: pointer;
+    }
+}
+
+// Text that exists for assistive technology only. Needed wherever a surface
+// carries meaning in geometry — the sayr contour states pitch height and
+// melodic direction purely by position, which a screen reader cannot see.
+// clip-path over the legacy clip rect; never display:none, which would take
+// the text out of the accessibility tree along with the layout.
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
 // The stacked page-header lockup (furniture eyebrow above, entity name
 // below) — used by the Suyūr and Intiqālāt pages; height-critical surfaces
 // (the sticky analysis header) run the same two voices inline instead.
@@ -754,22 +794,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         direction: rtl;
     }
 
-    &::-webkit-scrollbar {
-        height: 6px;
-        position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: $primary;
-        cursor: pointer;
-        position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: $medium-grey;
-        cursor: pointer;
-        position: relative;
-    }
+    @include scrollbar-thin;
 }
 
 // The 3-row column-flow grid inside manager-item-list. width: max-content

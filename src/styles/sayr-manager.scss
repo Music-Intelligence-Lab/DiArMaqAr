@@ -1,61 +1,68 @@
 @use "./variables" as *;
+@use "./maqam-jins-shared-ui";
 
 .sayr-manager {
   width: 100%;
-  margin-top: 20px;
+  margin-top: $space-block;
+  // Closes the page the same distance it opens it, so the comments/sources
+  // block doesn't butt straight into the footer (was 0px).
+  margin-bottom: $space-block;
 
-  // Page-level section lockup (shared stacked role)
-  &__page-header {
-    @include section-page-header;
+  // The SAME header band the Ajnās/Maqāmāt taḥlīl surfaces use: solid
+  // $secondary fill, $grey border — a real analysis-header surface, not a
+  // page title. Suyūr is one more lens on the selected maqām, so it earns
+  // the identical band rather than a bespoke treatment.
+  &__header {
+    width: 100%;
+    @include maqam-jins-shared-ui.transpositions-header-surface;
+    // A full block step feels tight right under a filled band (the eye
+    // reads the band's own padding as part of the gap); one and a half
+    // steps gives the sayr buttons clear air before them.
+    margin: 0 0 ($space-block + $space-block-half);
+    padding: 8px 20px;
   }
 
-  &__page-header-furniture {
+  &__title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  &__section-furniture {
     @include section-furniture($font-size-lg);
   }
 
-  &__page-header-name {
-    @include section-page-header-name;
+  &__entity-name {
+    @include type-entity-name;
+    font-size: $font-size-lg;
+    line-height: $line-height-tight;
   }
 
-  &__header {
-    @include type-heading-h2; // panel-header tier — was 26px/semibold, converged to 21px
-    margin-bottom: 1rem;
-    display: inline;
-  }
-
-  &__notice {
-    color: #a00;
-    font-style: italic;
-    margin-bottom: 1rem;
-  }
-
+  // Was the app's only light-on-light surface (#fff3cd/#856404) — a warning
+  // has to sit on the dark ground like everything else, so it's drawn as a
+  // gold rule against the page instead of a pale card.
   &__transposition-warning {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ffeaa7;
-    border-radius: 4px;
-    font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
+    background-color: rgba($gold, 0.08);
+    border-inline-start: 2px solid $gold;
+    color: $text;
+    padding: $space-block-half $space-block;
+    margin-bottom: $space-block;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-normal;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
+    gap: $space-block-half;
   }
 
+  // No [dir="rtl"] row-reverse: a flex row already lays out right-to-left
+  // under an RTL ancestor, so reversing it reversed the mirroring back to
+  // LTR. Same house rule the comments-sources-container mixin states — the
+  // row follows the page's writing direction, no per-direction variants.
   &__group {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
   }
 
   &__input-container {
@@ -67,54 +74,77 @@
   &__label {
     margin-bottom: 0.5rem;
     font-weight: $font-weight-semibold; // was 600, unloaded weight — remapped to the sole emphasis step
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
+    text-align: start; // logical, so RTL needs no override of its own
   }
 
+  // Suyūr are few (never the hundreds the ajnās/maqāmāt carousels hold), so
+  // they lay out as a plain wrapping row that hugs its content — no carousel,
+  // no scroll machinery, everything visible at once.
   &__list {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
-    gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: $space-block-half;
+    // The contour's own top margin was removed when it became "the thing
+    // right after the buttons" — left the two touching at 0px. This is the
+    // one gap between them.
+    margin-bottom: $space-block;
   }
 
+  // The carousel item's visual role WITHOUT the carousel: canonical surface
+  // tiers, square corners, no nth-child tooltip rules (those assume the
+  // 3-row column-flow grid this list deliberately doesn't use).
   &__item {
     display: flex;
     flex-direction: column;
-    align-items: left;
-    padding: 10px;
-    background-color: rgba($primary, 0.4);
-    border-radius: 5px;
-    font-size: $font-size-md;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 6px 10px;
+    border: none;
+    background-color: $surface-available;
     color: $text;
     cursor: pointer;
-    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
+    text-align: start;
+    transition: background-color 0.2s;
 
-    // RTL support
-    [dir="rtl"] & {
-      align-items: right;
-      text-align: right;
+    &:hover {
+      background-color: $surface-available-hover;
     }
 
-    &_active {
-      background-color: rgba($primary, 0.4);
-
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
+    &:focus-visible {
+      outline: 2px solid $gold;
+      outline-offset: -2px;
     }
 
     &_selected {
-      background-color: $tertiary;
+      background-color: $surface-selected;
 
       &:hover {
-        background-color: $tertiary;
+        background-color: $surface-selected;
       }
     }
+  }
+
+  &__item-name {
+    @include type-entity-name;
+    font-size: $font-size-md;
+    line-height: $line-height-snug;
+  }
+
+  // The quiet counterpart line, same role as the carousel cards'
+  // transposition count.
+  &__item-count {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    font-variant-numeric: tabular-nums;
+    line-height: $line-height-snug;
+    color: $text-quiet;
+  }
+
+  &__empty {
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
+    color: $text-quiet;
   }
 
   &__input,
@@ -130,16 +160,24 @@
   &__form {
     display: flex;
     flex-direction: column;
+    // A flex column's default min-width is auto, not 0 — without this, a
+    // max-content grandchild (the contour, once a long sayr overflows its
+    // row) forces THIS column wider instead of scrolling inside its own
+    // box, which pushed the whole page into a horizontal scroll.
+    min-width: 0;
   }
 
+  // The header block already sets the step above; this section adds none of
+  // its own, so the rhythm is one token everywhere instead of two stacking.
   &__stops-section {
-    margin-top: 1rem;
+    margin-top: 0;
+    min-width: 0; // same flex-min-content-size fix, one level down
   }
 
   &__stops-header {
     font-size: $font-size-md;
     font-weight: $font-weight-medium;
-    margin-bottom: 10px;
+    margin-bottom: $space-block-half;
   }
 
   &__add-stop {
@@ -149,23 +187,163 @@
 
   &__admin-stops {
     display: flex;
-    gap: 10px;
-
-    // RTL support
-    [dir="rtl"] & {
-      flex-direction: row-reverse;
-    }
+    gap: $space-block-half;
   }
 
-  &__stops {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
+  // ---------------------------------------------------------------------
+  // The sayr contour — a sayr IS a melodic path, so it is drawn as one.
+  // Each stop sits on a row of a pitch ladder, and the "ascend"/"descend"
+  // instructions stop being boxes in the row: they become the rise and fall
+  // of the track between stops. The reader sees the shape of the melody,
+  // not a sentence describing it.
+  //
+  // The ladder is RANK-based: one row per distinct pitch the sayr visits,
+  // ordered low to high, row 1 highest. Row distance is therefore ORDER,
+  // not interval size — the underlying value is an ordinal position in the
+  // note tables, not cents, so proportional spacing would claim a precision
+  // the data does not have. Hence no axis, no gridlines, no interval
+  // readout: the contour asserts which stop is higher than which, and no
+  // more.
+  //
+  // Columns alternate chip / run, both as real tracks, so a connector is a
+  // grid item that spans rows rather than a box overflowing its neighbour.
+  // gridTemplateColumns is authored in the component because the count is
+  // data-dependent; --run is the width of every run track.
+  // ---------------------------------------------------------------------
+  &__contour {
+    --row-height: 34px;
+    // The run is the space between two chips, so it takes the block token
+    // the rest of the page's rhythm uses.
+    --run: #{$space-block};
 
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
+    display: grid;
+    grid-template-rows: repeat(var(--rows), var(--row-height));
+    gap: 0; // the run is a track now, not a gap
+    align-items: center;
+    list-style: none;
+    // The SCROLL CONTAINER is pinned to its parent's width — width:
+    // max-content here (a past bug) let the box itself grow to fit its
+    // content, so overflow-x had nothing left to clip against and the whole
+    // page widened instead of this box scrolling. The grid's own COLUMNS
+    // (grid-auto-columns: max-content, set inline per-sayr in the
+    // component) are what may exceed 100% — that excess is what scrolls.
+    width: 100%;
+    // $surface-rest — the app's own "resting zone" tile fill — reads the
+    // path as one bounded surface distinct from the page behind it, the
+    // same way a carousel's scroll viewport is legible as its own strip.
+    background-color: $surface-rest;
+    // The header block owns the step above the path; the block step below
+    // separates the path from the commentary that glosses it.
+    margin: 0 0 $space-block;
+    padding: $space-block-half $space-block;
+    overflow-x: auto;
+
+    @include scrollbar-thin;
+  }
+
+  &__contour-step {
+    display: flex;
+    align-items: center;
+    // Nothing overflows its cell any more, so the old position/z-index pair
+    // that kept the absolute connector above its neighbours is gone.
+  }
+
+  // The connector is a STEP, not a diagonal: a horizontal run at this stop's
+  // pitch, one vertical riser, a horizontal run at the next stop's pitch.
+  // Only the riser carries anything — its presence is the pitch change. The
+  // runs carry nothing, and that is the point: the columns are max-content,
+  // so a run's width is the width of a LABEL. A diagonal would turn
+  // "muḥayyar" being longer than "awj" into a shallower slope for the same
+  // interval, encoding name-length noise as if it were music.
+  //
+  // The box spans from the top of the higher row to the bottom of the lower
+  // one, so each chip's centre-line sits exactly half a row in from an edge.
+  // Every offset below follows from that one fact.
+  &__contour-link {
+    align-self: stretch; // the grid centres its items; this one fills its rows
+    position: relative;
+    pointer-events: none;
+    color: rgba($text, 0.45);
+
+    // The riser, drawn as the element's own background so both
+    // pseudo-elements stay free for the two runs. Its height is the distance
+    // between the two chip centre-lines exactly.
+    background-image: linear-gradient(to bottom, currentColor 0 100%);
+    background-size: 1px calc(100% - var(--row-height));
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      height: 1px;
+      width: calc(50% + 0.5px); // overlaps the riser by a hair, so no seam
+      background-color: currentColor;
+    }
+
+    // The two chip centre-lines.
+    &::before {
+      top: calc(var(--row-height) / 2 - 0.5px);
+    }
+
+    &::after {
+      bottom: calc(var(--row-height) / 2 - 0.5px);
+    }
+
+    // Descending: leave this stop on the TOP line, arrive on the BOTTOM one.
+    // "level" takes the same rule — see the zero-span note below.
+    &[data-motion="descending"],
+    &[data-motion="level"] {
+      &::before {
+        inset-inline-start: 0;
+      }
+
+      &::after {
+        inset-inline-end: 0;
+      }
+    }
+
+    // Ascending is the same figure mirrored VERTICALLY, and only vertically.
+    &[data-motion="ascending"] {
+      &::before {
+        inset-inline-end: 0;
+      }
+
+      &::after {
+        inset-inline-start: 0;
+      }
+    }
+
+    // ZERO SPAN — a genuinely repeated pitch — needs no special case, which
+    // is what makes this a root fix rather than a patch. The box is exactly
+    // one row tall, so the riser's height computes to 0 and is not drawn
+    // (correct: no interval was crossed), while ::before and ::after land on
+    // the SAME line and, taking the inline-start and inline-end halves, meet
+    // as one continuous horizontal tie across the full run. The old code
+    // gave this an absolutely-positioned box of height 0 and drew nothing.
+
+    // A move the source did not direct is the archive's inference from pitch
+    // order, not the source's testimony, and it is drawn dotted so the two
+    // are never confused. Stated-and-agreeing is the common case and stays
+    // the calm solid default.
+    &[data-stated="no"] {
+      background-image: repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 4px);
+
+      &::before,
+      &::after {
+        background-color: transparent;
+        background-image: repeating-linear-gradient(to right, currentColor 0 1px, transparent 1px 4px);
+      }
+    }
+
+    // The source's word and the pitch positions disagree — an octave
+    // displacement, or an inconsistency in the source. Rare (six transitions
+    // corpus-wide) and the only state that earns the accent. The line still
+    // follows the pitches, because that is where the chips are; the source's
+    // word is printed on the arriving chip, attributed to it.
+    &[data-conflict="true"] {
+      color: $gold;
     }
   }
 
@@ -177,22 +355,92 @@
     margin-bottom: 0.5rem;
   }
 
+  // The stop itself. Every stop is audible, so all three types are
+  // interactive; the TYPE is carried by fill weight, not by a legend the
+  // reader has to learn — a note is the plain surface, a jins/maqām is
+  // filled because it stands for a whole collection of pitches.
   &__stop {
-    background-color: $primary;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    padding: 6px 12px;
+    border: none;
+    background-color: $surface-rest;
     color: $text;
-    padding: 10px 15px;
-    border-radius: 0px;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
+    // Now a real <button> (it was a keyboard-dead role="button" div), so it
+    // has to be told to keep the page's type instead of the UA's.
+    font: inherit;
+    cursor: pointer;
+    text-align: start;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+
+    &[data-type="jins"],
+    &[data-type="maqam"] {
+      background-color: $surface-available;
+    }
+
+    // The stop names a pitch the note tables do not carry, so its height on
+    // the ladder is inherited from the previous stop rather than its own.
+    // Marked so an inherited height is never read as a stated one.
+    &[data-unresolved="true"] {
+      border-inline-start: 2px solid $delete;
+      padding-inline-start: 10px;
+    }
+
+    &:hover {
+      background-color: $surface-available-hover;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $gold;
+      outline-offset: -2px;
+    }
   }
 
-  &__transition-label {
-    width: max-content;
-    //    text-align: center;
+  // The contour's meaning is carried by geometry, which a screen reader
+  // cannot see. This is the same two facts — pitch height and melodic
+  // direction — in text, placed first inside the chip so the accessible
+  // name reads "descend to nawā" rather than "nawā descend to".
+  &__stop-motion {
+    @include visually-hidden;
+  }
+
+  &__stop-label {
+    @include type-entity-name;
     font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    color: $text;
-    //    word-wrap: break-word;
+    line-height: $line-height-snug;
+  }
+
+  // Printed only where the source's stated direction contradicts where the
+  // two pitches actually sit. Gold, matching the connector that marks the
+  // same disagreement, and attributed ("Source: ascending") so the reader
+  // knows it is the source's claim and not the archive's.
+  &__stop-conflict {
+    font-size: $font-size-2xs;
+    font-weight: $font-weight-light;
+    line-height: $line-height-snug;
+    color: $gold;
+    letter-spacing: $letter-spacing-translit;
+
+    [dir="rtl"] & {
+      letter-spacing: $letter-spacing-normal;
+    }
+  }
+
+  // The pitch a jins/maqām stop is anchored on — the reason it sits at this
+  // height on the track.
+  &__stop-anchor {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-light;
+    line-height: $line-height-snug;
+    color: $text-quiet;
+    letter-spacing: $letter-spacing-translit;
+
+    [dir="rtl"] & {
+      letter-spacing: $letter-spacing-normal;
+    }
   }
 
   &__stop-type,
@@ -200,8 +448,9 @@
     padding: 0.4rem;
     font-size: $font-size-md; // was 0.9rem/14.4px, nearest scale step
     border: none; // black borderless fields (design system)
-    border-radius: 4px;
     max-width: 80px;
+    // radius dropped: it was the only live 4px in the file, and the system
+    // is square. The sibling __input/__textarea/__select already carry none.
   }
 
   &__delete-stop {
@@ -210,10 +459,10 @@
 
   &__buttons {
     width: 100%;
-    margin: 10px;
+    margin: $space-block-half;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: $space-block;
   }
 
   &__save-button {
@@ -224,43 +473,23 @@
     @include button-functional($bg: $delete, $bg-hover: $hovered-delete);
   }
 
-  &__details {
-    min-width: 100%;
-    width: fit-content;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.075);
-    border-radius: 10px;
-    margin: 20px 0;
-  }
-
-  &__summary {
-    font-size: $font-size-3xl; // was 24px, nearest scale step (26px)
-    margin-bottom: 10px;
-    cursor: pointer;
+  // The same comments/sources block the jins, maqām and tuning-system pages
+  // use — 75/25, furniture h3s, RTL by writing direction. The Sources column
+  // carries THIS sayr's own source and page, not the parent maqām's.
+  &__comments-sources-container {
+    @include comments-sources-container;
+    // The container's own padding already insets it from the page edge
+    padding-inline: 0;
+    // The path above owns the step between them; the mixin's own top margin
+    // would stack with it into a double gap.
+    margin-top: 0;
   }
 
   &__comments-section {
-    width: 50%;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 0px 0px;
-
-    // RTL support
-    [dir="rtl"] & {
-      text-align: right;
-    }
+    @include comments-sources-section(3);
   }
 
-  &__comments-english {
-    font-size: $font-size-md;
-    font-weight: $font-weight-light;
-    margin-bottom: 20px;
-
-    &_title {
-      font-size: $font-size-md;
-      font-weight: $font-weight-medium;
-    }
+  &__sources-section {
+    @include comments-sources-section(1);
   }
 }
