@@ -38,6 +38,7 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
         noteNameDisplay: pitchClass.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pitchClass.noteName) }),
         englishName: pitchClass.englishName,
+        solfege: pitchClass.solfege,
         abjadName: pitchClass.abjadName,
         fraction: pitchClass.fraction,
         cents: parseFloat(pitchClass.cents),
@@ -58,6 +59,15 @@ function formatPitchData(pitchClass: PitchClass, format: string, inArabic: boole
         noteNameDisplay: pitchClass.noteName,
         ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pitchClass.noteName) }),
         englishName: pitchClass.englishName
+      };
+    case "solfege":
+      return {
+        pitchClassIndex: pitchClass.pitchClassIndex,
+        octave: pitchClass.octave,
+        noteName: standardizeText(pitchClass.noteName),
+        noteNameDisplay: pitchClass.noteName,
+        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pitchClass.noteName) }),
+        solfege: pitchClass.solfege
       };
     case "fraction":
       return {
@@ -203,7 +213,38 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNoteParam = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
-    
+
+    // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
+    // default branch and silently returns a fixed shape instead of erroring.
+    const validPitchClassDataTypes = [
+      "all",
+      "englishName",
+      "solfege",
+      "fraction",
+      "cents",
+      "decimalRatio",
+      "stringLength",
+      "frequency",
+      "abjadName",
+      "fretDivision",
+      "midiNoteNumber",
+      "midiNoteDeviation",
+      "centsDeviation",
+      "referenceNoteName"
+    ];
+    if (!validPitchClassDataTypes.includes(pitchClassDataType)) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: `Invalid pitchClassDataType '${pitchClassDataType}'`,
+            validOptions: validPitchClassDataTypes,
+            hint: `Valid options: ${validPitchClassDataTypes.join(", ")}`
+          },
+          { status: 400 }
+        )
+      );
+    }
+
     // Parse includeArabic parameter
     let inArabic = false;
     try {
