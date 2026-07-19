@@ -37,6 +37,21 @@ html {
   overflow-y: auto;
 }
 
+// The text alternative for facts the design draws rather than writes (the
+// ghammāz mark). Removed from the visual flow, still read aloud and still
+// found by in-page search.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 // Suppress focus outlines app-wide with style: none. Never suppress via
 // 0-width + a visible style/colour: elements with a `transition` animate
 // outline-width from the 3px browser default down to 0 on focus, flashing

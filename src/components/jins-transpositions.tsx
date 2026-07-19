@@ -25,6 +25,7 @@ import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
 import smoothScrollIntoPosition, { SCROLL_DURATION_MS as SHARED_SCROLL_DURATION_MS, SCROLL_SCHEDULE_DELAY_MS } from "@/functions/smoothScrollIntoPosition";
+import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
 
 export default function JinsTranspositions() {
   // Configurable constants (extracted magic numbers for easier tuning)
@@ -689,7 +690,7 @@ export default function JinsTranspositions() {
                 {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <th scope="col" className="jins-transpositions__table-cell" data-column-type="empty"></th>}
-                    <th scope="col" className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{getDisplayName(pitchClass.noteName, "note")}</th>
+                    <th scope="col" className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{noteNameWithBreaks(getDisplayName(pitchClass.noteName, "note"))}</th>
                   </React.Fragment>
                 ))}
               </tr>

@@ -202,6 +202,39 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     color: $light-grey;
 }
 
+// ---------------------------------------------------------------------------
+// Structural marking in tables
+// ---------------------------------------------------------------------------
+
+// ONE element, one meaning: a gold hairline under a cell marks it. Every
+// structural fact these tables call out uses it —
+//
+//   the ghammāz degree → underlines its two cells (degree numeral, note name)
+//   the tuning system's native value type → underlines that row
+//
+// so a reader learns one mark instead of one convention per table.
+//
+// Drawn in $primary — the app's own colour, and the one the eye already
+// reads as "belongs to this system" rather than as an alert. The grid's own
+// 1px $grey edge sits underneath and border-collapse replaces it outright,
+// so the mark costs no layout.
+@mixin structural-mark {
+    border-bottom: 1px solid $primary;
+}
+
+// Table hover — the CELL under the pointer lights, not its whole row. A row
+// highlight claims a relationship the reader did not ask about; the cell is
+// what they are actually reading. One rule for every table in the app.
+// Cells whose content carries its own hover (jins buttons, play icons) opt
+// out at the call site, so two highlights never stack.
+@mixin table-cell-hover {
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba($grey, 0.2);
+    }
+}
+
 // The stacked page-header lockup (furniture eyebrow above, entity name
 // below) — used by the Suyūr and Intiqālāt pages; height-critical surfaces
 // (the sticky analysis header) run the same two voices inline instead.

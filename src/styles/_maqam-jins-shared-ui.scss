@@ -301,8 +301,8 @@
   }
 
   [class*="__transposition-title"] {
-    font-size: 16px;
-    font-weight: 300;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-regular;
     padding-left: 10px;
     padding-right: 20px;
     float: left;
@@ -401,21 +401,16 @@
       background-color: rgba($primary, 0.5);
     }
 
+    // No ground of its own: the note-name row above is the column header now,
+    // and it carries the fill (see the noteNames rule below).
     &[class*="--scale-degree"] {
-      background-color: $medium-grey;
-      font-weight: 400 !important;
-
-      // Numeral cells (not the empty interval spacers): keep room for the
-      // ghammāz marker, e.g. "IV (gh)"
-      &[data-column-type="scale-degree"] {
-        min-width: 60px;
-      }
+      background-color: transparent;
     }
 
-    // Ghammāz degree cell — marked textually with "(gh)" / "(غ)" after the
-    // numeral; class kept as a styling/testing hook
+    // Ghammāz — the gold mark under the degree numeral and its note name,
+    // and nothing else: no glyph, no ink or weight change alongside it.
     &[class*="--ghammaz"] {
-      white-space: nowrap;
+      @include structural-mark;
     }
 
     // Numeric value cells whose content overflows horizontally get their text
@@ -520,11 +515,14 @@
   //
   // Add your custom styles below as needed:
 
-  // Note names cells - make them bold and add background (jins only, matches scale degrees styling)
-  tr[data-row-type="noteNames"] th[data-column-type="note-name"],
-  tr[data-row-type="noteNames"] th[data-column-type="empty"] {
+  // The note-name row is the column header — it carries the header ground in
+  // both tables (maqām renders these as td, jins as th, hence both here).
+  // --unique keeps its own fill: a cell's state outranks the header ground,
+  // and --highlighted already wins on !important. The weight stays the
+  // table's own, per type-table-label.
+  tr[data-row-type="noteNames"] td:not([class*="--unique"]),
+  tr[data-row-type="noteNames"] th:not([class*="--unique"]) {
     background-color: $medium-grey;
-    font-weight: 400;
   }
 
   // -------------------------
@@ -536,7 +534,6 @@
   td[class*="__asc-desc-column"] {
     font-family: inherit;
     font-size: 18px;
-    font-weight: 400 !important;
     padding: 0;
     margin: 0;
     width: 26px;
@@ -555,7 +552,6 @@
   [class*="__row-header"] {
     background-color: $medium-grey;
     text-transform: capitalize;
-    font-weight: $font-weight-medium;
   }
 
   [class*="__row-header--sentence-case"] {
@@ -726,30 +722,21 @@
   // UI/UX Enhancements
   // -------------------------
 
-  // 1. Primary value type row identification (left border accent) & Row hover effects
-  [class*="__table"] tbody tr:has(> th[class*="__row-header"]) {
-    transition: background-color 0.2s ease;
-    
-    // Row hover effect for data rows - increased visibility
-    // Exclude ajnas row (contains buttons) and play row (contains play icons)
-    &:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])):hover {
-      background-color: rgba($grey, 0.2);
-    }
-    
-    // Primary value type row - enhanced visual prominence
-    &:has(> th[class*="--primary-value"]) {
-      
-      th:first-child {
-        background-color: $medium-grey !important;
-        border-right: 4px solid rgba($tertiary, 0.9);
-        font-weight: $font-weight-semibold;
-      }
-      
-      // Enhanced hover for primary value row
-      &:hover th:first-child {
-        background-color: rgba($grey, 0.2) !important;
-      }
-    }
+  // 1. Cell hover — only the cell under the pointer. Cells holding a jins
+  // button or a play icon are excluded: those carry their own hover.
+  [class*="__table"] tbody td:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])),
+  [class*="__table"] tbody th:not(:has([class*="__jins-button"])):not(:has([class*="__play-circle-icon"])) {
+    @include table-cell-hover;
+  }
+
+  // The tuning system's native value type — the same gold mark, under the
+  // row header only. The header is what names the type, so that is where the
+  // fact belongs; underlining the data cells too would spend the mark on
+  // values that are not themselves the fact. The octave tables mark this
+  // identically, which is why neither surface keeps its old bespoke
+  // treatment: a $tertiary border here, a $medium-grey row fill there.
+  [class*="__row-header--primary-value"] {
+    @include structural-mark;
   }
 
   // 2. Play icon hover effects (gold color, no transform)
@@ -764,7 +751,6 @@
   // 3. Ajnas buttons styling - matches main button style (maqam-specific)
   // Conventional jins rank prefix (1° primary / 2° secondary / 3° tertiary)
   [class*="__jins-degree-rank"] {
-    font-weight: $font-weight-semibold;
     margin-inline-end: 5px;
     white-space: nowrap;
   }
@@ -786,8 +772,11 @@
     align-items: center;
     justify-content: flex-start;
     transition: background-color 0.2s ease;
-    font-weight: 400;
-    line-height: 1.4;
+    // Explicit, not omitted: a <button> does not inherit font from the table,
+    // so leaving this out drops it to the UA's 400 — the bold these cells
+    // were reported as having. It reads at the table's own weight.
+    font-weight: $font-weight-light;
+    line-height: $line-height-normal;
     white-space: normal;
     word-wrap: break-word;
     box-sizing: border-box;

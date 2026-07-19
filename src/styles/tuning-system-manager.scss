@@ -64,8 +64,11 @@
     }
   }
 
-  // Row header styling for octave tables
+  // Row header styling for octave tables — the same $medium-grey ground the
+  // maqam/jins tables give their headers, so the two surfaces read as one
+  // table system rather than two.
   &__row-header {
+    background-color: $medium-grey;
     text-align: left;
 
     // RTL support
@@ -147,8 +150,8 @@
     // (to the first dīwān table)
     margin-top: $space-block;
     margin-bottom: $space-block;
-    font-size: 14px;
-    font-weight: 300;
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
     width: 100%;
 
     // RTL support
@@ -544,8 +547,8 @@
     width: 100%;
     max-width: 100%;
     overflow: auto;
-    font-size: 14px;
-    font-weight: 200;
+    font-size: $font-size-md;
+    font-weight: $font-weight-light;
     padding-bottom: 0px;
   }
 
@@ -730,12 +733,24 @@
 
     td {
       @include type-table-label;
+      // Only the hovered cell lights, as in the maqam/jins tables. Cells
+      // holding a play icon opt out — they carry their own hover.
+      &:not(:has([class*="play-circle-icon"])) {
+        @include table-cell-hover;
+      }
       padding-left: 10px;
       padding-top: 5px;
       padding-right: 10px;
       padding-bottom: 5px;
-      text-align: center;
+      // Reading edge, like the maqam/jins tables: left in LTR, right in RTL.
+      // These cells were centred, which made the octave tables the one table
+      // surface that did not line up on the reader's margin.
+      text-align: left;
       vertical-align: middle;
+
+      [dir="rtl"] & {
+        text-align: right;
+      }
       // width: 70px;
       min-width: 80px;
       max-width: 80px;
@@ -745,6 +760,22 @@
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
+    }
+
+    // Play and select cells hold a control, not text — the glyph/checkbox
+    // centres in its column. Their row headers are still text and keep the
+    // reading edge, hence the :not().
+    tr[data-row-type="play"] td:not([class*="row-header"]),
+    tr[data-row-type="select"] td:not([class*="row-header"]) {
+      text-align: center;
+    }
+
+    // Column headers — the note names identify each column, so they take the
+    // same $medium-grey ground the maqam/jins tables give their note-name and
+    // scale-degree header cells. Row and column headers now share one fill
+    // across both surfaces.
+    tr[data-row-type="noteNames"] td {
+      background-color: $medium-grey;
     }
 
     // Numeric data-value rows (cents, ratios, string length, MIDI, frequency,
@@ -762,8 +793,11 @@
       @include type-data-value;
     }
 
-    &__detectedPitchClassType {
-      background-color: $medium-grey;
+    // The native value type — the same gold mark the maqam/jins tables use
+    // for it, on the row header alone, replacing the $medium-grey row fill
+    // that made this surface say the same thing a different way.
+    &__detectedPitchClassType td[class*="row-header"] {
+      @include structural-mark;
     }
   }
 
@@ -778,8 +812,12 @@
       color: white;
     }
 
+    // !important like its sibling states: a cell's state must outrank the
+    // ground its row or column header paints, or the descending tint drops
+    // out of exactly the header rows (note names) where the reader most
+    // needs to see which columns the variant covers.
     &_descending {
-      background-color: rgba($primary, 0.5);
+      background-color: rgba($primary, 0.5) !important;
     }
 
     &_editing {

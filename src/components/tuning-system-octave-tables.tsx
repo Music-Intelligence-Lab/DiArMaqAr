@@ -25,6 +25,19 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
+
+/**
+ * How far one chevron press travels: a viewport, less one column so a
+ * landmark survives the jump. The column width is measured off the table
+ * rather than mirrored from the stylesheet, and the floor keeps the press
+ * meaningful on a narrow container.
+ */
+function octaveScrollStep(container: HTMLDivElement): number {
+  const dataCell = container.querySelector<HTMLElement>("tbody td + td");
+  const columnWidth = dataCell?.offsetWidth ?? 0;
+  return Math.max(container.clientWidth - columnWidth, container.clientWidth * 0.5);
+}
 
 export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) {
   const { t, getDisplayName, isRTL, language } = useLanguageContext();
@@ -136,7 +149,15 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         }
       });
 
-      isSyncingScroll.current = false;
+      // Release only AFTER those assignments have dispatched their own scroll
+      // events. Scroll events are delivered asynchronously, so clearing the
+      // flag synchronously here left it guarding nothing: every mirrored
+      // container echoed back and wrote scrollLeft onto the source, which
+      // cancels an in-flight smooth scroll each frame — the chevrons appeared
+      // to barely move because their animation was being killed on arrival.
+      requestAnimationFrame(() => {
+        isSyncingScroll.current = false;
+      });
     };
 
     // Attach scroll listeners to all octave containers
@@ -798,7 +819,9 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-prev"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? 635 : -635, behavior: "smooth" });
+              // One viewport per press, less a column of overlap so the reader
+              // keeps a landmark. Derived from the container, not a magic 635.
+              if (container) container.scrollBy({ left: (isRTL ? 1 : -1) * octaveScrollStep(container), behavior: "smooth" });
             }}
           >
             ‹
@@ -822,18 +845,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
               })()}
 
               <tbody>
-                {/* Row 1: Pitch Class */}
-                {filters.pitchClass && (
-                  <tr data-row-type="pitchClass">
-                    <td className="tuning-system-manager__row-header">{t('octave.pitchClass')}</td>
-                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
-                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {colIndex}
-                      </td>
-                    ))}
-                  </tr>
-                )}
-                {/* Row 2: Note Name */}
+                {/* Row 1: Note Name — the column's identity leads, and the
+                    pitch-class index follows as its coordinate */}
                 <tr
                   data-row-type="noteNames"
                   style={{
@@ -870,12 +883,23 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     } else {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {pitchClass.noteName === "none" ? t('octave.none') : getDisplayName(pitchClass.noteName, 'note')}
+                          {pitchClass.noteName === "none" ? t('octave.none') : noteNameWithBreaks(getDisplayName(pitchClass.noteName, 'note'))}
                         </td>
                       );
                     }
                   })}
                 </tr>
+                {/* Row 2: Pitch Class */}
+                {filters.pitchClass && (
+                  <tr data-row-type="pitchClass">
+                    <td className="tuning-system-manager__row-header">{t('octave.pitchClass')}</td>
+                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                        {colIndex}
+                      </td>
+                    ))}
+                  </tr>
+                )}
                 {/* Row 3: Abjad Name */}
                 {filters.abjadName && (
                   <tr data-row-type="abjadName">
@@ -1188,7 +1212,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             className="carousel-button carousel-button-next"
             onClick={() => {
               const container = octaveScrollRefs[octave as 0 | 1 | 2 | 3].current;
-              if (container) container.scrollBy({ left: isRTL ? -635 : 635, behavior: "smooth" });
+              if (container) container.scrollBy({ left: (isRTL ? -1 : 1) * octaveScrollStep(container), behavior: "smooth" });
             }}
           >
             ›

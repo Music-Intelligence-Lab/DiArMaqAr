@@ -48,6 +48,7 @@ import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
 import smoothScrollIntoPosition, { SCROLL_DURATION_MS as SHARED_SCROLL_DURATION_MS, SCROLL_SCHEDULE_DELAY_MS } from "@/functions/smoothScrollIntoPosition";
+import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
 
 const MaqamTranspositions: React.FC = () => {
   // Configurable constants (previous magic numbers)
@@ -962,6 +963,31 @@ const MaqamTranspositions: React.FC = () => {
                   {language === "ar" ? (ascending ? "↖" : "↙") : ascending ? "↗" : "↘"}
                 </td>
               </tr>
+              {/* Note names lead: the column's identity comes first, and the
+                  maqām degree follows as its position within the maqām */}
+              <tr data-row-type="noteNames">
+                <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-noteNames-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.noteNames")}</th>
+                {pitchClasses.map((pitchClass, i) => {
+                  // The ghammāz mark runs down the column, so the note name
+                  // carries the same underline as its degree numeral below
+                  const isGhammaz = ghammazDegreeIndices.includes(ascending ? i : pitchClasses.length - 1 - i);
+                  return (
+                  <React.Fragment key={i}>
+                    <td
+                      className={
+                        (!oppositePitchClasses.some(pc => pc.noteName === pitchClass.noteName && pc.cents === pitchClass.cents) ? "maqam-jins-transpositions-shared__table-cell--unique " : "maqam-jins-transpositions-shared__table-cell--pitch-class ") +
+                        (isCellHighlighted(rowIndex + (ascending ? 0 : 0.5), pitchClass.noteName) ? "maqam-jins-transpositions-shared__table-cell--highlighted" : "") +
+                        (isGhammaz ? " maqam-jins-transpositions-shared__table-cell--ghammaz" : "")
+                      }
+                      data-column-type="note-name"
+                    >
+                      {noteNameWithBreaks(getDisplayName(pitchClass.noteName, "note"))}{" "}
+                    </td>
+                    <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                  </React.Fragment>
+                  );
+                })}
+              </tr>
               <tr data-row-type="scaleDegrees">
                 <th scope="col" id={`maqam-${standardizeText(maqam.name)}-scaleDegrees-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.scaleDegrees")}</th>
                 {pitchClasses.map((_, i) => {
@@ -976,29 +1002,14 @@ const MaqamTranspositions: React.FC = () => {
                         title={isGhammaz ? "ghammāz" : undefined}
                       >
                         {ascending ? romanNumerals[i] : romanNumerals[romanNumerals.length - 1 - i]}
-                        {isGhammaz && ` (${language === "ar" ? "غ" : "gh"})`}
+                        {/* The mark draws the ghammāz; this is its text alternative,
+                            since a hairline carries no accessible name */}
+                        {isGhammaz && <span className="visually-hidden">{t("maqam.ghammaz")}</span>}
                       </th>
                       <th scope="col" className="maqam-jins-transpositions-shared__table-cell--scale-degree" data-column-type="empty"></th>
                     </React.Fragment>
                   );
                 })}
-              </tr>
-              <tr data-row-type="noteNames">
-                <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-noteNames-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.noteNames")}</th>
-                {pitchClasses.map((pitchClass, i) => (
-                  <React.Fragment key={i}>
-                    <td
-                      className={
-                        (!oppositePitchClasses.some(pc => pc.noteName === pitchClass.noteName && pc.cents === pitchClass.cents) ? "maqam-jins-transpositions-shared__table-cell--unique " : "maqam-jins-transpositions-shared__table-cell--pitch-class ") +
-                        (isCellHighlighted(rowIndex + (ascending ? 0 : 0.5), pitchClass.noteName) ? "maqam-jins-transpositions-shared__table-cell--highlighted" : "")
-                      }
-                      data-column-type="note-name"
-                    >
-                      {getDisplayName(pitchClass.noteName, "note")}{" "}
-                    </td>
-                    <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
-                  </React.Fragment>
-                ))}
               </tr>
               {filters["pitchClass"] && (
                 <tr data-row-type="pitchClass">
