@@ -42,3 +42,19 @@ body {
 body.scrollbar-active {
   padding-right: 0 !important;
 }
+
+// Reduced motion, answered once for the whole app rather than guarded
+// component by component. Durations collapse to a value that still fires
+// transitionend/animationend listeners, so nothing that waits on those
+// events stalls. Scroll behaviour goes with it: a smooth programmatic
+// scroll is motion the reader did not ask for.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
