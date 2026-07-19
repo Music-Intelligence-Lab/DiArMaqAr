@@ -39,25 +39,32 @@ export default function smoothScrollIntoPosition(el: HTMLElement, marginTop: num
     node = node.parentElement;
   }
 
-  const rect = el.getBoundingClientRect();
-  let start: number;
-  let target: number;
-  if (container === window) {
-    start = window.pageYOffset || document.documentElement.scrollTop;
-    target = Math.max(0, rect.top + window.pageYOffset - marginTop);
-  } else {
-    const containerEl = container as HTMLElement;
-    start = containerEl.scrollTop;
-    target = Math.max(0, rect.top - containerEl.getBoundingClientRect().top + containerEl.scrollTop - marginTop);
-  }
+  // Read the scrollport's current offset and the element's target offset
+  // WITHIN it. Both are expressed in the scrollport's own scroll coordinates,
+  // so they are invariant under scrolling — re-reading the target mid-flight
+  // measures layout, not our own animation.
+  const readScrollTop = (): number => (container === window ? window.pageYOffset || document.documentElement.scrollTop : (container as HTMLElement).scrollTop);
 
-  const distance = target - start;
+  const readTarget = (): number => {
+    const rect = el.getBoundingClientRect();
+    const containerTop = container === window ? 0 : (container as HTMLElement).getBoundingClientRect().top;
+    return Math.max(0, rect.top - containerTop + readScrollTop() - marginTop);
+  };
+
+  const start = readScrollTop();
   const startTime = performance.now();
 
   const animateScroll = (currentTime: number) => {
     if (generation !== animationGeneration) return; // preempted by a newer scroll
     const progress = Math.min((currentTime - startTime) / duration, 1);
-    const current = start + distance * easeInOutCubic(progress);
+    // Re-read the target every frame rather than freezing it at t=0. Content
+    // above the anchor is still settling while we travel — the open row's
+    // staff notation resizes after measuring its own bbox, cell rotation
+    // applies a frame late, a lazy batch commits — and a frozen target cannot
+    // absorb any of it, so the page lands short by however much the layout
+    // moved. Retargeting each frame converges on wherever the anchor actually
+    // ends up, whichever late-sizer moved it.
+    const current = start + (readTarget() - start) * easeInOutCubic(progress);
     if (container === window) {
       window.scrollTo(0, current);
     } else {
