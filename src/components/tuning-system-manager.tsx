@@ -1336,7 +1336,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       <TuningSystemOctaveTables admin={admin} />
 
-      {/* COMMENTS AND SOURCES — always rendered (headers included) once a
+      <SelectedPitchClassesAnalysis />
+
+      {/* COMMENTS AND SOURCES — closes the page, sitting under the taḥlīl
+          table: the tables are the argument, these are its attribution.
+          Always rendered (headers included) once a
           tuning system is selected; shared 3/4 + 1/4 layout, RTL mirrors
           via the row's writing direction. Arabic mode falls back to the
           English comments when no Arabic text exists. */}
@@ -1402,8 +1406,6 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </div>
           </div>
         )}
-
-      <SelectedPitchClassesAnalysis />
 
       {/* Export Modal */}
       <ExportModal

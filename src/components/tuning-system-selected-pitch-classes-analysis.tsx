@@ -14,6 +14,8 @@ import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNo
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { calculateInterval } from "@/models/PitchClass";
 import StaffNotation from "./staff-notation";
+import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
+import useRotateOverflowingCells from "@/hooks/use-rotate-overflowing-cells";
 
 export default function SelectedPitchClassesAnalysis() {
   const { selectedPitchClasses, selectedTuningSystem, allPitchClasses, centsTolerance } = useAppContext();
@@ -30,6 +32,12 @@ export default function SelectedPitchClassesAnalysis() {
   // Unit selection for intervals matrix - default to cents
   // Use a ref to track if we've initialized the unit based on valueType
   const hasInitializedUnit = useRef(false);
+
+  // Same overflow handling as the maqam/jins tables: a cell whose content
+  // outgrows its column rotates rather than forcing the column wider. Covers
+  // the intervals matrix too, since it lives inside this same container.
+  const rotateOverflowContainerRef = useRef<HTMLDivElement | null>(null);
+  useRotateOverflowingCells(rotateOverflowContainerRef);
   const [intervalsMatrixUnit, setIntervalsMatrixUnit] = useState<"fraction" | "cents" | "centsFromZero" | "decimalRatio" | "stringLength" | "fretDivision">("cents");
 
   // Initialize intervalsMatrixUnit once based on valueType, but don't override user's manual selection
@@ -509,8 +517,8 @@ export default function SelectedPitchClassesAnalysis() {
             <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.noteNames')} </th>
             {pitchClasses.map(({ noteName }, i) => (
               <React.Fragment key={i}>
-                {i !== 0 && <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>}
-                <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{getDisplayName(noteName, 'note')}</th>
+                {i !== 0 && <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>}
+                <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{noteNameWithBreaks(getDisplayName(noteName, 'note'))}</td>
               </React.Fragment>
             ))}
           </tr>
@@ -519,8 +527,8 @@ export default function SelectedPitchClassesAnalysis() {
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.pitchClass')}</th>
               {pitchClasses.map((pitchClass, i) => (
                 <React.Fragment key={i}>
-                  {i !== 0 && <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>}
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{pitchClass.pitchClassIndex}</th>
+                  {i !== 0 && <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>}
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="pitch-class">{pitchClass.pitchClassIndex}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -528,11 +536,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["abjadName"] && (
             <tr data-row-type="abjadName">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.abjadName')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].abjadName || "--"}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].abjadName || "--"}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[i + 1].abjadName || "--"}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[i + 1].abjadName || "--"}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -540,11 +548,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["englishName"] && (
             <tr data-row-type="englishName">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.englishName')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].englishName}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].englishName}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[i + 1].englishName}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[i + 1].englishName}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -552,11 +560,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["solfege"] && (
             <tr data-row-type="solfege">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.solfege')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[i + 1].solfege || '--'}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[i + 1].solfege || '--'}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -564,13 +572,13 @@ export default function SelectedPitchClassesAnalysis() {
           {filters[valueType as keyof typeof filters] && (
             <tr data-row-type={valueType}>
               <th className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`analysis.${valueType}`)}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={`${valueType}-interval`}>
                     {useRatio ? `(${interval.fraction.replace("/", ":")})` : `(${interval.cents.toFixed(3)})`}
-                  </th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[i + 1].originalValue}</th>
+                  </td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[i + 1].originalValue}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -578,11 +586,11 @@ export default function SelectedPitchClassesAnalysis() {
           {valueType !== "fraction" && filters["fraction"] && (
             <tr data-row-type="fraction">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.fraction')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[0].fraction}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[0].fraction}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction-interval">({interval.fraction})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[i + 1].fraction}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction-interval">({interval.fraction})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[i + 1].fraction}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -590,11 +598,11 @@ export default function SelectedPitchClassesAnalysis() {
           {valueType !== "cents" && filters["cents"] && (
             <tr data-row-type="cents">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.cents')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[0].cents).toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[0].cents).toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-interval">({interval.cents.toFixed(3)})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[i + 1].cents).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-interval">({interval.cents.toFixed(3)})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[i + 1].cents).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -602,11 +610,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["centsFromZero"] && (
             <tr data-row-type="centsFromZero">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.centsFromZero')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">0.000</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">0.000</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-interval">({interval.cents.toFixed(3)})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">{(parseFloat(pitchClasses[i + 1].cents) - parseFloat(pitchClasses[0].cents)).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-interval">({interval.cents.toFixed(3)})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">{(parseFloat(pitchClasses[i + 1].cents) - parseFloat(pitchClasses[0].cents)).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -614,17 +622,17 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["centsDeviation"] && (
             <tr data-row-type="centsDeviation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.centsDeviation')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
                 {getIpnReferenceNoteNameWithOctave(pitchClasses[0])}
                 {pitchClasses[0].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[0].centsDeviation.toFixed(1)}¢
-              </th>
+              </td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
                     {getIpnReferenceNoteNameWithOctave(pitchClasses[i + 1])}
                     {pitchClasses[i + 1].centsDeviation > 0 ? ' +' : ' '}{pitchClasses[i + 1].centsDeviation.toFixed(1)}¢
-                  </th>
+                  </td>
                 </React.Fragment>
               ))}
             </tr>
@@ -632,11 +640,11 @@ export default function SelectedPitchClassesAnalysis() {
           {valueType !== "decimalRatio" && filters["decimalRatio"] && (
             <tr data-row-type="decimalRatio">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.decimalRatio')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio-interval">({interval.decimalRatio.toFixed(3)})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio-interval">({interval.decimalRatio.toFixed(3)})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[i + 1].decimalRatio).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -644,11 +652,11 @@ export default function SelectedPitchClassesAnalysis() {
           {valueType !== "stringLength" && filters["stringLength"] && (
             <tr data-row-type="stringLength">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.stringLength')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length-interval">({interval.stringLength.toFixed(3)})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length-interval">({interval.stringLength.toFixed(3)})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[i + 1].stringLength).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -656,11 +664,11 @@ export default function SelectedPitchClassesAnalysis() {
           {valueType !== "fretDivision" && filters["fretDivision"] && (
             <tr data-row-type="fretDivision">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.fretDivision')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division-interval">({interval.fretDivision.toFixed(3)})</th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division-interval">({interval.fretDivision.toFixed(3)})</td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[i + 1].fretDivision).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -668,11 +676,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["midiNote"] && (
             <tr data-row-type="midiNote">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNote')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteDecimal.toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[i + 1].midiNoteDecimal.toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -680,15 +688,15 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["midiNoteDeviation"] && (
             <tr data-row-type="midiNoteDeviation">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.midiNoteDeviation')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
                 {calculateIpnReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
-              </th>
+              </td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="midi-note-deviation">
                     {calculateIpnReferenceMidiNote(pitchClasses[i + 1])} {pitchClasses[i + 1].centsDeviation > 0 ? "+" : ""}{pitchClasses[i + 1].centsDeviation.toFixed(1)}
-                  </th>
+                  </td>
                 </React.Fragment>
               ))}
             </tr>
@@ -696,11 +704,11 @@ export default function SelectedPitchClassesAnalysis() {
           {filters["frequency"] && (
             <tr data-row-type="frequency">
               <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.frequency')}</th>
-              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</th>
+              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</td>
               {intervals.map((interval, i) => (
                 <React.Fragment key={i}>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></th>
-                  <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</th>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="empty"></td>
+                  <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[i + 1].frequency).toFixed(3)}</td>
                 </React.Fragment>
               ))}
             </tr>
@@ -750,18 +758,18 @@ export default function SelectedPitchClassesAnalysis() {
                   {interval.fromIndex === 0 ? (
                     <>
                       {/* First pitch class value */}
-                      <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                      <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
                         {formatPitchClassValue(pitchClasses[0], intervalsMatrixUnit, 0)}
-                      </th>
+                      </td>
                       {/* Merged interval cell spanning from after index 0 to before toIndex */}
                       {cellsToMerge > 0 && (
-                        <th 
+                        <td 
                           className="maqam-jins-transpositions-shared__table-cell--pitch-class maqam-jins-transpositions-shared__table-cell--centered" 
                           data-column-type="intervals-matrix"
                           colSpan={cellsToMerge}
                         >
                           {formatIntervalValue(calculatedInterval, intervalsMatrixUnit)}
-                        </th>
+                        </td>
                       )}
                       {/* Subsequent pitch classes - only show those at or after toIndex */}
                       {pitchClasses.slice(1).map((pc, pcIndex) => {
@@ -774,17 +782,17 @@ export default function SelectedPitchClassesAnalysis() {
                           // At the "to" pitch class: show value (interval is already shown in merged cell)
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
                                 {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
-                              </th>
+                              </td>
                             </React.Fragment>
                           );
                         } else {
                           // After the "to" pitch class: show empty
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
                             </React.Fragment>
                           );
                         }
@@ -793,7 +801,7 @@ export default function SelectedPitchClassesAnalysis() {
                   ) : (
                     <>
                       {/* First pitch class value - empty when fromIndex is not 0 */}
-                      <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                      <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
                       {/* Subsequent pitch classes */}
                       {pitchClasses.slice(1).map((pc, pcIndex) => {
                         const actualIndex = pcIndex + 1;
@@ -802,27 +810,27 @@ export default function SelectedPitchClassesAnalysis() {
                           // Before the "from" pitch class: show empty
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
                             </React.Fragment>
                           );
                         } else if (actualIndex === interval.fromIndex) {
                           // At the "from" pitch class: show value, then merged interval cell with centered value
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
                                 {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
-                              </th>
+                              </td>
                               {/* Merged interval cell spanning from after fromIndex to before toIndex */}
                               {cellsToMerge > 0 && (
-                                <th 
+                                <td 
                                   className="maqam-jins-transpositions-shared__table-cell--pitch-class maqam-jins-transpositions-shared__table-cell--centered" 
                                   data-column-type="intervals-matrix"
                                   colSpan={cellsToMerge}
                                 >
                                   {formatIntervalValue(calculatedInterval, intervalsMatrixUnit)}
-                                </th>
+                                </td>
                               )}
                             </React.Fragment>
                           );
@@ -833,17 +841,17 @@ export default function SelectedPitchClassesAnalysis() {
                           // At the "to" pitch class: show value (interval is already shown in merged cell)
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
+                              <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="intervals-matrix-value">
                                 {formatPitchClassValue(pc, intervalsMatrixUnit, actualIndex)}
-                              </th>
+                              </td>
                             </React.Fragment>
                           );
                         } else {
                           // After the "to" pitch class: show empty
                           return (
                             <React.Fragment key={actualIndex}>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
-                              <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
+                              <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>
                             </React.Fragment>
                           );
                         }
@@ -858,8 +866,8 @@ export default function SelectedPitchClassesAnalysis() {
             <th className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t('analysis.play')}</th>
             {pitchClasses.map((pitchClass, i) => (
               <React.Fragment key={i}>
-                {i !== 0 && <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></th>}
-                <th className="maqam-jins-transpositions-shared__table-cell" data-column-type="play-button">
+                {i !== 0 && <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="empty"></td>}
+                <td className="maqam-jins-transpositions-shared__table-cell" data-column-type="play-button">
                   <PlayCircleIcon
                     className="maqam-jins-transpositions-shared__play-circle-icon"
                     onMouseDown={() => {
@@ -872,7 +880,7 @@ export default function SelectedPitchClassesAnalysis() {
                       window.addEventListener("mouseup", handleMouseUp);
                     }}
                   />
-                </th>
+                </td>
               </React.Fragment>
             ))}
           </tr>
@@ -882,7 +890,7 @@ export default function SelectedPitchClassesAnalysis() {
 
     return (
       <>
-        <div className="tuning-system-pitch-classes-analysis maqam-jins-transpositions-shared">
+        <div className="tuning-system-pitch-classes-analysis maqam-jins-transpositions-shared" ref={rotateOverflowContainerRef}>
           <div className="maqam-jins-transpositions-shared__analysis-header">
             <div className="maqam-jins-transpositions-shared__title-row">
               <span className="maqam-jins-transpositions-shared__section-furniture">{t('analysis.title')}</span>
@@ -1063,7 +1071,11 @@ export default function SelectedPitchClassesAnalysis() {
               return <colgroup>{cols}</colgroup>;
             })()}
 
-            <thead>{renderTable()}</thead>
+            {/* tbody, matching the maqam/jins tables: the shared stylesheet
+                scopes its cell rules (hover among them) to tbody, so rows
+                parked in thead here silently opted out of them */}
+            <thead></thead>
+            <tbody>{renderTable()}</tbody>
           </table>
         </div>
       </>
