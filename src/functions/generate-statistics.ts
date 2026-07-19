@@ -7,7 +7,7 @@ import TuningSystem from "@/models/TuningSystem";
 import fs from "fs";
 import path from "path";
 
-interface AnalyticsRow {
+interface StatisticsRow {
   id: string;
   label: string;
   possibleAjnasCount: number;
@@ -35,8 +35,8 @@ interface AnalyticsRow {
  * @param showProgress - Whether to show progress logging
  * @returns Array of statistics rows, one for each starting note in the tuning system
  */
-function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>, showProgress: boolean = false): AnalyticsRow[] {
-  const rows: AnalyticsRow[] = [];
+function computeStatisticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>, showProgress: boolean = false): StatisticsRow[] {
+  const rows: StatisticsRow[] = [];
   const totalNumberOfAjnas = allAjnas.length;
   const totalNumberOfMaqamat = allMaqamat.length;
   const allNoteNameLists = tuningSystem.getNoteNameSets();
@@ -106,7 +106,7 @@ function computeAnalyticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnT
  * @param showProgress - Whether to show progress logging (default: true)
  * @returns The path of the created file
  */
-export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProgress: boolean = true): string {
+export function generateAndWriteStatistics(useTimestamp: boolean = true, showProgress: boolean = true): string {
   if (showProgress) {
     console.log("🎵 Starting maqam statistics generation...");
     console.time("Total generation time");
@@ -121,13 +121,13 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
     console.log("🔄 Processing tuning systems...");
   }
 
-  const statisticsRows: AnalyticsRow[] = [];
+  const statisticsRows: StatisticsRow[] = [];
   
   systems.forEach((ts, index) => {
     if (showProgress) {
       console.log(`  [${index + 1}/${systems.length}] ${ts.stringify()}`);
     }
-    const systemRows = computeAnalyticsForSystem(ts, allAjnas, allMaqamat, showProgress);
+    const systemRows = computeStatisticsForSystem(ts, allAjnas, allMaqamat, showProgress);
     statisticsRows.push(...systemRows);
   });
 
@@ -154,7 +154,7 @@ export function generateAndWriteAnalytics(useTimestamp: boolean = true, showProg
   fs.writeFileSync(outputPath, JSON.stringify(statisticsRows, null, 2), "utf-8");
 
   if (showProgress) {
-    console.log(`✅ Analytics file created: ${outputPath}`);
+    console.log(`✅ Statistics file created: ${outputPath}`);
     console.timeEnd("Total generation time");
   }
 
@@ -172,5 +172,5 @@ if (require.main === module) {
   const useTimestamp = !args.includes('--no-timestamp');
   const showProgress = !args.includes('--no-progress');
   
-  generateAndWriteAnalytics(useTimestamp, showProgress);
+  generateAndWriteStatistics(useTimestamp, showProgress);
 }

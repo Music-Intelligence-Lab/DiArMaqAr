@@ -5,7 +5,7 @@ import { locales } from '@/i18n/config'
 
 const baseUrl = 'https://diarmaqar.net'
 
-const localizablePages = ["", "app", "about", "analytics", "bibliography", "credits", "statistics", "user-guide"] as const;
+const localizablePages = ["", "app", "about", "bibliography", "credits", "statistics", "user-guide"] as const;
 
 function localizedEntries(): MetadataRoute.Sitemap {
   return locales.flatMap((lang) =>
