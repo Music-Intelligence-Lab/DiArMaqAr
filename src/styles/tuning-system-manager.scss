@@ -653,16 +653,8 @@
     color: white;
     padding: 0px;
     margin: 0px;
-    margin-right: 3px;
-    font-size: 16px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 3px;
-    }
   }
 
   &__octave-scroll {
@@ -885,7 +877,8 @@
     padding: 0px;
     margin: 0px;
     margin-right: 0px;
-    font-size: 20px;
+    // Standalone play glyph in the octave-table cell
+    font-size: $icon-size-solo;
     cursor: pointer;
     vertical-align: middle;
   }
@@ -900,20 +893,35 @@
 
 
   &__export-button {
-    @include button-functional;
-    // Icon+label lockup needs flex centering; the shared pill is inline-block
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    @include button-functional; // flex centering + gap come from the mixin
     white-space: nowrap;
 
     svg {
-      display: block;
-      font-size: 16px !important;
+      font-size: $icon-size-inline;
     }
   }
 
+}
+
+// The taḥlīl table is a full member of the shared transposition-table system
+// and inherits all of it. Its one exception: a single short title and fewer
+// buttons than the jins/maqam titles, so the shared narrow-viewport rule that
+// stacks the button group below the title reads as buttons stranded under a
+// short line. Pin them beside the title instead — this table only. Scoping to
+// both real classes on the wrapper out-specifies the shared narrow rule (this
+// file loads before the shared UI, so equal specificity would lose on order).
+.tuning-system-pitch-classes-analysis.maqam-jins-transpositions-shared {
+  @media (max-width: 1280px) {
+    [class*="__buttons"] {
+      float: right;
+      clear: none;
+      margin-top: 0;
+
+      [dir="rtl"] & {
+        float: left;
+      }
+    }
+  }
 }
 
 .tuning-system-manager__row-header {

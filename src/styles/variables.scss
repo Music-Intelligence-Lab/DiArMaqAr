@@ -91,6 +91,11 @@ $font-size-2xl:  1.3125rem; // 21px — H2 tier / section headers
 $font-size-3xl:  1.625rem;  // 26px — H1 tier / navbar title, page-level headers
 $font-size-4xl:  2.5rem;    // 40px — hero/display scale
 
+// Icon sizes — a separate scale from type, since MUI SVG glyphs are sized
+// via font-size but are not text. Kept small and semantic.
+$icon-size-inline: 1rem;      // 16px — glyphs sitting inline beside button/label text
+$icon-size-solo:   1.25rem;   // 20px — glyph standing alone in a cell (e.g. the play-button column)
+
 // Font weight — only 200/300/400/500 are loaded (see layout.tsx Readex Pro
 // config). No bold/600/700 anywhere: hierarchy comes from size and spacing,
 // not weight.
@@ -272,7 +277,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     // One standard block step to whatever sits above (was a legacy 40px
     // that broke the page rhythm)
     margin-top: $space-block;
-    padding: 0 30px;
+    padding: 0 20px;
 }
 
 @mixin comments-sources-section($grow) {
@@ -443,9 +448,14 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     width: auto;
     height: 27px;
     vertical-align: middle;
-    text-align: center;
     border: none;
-    display: inline-block;
+    // One centering mechanism for every button: flex centers an icon+label
+    // lockup vertically and horizontally with no per-icon vertical-align or
+    // margin hacks; the gap is the sole icon↔label spacing.
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 
     &:focus {
         outline: transparent;

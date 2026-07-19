@@ -175,59 +175,36 @@
   // -------------------------
   // Icons
   // -------------------------
+  // In-button icons: size only. Spacing and vertical centering come from the
+  // button's own flex layout (button-functional: align-items + gap), so no
+  // per-icon margin or vertical-align — one mechanism, no magic numbers.
   &__play-circle-icon.MuiSvgIcon-root {
     color: $text;
     padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 21px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
-  // Inside play cells the icon stands alone: the 5px side margin (meant for
-  // icon-next-to-text contexts) skews horizontal centering, in both directions
-  td[data-column-type="play-button"] [class*="__play-circle-icon"].MuiSvgIcon-root {
-    margin-right: 0;
-    margin-left: 0;
+  // Inside play cells the icon stands alone (bare in the cell, not in a
+  // button): the solo size, centered by the cell. Play cells render as both
+  // th (the taḥlīl analysis table) and td (the transposition tables).
+  [data-column-type="play-button"] [class*="__play-circle-icon"].MuiSvgIcon-root {
+    font-size: $icon-size-solo;
+    vertical-align: middle;
   }
 
   &__export-icon.MuiSvgIcon-root {
     color: $text;
     padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
   &__copy-icon.MuiSvgIcon-root {
     color: white;
     padding: 0px;
-    margin: 0px;
-    margin-right: 5px;
-    font-size: 16px;
+    font-size: $icon-size-inline;
     cursor: pointer;
-    vertical-align: middle;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-right: 0;
-      margin-left: 5px;
-    }
   }
 
   // -------------------------
@@ -590,8 +567,8 @@
   // -------------------------
   // th/td prefixes outrank the generic table th/td padding rules; relative
   // positioning anchors the absolutely-centered button group
-  th[class*="-name-row"],
-  td[class*="-name-row"] {
+  th[class*="name-row"],
+  td[class*="name-row"] {
     background-color: black;
     color: white;
     padding: 15px;
