@@ -1486,15 +1486,19 @@ const MaqamTranspositions: React.FC = () => {
                       const hasDirectionColumn = !maqamConfig?.isSymmetric;
                       const totalCols = 2 + (pcCount - 1) * 2 - (hasDirectionColumn ? 0 : 1);
                       const cols: React.ReactElement[] = [];
-                      cols.push(<col key={`c-0-${displayIndex}`} style={{ width: "30px" }} />);
+                      // Key off the column's actual position rather than a
+                      // literal, so a skipped column can never leave two cols
+                      // claiming the same key
+                      const pushCol = (style: React.CSSProperties) => {
+                        cols.push(<col key={`c-${cols.length}-${displayIndex}`} style={style} />);
+                      };
+                      pushCol({ width: "30px" });
                       // Direction (asc/desc arrow) column — dropped for symmetric
                       // maqāmāt in lockstep with the arrow <td>, so the row header
                       // falls into this slot instead of shifting every detail row
-                      if (hasDirectionColumn) cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "26px" }} />);
-                      cols.push(<col key={`c-2-${displayIndex}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
-                      for (let i = cols.length; i < totalCols; i++) {
-                        cols.push(<col key={`c-${i}-${displayIndex}`} style={{ minWidth: "30px" }} />);
-                      }
+                      if (hasDirectionColumn) pushCol({ width: "26px" });
+                      pushCol({ minWidth: "110px", maxWidth: "110px", width: "110px" });
+                      while (cols.length < totalCols) pushCol({ minWidth: "30px" });
                       return <colgroup>{cols}</colgroup>;
                     })()}
                     <thead></thead>
