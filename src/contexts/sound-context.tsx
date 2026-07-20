@@ -742,7 +742,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     activeNotesRef.current.set(pitchClass.fraction, queue);
   }, [releaseMPEChannel, sendMidiMessage, soundSettings.outputMode, soundSettings.release, soundSettings.useMPE]);
 
-  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = useCallback(function (this: MIDIInput, ev: MIDIMessageEvent) {
+  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // Ignore MIDI messages unless inputType is "MIDI"
     if (soundSettings.inputType !== "MIDI") return;
     // only from our selected port
@@ -768,7 +768,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       noteOff(pitchClass);
       setActivePitchClasses((prev) => prev.filter((c) => !(c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)));
     }
-  }, [soundSettings.inputType, soundSettings.selectedMidiInputId, midiToPitchClassMapping, noteOn, noteOff]);
+  };
 
   // The MIDI port binding is imperative and lives outside React's render flow,
   // so a handler bound once would capture stale noteOn/noteOff closures — that
