@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "./variables" as *;
 @use "./maqam-jins-shared-ui";
 
@@ -93,12 +94,19 @@
 
   // The carousel item's visual role WITHOUT the carousel: canonical surface
   // tiers, square corners, no nth-child tooltip rules (those assume the
-  // 3-row column-flow grid this list deliberately doesn't use).
+  // 3-row column-flow grid this list deliberately doesn't use). Every listed
+  // sayr is selectable, so the resting tier is $surface-available — a carousel
+  // card's _active state — and there is no unavailable tier below it.
   &__item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
+    // Attributions run from "al-Ḥilū, 1972" to a full multi-author citation,
+    // so left to themselves these are blocks of six different widths reading
+    // as six unrelated things. One floor width makes them a set of peers and
+    // only a genuinely long citation grows past it.
+    min-width: 220px;
     padding: 6px 10px;
     border: none;
     background-color: $surface-available;
@@ -106,6 +114,12 @@
     cursor: pointer;
     text-align: start;
     transition: background-color 0.2s;
+
+    // Parity with manager-item: the name lockup is start-aligned, which under
+    // RTL has to mean the right edge.
+    [dir="rtl"] & {
+      text-align: right;
+    }
 
     &:hover {
       background-color: $surface-available-hover;
@@ -119,8 +133,11 @@
     &_selected {
       background-color: $surface-selected;
 
+      // Clicking the selected sayr now clears it, so this hover has to answer.
+      // It used to be pinned to the resting colour — correct when the state
+      // was a dead end, and misleading now that it is the way back out.
       &:hover {
-        background-color: $surface-selected;
+        background-color: $hovered-tertiary;
       }
     }
   }
@@ -234,11 +251,60 @@
     background-color: $surface-rest;
     // The header block owns the step above the path; the block step below
     // separates the path from the commentary that glosses it.
-    margin: 0 0 $space-block;
-    padding: $space-block-half $space-block;
+    margin: 0;
+    // Even inset on all four sides. It was $space-block-half top and bottom
+    // against $space-block left and right, which read as a box squashed
+    // vertically rather than as one surface with a consistent frame.
+    padding: $space-block;
     overflow-x: auto;
 
+    // Draws a classic, always-visible rail rather than the overlay bar macOS
+    // fades out when idle — see the mixin, which documents why it must stay
+    // webkit-only to keep that behaviour.
     @include scrollbar-thin;
+  }
+
+  // Holds the right-edge fade. The wrapper exists because the fade cannot go
+  // on the scroller: a mask there would take the scroll rail with it.
+  //
+  // The fade must land on the contour's OWN fill, not the page ground, or it
+  // draws a second hard edge where it is meant to remove one. That fill is
+  // $surface-rest — rgba($black, 0.3) — which cannot be used in a gradient
+  // stop, because a translucent layer over the page reads differently from
+  // the same colour composited into the gradient. Mixing the two at the same
+  // ratio gives the identical rendered value as an opaque colour, so the
+  // gradient matches the box by construction rather than by a hand-picked hex
+  // that drifts the next time the tile or the page ground changes.
+  $contour-fill: color.mix($black, $dark-grey, 30%);
+
+  &__contour-viewport {
+    position: relative;
+    margin-bottom: $space-block;
+
+    // Only when there is somewhere to scroll TO. A fade over a box whose
+    // content already fits announces hidden content that does not exist —
+    // the same lie in the other direction from having no fade at all.
+    // Measured in the component (scrollWidth vs clientWidth); the rail itself
+    // needs no gate, overflow-x: auto already draws it only on overflow.
+    &[data-overflowing="true"]::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      inset-inline-end: 0;
+      // Clear of the rail, so the fade never dims the one element at this
+      // edge that has to stay readable.
+      bottom: 6px;
+      // Wide enough to read AS a fade. At two block steps it was a 40px band
+      // that looked like a slightly dark edge rather than content receding —
+      // the hard cutoff it was meant to soften was still what the eye saw.
+      width: $space-block * 5;
+      pointer-events: none;
+      background: linear-gradient(to right, rgba($contour-fill, 0), $contour-fill);
+
+      [dir="rtl"] & {
+        background: linear-gradient(to left, rgba($contour-fill, 0), $contour-fill);
+      }
+    }
   }
 
   &__contour-step {
@@ -336,15 +402,6 @@
         background-image: repeating-linear-gradient(to right, currentColor 0 1px, transparent 1px 4px);
       }
     }
-
-    // The source's word and the pitch positions disagree — an octave
-    // displacement, or an inconsistency in the source. Rare (six transitions
-    // corpus-wide) and the only state that earns the accent. The line still
-    // follows the pitches, because that is where the chips are; the source's
-    // word is printed on the arriving chip, attributed to it.
-    &[data-conflict="true"] {
-      color: $gold;
-    }
   }
 
   &__admin-stop {
@@ -411,22 +468,6 @@
     @include type-entity-name;
     font-size: $font-size-md;
     line-height: $line-height-snug;
-  }
-
-  // Printed only where the source's stated direction contradicts where the
-  // two pitches actually sit. Gold, matching the connector that marks the
-  // same disagreement, and attributed ("Source: ascending") so the reader
-  // knows it is the source's claim and not the archive's.
-  &__stop-conflict {
-    font-size: $font-size-2xs;
-    font-weight: $font-weight-light;
-    line-height: $line-height-snug;
-    color: $gold;
-    letter-spacing: $letter-spacing-translit;
-
-    [dir="rtl"] & {
-      letter-spacing: $letter-spacing-normal;
-    }
   }
 
   // The pitch a jins/maqām stop is anchored on — the reason it sits at this

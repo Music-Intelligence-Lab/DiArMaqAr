@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import useAppContext from "@/contexts/app-context";
 import useLanguageContext from "@/contexts/language-context";
 import useSoundContext from "@/contexts/sound-context";
@@ -22,6 +22,46 @@ import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/fun
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import { stringifySource } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
+
+/**
+ * Wraps the scrolling contour and reports whether it actually overflows.
+ *
+ * The edge fade hangs off this element rather than the scroller itself: a mask
+ * on the scroller would fade the scroll rail along with the content, and the
+ * rail is the one thing at that edge that has to stay legible — it is what
+ * tells the reader there is more to see.
+ *
+ * The fade is gated on real measurement because a fade over a box whose
+ * content already fits announces hidden content that isn't there. The rail
+ * needs no such gate: `overflow-x: auto` already draws it only on overflow.
+ */
+function ContourViewport({ children }: { children: React.ReactNode }) {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+
+  useLayoutEffect(() => {
+    const scroller = viewportRef.current?.querySelector<HTMLElement>(".sayr-manager__contour");
+    if (!scroller) return;
+
+    // The 1px slack keeps sub-pixel layout rounding from reporting a box that
+    // fits exactly as overflowing by a fraction of a pixel.
+    const measure = () => setOverflowing(scroller.scrollWidth > scroller.clientWidth + 1);
+    measure();
+
+    // Catches the viewport being resized. Content changes don't resize the
+    // scroller (it is width: 100%), so those are covered by re-running on
+    // `children` — a different sayr is a different child tree.
+    const observer = new ResizeObserver(measure);
+    observer.observe(scroller);
+    return () => observer.disconnect();
+  }, [children]);
+
+  return (
+    <div className="sayr-manager__contour-viewport" data-overflowing={overflowing ? "true" : undefined} ref={viewportRef}>
+      {children}
+    </div>
+  );
+}
 
 export default function SayrManager({ admin }: { admin: boolean }) {
   const { t, getDisplayName, language } = useLanguageContext();
@@ -303,21 +343,14 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       // one thing that sayr is about.
       const motion = span < 0 ? "ascending" : span > 0 ? "descending" : "level";
       const stated = next.arrival;
-      // A CONTRADICTION is the source naming one direction while the pitches
-      // move the OPPOSITE way — an octave displacement, or an inconsistency
-      // in the source itself. Neither party is overruled: the line goes where
-      // the pitches are, because that is where the chips are, and the
-      // source's word is printed on the arriving stop with the connector
-      // marked. Eight transitions in the corpus are like this.
-      //
-      // A stated direction over a LEVEL move is deliberately NOT counted
-      // (fourteen more transitions). There the source names a direction and
-      // the next stop it names is the same pitch — the motion happened
-      // through notes the source did not stop on. That is a gap in what was
-      // written down, not a disagreement about it, and flagging it would
-      // spend the accent on noise and blunt the eight that matter.
-      const conflict = stated !== null && motion !== "level" && stated !== motion;
-      return { span, stated, motion, conflict };
+      // Where the source's stated direction contradicts the pitches (an octave
+      // displacement, or an inconsistency in the source — eight transitions
+      // corpus-wide) the contour used to print the source's word on the
+      // arriving stop in gold. It was read as a label on the stop rather than
+      // as a disagreement about it, so it is gone. `stated` is still carried:
+      // the connector distinguishes a move the source directed from one the
+      // archive inferred, which is the distinction that survived.
+      return { span, stated, motion };
     });
 
     return { steps, links, rows };
@@ -429,8 +462,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                   className={"sayr-manager__item" + (isSelected ? " sayr-manager__item_selected" : "")}
                   // A single-select, not six independent toggles: aria-pressed
                   // announced five "not pressed" states alongside one choice.
+                  // Clicking the current choice clears it — no sayr is the
+                  // archive's real resting state, and it was otherwise the one
+                  // state the reader could enter but never leave.
                   aria-current={isSelected ? "true" : undefined}
-                  onClick={() => setMaqamSayrId(sayr.id)}
+                  onClick={() => setMaqamSayrId(isSelected ? "" : sayr.id)}
                 >
                   <span className="sayr-manager__item-name">{attribution}</span>
                   <span className="sayr-manager__item-count">
@@ -656,11 +692,24 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 </div>
               ))}
           </div>
-          {!admin && (() => {
+          {/* Nothing below this point describes the maqām — it all describes
+              the ONE sayr the reader picked. With no sayr picked there is
+              nothing to say, so the contour, the comments and the source
+              header are all absent rather than standing empty. */}
+          {!admin && maqamSayrId && (() => {
             const { steps, links, rows } = buildContour(stops);
-            if (steps.length === 0) return <p className="sayr-manager__empty">{t("sayr.noSuyurAvailable")}</p>;
+            // A selected sayr with no renderable stops is its own fact, and not
+            // the same one as "this maqām has no suyūr" (which the list above
+            // reports). Reusing that string here told a reader looking at six
+            // listed suyūr that there were none.
+            if (steps.length === 0) return <p className="sayr-manager__empty">{t("sayr.noStops")}</p>;
 
             return (
+            // The fade lives on a wrapper, not on the scrolling <ol> itself:
+            // a mask-image on the scroller would fade the scroll rail along
+            // with the content, and the rail is the one thing that has to stay
+            // legible at that edge — it is what tells the reader there is more.
+            <ContourViewport>
             <ol
               className="sayr-manager__contour"
               // The path is an ordered sequence, so it is announced as one.
@@ -783,15 +832,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         {anchorNote && stop.type !== "note" && (
                           <span className="sayr-manager__stop-anchor">{getDisplayName(anchorNote, "note")}</span>
                         )}
-                        {inbound?.conflict && (
-                          // The source's word for this move contradicts where
-                          // the two pitches actually sit. Neither is silently
-                          // resolved: the track follows the pitches, and the
-                          // source's claim is printed here, attributed.
-                          <span className="sayr-manager__stop-conflict">
-                            {t("sayr.source")}: {t(`sayr.${inbound.stated}`)}
-                          </span>
-                        )}
                       </button>
                     </li>
 
@@ -809,7 +849,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                         aria-hidden="true"
                         data-motion={link.motion}
                         data-stated={link.stated ? "yes" : "no"}
-                        data-conflict={link.conflict ? "true" : undefined}
                         style={{
                           gridColumn: 2 * i + 2,
                           // Top of the higher row to the bottom of the lower
@@ -824,39 +863,45 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 );
               })}
             </ol>
+            </ContourViewport>
             );
           })()}
 
           {/* The commentary reads as a gloss ON the path above it, so it
-              follows the path rather than preceding it. */}
-          {!admin && (
-            <div className="sayr-manager__comments-sources-container">
-              <div className="sayr-manager__comments-section">
-                <h3>{t("sayr.comments")}:</h3>
-                <div className="sayr-manager__comments-text">
-                  {language === "ar" ? commentsArabic?.trim() || commentsEnglish : commentsEnglish}
-                </div>
-              </div>
-              <div className="sayr-manager__sources-section">
-                {/* Singular deliberately: this column carries THIS sayr's one
-                    source, not the parent maqām's list of source references. */}
-                <h3>{t("sayr.source")}:</h3>
-                <div className="sayr-manager__sources-text">
-                  {(() => {
-                    // This sayr's OWN source and page — not the parent maqām's
-                    // source references, which describe a different claim.
-                    const source = sources.find((s) => s.getId() === sourceId);
-                    if (!source) return null;
-                    return (
+              follows the path rather than preceding it. Each header is bound
+              to its own content: a heading over an empty box announces a
+              missing thing rather than saying nothing, which is worse than
+              the silence it replaces. */}
+          {!admin && maqamSayrId && (() => {
+            const comment = (language === "ar" ? commentsArabic?.trim() || commentsEnglish : commentsEnglish)?.trim();
+            // This sayr's OWN source and page — not the parent maqām's source
+            // references, which describe a different claim.
+            const source = sources.find((s) => s.getId() === sourceId);
+            if (!comment && !source) return null;
+
+            return (
+              <div className="sayr-manager__comments-sources-container">
+                {comment && (
+                  <div className="sayr-manager__comments-section">
+                    <h3>{t("sayr.comments")}:</h3>
+                    <div className="sayr-manager__comments-text">{comment}</div>
+                  </div>
+                )}
+                {source && (
+                  <div className="sayr-manager__sources-section">
+                    {/* Singular deliberately: this column carries THIS sayr's
+                        one source, not the parent maqām's list of references. */}
+                    <h3>{t("sayr.source")}:</h3>
+                    <div className="sayr-manager__sources-text">
                       <Link href={lh(`/bibliography?source=${source.getId()}`)}>
                         {stringifySource(source, language !== "ar", page)}
                       </Link>
-                    );
-                  })()}
-                </div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
         {admin && (

@@ -319,17 +319,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       setSelectedJinsData(null);
       setSelectedJins(null);
 
-      if (maqamSayrId) {
-        let found = false;
-        for (const sayrId of maqamData.getSuyur().map((sayr) => sayr.id)) {
-          if (sayrId === maqamSayrId) {
-            found = true;
-            break;
-          }
-        }
-
-        if (!found) setMaqamSayrId("");
-      }
+      // A sayr belongs to the maqām the reader chose it under, so changing the
+      // maqām clears it. This used to be a membership check — keep the id if
+      // the incoming maqām also has a sayr by that id — which almost never
+      // fired: sayr ids are derived from the SOURCE alone (sayr-manager.tsx,
+      // `sayr${sourceId}`), so 101 of the archive's 102 suyūr share the id
+      // "sayralshawwa_1946" and the check passed for nearly every pair of
+      // maqāmāt. The reader saw a sayr pre-selected on maqāmāt they had never
+      // opened one for. Transpositions come through this same call with the
+      // same MaqamData, so comparing the maqām's id leaves those untouched.
+      if (maqamSayrId && maqamData.getId() !== selectedMaqamData?.getId()) setMaqamSayrId("");
 
       setSelectedMaqam(maqam);
 
@@ -353,7 +352,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const getModulations = useCallback(
     (sourceMaqamTransposition: Maqam): MaqamatModulations | AjnasModulations => modulate(allPitchClasses, ajnas, maqamat, sourceMaqamTransposition, ajnasModulationsMode, centsTolerance),
-    [allPitchClasses, ajnas, maqamat, ajnasModulationsMode, centsTolerance]
+    // maqamSayrId and selectedMaqamData are read by the sayr-clearing branch
+    // above; both were previously missing here, so that branch decided against
+    // whatever values happened to be captured when the callback was last built.
+    // Every consumer is an event handler, so the extra identity churn is free.
+    [allPitchClasses, ajnas, maqamat, ajnasModulationsMode, centsTolerance, maqamSayrId, selectedMaqamData]
   );
 
   const handleUrlParams = useCallback(
