@@ -1,5 +1,17 @@
 @use "./variables" as *;
 
+// MUI ships size="small" sliders with ~20px of vertical padding, which is far
+// too tall for a 288px panel. Two surfaces here carry a slider — the envelope
+// rows and the tempo control — and both need the identical trim, so it is
+// declared once rather than restated per surface.
+@mixin settings-compact-slider {
+  .MuiSlider-root {
+    padding: 6px 0;
+    margin: 0;
+    display: block;
+  }
+}
+
 .settings-open-button {
   position: fixed;
   top: 15px;
@@ -18,7 +30,6 @@
   right: 0;
   height: 100%;
   width: 288px;
-  // border-left: solid $grey 1px;
   transform: translateX(130%);
   transition: transform 0.3s ease-in-out;
   z-index: 9999;
@@ -43,29 +54,58 @@
     font-size: $font-size-md;
   }
 
+  // No border-top: the section-title lockup below is the divider now. The
+  // block padding carries the separation the border used to assert — see the
+  // note on __section-title.
   &__section {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    padding: 14px 20px;
-    border-top: 1px solid $grey;
+    padding: 16px 20px;
   }
 
-  // Inline divider: the label sits left, a hairline runs out to the right.
-  // Spends ~24px where a stacked header spent ~56px.
+  // Section furniture, and the panel's only section divider.
+  //
+  // The label and the hairline trailing it are ONE lockup: the label names the
+  // section, the rule carries it out to the panel edge and does the dividing
+  // that __section's full-bleed `border-top` used to do. Running both drew two
+  // horizontal lines 16px apart at the top of every section, where the upper
+  // one belonged to nothing and the lower one was therefore read as
+  // decoration. The border is gone and the rule is promoted from
+  // rgba($grey, 0.5) to solid $grey to carry the separation on its own — still
+  // far quieter than the $light-grey label, so the lockup's internal hierarchy
+  // holds.
+  //
+  // The rest of the hierarchy is ink, which is section-furniture's own
+  // weight-duet logic: the title is $light-grey, and __row-label below has been
+  // dropped to $text-quiet. Previously both were 12px / 200 / $light-grey —
+  // literally identical type — which is the actual reason the title read as
+  // another row rather than as a header. Size and weight are untouched:
+  // section-furniture is script-neutral by construction (no case, no tracking)
+  // because the app ships Arabic, and that is not something to trade away for
+  // emphasis.
+  //
+  // The standoff is the other half. margin-block-end doubles the 8px the
+  // section gap gives every child, so there is 16px under the title and 8px
+  // between the rows it heads — the title is spaced as a header, not as a
+  // sibling.
+  //
+  // ::after is a flex item, so it trails the label along the inline axis and
+  // mirrors under RTL on its own. Nothing here is pinned to a physical side.
   &__section-title {
     @include section-furniture($font-size-sm);
     display: flex;
     align-items: center;
     gap: 10px;
     margin: 0;
+    margin-block-end: 8px;
 
     &::after {
       content: "";
       flex: 1;
       height: 1px;
-      background-color: rgba($grey, 0.5);
+      background-color: $grey;
     }
   }
 
@@ -81,8 +121,20 @@
 
   &__row-label {
     @include type-table-label;
-    color: $light-grey;
+    // Inline-label furniture ink, per the $text-quiet token's own definition.
+    // Was $light-grey, which made every row label typographically identical to
+    // the section title; the title cannot read as a header while the rows it
+    // heads match it exactly.
+    color: $text-quiet;
     white-space: nowrap;
+    // Two labels (MIDI input, pattern select) carry an inline button. Flex plus
+    // gap gives both the same lockup, instead of one being a flex row and the
+    // other hanging a button off a text baseline with ad-hoc margins. Every
+    // __row-label is a grid item, so its display is blockified regardless; a
+    // label with a lone text child renders unchanged.
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   &__row-control {
@@ -93,17 +145,12 @@
   // [label] [track] [value]. The read-out is tabular-nums so digits stop
   // jittering as the handle is dragged.
   &__slider-row {
+    @include settings-compact-slider;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 10px;
     width: 100%;
-
-    .MuiSlider-root {
-      padding: 6px 0; // MUI size="small" ships ~20px vertical padding
-      margin: 0;
-      display: block;
-    }
   }
 
   &__slider-value {
@@ -115,72 +162,47 @@
     text-align: end;
   }
 
+  // The header and the slider are two halves of one control, so they sit
+  // tighter than the section's 8px row rhythm.
+  &__tempo {
+    @include settings-compact-slider;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  // The label takes the free space; the three controls close ranks at the
+  // row's end at 4px, which is what makes them read as one stepper lockup
+  // rather than three separate widgets.
+  &__tempo-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+
+    > label {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  // Square icon button: $min-width: 0 clears the 90px main-content floor, and
+  // an explicit width equal to the mixin's 27px height makes − and + identical
+  // squares rather than pills. Padding is zeroed so the box cannot grow past
+  // the square; the mixin's flex centering places the glyph, and line-height: 1
+  // keeps it optically centred instead of riding the font's descender space.
+  &__stepper-button {
+    @include button-functional($min-width: 0);
+    width: 27px;
+    flex: none;
+    padding: 0;
+    font-size: $font-size-md;
+    line-height: 1;
+  }
+
   &__input-container {
     width: 100%;
-  }
-
-  &__filter-container {
-    width: 100%;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 40px;
-  }
-
-  &__filter-checkbox {
-    & input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    & {
-      display: block;
-      position: relative;
-      cursor: pointer;
-      font-size: 1.5rem;
-      user-select: none;
-    }
-
-    .checkmark {
-      position: relative;
-      top: 0;
-      left: 0;
-      height: 28px;
-      width: 28px;
-      background-color: $text;
-      border-radius: 50%;
-      transition: 300ms;
-    }
-
-    & input:checked~.checkmark {
-      background-color: $primary;
-      border-radius: 5px;
-      animation: pulse 500ms ease-in-out;
-    }
-
-    .checkmark:after {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    & input:checked~.checkmark:after {
-      display: block;
-    }
-
-    & .checkmark:after {
-      left: 0.45em;
-      top: 0.25em;
-      width: 0.25em;
-      height: 0.5em;
-      border: solid #e0e0e2;
-      border-width: 0 0.15em 0.15em 0;
-      transform: rotate(45deg);
-    }
   }
 
   &__label {
@@ -224,46 +246,28 @@
     width: auto;
     margin: 0;
     padding: 0;
-    color: $light-grey;
+    color: $text-quiet;
     white-space: nowrap;
   }
 
   &__drone-button {
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: 0.1s;
-    color: $text;
-    background-color: $black;
-    font-size: $font-size-sm;
-    margin: 0;
-
-    &_active {
-      color: $text;
-      background-color: $primary;
-    }
+    @include button-functional($bg: rgba($black, 0.5), $bg-hover: rgba($primary, 0.5), $min-width: 0);
   }
 
-  &__filter-label {
-    cursor: pointer;
-    user-select: none;
-  }
-
-  &__number-input {
-    width: 100%;
-  }
-
-  &__clear-button {
-    padding: 10px 20px;
-    font-size: $font-size-md;
-    cursor: pointer;
-    transition: 0.1s;
-    color: $text;
-    margin: 10px;
+  // State modifier, resolved by specificity rather than by source order.
+  //
+  // button-functional brings a `&:hover` at (0,2,0). A bare
+  // `__drone-button_active` is only (0,1,0), so the hover fill would outrank
+  // the active fill and an ON drone would DIM from $primary to
+  // rgba($primary, 0.5) under the pointer — a regression the mixin introduces,
+  // since the hand-rolled rule this replaces had no hover at all. The
+  // intersection is (0,2,0): it beats the base rest state outright and ties the
+  // mixin's hover, where being written later settles it, so the active colour
+  // holds through hover. Same idiom as `__pattern-label#{&}__row-label` above.
+  //
+  // Colour only — the geometry stays in the base rule, declared once.
+  &__drone-button#{&}__drone-button_active {
     background-color: $primary;
-
-    &:hover {
-      background-color: $secondary;
-    }
   }
 
   &__select,
@@ -273,6 +277,35 @@
     border: none;
     border-radius: 0px;
     background-position: left -40px center;
+  }
+
+  // Deliberately after the shared __select/__number-input block: __tempo-value
+  // and __number-input are both (0,1,0) and this element carries both, so the
+  // declarations below win on source order rather than by accident.
+  &__tempo-value {
+    // Narrow, so it reads as the middle of the stepper lockup rather than as a
+    // form field stretched across the row. Height matches the two buttons so
+    // the three parts form one continuous bar.
+    width: 52px;
+    flex: none;
+    height: 27px;
+    padding: 0 6px;
+    text-align: center;
+
+    // The native spinners duplicate the − / + buttons and only appear on
+    // hover, which is precisely the behaviour those buttons replace. Scoped to
+    // this input rather than to every __number-input: the pitch-bend field has
+    // no stepper buttons and keeps its native spinners.
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    & {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
   }
 
   &__select {
@@ -292,35 +325,26 @@
     gap: 6px;
   }
 
+  // Segmented pair. $min-width: 0 clears the 90px main-content floor, which two
+  // buttons plus a gap could not fit in the panel's 248px of usable width;
+  // flex: 1 splits that width evenly instead.
   &__sound-mode-button {
-    padding: 6px 8px;
-    font-size: $font-size-sm;
-    margin-right: 0;
+    @include button-functional($min-width: 0);
     flex: 1;
-    transition: 0.1s;
-    cursor: pointer;
-    background-color: rgba($primary, 0.5);
-    color: $text;
-
-    &:hover {
-      background-color: rgba($primary, 1);
-    }
-
-    &_selected {
-      background-color: $secondary;
-      color: $text;
-    }
   }
 
-  &__refresh-button {
-    margin-left: auto;
-    margin-right: 10px;
-    margin-top: 5px;
-    padding: 5px;
-    font-size: $font-size-sm;
+  // State modifier — same specificity resolution as __drone-button_active
+  // above, and for the same reason: the mixin's :hover would otherwise repaint
+  // a selected segment as though it were unselected.
+  &__sound-mode-button#{&}__sound-mode-button_selected {
     background-color: $secondary;
-    color: $text;
-    cursor: pointer;
+  }
+
+  // Sits inline inside a __row-label, which is now a flex row with a gap, so
+  // the 27px pill is centred against the label text by that flex — no margins
+  // of its own.
+  &__refresh-button {
+    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary, $min-width: 0);
   }
 
   &__reset-container {
@@ -329,25 +353,14 @@
     width: 100%;
   }
 
+  // Three of these share the octave-shift row, so the 90px floor is cleared
+  // here too and flex: 1 divides the width. Colour, geometry, focus, the gold
+  // :active flash and the sitewide :disabled treatment all come from the mixin
+  // — the former box-shadow and translateY(1px) press were a private button
+  // language this surface no longer speaks.
   &__quick-action-button {
-    padding: 6px 12px;
-    background-color: rgba($primary, 0.8);
-    color: white;
-    //border: 1px solid $grey;
-    border-radius: 4px;
-    font-size: $font-size-sm;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    @include button-functional($min-width: 0);
     flex: 1;
-    
-    &:hover {
-      background-color: $primary;
-    }
-    
-    &:active {
-      transform: translateY(1px);
-    }
   }
 
   &__octave-controls {
@@ -367,37 +380,9 @@
     margin: 0;
     text-align: center;
   }
-}
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 #{$primary}90;
-    rotate: 20deg;
-  }
-
-  50% {
-    rotate: -20deg;
-  }
-
-  75% {
-    box-shadow: 0 0 0 10px #{$primary}60;
-  }
-
-  100% {
-    box-shadow: 0 0 0 13px #{$primary}30;
-    rotate: 0;
-  }
-}
-
-.settings-card {
   &__checkbox {
     margin-right: 8px;
     transform: scale(1.2);
-  }
-
-  &__description {
-    @include type-settings-description; // deliberate bump from 12px — prose-like helper text, not data
-    color: $grey;
-    margin-top: 4px;
   }
 }

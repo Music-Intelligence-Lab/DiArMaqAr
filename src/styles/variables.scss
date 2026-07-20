@@ -508,16 +508,18 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // export / copy table). One geometry and type treatment everywhere; role is
 // carried by the color parameters. Gold :active flash is the shared
 // "pressed" signal.
-@mixin button-functional($bg: rgba($primary, 0.5), $bg-hover: rgba($primary, 1)) {
+@mixin button-functional($bg: rgba($primary, 0.5), $bg-hover: rgba($primary, 1), $min-width: 90px) {
     background-color: $bg;
     color: $text;
     padding: 0px 10px;
     border-radius: 2px;
     cursor: pointer;
     font-size: $font-size-sm;
-    // Spacing comes from the container gap; the narrow floor keeps button
-    // rows fitting at 1024px
-    min-width: 90px;
+    // Spacing comes from the container gap. The 90px default is the floor for
+    // main-content button rows — it keeps them fitting at 1024px. Dense
+    // surfaces pass a smaller one: the settings sidebar has 248px of usable
+    // width, where three 90px buttons plus gaps would overflow or wrap.
+    min-width: $min-width;
     width: auto;
     height: 27px;
     vertical-align: middle;
