@@ -95,15 +95,6 @@ export default function Footer() {
                   : "Documentation"}
               </Link>
             </li>
-            <li className="footer__list-item">
-              <Link href={lh("/about")} className="footer__link">
-                {language === "ar"
-                  ? "حول المشروع"
-                  : language === "fr"
-                  ? "À propos"
-                  : "About"}
-              </Link>
-            </li>
           </ul>
         </div>
 

@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "./variables" as *;
 
 // ============================================================================
@@ -26,24 +25,8 @@
 //   spacing — every chapter boundary is 2 × $space-xl, band or not.
 // ============================================================================
 
-// Spacing scale — every size on the page is one of these steps.
-$space-2xs: 0.5rem;
-$space-xs: 0.75rem;
-$space-sm: 1rem;
-$space-md: 1.5rem;
-$space-lg: 2.5rem;
-$space-xl: 4rem;
-
-// Small accents need a lighter purple: $primary on charcoal is ~1.5:1, below
-// the 3:1 non-text threshold. Large fills keep $primary's depth.
-$accent-line: color.adjust($primary, $lightness: 28%);
-
-// Shared inner content width, centred on the page axis.
-$content-max: 980px;
-
-// Full-bleed break-out: cancels the page's inline padding (footer 22px + 1rem).
-$bleed: calc(-22px - 1rem);
-$bleed-pad: calc(22px + 1rem);
+// The spacing scale, $accent-line, $content-max and $bleed-pad now live in
+// variables.scss as the shared editorial scale — the about page uses them too.
 
 body {
   overflow-x: hidden;

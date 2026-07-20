@@ -44,6 +44,31 @@ $hovered-success: color.adjust($success, $lightness: -10%);
 $hovered-delete: color.adjust($delete, $lightness: -10%);
 $hovered-disabled: color.adjust($disabled, $lightness: -10%);
 
+// ---------------------------------------------------------------------------
+// Editorial scale — long-form prose pages (landing)
+// ---------------------------------------------------------------------------
+//
+// The app's dense chrome runs on $space-block; editorial pages need a wider
+// range, so they share this scale. Every size on those pages is one of these
+// steps — no ad-hoc rems.
+$space-2xs: 0.5rem;
+$space-xs: 0.75rem;
+$space-sm: 1rem;
+$space-md: 1.5rem;
+$space-lg: 2.5rem;
+$space-xl: 4rem;
+
+// Small accents need a lighter purple: $primary on charcoal is ~1.5:1, below
+// the 3:1 non-text threshold. Large fills keep $primary's depth.
+$accent-line: color.adjust($primary, $lightness: 28%);
+
+// Shared inner content width for editorial pages, centred on the page axis.
+$content-max: 980px;
+
+// Full-bleed break-out: cancels an editorial page's inline padding, which is
+// the footer's 22px plus 1rem. Used to run a band out to the viewport edges.
+$bleed-pad: calc(22px + 1rem);
+
 $main-gradient: linear-gradient(0deg, $dark-grey, $dark-grey);
 
 $link: $gold; // Default link color
