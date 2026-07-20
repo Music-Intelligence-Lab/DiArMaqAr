@@ -11,6 +11,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import clampOctaveShift, { OCTAVE_SHIFT_MIN, OCTAVE_SHIFT_MAX } from "@/functions/clampOctaveShift";
+import clampTempo, { TEMPO_MIN, TEMPO_MAX } from "@/functions/clampTempo";
 
 const SettingsCard = () => {
   const { patterns, selectedTuningSystem, allPitchClasses, referenceFrequencies, selectedIndices } = useAppContext();
@@ -63,7 +64,7 @@ const SettingsCard = () => {
     const focusable = cardRef.current?.querySelectorAll<HTMLElement>('input, select, button, a, [tabindex]:not([tabindex="-1"])');
     const first = focusable?.[0];
     const last = focusable?.[focusable.length - 1];
-    first?.focus();
+    cardRef.current?.focus();
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setOpenSettings(false);
@@ -115,6 +116,13 @@ const SettingsCard = () => {
   const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(e.target.value);
     if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, tempo: val }));
+  };
+
+  // The field is left unclamped while typing — clamping each keystroke would rewrite
+  // the first digit of any multi-digit tempo up to TEMPO_MIN. Range is enforced on exit.
+  const handleTempoBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    setSoundSettings((prev) => ({ ...prev, tempo: clampTempo(isNaN(val) ? prev.tempo : val) }));
   };
 
   /*   const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,19 +187,54 @@ const SettingsCard = () => {
       <div className="settings-card__content">
         <section className="settings-card__section">
           <h2 className="settings-card__section-title">{t('settings.pattern')}</h2>
-          <div className="settings-card__row">
-            <label htmlFor="tempo-input" className="settings-card__row-label">
-              {t('settings.tempo')}
-            </label>
-            <input
-              type="number"
-              onFocus={(e) => e.target.select()}
-              id="tempo-input"
+          <div className="settings-card__tempo">
+            <div className="settings-card__tempo-header">
+              <label htmlFor="tempo-input" className="settings-card__row-label">
+                {t('settings.tempo')}
+              </label>
+              <button
+                type="button"
+                className="settings-card__stepper-button"
+                onClick={() => setSoundSettings((prev) => ({ ...prev, tempo: clampTempo(prev.tempo - 1) }))}
+                disabled={soundSettings.tempo <= TEMPO_MIN}
+                aria-label={t('settings.tempoDown')}
+              >
+                −
+              </button>
+              <input
+                type="number"
+                onFocus={(e) => e.target.select()}
+                id="tempo-input"
+                value={soundSettings.tempo}
+                onChange={handleTempoChange}
+                onBlur={handleTempoBlur}
+                className="settings-card__number-input settings-card__tempo-value"
+                min={TEMPO_MIN}
+                max={TEMPO_MAX}
+              />
+              <button
+                type="button"
+                className="settings-card__stepper-button"
+                onClick={() => setSoundSettings((prev) => ({ ...prev, tempo: clampTempo(prev.tempo + 1) }))}
+                disabled={soundSettings.tempo >= TEMPO_MAX}
+                aria-label={t('settings.tempoUp')}
+              >
+                +
+              </button>
+            </div>
+            <Slider
+              size="small"
               value={soundSettings.tempo}
-              onChange={handleTempoChange}
-              className="settings-card__number-input settings-card__row-control"
-              min={20}
-              max={300}
+              min={TEMPO_MIN}
+              max={TEMPO_MAX}
+              step={1}
+              onChange={(_e, newVal) => typeof newVal === "number" && setSoundSettings((prev) => ({ ...prev, tempo: newVal }))}
+              onChangeCommitted={() => {
+                const el = document.activeElement as HTMLElement | null;
+                el?.blur();
+              }}
+              valueLabelDisplay="off"
+              aria-label={t('settings.tempo')}
             />
           </div>
           <div className="settings-card__row">
@@ -232,7 +275,7 @@ const SettingsCard = () => {
         </section>
 
         <section className="settings-card__section">
-          <h2 className="settings-card__section-title">{t('settings.liveInput')}</h2>
+          <h2 className="settings-card__section-title">{t('settings.inputOutput')}</h2>
 
           <div className="settings-card__row">
             <label htmlFor="midi-output-select" className="settings-card__row-label">
@@ -311,6 +354,211 @@ const SettingsCard = () => {
               >
                 {t('settings.jinsOrMaqam')}
               </button>
+            </div>
+          )}
+
+          <div className="settings-card__sound-mode">
+            <button
+              onClick={() =>
+                setSoundSettings((prev) => ({
+                  ...prev,
+                  outputMode: "waveform",
+                }))
+              }
+              className={`settings-card__sound-mode-button ${
+                soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
+              }`}
+            >
+              {t('settings.waveformMode')}
+            </button>
+            <button
+              onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
+              className={`settings-card__sound-mode-button ${soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""}`}
+            >
+              {t('settings.midi')}
+            </button>
+          </div>
+
+          {soundSettings.outputMode === "midi" && (
+            <>
+              <div className="settings-card__row">
+                <label htmlFor="midi-output-select" className="settings-card__row-label">
+                  {t('settings.midiOutput')}{" "}
+                  <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
+                    {t('settings.refresh')}
+                  </button>
+                </label>
+                <select
+                  id="midi-output-select"
+                  value={soundSettings.selectedMidiOutputId || ""}
+                  onChange={(e) =>
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      selectedMidiOutputId: e.target.value || null,
+                    }))
+                  }
+                  className="settings-card__select settings-card__row-control"
+                >
+                  <option value="">{t('settings.chooseOutput')}</option>
+                  {midiOutputs.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="settings-card__row">
+                <label htmlFor="tempo-input" className="settings-card__row-label">
+                  {t('settings.pitchBendRange')}
+                </label>
+                <input
+                  type="number"
+                  onFocus={(e) => e.target.select()}
+                  id="tempo-input"
+                  value={soundSettings.pitchBendRange}
+                  onChange={handlePitchBendRangeChange}
+                  className="settings-card__number-input settings-card__row-control"
+                  min={1}
+                  max={96}
+                />
+              </div>
+              <div className="settings-card__input-container">
+                <label className="settings-card__label">
+                  <input
+                    type="checkbox"
+                    checked={soundSettings.useMPE}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        // Save current pitch bend value before switching to MPE
+                        setOriginalPitchBend(soundSettings.pitchBendRange);
+                        setSoundSettings((prev) => ({
+                          ...prev,
+                          useMPE: true,
+                          pitchBendRange: 48,
+                        }));
+                      } else {
+                        // Restore original pitch bend value when turning off MPE
+                        setSoundSettings((prev) => ({
+                          ...prev,
+                          useMPE: false,
+                          pitchBendRange: originalPitchBend,
+                        }));
+                      }
+                    }}
+                    className="settings-card__checkbox"
+                  />
+                  {t('settings.useMPE')}
+                </label>
+              </div>
+            </>
+          )}
+        </section>
+
+        <section className="settings-card__section">
+          <h2 className="settings-card__section-title">{t('settings.sound')}</h2>
+          {soundSettings.outputMode === "waveform" && (
+            <div className="settings-card__row">
+              <label htmlFor="waveform-select" className="settings-card__row-label">
+                {t('settings.waveform')}
+              </label>
+              <select
+                id="waveform-select"
+                value={soundSettings.waveform}
+                onChange={handleWaveformChange}
+                tabIndex={-1}
+                aria-hidden="true"
+                className="settings-card__select settings-card__row-control"
+              >
+                <optgroup label={t('settings.basic')}>
+                  {BASIC_WAVEFORMS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label={t('settings.customPeriodic')}>
+                  {CUSTOM_WAVEFORMS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label={t('settings.aperiodic')}>
+                  {APERIODIC_WAVEFORMS.map((w) => (
+                    <option key={w} value={w}>
+                      {w}
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+          )}
+
+          {/* Octave Shift Controls */}
+          {refInfo && (
+            <div className="settings-card__input-container">
+              <label className="settings-card__label">{t('settings.octaveShift')}</label>
+              <div className={`settings-card__octave-controls ${language === 'ar' ? 'rtl' : ''}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: clampOctaveShift(prev.octaveShift - 1),
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift <= OCTAVE_SHIFT_MIN}
+                >
+                  {t('settings.octaveDown')}
+                </button>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: 0,
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift === 0}
+                >
+                  {t('settings.reset')}
+                </button>
+                <button
+                  onClick={() => {
+                    setSoundSettings((prev) => ({
+                      ...prev,
+                      octaveShift: clampOctaveShift(prev.octaveShift + 1),
+                    }));
+                  }}
+                  className="settings-card__quick-action-button"
+                  disabled={soundSettings.octaveShift >= OCTAVE_SHIFT_MAX}
+                >
+                  {t('settings.octaveUp')}
+                </button>
+              </div>
+              <p className="settings-card__octave-info">
+                {language === 'ar' ? (
+                  <>
+                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
+                    {soundSettings.octaveShift !== 0 && (
+                      <>
+                        <br />
+                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
+                    {soundSettings.octaveShift !== 0 && (
+                      <>
+                        <br />
+                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
+                      </>
+                    )}
+                  </>
+                )}
+              </p>
             </div>
           )}
         </section>
@@ -435,218 +683,6 @@ const SettingsCard = () => {
               {t('settings.resetEnvelope')}
             </button>
           </div>
-        </section>
-
-        <section className="settings-card__section">
-          <h2 className="settings-card__section-title">{t('settings.output')}</h2>
-
-          {/* Octave Shift Controls */}
-          {refInfo && (
-            <div className="settings-card__input-container">
-              <label className="settings-card__label">{t('settings.octaveShift')}</label>
-              <div className={`settings-card__octave-controls ${language === 'ar' ? 'rtl' : ''}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
-                <button
-                  onClick={() => {
-                    setSoundSettings((prev) => ({
-                      ...prev,
-                      octaveShift: clampOctaveShift(prev.octaveShift - 1),
-                    }));
-                  }}
-                  className="settings-card__quick-action-button"
-                  disabled={soundSettings.octaveShift <= OCTAVE_SHIFT_MIN}
-                >
-                  {t('settings.octaveDown')}
-                </button>
-                <button
-                  onClick={() => {
-                    setSoundSettings((prev) => ({
-                      ...prev,
-                      octaveShift: 0,
-                    }));
-                  }}
-                  className="settings-card__quick-action-button"
-                  disabled={soundSettings.octaveShift === 0}
-                >
-                  {t('settings.reset')}
-                </button>
-                <button
-                  onClick={() => {
-                    setSoundSettings((prev) => ({
-                      ...prev,
-                      octaveShift: clampOctaveShift(prev.octaveShift + 1),
-                    }));
-                  }}
-                  className="settings-card__quick-action-button"
-                  disabled={soundSettings.octaveShift >= OCTAVE_SHIFT_MAX}
-                >
-                  {t('settings.octaveUp')}
-                </button>
-              </div>
-              <p className="settings-card__octave-info">
-                {language === 'ar' ? (
-                  <>
-                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
-                    {soundSettings.octaveShift !== 0 && (
-                      <>
-                        <br />
-                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <bdi>{getDisplayName(refInfo.noteName, 'note')} {refInfo.englishName} = {refInfo.baseFrequency.toFixed(2)} Hz</bdi>
-                    {soundSettings.octaveShift !== 0 && (
-                      <>
-                        <br />
-                        <bdi>{soundSettings.octaveShift > 0 ? '+' : ''}{soundSettings.octaveShift} {t('settings.octaves')} = {refInfo.currentFrequency.toFixed(2)} Hz</bdi>
-                      </>
-                    )}
-                  </>
-                )}
-              </p>
-            </div>
-          )}
-
-          <div className="settings-card__sound-mode">
-            <button
-              onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "mute" }))}
-              className={`settings-card__sound-mode-button ${soundSettings.outputMode === "mute" ? "settings-card__sound-mode-button_selected" : ""}`}
-            >
-              {t('settings.mute')}
-            </button>
-            <button
-              onClick={() =>
-                setSoundSettings((prev) => ({
-                  ...prev,
-                  outputMode: "waveform",
-                }))
-              }
-              className={`settings-card__sound-mode-button ${
-                soundSettings.outputMode === "waveform" ? "settings-card__sound-mode-button_selected" : ""
-              }`}
-            >
-              {t('settings.waveformMode')}
-            </button>
-            <button
-              onClick={() => setSoundSettings((prev) => ({ ...prev, outputMode: "midi" }))}
-              className={`settings-card__sound-mode-button ${soundSettings.outputMode === "midi" ? "settings-card__sound-mode-button_selected" : ""}`}
-            >
-              {t('settings.midi')}
-            </button>
-          </div>
-
-          {soundSettings.outputMode === "waveform" && (
-            <div className="settings-card__row">
-              <label htmlFor="waveform-select" className="settings-card__row-label">
-                {t('settings.waveform')}
-              </label>
-              <select
-                id="waveform-select"
-                value={soundSettings.waveform}
-                onChange={handleWaveformChange}
-                tabIndex={-1}
-                aria-hidden="true"
-                className="settings-card__select settings-card__row-control"
-              >
-                <optgroup label={t('settings.basic')}>
-                  {BASIC_WAVEFORMS.map((w) => (
-                    <option key={w} value={w}>
-                      {w}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label={t('settings.customPeriodic')}>
-                  {CUSTOM_WAVEFORMS.map((w) => (
-                    <option key={w} value={w}>
-                      {w}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label={t('settings.aperiodic')}>
-                  {APERIODIC_WAVEFORMS.map((w) => (
-                    <option key={w} value={w}>
-                      {w}
-                    </option>
-                  ))}
-                </optgroup>
-              </select>
-            </div>
-          )}
-
-          {soundSettings.outputMode === "midi" && (
-            <>
-              <div className="settings-card__row">
-                <label htmlFor="midi-output-select" className="settings-card__row-label">
-                  {t('settings.midiOutput')}{" "}
-                  <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
-                    {t('settings.refresh')}
-                  </button>
-                </label>
-                <select
-                  id="midi-output-select"
-                  value={soundSettings.selectedMidiOutputId || ""}
-                  onChange={(e) =>
-                    setSoundSettings((prev) => ({
-                      ...prev,
-                      selectedMidiOutputId: e.target.value || null,
-                    }))
-                  }
-                  className="settings-card__select settings-card__row-control"
-                >
-                  <option value="">{t('settings.chooseOutput')}</option>
-                  {midiOutputs.map((o) => (
-                    <option key={o.id} value={o.id}>
-                      {o.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="settings-card__row">
-                <label htmlFor="tempo-input" className="settings-card__row-label">
-                  {t('settings.pitchBendRange')}
-                </label>
-                <input
-                  type="number"
-                  onFocus={(e) => e.target.select()}
-                  id="tempo-input"
-                  value={soundSettings.pitchBendRange}
-                  onChange={handlePitchBendRangeChange}
-                  className="settings-card__number-input settings-card__row-control"
-                  min={1}
-                  max={96}
-                />
-              </div>
-              <div className="settings-card__input-container">
-                <label className="settings-card__label">
-                  <input
-                    type="checkbox"
-                    checked={soundSettings.useMPE}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        // Save current pitch bend value before switching to MPE
-                        setOriginalPitchBend(soundSettings.pitchBendRange);
-                        setSoundSettings((prev) => ({
-                          ...prev,
-                          useMPE: true,
-                          pitchBendRange: 48,
-                        }));
-                      } else {
-                        // Restore original pitch bend value when turning off MPE
-                        setSoundSettings((prev) => ({
-                          ...prev,
-                          useMPE: false,
-                          pitchBendRange: originalPitchBend,
-                        }));
-                      }
-                    }}
-                    className="settings-card__checkbox"
-                  />
-                  {t('settings.useMPE')}
-                </label>
-              </div>
-            </>
-          )}
         </section>
       </div>
     </div>

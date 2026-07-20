@@ -11,7 +11,7 @@ import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
 type InputMode = "tuningSystem" | "selection";
-type OutputMode = "mute" | "waveform" | "midi";
+type OutputMode = "waveform" | "midi";
 
 // ---- Global velocity defaults ----
 export const defaultNoteVelocity = 70;
@@ -590,7 +590,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     });
     // Apply octave shift: multiply by 2^octaveShift
     const frequency = baseFrequency * Math.pow(2, soundSettings.octaveShift);
-    if (soundSettings.outputMode === "mute") return;
 
     // Use a quadratic velocity curve for more expressive dynamics
     const velocityNorm = Math.max(0, Math.min(1, midiVelocity / 127));
@@ -724,7 +723,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
   const noteOff = useCallback(function noteOff(pitchClass: PitchClass) {
     setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
-    if (soundSettings.outputMode === "mute") return;
     if (soundSettings.outputMode === "midi") {
       const currentFrequency = midiActiveNotesRef.current.get(pitchClass.fraction);
       if (!currentFrequency) return;
