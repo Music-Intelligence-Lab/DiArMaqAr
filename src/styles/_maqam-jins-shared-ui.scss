@@ -407,8 +407,13 @@
       background-color: transparent;
     }
 
-    // Ghammāz — the gold mark under the degree numeral and its note name,
-    // and nothing else: no glyph, no ink or weight change alongside it.
+    // Ghammāz — the mark under the degree numeral and its note name, and
+    // nothing else: no glyph, no ink or weight change alongside it. It
+    // overrides structural-mark's weight and colour rather than editing the
+    // mixin, because the mixin also draws the native-value-type row header
+    // (see __row-header--primary-value below) — two structures, one hairline
+    // vocabulary, and only this one is the ghammāz. Heavier and in $secondary
+    // so a structural degree of the maqām does not read as page furniture.
     &[class*="--ghammaz"] {
       @include structural-mark;
     }
@@ -689,14 +694,21 @@
   }
 
   // -------------------------
-  // Comments and sources
+  // Entity note — commentary and attribution
   // -------------------------
-  // (The section h3s are styled by the comments-sources-section mixin —
-  // the generic h3 rules that used to compete across the page files were
-  // deleted so every page renders the identical furniture header.)
+  // The maqām's/jins's own commentary, directly under whichever transposition
+  // is open. Same 3/4 + 1/4 columns and h3 furniture the sayr and
+  // tuning-system pages use — one commentary block for the whole app, not a
+  // bespoke second one here. Only its PLACEMENT changed (it used to close the
+  // page); the furniture is deliberately unchanged so it stays recognisable.
 
   &__comments-sources-container {
     @include comments-sources-container;
+    // It belongs to the table above it, so it sits tight under that one and a
+    // full block clear of the next — the gap says which table it is about.
+    // (Overrides the mixin's own top margin, which assumes a page-foot block.)
+    margin-top: $space-block-half;
+    margin-bottom: $space-block;
   }
 
   &__comments-section {
@@ -729,13 +741,20 @@
     @include table-cell-hover;
   }
 
-  // The tuning system's native value type — the same gold mark, under the
-  // row header only. The header is what names the type, so that is where the
-  // fact belongs; underlining the data cells too would spend the mark on
-  // values that are not themselves the fact. The octave tables mark this
-  // identically, which is why neither surface keeps its old bespoke
+  // The tuning system's native value type — the same mark as the ghammāz,
+  // under the row header only. The header is what names the type, so that is
+  // where the fact belongs; underlining the data cells too would spend the
+  // mark on values that are not themselves the fact. The octave tables mark
+  // this identically, which is why neither surface keeps its old bespoke
   // treatment: a $tertiary border here, a $medium-grey row fill there.
-  [class*="__row-header--primary-value"] {
+  //
+  // Qualified by `[class*="__table"] th` because that is the selector this has
+  // to beat: the table's base `th { border: solid 1px $grey }` scores (0,2,1)
+  // and an unqualified `[class*="__row-header--primary-value"]` only (0,2,0),
+  // so the grey edge won and the mark never appeared at any width or colour.
+  // Naming the same context the base rule names is the fix — not !important,
+  // and not a doubled class.
+  [class*="__table"] th[class*="__row-header--primary-value"] {
     @include structural-mark;
   }
 

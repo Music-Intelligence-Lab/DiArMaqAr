@@ -11,18 +11,16 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
+import EntitySourceNote from "@/components/entity-source-note";
 import useRotateOverflowingCells from "@/hooks/use-rotate-overflowing-cells";
 import PitchClass from "@/models/PitchClass";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Jins } from "@/models/Jins";
-import Link from "next/link";
 import StaffNotation from "./staff-notation";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ExportModal from "./export-modal";
-import { stringifySource } from "@/models/bibliography/Source";
-import { useLocalizedHref } from "@/hooks/use-localized-href";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
 import smoothScrollIntoPosition, { SCROLL_DURATION_MS as SHARED_SCROLL_DURATION_MS, SCROLL_SCHEDULE_DELAY_MS } from "@/functions/smoothScrollIntoPosition";
 import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
@@ -43,7 +41,6 @@ export default function JinsTranspositions() {
   const { filters, setFilters } = useFilterContext();
 
   const { t, language, getDisplayName } = useLanguageContext();
-  const lh = useLocalizedHref();
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [jinsToExport, setJinsToExport] = useState<Jins | null>(null);
@@ -559,15 +556,18 @@ export default function JinsTranspositions() {
       // exact register appears in the table highlights only that cell; actives
       // beyond the table's range wrap octave-blind, cycling back from the tonic.
       const rowActives = activePitchClasses.filter((ac) => !ac.melodicDirection || ac.melodicDirection === "ascending");
-      // Highlighting is degree-based: among same-index cells only the lowest
-      // register represents the scale degree — an octave-duplicate cell never
-      // lights on behalf of its lower sibling, and cycling wraps back to the
-      // tonic from the last jins note.
+      // Every cell here is a degree of the jins in its own register, so a cell
+      // lights for its own pitch class AND octave. Keys reaching past the
+      // jins's extent have no cell at their register and wrap back onto its
+      // degrees. Same rule as the maqām table (see maqam-transpositions.tsx),
+      // minus the octave-completion cell — a jins never grows one.
+      const unmatchedActives = rowActives.filter((ac) => !pitchClasses.some((cell) => cell.pitchClassIndex === ac.pitchClassIndex && cell.octave === ac.octave));
       const isPitchClassActive = (pitchClass: PitchClass) => {
+        if (rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave)) return true;
         const sameIndexCells = pitchClasses.filter((rowPitchClass) => rowPitchClass.pitchClassIndex === pitchClass.pitchClassIndex);
         const lowestOctave = Math.min(...sameIndexCells.map((cell) => cell.octave));
         if (pitchClass.octave !== lowestOctave) return false;
-        return rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
+        return unmatchedActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
       };
       // Octave-register siblings share transposition=false but only the canonical
       // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
@@ -605,9 +605,9 @@ export default function JinsTranspositions() {
                   }}
                 >
                   <span>
-                    <span className="maqam-jins-transpositions-shared__entity-name">{getDisplayName(jins.name, 'jins')}</span>
+                    <span className="maqam-jins-transpositions-shared__entity-name">{noteNameWithBreaks(getDisplayName(jins.name, 'jins'))}</span>
                     {" "}
-                    ({getDisplayName(pitchClasses[0].noteName, "note")} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
+                    ({noteNameWithBreaks(getDisplayName(pitchClasses[0].noteName, "note"))} / <span dir="ltr">{getEnglishNoteName(pitchClasses[0].noteName)}</span>)
                   </span>
                   <span className="jins-transpositions__darajat-al-istiqrar">
                     {t("jins.darajatAlIstiqrar")}
@@ -922,6 +922,19 @@ export default function JinsTranspositions() {
       );
     }
 
+    // One definition, two placements — under the open transposition, or at the
+    // foot of the page when none is open. Written once so the two can't drift.
+    const JinsEntityNote = () =>
+      selectedJinsData ? (
+        <EntitySourceNote
+          comments={language === "ar" ? selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getCommentsEnglish() : selectedJinsData.getCommentsEnglish()}
+          sourcePageReferences={selectedJinsData.getSourcePageReferences()}
+          sources={sources}
+          commentsLabel={t("jins.comments")}
+          sourcesLabel={t("jins.sources")}
+        />
+      ) : null;
+
     return (
       <>
         <div className="jins-transpositions maqam-jins-transpositions-shared" key={language} ref={rotateOverflowContainerRef}>
@@ -1024,6 +1037,7 @@ export default function JinsTranspositions() {
                 return filterElement;
                 })}
             </div>
+
           </div>
 
           {/* Render all tables (analysis + transpositions) in sorted order */}
@@ -1063,6 +1077,10 @@ export default function JinsTranspositions() {
                     )}
                   </tbody>
                 </table>
+                {/* Under whichever transposition the reader has open — see the
+                    matching note in maqam-transpositions.tsx. The commentary
+                    describes the JINS, so it appears exactly once. */}
+                {openTranspositions.includes(jins.name) && <JinsEntityNote />}
               </React.Fragment>
             );
           })}
@@ -1080,37 +1098,9 @@ export default function JinsTranspositions() {
               </button>
             </div>
           )}
-
-          {/* COMMENTS AND SOURCES — always rendered (headers included) once
-              a jins is selected; the shared classes carry the 3/4 + 1/4
-              layout, and RTL mirrors via the row's writing direction.
-              Arabic mode falls back to the English comments when no Arabic
-              text exists. */}
-          {selectedJinsData && (
-            <div className="maqam-jins-transpositions-shared__comments-sources-container">
-              <div className="maqam-jins-transpositions-shared__comments-section">
-                <h3>{t("jins.comments")}:</h3>
-                <div className="maqam-jins-transpositions-shared__comments-text">
-                  {language === "ar" ? selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getCommentsEnglish() : selectedJinsData.getCommentsEnglish()}
-                </div>
-              </div>
-
-              <div className="maqam-jins-transpositions-shared__sources-section">
-                <h3>{t("jins.sources")}:</h3>
-                <div className="maqam-jins-transpositions-shared__sources-text">
-                  {selectedJinsData.getSourcePageReferences()?.map((sourceRef, idx) => {
-                    const source = sources.find((s) => s.getId() === sourceRef.sourceId);
-                    return source ? (
-                      <Link key={idx} href={lh(`/bibliography?source=${source.getId()}`)}>
-                        {stringifySource(source, language !== "ar", sourceRef.page)}
-                        <br />
-                      </Link>
-                    ) : null;
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Fallback placement: with every transposition collapsed there is no
+              open table for the commentary to sit under, so it closes the page. */}
+          {openTranspositions.length === 0 && <JinsEntityNote />}
         </div>
       </>
     );

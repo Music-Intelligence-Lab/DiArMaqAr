@@ -360,6 +360,7 @@ const translations = {
     "modulations.sixthAscending": "Sixth (ascending)",
     "modulations.sixthDescending": "Sixth (descending)",
     "modulations.octaveShift": "Octave Shift (-1)",
+    "sayr.noStops": "This sayr records no stops.",
 
     // Sayr Manager
     "sayr.selectOrCreate": "Select Sayr or Create New:",
@@ -720,6 +721,7 @@ const translations = {
     "modulations.third": "الثالثة",
     "modulations.thirdAlternative": "الثالثة (البديلة)",
     "modulations.fourth": "الرابعة",
+    "sayr.noStops": "لا وقفات مسجّلة في هذا السير.",
     "modulations.fifth": "الخامسة",
     "modulations.sixthIfNoThird": "السادسة (إذا لم توجد ثالثة)",
     "modulations.sixthAscending": "السادسة (صعوداًة)",
@@ -1078,6 +1080,7 @@ const translations = {
     "modulations.collapse": "Réduire",
     "modulations.ajnasModulations": "modulations des ajnās",
     "modulations.maqamatModulations": "modulations des maqāmāt",
+    "sayr.noStops": "Ce sayr ne consigne aucun arrêt.",
     "modulations.deleteHop": "Supprimer le saut",
     "modulations.tonic": "Tonique",
     "modulations.third": "Tierce",

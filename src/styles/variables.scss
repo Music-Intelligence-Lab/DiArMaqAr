@@ -206,20 +206,30 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // Structural marking in tables
 // ---------------------------------------------------------------------------
 
-// ONE element, one meaning: a gold hairline under a cell marks it. Every
+// ONE element, one meaning: a hairline under a cell marks it. Every
 // structural fact these tables call out uses it —
 //
-//   the ghammāz degree → underlines its two cells (degree numeral, note name)
-//   the tuning system's native value type → underlines that row
+//   the ghammāz degree → underlines its two cells (note name, degree numeral)
+//   the tuning system's native value type → underlines that ROW HEADER
 //
 // so a reader learns one mark instead of one convention per table.
 //
-// Drawn in $primary — the app's own colour, and the one the eye already
-// reads as "belongs to this system" rather than as an alert. The grid's own
-// 1px $grey edge sits underneath and border-collapse replaces it outright,
-// so the mark costs no layout.
+// ONE mark, drawn identically wherever it appears — 3px in $secondary. The
+// two facts it carries are not ranked against each other, so they are not
+// tinted against each other either; what the reader learns is the mark, and
+// then which cell is wearing it.
+//
+// It was 1px in $primary (#5a2585), which is the reason it went unnoticed for
+// so long: at that width and colour it merely swapped the grid's own 1px
+// $grey edge for a dark purple of near-identical value on the $medium-grey
+// row-header ground. Invisible by construction.
+//
+// border-collapse replaces the grid edge outright, so the mark costs no
+// layout — but it also means this must OUT-SPECIFY the table's base
+// `th { border: solid 1px $grey }` at each call site, or the grey edge wins
+// and nothing shows. See the primary-value call site for the worked case.
 @mixin structural-mark {
-    border-bottom: 1px solid $primary;
+    border-bottom: 3px solid $secondary;
 }
 
 // Table hover — the CELL under the pointer lights, not its whole row. A row
@@ -240,8 +250,6 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // manager carousels and the sayr contour scroll identically instead of
 // carrying two hand-rolled copies of the same three rules.
 @mixin scrollbar-thin($size: 6px) {
-    scrollbar-width: thin;
-
     &::-webkit-scrollbar {
         width: $size;
         height: $size;
@@ -273,6 +281,29 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+//
+// ⚠️ Do NOT add `scrollbar-width` or `scrollbar-color` here. Both have been
+// tried and both break this rail, for the same underlying reason: declaring
+// either one makes Chromium 121+ ignore the whole ::-webkit-scrollbar family
+// and fall back to the platform scrollbar, which on macOS is an OVERLAY —
+// drawn only while the user is actively scrolling, and invisible at rest.
+//
+//   `scrollbar-width: thin` alone  → overlay, and unstyled (this is the
+//                                    regression 58dfe070 introduced)
+//   + `scrollbar-color`            → overlay, correctly coloured, still
+//                                    invisible until you scroll
+//
+// Defining ::-webkit-scrollbar is not the legacy path here, it is the load
+// bearing one: it is what opts the element OUT of overlay scrollbars, so the
+// rail stays drawn for as long as there is anything to scroll to. That
+// permanence is the whole point — the rail is how the reader learns the
+// surface has more in it. Every other styled scroller in the app
+// (modulations, sources-manager, pitch-class-bar, .main-content) is
+// webkit-only for the same reason.
+//
+// The cost is Firefox, which styles scrollbars only through the standard
+// properties and so renders its own default here. Accepted deliberately:
+// a visible rail everywhere beats a coloured one that vanishes at rest.
 }
 
 // The stacked page-header lockup (furniture eyebrow above, entity name
