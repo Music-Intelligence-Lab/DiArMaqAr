@@ -175,6 +175,26 @@
   // The label takes the free space; the three controls close ranks at the
   // row's end at 4px, which is what makes them read as one stepper lockup
   // rather than three separate widgets.
+  //
+  // Same anti-mirror flip as __octave-controls, on the same reasoning: −/+
+  // are a number-line convention, not text, so they must not mirror under
+  // RTL. __octave-controls gets its flip from a `.rtl` class the JSX sets
+  // (language-aware, in settings-cards.tsx); __tempo-header's markup carries
+  // no such class and this task may not touch the JSX, so this reads the
+  // ancestor <html dir="rtl"> (set by src/app/[lang]/layout.tsx) via the
+  // `[dir="rtl"] &` idiom already used elsewhere in this codebase (e.g.
+  // jins-transpositions.scss) instead.
+  //
+  // The label, −, value and + are all direct children here — no wrapper
+  // groups the three stepper controls on their own — so the flip cannot be
+  // scoped to just that trio the way __octave-controls scopes it to its own,
+  // self-contained row. row-reverse must therefore apply to the whole
+  // container, which would also drag the label from the leading edge (right,
+  // in Arabic) to the trailing one; `order` on the label counteracts exactly
+  // that, pulling it back to the leading edge the row-reverse displaced it
+  // from, while the three controls keep their DOM order and, being
+  // unordered, close ranks at the new row-reverse start in − value +
+  // sequence.
   &__tempo-header {
     display: flex;
     align-items: center;
@@ -184,6 +204,14 @@
     > label {
       flex: 1;
       min-width: 0;
+    }
+
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+
+      > label {
+        order: 1;
+      }
     }
   }
 
