@@ -56,7 +56,11 @@
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    min-height: 80px;
+    // Each item is exactly one navbar bottom bar tall, border included, so the
+    // menu's rules line up with the navbar's tab rules behind it. The content's
+    // padding-top already aligns the first item's top edge with the bottom
+    // bar's, so matching the height keeps every subsequent rule in step.
+    min-height: $bottom-navbar-height;
     padding: 10px 20px;
     border-top: 1px solid $grey;
     transition: all 0.1s ease-in-out;

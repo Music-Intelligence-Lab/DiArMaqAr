@@ -38,8 +38,6 @@ const translations = {
     "nav.bibliography": "Bibliography",
     "nav.statistics": "Statistics",
     "nav.documentation": "Documentation",
-    "nav.about": "About",
-    "nav.credits": "Credits",
 
     // Navbar Tabs
     "tabs.tuningSystem": "Tanāghīm",
@@ -405,8 +403,6 @@ const translations = {
     "nav.bibliography": "المراجع",
     "nav.statistics": "الإحصائيات",
     "nav.documentation": "التوثيق",
-    "nav.about": "حول المنصة",
-    "nav.credits": "صفحة الإعتمادات",
 
     // Navbar Tabs
     "tabs.tuningSystem": "تناغيم",
@@ -769,8 +765,6 @@ const translations = {
     "nav.bibliography": "Bibliographie",
     "nav.statistics": "Statistiques",
     "nav.documentation": "Documentation",
-    "nav.about": "À propos",
-    "nav.credits": "Crédits",
 
     // Navbar Tabs
     "tabs.tuningSystem": "Tanāghīm",
