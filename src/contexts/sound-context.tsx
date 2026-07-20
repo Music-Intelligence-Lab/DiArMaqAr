@@ -556,20 +556,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       .catch(console.error);
   }, [refresh]);
 
-  useEffect(() => {
-    const ma = midiAccessRef.current;
-    if (!ma) return;
-
-    for (const input of Array.from(ma.inputs.values())) {
-      input.onmidimessage = handleMidiInput;
-    }
-
-    return () => {
-      for (const input of Array.from(ma.inputs.values())) {
-        input.onmidimessage = null;
-      }
-    };
-  }, [midiInputs, midiToPitchClassMapping, soundSettings.inputType, soundSettings.selectedMidiInputId]);
+  // MIDI port binding effect moved below (after handleMidiInput/midiHandlerRef
+  // are declared) so the trampoline ref is in scope. See below noteOff.
 
   useEffect(() => {
     return () => {
@@ -584,35 +572,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
   }, [soundSettings.useMPE, soundSettings.selectedMidiOutputId, soundSettings.pitchBendRange]);
 
-  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = useCallback(function (this: MIDIInput, ev: MIDIMessageEvent) {
-    // Ignore MIDI messages unless inputType is "MIDI"
-    if (soundSettings.inputType !== "MIDI") return;
-    // only from our selected port
-    if (this.id !== soundSettings.selectedMidiInputId) return;
-
-    const data = ev.data;
-    if (!data) return; // safety
-    const [status, noteNumber, velocity] = data;
-    const cmd = status & 0xf0;
-
-    // Use centralized mapping to get pitch class from MIDI note number
-    const pitchClass = midiToPitchClassMapping[noteNumber];
-    if (!pitchClass) return; // No mapping found for this note number
-
-    // ——— dispatch sound ———
-    if (cmd === 0x90 && velocity > 0) {
-      noteOn(pitchClass, velocity);
-      setActivePitchClasses((prev) => {
-        if (prev.some((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)) return prev;
-        return [...prev, pitchClass];
-      });
-    } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
-      noteOff(pitchClass);
-      setActivePitchClasses((prev) => prev.filter((c) => !(c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)));
-    }
-  }, [soundSettings.inputType, soundSettings.selectedMidiInputId, midiToPitchClassMapping]);
-
   // Define noteOn/noteOff before playNote/playSequence to satisfy hook dependency ordering.
+  // handleMidiInput (which calls noteOn/noteOff) is declared below noteOff for the same reason.
 
   const noteOn = useCallback(function noteOn(pitchClass: PitchClass, midiVelocity: number = defaultNoteVelocity) {
     // Unplayable pitch class (empty placeholder from an out-of-range octave
@@ -780,6 +741,62 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (Array.isArray(voice.oscillator)) voice.oscillator.forEach((osc) => osc.stop(now + release)); else voice.oscillator.stop(now + release);
     activeNotesRef.current.set(pitchClass.fraction, queue);
   }, [releaseMPEChannel, sendMidiMessage, soundSettings.outputMode, soundSettings.release, soundSettings.useMPE]);
+
+  const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = useCallback(function (this: MIDIInput, ev: MIDIMessageEvent) {
+    // Ignore MIDI messages unless inputType is "MIDI"
+    if (soundSettings.inputType !== "MIDI") return;
+    // only from our selected port
+    if (this.id !== soundSettings.selectedMidiInputId) return;
+
+    const data = ev.data;
+    if (!data) return; // safety
+    const [status, noteNumber, velocity] = data;
+    const cmd = status & 0xf0;
+
+    // Use centralized mapping to get pitch class from MIDI note number
+    const pitchClass = midiToPitchClassMapping[noteNumber];
+    if (!pitchClass) return; // No mapping found for this note number
+
+    // ——— dispatch sound ———
+    if (cmd === 0x90 && velocity > 0) {
+      noteOn(pitchClass, velocity);
+      setActivePitchClasses((prev) => {
+        if (prev.some((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)) return prev;
+        return [...prev, pitchClass];
+      });
+    } else if (cmd === 0x80 || (cmd === 0x90 && velocity === 0)) {
+      noteOff(pitchClass);
+      setActivePitchClasses((prev) => prev.filter((c) => !(c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave)));
+    }
+  }, [soundSettings.inputType, soundSettings.selectedMidiInputId, midiToPitchClassMapping, noteOn, noteOff]);
+
+  // The MIDI port binding is imperative and lives outside React's render flow,
+  // so a handler bound once would capture stale noteOn/noteOff closures — that
+  // is how changing the waveform stopped affecting MIDI input. Pointing a ref
+  // at the current handler every render means the binding never goes stale and
+  // there is no dep array left to forget.
+  const midiHandlerRef = useRef(handleMidiInput);
+  useEffect(() => {
+    midiHandlerRef.current = handleMidiInput;
+  });
+
+  useEffect(() => {
+    const ma = midiAccessRef.current;
+    if (!ma) return;
+
+    for (const input of Array.from(ma.inputs.values())) {
+      // `function`, not an arrow: handleMidiInput reads `this.id` to filter by port.
+      input.onmidimessage = function (this: MIDIInput, ev: MIDIMessageEvent) {
+        midiHandlerRef.current.call(this, ev);
+      };
+    }
+
+    return () => {
+      for (const input of Array.from(ma.inputs.values())) {
+        input.onmidimessage = null;
+      }
+    };
+  }, [midiInputs]);
 
   const playNote = useCallback((pitchClass: PitchClass, givenDuration: number = soundSettings.duration, velocity?: number) => {
     noteOn(pitchClass, velocity);
