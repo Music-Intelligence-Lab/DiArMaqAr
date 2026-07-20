@@ -339,9 +339,16 @@ const MaqamTranspositions: React.FC = () => {
       });
     });
 
+    // A symmetric maqām's descending block would duplicate the ascending one
+    // note for note, so the table renders a single block (no descending block,
+    // no spacer, no asc/desc arrow column). Symmetry belongs to the maqām, not
+    // to a transposition, so one flag covers every table in the view.
+    const isSymmetric = selectedMaqamData.isMaqamSymmetric();
+
     return {
       ascendingNoteNames,
       descendingNoteNames,
+      isSymmetric,
       romanNumerals,
       ascendingMaqamPitchClasses,
       numberOfMaqamNotes,
@@ -364,7 +371,7 @@ const MaqamTranspositions: React.FC = () => {
         let ascendingIntervals = maqam.ascendingPitchClassIntervals;
         let descendingIntervals = maqam.descendingPitchClassIntervals;
 
-        const { romanNumerals, valueType, noOctaveMaqam } = maqamConfig;
+        const { romanNumerals, valueType, noOctaveMaqam, isSymmetric } = maqamConfig;
 
         // Apply the same octave transformations as the UI rendering
         if (noOctaveMaqam) {
@@ -621,16 +628,17 @@ const MaqamTranspositions: React.FC = () => {
         // Build complete table
         const allRows: string[][] = [];
         
-        // Ascending section header
-        allRows.push([t("maqam.ascending")]);
-        const ascendingRows = buildDirectionRows(ascending, ascendingIntervals, true, ascendingJins);
-        allRows.push(...ascendingRows);
-        allRows.push([]); // Empty row for spacing
+        // A symmetric maqām copies as a single unlabelled block, matching the
+        // on-screen table: with no descending block there is no direction to
+        // name, so the section headers would label nothing.
+        if (!isSymmetric) allRows.push([t("maqam.ascending")]);
+        allRows.push(...buildDirectionRows(ascending, ascendingIntervals, true, ascendingJins));
 
-        // Descending section header and data
-        allRows.push([t("maqam.descending")]);
-        const descendingRows = buildDirectionRows(descending, descendingIntervals, false, descendingJins);
-        allRows.push(...descendingRows);
+        if (!isSymmetric) {
+          allRows.push([]); // Empty row for spacing
+          allRows.push([t("maqam.descending")]);
+          allRows.push(...buildDirectionRows(descending, descendingIntervals, false, descendingJins));
+        }
 
         // Convert to multiple formats for universal compatibility
         // Create both TSV (for spreadsheets) and HTML (for documents)
@@ -736,7 +744,18 @@ const MaqamTranspositions: React.FC = () => {
   const transpositionTables = useMemo(() => {
     if (!maqamConfig) return null;
 
-    const { romanNumerals, noOctaveMaqam, valueType, numberOfFilterRows, ghammazDegreeIndices, jinsDegreeRankByIndex } = maqamConfig;
+    const { romanNumerals, noOctaveMaqam, valueType, numberOfFilterRows, ghammazDegreeIndices, jinsDegreeRankByIndex, isSymmetric } = maqamConfig;
+
+    // One detail block = the arrow row (asymmetric only) + noteNames +
+    // scaleDegrees + primaryValue + play + ajnas + the enabled filter rows.
+    // Both rowSpans below derive from this so they stay correct as filters
+    // toggle, instead of drifting apart as independent magic numbers.
+    // (primaryValue is gated on filters[valueType] and ajnas on
+    // jinsTranspositions, yet both are counted unconditionally — pre-existing
+    // behaviour, preserved deliberately.)
+    const detailRowsPerBlock = (isSymmetric ? 5 : 6) + numberOfFilterRows;
+    // Asymmetric stacks two blocks with a spacer row between them.
+    const openRowSpan = isSymmetric ? 1 + detailRowsPerBlock : 1 + detailRowsPerBlock * 2 + 1;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
       // Always pass the combined ascending + descending pitch classes so cross-
@@ -816,7 +835,7 @@ const MaqamTranspositions: React.FC = () => {
         return rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
       };
 
-      const rowSpan = open ? 14 + numberOfFilterRows * 2 : 1;
+      const rowSpan = open ? openRowSpan : 1;
 
       return (
         <>
@@ -831,9 +850,15 @@ const MaqamTranspositions: React.FC = () => {
               <th className={`maqam-jins-transpositions-shared__transposition-number maqam-jins-transpositions-shared__transposition-number_${pitchClasses[0].octave}`} rowSpan={rowSpan}>
                 {rowIndex + 1}
               </th>
+              {/* The title row sets the table's column count under
+                  table-layout: fixed, so its span must match what a detail row
+                  actually occupies. The leading term counts the columns covered
+                  by rowSpan — the number cell plus, when asymmetric, the arrow
+                  cell. Over-spanning by one leaves a dead column at the right
+                  edge that no detail row ever fills. */}
               <th
                 className="maqam-jins-transpositions-shared__title-cell"
-                colSpan={4 + (pitchClasses.length - 1) * 2}
+                colSpan={(isSymmetric ? 3 : 4) + (pitchClasses.length - 1) * 2}
               >
                 {/* span[role=button] instead of <button>: browsers refuse text
                     selection inside form controls, and these titles must be
@@ -958,11 +983,16 @@ const MaqamTranspositions: React.FC = () => {
           )}
           {open && (
             <>
-              <tr>
-                <td className="maqam-jins-transpositions-shared__asc-desc-column" rowSpan={6 + numberOfFilterRows} data-column-type="direction">
-                  {language === "ar" ? (ascending ? "↖" : "↙") : ascending ? "↗" : "↘"}
-                </td>
-              </tr>
+              {/* Direction arrow — omitted for symmetric maqāmāt, which render
+                  a single block and so have no direction to distinguish. Drops
+                  in lockstep with the matching <col> in the colgroup below. */}
+              {!isSymmetric && (
+                <tr>
+                  <td className="maqam-jins-transpositions-shared__asc-desc-column" rowSpan={detailRowsPerBlock} data-column-type="direction">
+                    {language === "ar" ? (ascending ? "↖" : "↙") : ascending ? "↗" : "↘"}
+                  </td>
+                </tr>
+              )}
               {/* Note names lead: the column's identity comes first, and the
                   maqām degree follows as its position within the maqām */}
               <tr data-row-type="noteNames">
@@ -1307,8 +1337,10 @@ const MaqamTranspositions: React.FC = () => {
         <>
           {renderTranspositionRow(maqam, true, index)}
 
-          {/* Only render descending row and spacer when open */}
-          {isOpen && (
+          {/* Descending block and its spacer: only when open, and only for
+              asymmetric maqāmāt — a symmetric maqām's descending block repeats
+              the ascending one note for note */}
+          {isOpen && !maqamConfig?.isSymmetric && (
             <>
               <tr>
                 <td className="maqam-transpositions__direction-spacer" colSpan={colSpan} />
@@ -1451,13 +1483,16 @@ const MaqamTranspositions: React.FC = () => {
                   >
                     {(() => {
                       const pcCount = maqam.ascendingPitchClasses.length + (maqamConfig?.noOctaveMaqam ? 1 : 0);
-                      const totalCols = 2 + (pcCount - 1) * 2;
+                      const hasDirectionColumn = !maqamConfig?.isSymmetric;
+                      const totalCols = 2 + (pcCount - 1) * 2 - (hasDirectionColumn ? 0 : 1);
                       const cols: React.ReactElement[] = [];
                       cols.push(<col key={`c-0-${displayIndex}`} style={{ width: "30px" }} />);
-                      // Direction (asc/desc arrow) column
-                      cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "26px" }} />);
+                      // Direction (asc/desc arrow) column — dropped for symmetric
+                      // maqāmāt in lockstep with the arrow <td>, so the row header
+                      // falls into this slot instead of shifting every detail row
+                      if (hasDirectionColumn) cols.push(<col key={`c-1-${displayIndex}`} style={{ width: "26px" }} />);
                       cols.push(<col key={`c-2-${displayIndex}`} style={{ minWidth: "110px", maxWidth: "110px", width: "110px" }} />);
-                      for (let i = 3; i < totalCols; i++) {
+                      for (let i = cols.length; i < totalCols; i++) {
                         cols.push(<col key={`c-${i}-${displayIndex}`} style={{ minWidth: "30px" }} />);
                       }
                       return <colgroup>{cols}</colgroup>;
