@@ -2,7 +2,7 @@
 @use "sass:color";
 
 .footer {
-  background-color: rgba($black, 0.6);
+  background-color: $surface-chrome;
   color: $text;
   box-sizing: border-box;
   width: 100%;

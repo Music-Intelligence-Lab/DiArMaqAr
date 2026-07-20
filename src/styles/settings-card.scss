@@ -1,17 +1,5 @@
 @use "./variables" as *;
 
-// MUI ships size="small" sliders with ~20px of vertical padding, which is far
-// too tall for a 288px panel. Two surfaces here carry a slider — the envelope
-// rows and the tempo control — and both need the identical trim, so it is
-// declared once rather than restated per surface.
-@mixin settings-compact-slider {
-  .MuiSlider-root {
-    padding: 6px 0;
-    margin: 0;
-    display: block;
-  }
-}
-
 .settings-open-button {
   position: fixed;
   top: 15px;
@@ -21,10 +9,15 @@
   border: none;
   cursor: pointer;
   z-index: 11000;
+  display: inline-flex;
+  padding: 0;
+  &:focus-visible {
+    outline: 2px solid $gold;
+    outline-offset: 2px;
+  }
 }
 
 .settings-card {
-  font-size: $font-size-xl;
   position: fixed;
   top: 0;
   right: 0;
@@ -49,7 +42,7 @@
     height: 100%;
     width: 100%;
     overflow-y: auto;
-    background: $black;
+    background: $surface-chrome;
     color: $text;
     font-size: $font-size-md;
   }
@@ -57,12 +50,20 @@
   // No border-top: the section-title lockup below is the divider now. The
   // block padding carries the separation the border used to assert — see the
   // note on __section-title.
+  // The section owns the columns, not each row — that is the whole point.
+  // Every __row used to declare its own `auto 1fr` grid, so each row sized its
+  // label track to its OWN label and the controls came out on a ragged inline
+  // edge (Waveform's select started well before MIDI Output's). One grid here
+  // plus `display: contents` on the rows puts every label and every control in
+  // the section into two real shared tracks, so the controls line up as a
+  // column. Full-width children opt out with `grid-column: 1 / -1`.
   &__section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px 10px;
     width: 100%;
-    padding: 16px 20px;
+    padding: $space-block 20px;
   }
 
   // Section furniture, and the panel's only section divider.
@@ -94,7 +95,8 @@
   // ::after is a flex item, so it trails the label along the inline axis and
   // mirrors under RTL on its own. Nothing here is pinned to a physical side.
   &__section-title {
-    @include section-furniture($font-size-sm);
+    @include section-furniture;
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -110,22 +112,16 @@
   }
 
   // Label beside control rather than above it — the single biggest vertical
-  // saving across ~14 controls.
+  // saving across ~14 controls. `contents` promotes the label and the control
+  // to items of __section's grid, so they share its tracks with every other
+  // row instead of each row inventing its own.
   &__row {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
+    display: contents;
   }
 
   &__row-label {
     @include type-table-label;
-    // Inline-label furniture ink, per the $text-quiet token's own definition.
-    // Was $light-grey, which made every row label typographically identical to
-    // the section title; the title cannot read as a header while the rows it
-    // heads match it exactly.
-    color: $text-quiet;
+    color: $light-grey;
     white-space: nowrap;
     // Two labels (MIDI input, pattern select) carry an inline button. Flex plus
     // gap gives both the same lockup, instead of one being a flex row and the
@@ -137,6 +133,24 @@
     gap: 8px;
   }
 
+  // A control plus its adjuncts as one lockup — ‹ [select] › for the synth,
+  // [select] ↻ for the two ports — closing ranks at 4px the way the tempo
+  // stepper does. It is a single grid item, so the select inside it still
+  // stretches to the section's control track; the adjunct buttons are flex:
+  // none, so every pixel the track gains goes to the select.
+  //
+  // The refresh button sits AFTER the select rather than inside the label: it
+  // acts on the list you are about to read, so it belongs with the list, and
+  // keeping it out of the label column lets that column shrink to the text —
+  // which is where the extra width for the selects comes from.
+  &__control-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    width: 100%;
+  }
+
   &__row-control {
     min-width: 0; // lets the select shrink so ellipsis can engage
     width: 100%;
@@ -145,7 +159,8 @@
   // [label] [track] [value]. The read-out is tabular-nums so digits stop
   // jittering as the handle is dragged.
   &__slider-row {
-    @include settings-compact-slider;
+    grid-column: 1 / -1;
+    @include app-slider;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
@@ -155,7 +170,7 @@
 
   &__slider-value {
     @include type-data-value;
-    color: $light-grey;
+    color: $text;
     min-width: 42px;
     // Logical, not `right`: the read-out is the inline-end column, so under
     // RTL it must hug the mirrored edge, not the physical right.
@@ -165,7 +180,8 @@
   // The header and the slider are two halves of one control, so they sit
   // tighter than the section's 8px row rhythm.
   &__tempo {
-    @include settings-compact-slider;
+    grid-column: 1 / -1;
+    @include app-slider;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -222,89 +238,52 @@
   // keeps it optically centred instead of riding the font's descender space.
   &__stepper-button {
     @include button-functional($min-width: 0);
-    width: 27px;
+    width: 22px;
     flex: none;
     padding: 0;
     font-size: $font-size-md;
     line-height: 1;
   }
 
-  &__input-container {
-    width: 100%;
-  }
-
-  &__label {
-    display: flex;
-    align-items: flex-end;
-    width: 100%;
-    margin-bottom: 5px;
-  }
-
-  &__pattern-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 5px;
-    padding-right: 10px;
-  }
-
-  // Specificity resolution, not a cosmetic tweak. The pattern-select label
-  // carries BOTH `__pattern-label` and `__row-label`; each is (0,1,0), so the
-  // winner would be stylesheet source order, not the order the classes appear
-  // in the attribute. This intersection selector is (0,2,0) and therefore wins
-  // deterministically wherever the two rules disagree.
-  //
-  // It re-states `__row-label`'s typography (which would otherwise be a
-  // coin-toss) and keeps `__pattern-label`'s `justify-content: space-between`,
-  // which is load-bearing for the drone button. In the `auto` grid track the
-  // label is content-sized, so space-between has no free space to distribute —
-  // `gap` supplies the actual separation — but it is kept so the button still
-  // lands correctly if the label is ever given a full-width context.
-  //
-  // It also neutralises the base rule's leaks (`width: 100%`, `margin-bottom`,
-  // `padding-right`), which would otherwise still apply: an intersection only
-  // wins for the properties it declares.
-  &__pattern-label#{&}__row-label {
+  // The MPE toggle: checkbox and its text as one click target, in the same
+  // quiet furniture ink as every other label in the panel.
+  &__checkbox-row {
+    grid-column: 1 / -1;
     @include type-table-label;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 8px;
-    width: auto;
-    margin: 0;
-    padding: 0;
+    color: $light-grey;
+    cursor: pointer;
+  }
+
+  // One-line consequence note under a control (e.g. "MIDI output is driving
+  // the sound"). Quieter than a label and never a heading — it explains state,
+  // it does not name a field.
+  &__hint {
+    grid-column: 1 / -1;
+    @include type-table-label;
     color: $text-quiet;
-    white-space: nowrap;
+    margin: 0;
   }
 
-  &__drone-button {
-    @include button-functional($bg: rgba($black, 0.5), $bg-hover: rgba($primary, 0.5), $min-width: 0);
-  }
+  // __pattern-label is gone, not moved. It existed to give the pattern row's
+  // label a flex context for its inline drone button — which is precisely what
+  // __row-label now provides for every label in the panel (see its `display:
+  // flex` note). Two classes on one element, one of them purely to re-state the
+  // other and neutralise its own leaks, was a specificity problem this file was
+  // solving rather than removing. The label carries __row-label alone.
 
-  // State modifier, resolved by specificity rather than by source order.
-  //
-  // button-functional brings a `&:hover` at (0,2,0). A bare
-  // `__drone-button_active` is only (0,1,0), so the hover fill would outrank
-  // the active fill and an ON drone would DIM from $primary to
-  // rgba($primary, 0.5) under the pointer — a regression the mixin introduces,
-  // since the hand-rolled rule this replaces had no hover at all. The
-  // intersection is (0,2,0): it beats the base rest state outright and ties the
-  // mixin's hover, where being written later settles it, so the active colour
-  // holds through hover. Same idiom as `__pattern-label#{&}__row-label` above.
-  //
-  // Colour only — the geometry stays in the base rule, declared once.
-  &__drone-button#{&}__drone-button_active {
-    background-color: $primary;
+  // The drone toggle. justify-self keeps it hugging the control track's
+  // leading edge instead of being stretched across it by the 1fr column.
+  &__switch {
+    @include toggle-switch;
+    justify-self: start;
   }
 
   &__select,
   &__number-input {
-    padding: 4px 8px;
-    font-size: $font-size-sm;
-    border: none;
-    border-radius: 0px;
-    background-position: left -40px center;
+    @include form-control;
   }
 
   // Deliberately after the shared __select/__number-input block: __tempo-value
@@ -346,6 +325,7 @@
   }
 
   &__sound-mode {
+    grid-column: 1 / -1;
     padding: 0;
     width: 100%;
     margin: 0;
@@ -372,10 +352,21 @@
   // the 27px pill is centred against the label text by that flex — no margins
   // of its own.
   &__refresh-button {
-    @include button-functional($bg: $secondary, $bg-hover: $hovered-secondary, $min-width: 0);
+    @include button-functional($min-width: 0);
+    width: 27px;
+    flex: none;
+    padding: 0;
+    font-size: $font-size-lg;
+    line-height: 1;
+
+    // ↻ is drawn with its gap at the top, which reads as a broken ring at this
+    // size; a quarter turn puts the gap on the side and the glyph reads as one
+    // continuous arrow.
+    transform: rotate(90deg);
   }
 
   &__reset-container {
+    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -391,26 +382,97 @@
     flex: 1;
   }
 
+  // Sits in the section grid's control track beside its label, not on a row of
+  // its own: three small buttons do not need the panel's full width, and the
+  // label + control shape is what every other row here uses.
+  //
+  // The buttons hug their content (no flex: 1) so the trio stays compact at the
+  // track's leading edge. ⌄ / ⌃ are a vertical axis, not text, so the row must
+  // not mirror under RTL — hence the explicit reverse that cancels the flip.
   &__octave-controls {
     display: flex;
-    gap: 10px;
+    gap: 4px;
     align-items: center;
-    margin-top: 5px;
+    // Fills the control track, so the trailing arrow ends flush with every
+    // other control in the panel; Reset takes up the slack.
+    width: 100%;
 
     &.rtl {
       flex-direction: row-reverse;
     }
   }
 
+  // Compact enough to share a row with the two arrowheads.
+  &__octave-reset {
+    @include button-functional($min-width: 0);
+    flex: 1;
+    padding: 0 8px;
+  }
+
+  // ▾ ▴ are drawn small on their em square — a step up in size gives them the
+  // same optical weight as the ‹ › and − + glyphs on the identically-sized
+  // buttons above them.
+  // Octave steppers, DRAWN rather than typeset. The ▼ ▲ characters are not an
+  // equilateral pair in any face we ship — U+25B4/U+25BE were mismatched
+  // outright (Readex Pro draws only one of them, so the other was a font
+  // substitution), and U+25B2/U+25BC are squatter than they are wide. A border
+  // triangle is exact geometry: half-base $b and height $b·√3/2 give a true
+  // equilateral, identical for both directions with only the filled edge
+  // swapped.
+  //
+  // currentColor, not a fixed fill, so the shared interactive-disabled
+  // treatment greys the triangle along with everything else it touches.
+  &__octave-step {
+    @include button-functional($min-width: 0);
+    width: 22px;
+    flex: none;
+    padding: 0;
+
+    // Base kept, height cut: a true equilateral read too tall against the
+    // short label text beside it, so the triangle is squatter by design.
+    $b: 5px; // half the base
+    $h: 6px;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      // Physical sides, deliberately: a triangle is geometry, not text, so it
+      // must not mirror under RTL the way a chevron would.
+      border-left: $b solid transparent;
+      border-right: $b solid transparent;
+    }
+
+    &_down::before {
+      border-top: $h solid currentColor;
+    }
+
+    &_up::before {
+      border-bottom: $h solid currentColor;
+    }
+  }
+
+  // Two lines are RESERVED, not grown into. The second line ("+1 octaves =
+  // 220.00 Hz") only renders once the shift leaves 0, so the block used to be
+  // one line tall at rest and two after a click — and every section below it
+  // jumped down the moment you pressed an octave button. The panel has the room
+  // either way; what it cannot afford is the whole lower half moving while you
+  // are still using the control that moved it. min-height holds the taller of
+  // the two states from the start.
+  //
+  // 2 lines at $line-height-snug on the $font-size-sm the mixin sets.
   &__octave-info {
+    grid-column: 1 / -1;
     @include type-data-value;
+    min-height: calc(2 * #{$line-height-snug} * #{$font-size-sm});
     color: $light-grey;
     margin: 0;
     text-align: center;
   }
 
   &__checkbox {
-    margin-right: 8px;
-    transform: scale(1.2);
+    @include filter-checkbox;
+    flex: none;
   }
 }
