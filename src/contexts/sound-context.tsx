@@ -12,7 +12,6 @@ import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
 import clampTempo from "@/functions/clampTempo";
 type InputMode = "tuningSystem" | "selection";
-type OutputMode = "waveform" | "midi";
 
 // ---- Global velocity defaults ----
 export const defaultNoteVelocity = 70;
@@ -36,7 +35,6 @@ interface SoundSettings {
   inputType: "QWERTY" | "MIDI";
   inputMode: InputMode;
   selectedMidiInputId: string | null;
-  outputMode: OutputMode;
   selectedMidiOutputId: string | null;
   selectedPattern: Pattern | null;
   drone: boolean;
@@ -100,7 +98,6 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     inputType: "QWERTY",
     inputMode: "selection",
     selectedMidiInputId: null,
-    outputMode: "waveform",
     selectedMidiOutputId: null,
     selectedPattern: null,
   drone: true,
@@ -108,6 +105,19 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     useMPE: false,
     octaveShift: 0,
   });
+
+  // The output route, DERIVED — there is no `outputMode` setting.
+  //
+  // A stored mode plus a stored port is two facts that can disagree, and one of
+  // their four combinations is silently dead: mode "midi" with no port selected
+  // sends nothing (sendMidiMessage bails on a null port) while also skipping the
+  // waveform path, so the app goes mute with every control looking correct. The
+  // port IS the mode: choose one and it takes over, clear it and the internal
+  // waveform comes back. That state cannot be reached now.
+  //
+  // A plain boolean, so it compares by value and is safe to list in the
+  // callback dep arrays that used to list `soundSettings.outputMode`.
+  const midiOutputSelected = soundSettings.selectedMidiOutputId !== null;
 
   // Union type: oscillator can be OscillatorNode or OscillatorNode[]
   const activeNotesRef = useRef<Map<string, { oscillator: OscillatorNode | OscillatorNode[]; gainNode: GainNode; frequency: number }[]>>(new Map());
@@ -596,7 +606,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const velocityNorm = Math.max(0, Math.min(1, midiVelocity / 127));
     const velocityCurve = velocityNorm * velocityNorm;
 
-    if (soundSettings.outputMode === "midi") {
+    if (midiOutputSelected) {
       const mf = frequencyToMidiNoteNumber(frequency);
       const note = Math.floor(mf);
       const detune = mf - note;
@@ -720,11 +730,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const prev = activeNotesRef.current.get(pitchClass.fraction) || [];
     prev.push({ oscillator: osc, gainNode, frequency });
     activeNotesRef.current.set(pitchClass.fraction, prev);
-  }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.octaveShift, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
+  }, [allocateMPEChannel, sendMidiMessage, sendPitchBend, soundSettings.attack, soundSettings.decay, soundSettings.octaveShift, midiOutputSelected, soundSettings.pitchBendRange, soundSettings.sustain, soundSettings.useMPE, soundSettings.volume, soundSettings.waveform]);
 
   const noteOff = useCallback(function noteOff(pitchClass: PitchClass) {
     setActivePitchClasses((prev) => prev.filter((c) => !(c.frequency === pitchClass.frequency)));
-    if (soundSettings.outputMode === "midi") {
+    if (midiOutputSelected) {
       const currentFrequency = midiActiveNotesRef.current.get(pitchClass.fraction);
       if (!currentFrequency) return;
       const mf = frequencyToMidiNoteNumber(currentFrequency);
@@ -739,7 +749,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const voice = queue.shift()!; voice.gainNode.gain.cancelScheduledValues(now); voice.gainNode.gain.setValueAtTime(voice.gainNode.gain.value, now); voice.gainNode.gain.linearRampToValueAtTime(0, now + release);
     if (Array.isArray(voice.oscillator)) voice.oscillator.forEach((osc) => osc.stop(now + release)); else voice.oscillator.stop(now + release);
     activeNotesRef.current.set(pitchClass.fraction, queue);
-  }, [releaseMPEChannel, sendMidiMessage, soundSettings.outputMode, soundSettings.release, soundSettings.useMPE]);
+  }, [releaseMPEChannel, sendMidiMessage, midiOutputSelected, soundSettings.release, soundSettings.useMPE]);
 
   const handleMidiInput: NonNullable<MIDIInput["onmidimessage"]> = function (this: MIDIInput, ev: MIDIMessageEvent) {
     // Ignore MIDI messages unless inputType is "MIDI"
@@ -909,10 +919,10 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
 
       if (soundSettings.drone) {
         // If output is MIDI, keep previous behavior using MIDI velocity
-        if (soundSettings.outputMode === "midi") {
+        if (midiOutputSelected) {
           const droneVel = typeof soundSettings.droneVolume === "number" ? Math.round(soundSettings.droneVolume * 127) : defaultDroneVelocity;
           noteOn(dronePitchClass, droneVel);
-        } else if (soundSettings.outputMode === "waveform") {
+        } else if (!midiOutputSelected) {
           // Create a dedicated oscillator for the drone connected to droneGainRef
           const audioCtx = audioCtxRef.current;
           if (audioCtx && droneGainRef.current) {
@@ -1050,7 +1060,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
       if (soundSettings.drone) {
         scheduleTimeout(() => {
           // stop drone oscillator if waveform
-          if (soundSettings.outputMode === "waveform" && droneOscRef.current) {
+          if (!midiOutputSelected && droneOscRef.current) {
             stopDroneOscillator();
           } else {
             noteOff(dronePitchClass);
@@ -1062,7 +1072,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         resolve();
       }, totalSeqMs);
     });
-  }, [allPitchClasses, noteOff, noteOn, scheduleTimeout, selectedMaqam, selectedMaqamData, selectedPitchClasses, soundSettings.drone, soundSettings.selectedPattern, soundSettings.tempo, stopDroneOscillator]);
+  }, [allPitchClasses, midiOutputSelected, noteOff, noteOn, scheduleTimeout, selectedMaqam, selectedMaqamData, selectedPitchClasses, soundSettings.drone, soundSettings.selectedPattern, soundSettings.tempo, stopDroneOscillator]);
 
 
   const stopAllSounds = useCallback(function stopAllSounds() {
@@ -1222,7 +1232,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     // Update MIDI notes
-    if (soundSettings.outputMode === "midi") {
+    if (midiOutputSelected) {
       for (const [pitchClassFraction, oldFrequency] of midiActiveNotesRef.current.entries()) {
         // Find the current pitch class for this fraction to get its decimal ratio
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
@@ -1274,7 +1284,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiActiveNotesRef.current.set(pitchClassFraction, newFrequency);
       }
     }
-  }, [allPitchClasses, sendMidiMessage, sendPitchBend, soundSettings.outputMode, soundSettings.pitchBendRange, soundSettings.useMPE]);
+  }, [allPitchClasses, sendMidiMessage, sendPitchBend, midiOutputSelected, soundSettings.pitchBendRange, soundSettings.useMPE]);
 
   // Function to recalculate all active note frequencies to match their current pitch class frequencies
   const recalculateAllActiveNoteFrequencies = useCallback(function recalculateAllActiveNoteFrequencies() {
@@ -1337,7 +1347,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     }
 
     // Update MIDI notes to their pitch class's current frequency
-    if (soundSettings.outputMode === "midi") {
+    if (midiOutputSelected) {
       for (const [pitchClassFraction, currentFreq] of midiActiveNotesRef.current.entries()) {
         // Find the current pitch class for this fraction in allPitchClasses (which has updated frequencies)
         const currentPitchClass = allPitchClasses.find((pc) => pc.fraction === pitchClassFraction);
@@ -1389,7 +1399,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         midiActiveNotesRef.current.set(pitchClassFraction, targetFrequency);
       }
     }
-  }, [allPitchClasses, sendMidiMessage, sendPitchBend, soundSettings.outputMode, soundSettings.useMPE]);
+  }, [allPitchClasses, sendMidiMessage, sendPitchBend, midiOutputSelected, soundSettings.useMPE]);
 
   const contextValue = useMemo(() => ({
     playNote,

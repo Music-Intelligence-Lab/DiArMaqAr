@@ -37,6 +37,15 @@ $medium-grey: #333333;
 $grey: #555555;
 $light-grey: #dddddd;
 
+// The app's opaque chrome surface — the footer band and the two slide-out
+// sidebars (settings, navigation). The footer arrived at this colour as
+// rgba($black, 0.6) over the $medium-grey page; the sidebars cannot use that,
+// because they overlay scrolling content and would show it through. Mixing the
+// same two colours at the same ratio gives the identical rendered value as an
+// opaque fill, so the three surfaces are one colour by construction rather than
+// by a hand-matched hex that drifts the next time the page ground changes.
+$surface-chrome: color.mix($black, $medium-grey, 60%);
+
 $hovered-primary: color.adjust($primary, $lightness: 10%);
 $hovered-secondary: color.adjust($secondary, $lightness: -10%);
 $hovered-tertiary: color.adjust($tertiary, $lightness: 10%);
@@ -45,7 +54,7 @@ $hovered-delete: color.adjust($delete, $lightness: -10%);
 $hovered-disabled: color.adjust($disabled, $lightness: -10%);
 
 // ---------------------------------------------------------------------------
-// Editorial scale — long-form prose pages (landing)
+// Editorial scale — long-form prose pages (landing, about)
 // ---------------------------------------------------------------------------
 //
 // The app's dense chrome runs on $space-block; editorial pages need a wider
@@ -274,6 +283,29 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 // thumb in the app's own colour on a $medium-grey track. Extracted so the
 // manager carousels and the sayr contour scroll identically instead of
 // carrying two hand-rolled copies of the same three rules.
+//
+// ⚠️ Do NOT add `scrollbar-width` or `scrollbar-color` here. Both have been
+// tried and both break this rail, for the same underlying reason: declaring
+// either one makes Chromium 121+ ignore the whole ::-webkit-scrollbar family
+// and fall back to the platform scrollbar, which on macOS is an OVERLAY —
+// drawn only while the user is actively scrolling, and invisible at rest.
+//
+//   `scrollbar-width: thin` alone  → overlay, and unstyled (this is the
+//                                    regression 58dfe070 introduced)
+//   + `scrollbar-color`            → overlay, correctly coloured, still
+//                                    invisible until you scroll
+//
+// Defining ::-webkit-scrollbar is not the legacy path here, it is the load
+// bearing one: it is what opts the element OUT of overlay scrollbars, so the
+// rail stays drawn for as long as there is anything to scroll to. That
+// permanence is the whole point — the rail is how the reader learns the
+// surface has more in it. Every other styled scroller in the app
+// (modulations, sources-manager, pitch-class-bar, .main-content) is
+// webkit-only for the same reason.
+//
+// The cost is Firefox, which styles scrollbars only through the standard
+// properties and so renders its own default here. Accepted deliberately:
+// a visible rail everywhere beats a coloured one that vanishes at rest.
 @mixin scrollbar-thin($size: 6px) {
     &::-webkit-scrollbar {
         width: $size;
@@ -306,29 +338,6 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
-//
-// ⚠️ Do NOT add `scrollbar-width` or `scrollbar-color` here. Both have been
-// tried and both break this rail, for the same underlying reason: declaring
-// either one makes Chromium 121+ ignore the whole ::-webkit-scrollbar family
-// and fall back to the platform scrollbar, which on macOS is an OVERLAY —
-// drawn only while the user is actively scrolling, and invisible at rest.
-//
-//   `scrollbar-width: thin` alone  → overlay, and unstyled (this is the
-//                                    regression 58dfe070 introduced)
-//   + `scrollbar-color`            → overlay, correctly coloured, still
-//                                    invisible until you scroll
-//
-// Defining ::-webkit-scrollbar is not the legacy path here, it is the load
-// bearing one: it is what opts the element OUT of overlay scrollbars, so the
-// rail stays drawn for as long as there is anything to scroll to. That
-// permanence is the whole point — the rail is how the reader learns the
-// surface has more in it. Every other styled scroller in the app
-// (modulations, sources-manager, pitch-class-bar, .main-content) is
-// webkit-only for the same reason.
-//
-// The cost is Firefox, which styles scrollbars only through the standard
-// properties and so renders its own default here. Accepted deliberately:
-// a visible rail everywhere beats a coloured one that vanishes at rest.
 }
 
 // The stacked page-header lockup (furniture eyebrow above, entity name
@@ -603,6 +612,141 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     // one disabled treatment sitewide, no per-component variants
     &:disabled,
     &[aria-disabled="true"] {
+        @include interactive-disabled;
+    }
+}
+
+// The app's one form-control voice — selects and text/number inputs. Counterpart
+// to button-functional: same 27px height and 2px radius, so a control and the
+// button beside it form one continuous bar instead of two different objects.
+//
+// The fill is $surface-rest rather than solid black for the same reason
+// input-value-box uses it: the control darkens whatever ground it sits on
+// instead of punching a hole in it. Without this, native selects and inputs
+// render in the UA's own white — the single loudest un-tokenised surface left
+// in the app.
+//
+// input-value-box stays a separate role: it is a CENTRED, content-hugging
+// numeric read-out (Hz, cents). This one is a full-width labelled form control.
+@mixin form-control {
+    @include type-form-input;
+    box-sizing: border-box;
+    height: 27px;
+    padding: 0 8px;
+    border: none;
+    border-radius: 2px;
+    background-color: $surface-rest;
+    color: $text;
+
+    &:focus-visible {
+        outline: 2px solid $gold;
+        outline-offset: -2px;
+    }
+
+    // Matches the button system's disabled treatment, so a control that is
+    // overridden by another reads as inert in the same language as a button
+    // that cannot be pressed.
+    &:disabled {
+        @include interactive-disabled;
+    }
+}
+
+// THE app's slider voice. MUI ships <Slider> in its default palette blue
+// (#1976d2) — a colour that appears nowhere else in this app — and the project
+// has no ThemeProvider to correct it centrally, so the correction lives here
+// with every other role token.
+//
+// Track/thumb in $tertiary (the app's "this is the selected/live value" colour,
+// same as $surface-selected), rail in $grey. The vertical trim is part of the
+// same role: size="small" still ships ~20px of padding, which is far too tall
+// for the settings panel's dense rows.
+@mixin app-slider {
+    .MuiSlider-root {
+        padding: 6px 0;
+        margin: 0;
+        display: block;
+        color: $tertiary;
+    }
+
+    .MuiSlider-rail {
+        background-color: $grey;
+        opacity: 1;
+    }
+
+    .MuiSlider-track {
+        border: none;
+    }
+
+    .MuiSlider-thumb {
+        width: 12px;
+        height: 12px;
+
+        // MUI's default focus/hover halo is a 8px box-shadow in its own blue.
+        &:hover,
+        &.Mui-focusVisible {
+            box-shadow: 0 0 0 6px rgba($tertiary, 0.25);
+        }
+
+        &.Mui-active {
+            box-shadow: 0 0 0 10px rgba($tertiary, 0.3);
+        }
+    }
+}
+
+// THE app's toggle switch — a two-state setting that takes effect immediately
+// (the drone). Distinct from a checkbox, which states a fact to be submitted,
+// and from the segmented button pairs, which pick one of several named modes:
+// a switch is on or off and acts at once. Built on a real checkbox so the
+// keyboard, the label's `for`, and the accessibility tree all work unaided;
+// role="switch" at the call site names it correctly to a screen reader.
+@mixin toggle-switch {
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    flex: none;
+    width: 34px;
+    height: 18px;
+    margin: 0;
+    border-radius: 9px;
+    background-color: $surface-rest;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+
+    // The knob. Positioned from the INLINE start, so its rest position mirrors
+    // under RTL on its own; only the travel direction needs flipping.
+    &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        inset-inline-start: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: $light-grey;
+        transition: translate 150ms ease;
+    }
+
+    // $secondary is the panel's "this is on" fill — the same colour the
+    // selected segment of every button pair uses.
+    &:checked {
+        background-color: $secondary;
+
+        &::after {
+            translate: 16px 0;
+            background-color: $text;
+        }
+    }
+
+    [dir="rtl"] &:checked::after {
+        translate: -16px 0;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $gold;
+        outline-offset: 2px;
+    }
+
+    &:disabled {
         @include interactive-disabled;
     }
 }
