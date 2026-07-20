@@ -29,6 +29,7 @@
   }
 
   &__content {
+    @include scrollbar-thin;
     display: flex;
     flex-direction: column;
     padding-bottom: 50px;
@@ -42,34 +43,80 @@
     font-size: $font-size-md;
   }
 
-  &__details {
+  &__section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 8px;
     width: 100%;
-    height: 80px;
-    padding: 10px 20px;
+    padding: 14px 20px;
     border-top: 1px solid $grey;
-    transition: all 0.1s ease-in-out;
+  }
 
-    &[open] {
-      background-color: $dark-grey;
-      height: fit-content;
+  // Inline divider: the label sits left, a hairline runs out to the right.
+  // Spends ~24px where a stacked header spent ~56px.
+  &__section-title {
+    @include section-furniture($font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: rgba($grey, 0.5);
     }
   }
 
-  &__summary {
+  // Label beside control rather than above it — the single biggest vertical
+  // saving across ~14 controls.
+  &__row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
     width: 100%;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 14px;
-    font-weight: $font-weight-regular;
-    font-size: $font-size-lg;
+  }
+
+  &__row-label {
+    @include type-table-label;
+    color: $light-grey;
+    white-space: nowrap;
+  }
+
+  &__row-control {
+    min-width: 0; // lets the select shrink so ellipsis can engage
+    width: 100%;
+  }
+
+  // [label] [track] [value]. The read-out is tabular-nums so digits stop
+  // jittering as the handle is dragged.
+  &__slider-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+
+    .MuiSlider-root {
+      padding: 6px 0; // MUI size="small" ships ~20px vertical padding
+      margin: 0;
+      display: block;
+    }
+  }
+
+  &__slider-value {
+    @include type-data-value;
+    color: $light-grey;
+    min-width: 42px;
+    // Logical, not `right`: the read-out is the inline-end column, so under
+    // RTL it must hug the mirrored edge, not the physical right.
+    text-align: end;
   }
 
   &__input-container {
     width: 100%;
-    margin-bottom: 5px;
   }
 
   &__filter-container {
@@ -152,6 +199,35 @@
     padding-right: 10px;
   }
 
+  // Specificity resolution, not a cosmetic tweak. The pattern-select label
+  // carries BOTH `__pattern-label` and `__row-label`; each is (0,1,0), so the
+  // winner would be stylesheet source order, not the order the classes appear
+  // in the attribute. This intersection selector is (0,2,0) and therefore wins
+  // deterministically wherever the two rules disagree.
+  //
+  // It re-states `__row-label`'s typography (which would otherwise be a
+  // coin-toss) and keeps `__pattern-label`'s `justify-content: space-between`,
+  // which is load-bearing for the drone button. In the `auto` grid track the
+  // label is content-sized, so space-between has no free space to distribute —
+  // `gap` supplies the actual separation — but it is kept so the button still
+  // lands correctly if the label is ever given a full-width context.
+  //
+  // It also neutralises the base rule's leaks (`width: 100%`, `margin-bottom`,
+  // `padding-right`), which would otherwise still apply: an intersection only
+  // wins for the properties it declares.
+  &__pattern-label#{&}__row-label {
+    @include type-table-label;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    color: $light-grey;
+    white-space: nowrap;
+  }
+
   &__drone-button {
     padding: 5px 10px;
     cursor: pointer;
@@ -159,7 +235,7 @@
     color: $text;
     background-color: $black;
     font-size: $font-size-sm;
-    margin: 10px 0px;
+    margin: 0;
 
     &_active {
       color: $text;
@@ -192,29 +268,35 @@
 
   &__select,
   &__number-input {
-    padding: 5px 10px;
+    padding: 4px 8px;
     font-size: $font-size-sm;
     border: none;
-    width: 100%;
     border-radius: 0px;
     background-position: left -40px center;
   }
 
   &__select {
     cursor: pointer;
-    padding-right: 20px;
+    // MIDI port names ("IAC Driver Bus 1") overflow a 288px panel. The full
+    // name stays readable in the open dropdown.
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 
   &__sound-mode {
-    padding: 10px 0;
-    width: fit-content;
-    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    gap: 6px;
   }
 
   &__sound-mode-button {
-    padding: 10px 10px;
+    padding: 6px 8px;
     font-size: $font-size-sm;
-    margin-right: 10px;
+    margin-right: 0;
+    flex: 1;
     transition: 0.1s;
     cursor: pointer;
     background-color: rgba($primary, 0.5);
@@ -280,8 +362,9 @@
   }
 
   &__octave-info {
-    font-size: 0.9em;
-    margin-top: 8px;
+    @include type-data-value;
+    color: $light-grey;
+    margin: 0;
     text-align: center;
   }
 }
