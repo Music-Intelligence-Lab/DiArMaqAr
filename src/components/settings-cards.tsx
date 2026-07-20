@@ -71,7 +71,7 @@ const SettingsCard = () => {
         buttonRef.current?.focus();
       }
       if (e.key === "Tab" && focusable && focusable.length > 0) {
-        if (e.shiftKey && document.activeElement === first) {
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === cardRef.current)) {
           e.preventDefault();
           last?.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
@@ -114,15 +114,16 @@ const SettingsCard = () => {
   };
 
   const handleTempoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    if (!isNaN(val)) setSoundSettings((prev) => ({ ...prev, tempo: val }));
+    // Left unclamped while typing: clamping each keystroke would rewrite the first
+    // digit of any multi-digit tempo up to TEMPO_MIN. Range is enforced on blur.
+    setSoundSettings((prev) => ({ ...prev, tempo: Number(e.target.value) }));
   };
 
-  // The field is left unclamped while typing — clamping each keystroke would rewrite
-  // the first digit of any multi-digit tempo up to TEMPO_MIN. Range is enforced on exit.
   const handleTempoBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setSoundSettings((prev) => ({ ...prev, tempo: clampTempo(isNaN(val) ? prev.tempo : val) }));
+    // An emptied field reads as "" -> keep the tempo the user started with rather
+    // than snapping to TEMPO_MIN.
+    const raw = e.target.value.trim();
+    setSoundSettings((prev) => ({ ...prev, tempo: raw === "" ? prev.tempo : clampTempo(Number(raw)) }));
   };
 
   /*   const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,14 +279,14 @@ const SettingsCard = () => {
           <h2 className="settings-card__section-title">{t('settings.inputOutput')}</h2>
 
           <div className="settings-card__row">
-            <label htmlFor="midi-output-select" className="settings-card__row-label">
+            <label htmlFor="midi-input-select" className="settings-card__row-label">
               {t('settings.midiInput')}{" "}
               <button className="settings-card__refresh-button" onClick={() => setRefresh((prev) => !prev)}>
                 {t('settings.refresh')}
               </button>
             </label>
             <select
-              id="midi-output-select"
+              id="midi-input-select"
               value={soundSettings.selectedMidiInputId || ""}
               onChange={(e) =>
                 setSoundSettings((prev) => ({
@@ -408,13 +409,13 @@ const SettingsCard = () => {
                 </select>
               </div>
               <div className="settings-card__row">
-                <label htmlFor="tempo-input" className="settings-card__row-label">
+                <label htmlFor="pitch-bend-range-input" className="settings-card__row-label">
                   {t('settings.pitchBendRange')}
                 </label>
                 <input
                   type="number"
                   onFocus={(e) => e.target.select()}
-                  id="tempo-input"
+                  id="pitch-bend-range-input"
                   value={soundSettings.pitchBendRange}
                   onChange={handlePitchBendRangeChange}
                   className="settings-card__number-input settings-card__row-control"

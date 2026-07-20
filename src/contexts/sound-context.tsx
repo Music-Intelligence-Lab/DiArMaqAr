@@ -10,6 +10,7 @@ import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
+import clampTempo from "@/functions/clampTempo";
 type InputMode = "tuningSystem" | "selection";
 type OutputMode = "waveform" | "midi";
 
@@ -836,7 +837,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     const selectedPattern = soundSettings.selectedPattern || new Pattern("Default", "Default", [{ scaleDegree: "I", noteDuration: "8n", isTarget: true }]);
 
     return new Promise((resolve) => {
-      const beatSec = 60 / soundSettings.tempo;
+      const beatSec = 60 / clampTempo(soundSettings.tempo);
 
       const patternNotes = selectedPattern.getNotes();
 
