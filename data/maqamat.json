@@ -39,7 +39,7 @@
         "sourceId": "alshawwa_1946",
         "page": "42",
         "commentsEnglish": "Begins from the note rāst or yegāh and repeats the sayr from the qarār, then it ascends to nawā and above. In the end it descends to the qarār which is rāst.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست أو صوت اليك كاه ويكرر فى سير العمل من القرار ثم الصعود إلى درجة صوت النواه فما فوق وفى النهايه يعود العمل بالهبوط إلى القرار وقراره هو صوت الراست .",
         "stops": [
           {
             "type": "jins",
@@ -67,7 +67,7 @@
             "value": "rāst"
           }
         ],
-        "version": "2025-12-10T17:00:39.497Z"
+        "version": "2026-07-19T19:12:36.330Z"
       },
       {
         "id": "sayralsabbagh_1950",
@@ -144,11 +144,67 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "65",
+        "commentsEnglish": "Begins from rāst descending to yegāh, then performs ḥijāz on dūgāh, followed by rāst on nawā; then ascends above muḥayyar and descends to the qarār, which is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست هبوطاً إلى صوت اليك كاه ثم عمل حجاز على صوت الدوكاه يلى ذلك عمـل راست عـلى صوت النواه ثم صعوداً إلى مافوق المحير فهبوطا للقرار وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "65"
+      }
+    ],
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "3",
@@ -182,11 +238,62 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "77",
+        "commentsEnglish": "Begins from dūgāh to nawā, then performs nahāwand on nawā, continues ascending to muḥayyar, and returns descending to its qarār, dūgāh.",
+        "commentsArabic": "هــذا المقام يــبدأ من صوت الدوكاه إلى صوت النواه . ثم يعمل نهاوند على النواه ثم يستمر فى الصعود إلى صوت المحير ويعود هبوطاً إلى قراره وهو صوت الدوكــاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "77"
+      }
+    ],
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "4",
@@ -214,17 +321,68 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "chahārgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "57",
+        "commentsEnglish": "Begins from ʿajam to kurdān, then ascends above kurdān; in the descent it performs kurdī on kurdān and continues descending to the qarār, which is rāst.\n\nal-Shawwā names this maqām kūrdīlī ḥijāz kār.",
+        "commentsArabic": "هذا المقام يـبدأ من صوت العجم إلى الـكردان ثم يصير الصعود إلى ما فوق صوت الـكردان وفى الهبوط يعمل نغم كوردى على الـكردان ويستمر فى الهبوط إلى القرار وقراره صــوت الراست .\n\nيسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-20T08:26:02.162Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā names this maqām kūrdīlī ḥijāz kār.",
+    "commentsArabic": "يسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "57"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "5",
@@ -266,7 +424,7 @@
         "sourceId": "alshawwa_1946",
         "page": "53",
         "commentsEnglish": "This maqām starts on rāst ascending to nawā, then from there ascends to kurdān step by step, then to what is above the kurdān and then it descends until its qarār which is rāst",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبـدأ من صوت الراست صعودا إلى صوت النواه ثم من صوت النواه يصير الصعود إلى الـكردان تدريجيا ثم إلى ما فوق الـكردان ويلى ذلك هبوطا لغـاية القرار وقراره هـو صـوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -295,12 +453,17 @@
             "value": "rāst"
           }
         ],
-        "version": "2025-12-10T18:46:59.797Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "53"
+      }
+    ],
     "version": "2025-12-10T18:46:59.797Z"
   },
   {
@@ -343,7 +506,7 @@
         "sourceId": "alshawwa_1946",
         "page": "52",
         "commentsEnglish": "This maqām starts on nawā with a touch of ḥijāz to render the nagham of ḥijāz on nawā then it ascends to kurdān to render the nagham of nawā athar on kurdān, then up to jawāb al-nawā (saham/ramal tūtī) and then descends to its qarār which is rāst.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت النـواه مع مس صوت الحجاز لعمل نغم حجاز على صوت النواه ثم يصعد إلى الـكردان لعمل نغم نوأثر عليه ثم إلى جواب النواه وبعد ذلك هبوطاً إلى القرار وقراره هو صوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -388,7 +551,7 @@
             "value": "rāst"
           }
         ],
-        "version": "2025-12-10T18:28:28.107Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -411,7 +574,7 @@
       "chahārgāh",
       "nawā",
       "ḥusaynī",
-      "awj",
+      "ʿajam",
       "kurdān"
     ],
     "descendingNoteNames": [
@@ -427,17 +590,63 @@
       "dūgāh"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "chahārgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
-    "commentsEnglish": "TESTING VERSION TIMESTAMP",
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "59",
+        "commentsEnglish": "Begins from nawā or chahārgāh, ascending to ḥusaynī, ʿajam and kurdān up to muḥayyar, then returns to chahārgāh repeatedly; at the end the descent follows the scale of the maqām down to the qarār, which is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه أو الجهاركاه للصعود إلى أصوات الحسينى والعجم والـكردان إلى المحير ثم يعود إلى صوت الجهاركاه مكرراً وعند الانتهى يصير الهبوط حسب تركيب سلم المقام لغاية القرار وقرارة صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:42:22.369Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "59"
+      }
+    ],
+    "version": "2026-07-20T13:01:34.466Z"
   },
   {
     "id": "8",
@@ -472,10 +681,10 @@
       "nawā"
     ],
     "suyur": [],
-    "commentsEnglish": "test",
-    "commentsArabic": "تجريب",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T13:05:09.038Z"
   },
   {
     "id": "9",
@@ -541,9 +750,11 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -555,7 +766,7 @@
         "sourceId": "alshawwa_1946",
         "page": "49",
         "commentsEnglish": "Starts on the note chahārgāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahārgāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه أو النواه ثم بعد الهبوط الى صوت الراست يصير الصعود من صوت النواه الى الـكردان وما فوقه وقراره على صوت الراست",
         "stops": [
           {
             "type": "note",
@@ -605,18 +816,19 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.49).",
+    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٤٩).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "49"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "11",
@@ -658,7 +870,7 @@
         "sourceId": "alshawwa_1946",
         "page": "50",
         "commentsEnglish": "Starts from the note ḥijāz to render ḥijaz on nawā and it continues ascending until rendering nahāwand on kurdān. Then during the descent one renders nahāwand on nawā, then nawā on chahārgāh after which the note ḥusaynī is swapped for ḥiṣār and the descent continues until its qarār which is rāst, but before the end one must briefly utilise ḥijāz on yegāh.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحجاز لعمل حجاز على صوت النواه ويستمر فى الصعود الى عمل نهاوند على الـكردان ثم فى الهبوط يعمل نهاوند على النواه وبعده تستبدل درجة الحسينى بعربة الحصار ويستمر فى الهبوط الى القرار وهو صوت الراست",
         "stops": [
           {
             "type": "note",
@@ -714,18 +926,19 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.50).",
+    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٥٠).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "50"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T10:12:09.875Z"
   },
   {
     "id": "12",
@@ -760,10 +973,10 @@
       "ḥusaynī"
     ],
     "suyur": [],
-    "commentsEnglish": "TESTING VERSION TIMESTAMP",
+    "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:51.331Z"
+    "version": "2026-07-20T13:01:34.466Z"
   },
   {
     "id": "13",
@@ -799,9 +1012,9 @@
     ],
     "suyur": [],
     "commentsEnglish": "Also known as qārjagār",
-    "commentsArabic": "",
+    "commentsArabic": "ويعرف أيضاً بالقارجغار.",
     "sourcePageReferences": [],
-    "version": "2025-11-09T03:10:10.171Z"
+    "version": "2026-07-20T13:05:09.038Z"
   },
   {
     "id": "14",
@@ -867,17 +1080,58 @@
       "dūgāh"
     ],
     "secondaryJinsDegree": [
-      "ḥusaynī"
+      "chahārgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
     "ghammaz": [
       "ḥusaynī"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "69",
+        "commentsEnglish": "Begins from chahārgāh to perform ḥijāz on chahārgāh, then returns from ascent to descent according to the scale of the maqām, ending on dūgāh.\n\nNote: al-Shawwā gives the fourth degree as the note ṣabā, where our scale uses ḥijāz.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل حجاز عـلى صوت الجهاركاه ثم يعود من الصعود إلى الهبوط حسب تركيب سلم المقام وينتهى على صوت الدوكاه .\n\nملاحظة: يعطي الشوّا الدرجة الرابعة نغمةَ صبا، حيث يستعمل سلّمنا الحجاز.",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-20T08:40:56.038Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "69"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "16",
@@ -949,21 +1203,62 @@
     "ghammaz": [
       "chahārgāh"
     ],
-    "suyur": [],
-    "commentsEnglish": "TEST",
-    "commentsArabic": "TEST",
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "30",
+        "commentsEnglish": "Begins from chahārgāh ascending to kurdān, then returns to chahārgāh, and after that descends until the qarār, which is ʿajam ʿushayrān.",
+        "commentsArabic": "هـذا المقـام يبدأ من صوت الجهاركاه صعوداً إلى الـكردان ثم يعود إلى الجهاركاه وبعد ذلك ينزل هبوطاً لغاية القرار وقراره هو صوت العجم عشيران .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "30"
       }
     ],
-    "version": "2026-07-15T20:22:19.217Z"
+    "version": "2026-07-20T13:01:34.466Z"
   },
   {
     "id": "18",
-    "idName": "maqam_nayruz",
-    "name": "maqām nayrūz",
+    "idName": "maqam_nairuz",
+    "name": "maqām nairūz",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -992,11 +1287,61 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "58",
+        "commentsEnglish": "Composed of a taṣwīr of maqām bayyāt on nawā, then descends from nawā to rāst through the degrees of the rāst scale. Sometimes nīm būselīk is used instead of segāh, to perform chahārgāh on rāst. At the end there is rāst on rāst together with bayyāt on nawā, and its qarār is rāst.",
+        "commentsArabic": "هذا المقـام مركب من تصوير مقام بياتى على صوت النواه ثم يصير هبوطاً من صوت النواه إلى صوت الراست بتركيب درجات سلم الراست من النواه هبوطاً إلى الراست : وأحيانا تستعمل عربة النيـم بوسليك بدلا من بردة الثيه كاه لعمل نغم جهاركاه على صوت الراست وفى النهايه يكون مقـام راست على صوت الراست مع استعمال مقام البياتى على صوت النواه وينتهى قراره على صوت الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "58"
+      }
+    ],
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "19",
@@ -1014,7 +1359,7 @@
     "descendingNoteNames": [
       "muḥayyar",
       "kurdān",
-      "awj",
+      "ʿajam",
       "ḥusaynī",
       "nawā",
       "chahārgāh",
@@ -1026,15 +1371,60 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "84",
+        "commentsEnglish": "Begins from the qarār, segāh, then performs rāst on nawā, followed by awj on the note awj, then descends to the qarār, segāh. In the opening, kurdī must be touched. Note: al-Shawwā adds that this nagham has many paths other than this construction.",
+        "commentsArabic": "هذا المقــام يبدأ من القرار أى من صوت الثيه كاه ثم عمل راست على صوت النواه يلى ذلك عمل اوج على صوت الاوج ثم هبوطاً إلى القرار وهو صوت الثيه كاه : وفى الاستهلال يجب لمس عربة الــكوردى .\n( ملاحظه ) ولهذا النغم طرق كثيره خلاف هذا التركيب .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:20:55.789Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "84"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "20",
@@ -1045,15 +1435,15 @@
       "chahārgāh",
       "nawā",
       "ḥiṣār",
-      "māhūr",
+      "nīm māhūr",
       "kurdān",
       "muḥayyar"
     ],
     "descendingNoteNames": [
       "muḥayyar",
       "kurdān",
-      "māhūr",
-      "ḥiṣār",
+      "ʿajam",
+      "ḥusaynī",
       "nawā",
       "chahārgāh",
       "segāh"
@@ -1064,15 +1454,60 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "85",
+        "commentsEnglish": "Begins from segāh with a touch of kurdī, then performs ḥijāz on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.\n\nNote: al-Shawwā adds that sāzkār is sometimes performed on kurdān in this maqām.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الثيه كاه مع لمس عربة السكوردى ثم عمل حجاز على النواه وبعد الصعود إلى الجواب يصير الهبوط إلى قرار المقام وهو صوت الثيه كاه .\nملاحظه : يستعمل أحيانا فى هذا المقام عمل سازكار على صوت الكردان .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:20:55.789Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives nīm māhūr as the fifth degree, noting that it \"was formerly awj\" (1946, p.85).",
+    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً خامسة، وينبّه إلى أنها «قديماً كان اوج» (١٩٤٦، ص٨٥).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "85"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "21",
@@ -1100,9 +1535,11 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1112,9 +1549,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 36,
+        "page": "36",
         "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
-        "commentsArabic": "",
+        "commentsArabic": "يبدأ هذا المقام بعمل حجاز على الدوكاه ثم راست على النواه وهبوطاً يستعمل بوسليك على النواه ثم حجاز على الدوكاه وينهى قراره على صوت العراق .",
         "stops": [
           {
             "type": "jins",
@@ -1144,7 +1581,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1155,7 +1593,7 @@
         "page": "36"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "22",
@@ -1183,7 +1621,7 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "chahārgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -1197,7 +1635,7 @@
         "sourceId": "alshawwa_1946",
         "page": "43",
         "commentsEnglish": "Starts from rāst and plays jins chahārgāh on rāst until nawā. Then jins chahārgāh on chahārgāh ascending to render bayyātī on ḥusaynī, then rāst on kurdān. During descent it uses chahārgāh on kurdān instead of rāst, and touches nīm būselīk instead of segāh. Towards the end it uses yegāh and its qarār is rāst",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من درجة الراست إلى النواه وفى الهبوط تلمس درجة النيم بوسليك بدلا من الثيه كاه وعند النهايه تستعمل درجة الثيه كاه وقراره صوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -1251,18 +1689,19 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives segāh and nīm būselīk as alternatives to one another, segāh in the ascent and nīm būselīk in the descent.",
+    "commentsArabic": "يجعل الشوّا السيكاه والنيم بوسليك بديلين أحدهما من الآخر، السيكاه صعوداً والنيم بوسليك هبوطاً.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "43"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "23",
@@ -1271,18 +1710,18 @@
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "chahārgāh",
       "nawā",
       "ḥiṣār",
-      "māhūr"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
-      "māhūr",
+      "nīm māhūr",
       "ḥiṣār",
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "zīrgūleh",
       "rāst"
     ],
@@ -1296,11 +1735,42 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "56",
+        "commentsEnglish": "Begins from nīm māhūr to kurdān to perform nahāwand on kurdān; after ascending above kurdān it returns descending, performing ḥijāz on kurdān when needed, then descends to the qarār, which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النيم ماهور إلى الـكردان لعمل نغم نهاوند عـلى الـكردان ثم بعدالصعود إلى مافوق الـكردان من الأصوات يعود للهبوط مع عمل نغم حجاز على الـكردان فى حالة اللزوم ثم يهبط للقرار وقراره هو صوت الراست .\n( ملاحظه ) كان هذا المقـام قديما يستعمل فيه صوتى الثيه كاه والاوج بدلا من صوتى النيم بوسليك والنيم ماهور .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm māhūr"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": ""
+          }
+        ],
+        "version": "2026-07-20T10:12:09.875Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā notes that \"this maqām formerly used the notes segāh and awj instead of nīm būselīk and nīm māhūr\" (1946, p.56).",
+    "commentsArabic": "ينبّه الشوّا إلى أن «هذا المقام قديماً يستعمل فيه صوتي الثيه كاه والاوج بدلاً من صوتي النيم بوسليك والنيم ماهور» (١٩٤٦، ص٥٦).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "56"
+      }
+    ],
+    "version": "2026-07-20T10:12:09.875Z"
   },
   {
     "id": "24",
@@ -1349,15 +1819,15 @@
       "ḥijāz",
       "nawā",
       "ḥusaynī",
-      "awj",
+      "ʿajam",
       "kurdān",
       "muḥayyar"
     ],
     "descendingNoteNames": [
       "muḥayyar",
       "kurdān",
-      "awj",
-      "ḥusaynī",
+      "nīm māhūr",
+      "ḥiṣār",
       "nawā",
       "ḥijāz",
       "segāh"
@@ -1374,11 +1844,57 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "86",
+        "commentsEnglish": "Begins from kurdī to segāh ascending; in the descent, kurdī must be touched before the ending on the qarār, which is segāh. In the ascent, nahāwand on nawā; in the descent, ḥijāz on nawā.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت السكوردى إلى صوت الثيه كاه صعوداً ثم فى الهبوط يجب لمس عربة السكوردى قبل النهايه فى القرار وقراره صوت الثيه كاه : وفى الصعود نهاوند على النواه وفى الهبوط حجاز على النواه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "86"
+      }
+    ],
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "26",
@@ -1406,9 +1922,11 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1418,9 +1936,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 33,
+        "page": "33",
         "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayyāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت العراق أو الدوكاه هبوطاً إلى صوت اليك كاه ثم بياتى على الدوكاه لغاية صوت النواه ثم عمل راست على النواه ويعود هبوطاً إلى قرار المقام : وقراره هو صوت العراق .",
         "stops": [
           {
             "type": "note",
@@ -1450,7 +1968,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1461,7 +1980,7 @@
         "page": "33"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "27",
@@ -1497,7 +2016,9 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
     "ghammaz": [
       "nawā"
     ],
@@ -1509,7 +2030,7 @@
         "sourceId": "alshawwa_1946",
         "page": "44",
         "commentsEnglish": "Starts by ascending from rāst to nawā followed by ḥijāz on nawā the nahāwand on kurdān, it then descends with būselīk on nawā until the qarār which is rāst ",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ صعوداً من صوت الراست إلى صوت النواه ثم يعمل حجاز على صوت النواه ثم نهاوند على صوت الـكردان ثم هبوطاً لعمل بوسليك على النواه ومنه إلى قرار المقام وهـو صوت الراست .",
         "stops": [
           {
             "type": "jins",
@@ -1545,7 +2066,8 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1556,7 +2078,7 @@
         "page": "44"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "29",
@@ -1596,9 +2118,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 17,
+        "page": "17",
         "commentsEnglish": "Sayr can start from chahārgāh or nawā, ascends and then descends until the qarār. Ascent is not defined, so it is assumed that it will be in jins rāst al-nawā following the construction of the maqām.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام قراره صوت اليك كاه ويختلف فى الهبوط عن الصعود فى استعمال صوت الثيه كاه بدلا من النيم بوسليك وصوت الجهاركاه بدلا من النيم حجاز وهذا فى حالة الهبوط : ويبدأ من صوت الجهاركاه أو النواه صعوداً ثم يعود هبوطاً لغاية القرار .\n( ملاحظه ) درجات الصعود هى من القرار إلى الجواب والهبوط من الجواب إلى القرار .",
         "stops": [
           {
             "type": "note",
@@ -1640,18 +2162,19 @@
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "Introducing the first maqām of the chapter, al-Shawwā sets out the convention followed throughout: \"the ascending degrees run from the qarār to the jawāb, and the descent from the jawāb to the qarār\" (1946, p.17).",
+    "commentsArabic": "يضع الشوّا عند تقديمه أول مقام في الفصل القاعدةَ المتّبعة في الكتاب كلّه: «درجات الصعود هي من القرار إلى الجواب والهبوط من الجواب إلى القرار» (١٩٤٦، ص١٧).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "17"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T10:12:09.875Z"
   },
   {
     "id": "30",
@@ -1691,9 +2214,9 @@
         "creatorEnglish": "al-Shawwā",
         "creatorArabic": "الشوّا",
         "sourceId": "alshawwa_1946",
-        "page": 19,
+        "page": "19",
         "commentsEnglish": "Begins on nawā, then ḥusaynī and 'ajam until muḥayyar ascending and descending, then descends from nawā until yegāh with a touch of qarār ḥijāz before ending on its qarār, yegāh. Therefore it is assumed that the initial ascents and descents are in jins nahāwand nawā as per the construction of the maqām. Also the note qarār ḥijāz does not exist in the list of note names provided by Shawwā in his book.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه إلى الحسينى والعجم لغاية المحير مراراً صعوداً وهبوطاً ثم يعود من النواه هبوطاً لغاية صوت اليك كاه مع مس عربة قرار الحجاز وينتهى قراره على صوت اليك كاه .",
         "stops": [
           {
             "type": "jins",
@@ -1743,7 +2266,8 @@
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1794,9 +2318,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 20,
-        "commentsEnglish": "",
-        "commentsArabic": "",
+        "page": "20",
+        "commentsEnglish": "Begins from ḥijāz to perform a taṣwīr of ḥijāz on nawā; then from nawā it descends to chahārgāh, then kurdī, dūgāh, rāst, nīm kawasht, qarār ḥiṣār and yegāh; its qarār is yegāh.",
+        "commentsArabic": "هذا المقام يبدأ من عربة الحجاز لعمل تصوير حجاز على صوت النواه ثم من النواه هبوطا إلى الجهاركاه فالكوردى والدوكاه والراست والنيم كوشت وقرار الحصار واليك كاه وقراره صوت اليك كاه .",
         "stops": [
           {
             "type": "note",
@@ -1836,7 +2360,8 @@
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-20T07:58:17.338Z"
       }
     ],
     "commentsEnglish": "",
@@ -1887,9 +2412,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 21,
+        "page": "21",
         "commentsEnglish": "nahāwand nawā, followed by ḥijāz dūgāh then the qarār, yegāh, with a touch of qarār ḥijāz",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه لعمل نهاوند على النواه ثم حجاز على الدوكاه وقراره صوت اليك كاه مع لمس قرار عربة الحجاز .",
         "stops": [
           {
             "type": "jins",
@@ -1911,7 +2436,8 @@
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1962,9 +2488,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 22,
+        "page": "22",
         "commentsEnglish": "Start with jins bayyāt on dūgāh, ending on 'irāq. Then ascend and descend ending on note 'ushayrān. Repeat jins bayyāt on dūgāh, and descend to end on the qarār which is yegāh. This maqām name corresponds with a Persian Gushe also called Majlis Afrooz in the Dastgah Mahūr and Dastgāh Shūr. In Mahūr it bears no melodic or intervallic resemblance, but in Shūr the jins bayyāt is prominent.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يستهل بعمل مقام عراق مع اظهار الجنس الاول للبياتى على صوت الدوكاه وينتهى أولا على صوت العراق ثم يعود صعوداً وينتهى هبوطاً على صوت العشيران ثانياً يكرر العمل على صوت الدوكاه بعمل مقام البياتى ويصير الهبوط إلى القرار وقراره هو صوت اليك كاه .",
         "stops": [
           {
             "type": "jins",
@@ -2007,7 +2533,7 @@
             "value": "yegāh"
           }
         ],
-        "version": "2026-07-15T18:24:27.689Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2056,9 +2582,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 23,
+        "page": "23",
         "commentsEnglish": "Start on nawā to huseinī and what's above it (jins kurd huseinī), then jins bayyāt on dūgāh. After it's descent ascend bayyāt dūgāh and during the descent use the note kurdī instead of segāh (i.e. jins kurd on dūgāh) and descend to end on yegāh using a touch of qarār ḥijāz. ",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقـام يبدأ من صوت النـواه إلى صوت الحسينى وما فوقه ثم يعـود لعمل بيـاتى على صوت الدوكاه وبعـد الهبوط إلى صوت الدوكاه يعود صعودا ثم فى الهبوط تسـتبدل بردة الثيه كاه بعربة الـكوردى ومنها إلى القرار وقراره صوت اليك كاه : وقبل الارتـكاز على صوت اليك كاه يجب لمس عربة قرار الحجاز .",
         "stops": [
           {
             "type": "note",
@@ -2103,7 +2629,8 @@
             "type": "note",
             "value": "yegāh"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2142,7 +2669,7 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -2154,9 +2681,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 24,
+        "page": "24",
         "commentsEnglish": "Begins on nawā to develop bayyāt on dūgāh, then bayyāt 'ushayrān and upon reaching muḥayyar in the ascent, it descends until dūgāh using 'ajam instead of awj (jins kurd ḥusaynī) and its qarār is 'ushayrān.",
-        "commentsArabic": "",
+        "commentsArabic": "يبدأ هذا المقام من صوت النواه لعمل بياتى على الدوكاه ثم بياتى على العشيران وعند الصعود إلى صوت المحير يعـود بالنزول لغـاية الدوكاه مع استعمال العجم بدلا من الاوج وقـراره عــــلى صوت العشيران .",
         "stops": [
           {
             "type": "note",
@@ -2212,7 +2739,8 @@
             "type": "note",
             "value": "ʿushayrān"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2223,7 +2751,7 @@
         "page": "24"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "36",
@@ -2259,9 +2787,11 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
     "ghammaz": [
       "nawā"
     ],
@@ -2271,9 +2801,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 30,
+        "page": "25",
         "commentsEnglish": "Starts on nawā to render maqām bayyāt al-dūgāh and descends to ʿushayrān to render maqām bayyāt al-ḥusaynī and descends stepwise until it's qarār ʿushayrān.",
-        "commentsArabic": "TESTING VERSION TIMESTAMP 3",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه لعمل مقام بياتى على صوت الدوكاه ثم ينزل هبوطاً إلى العشيران كذلك يعود لعمل مقام بياتى على صوت الحسينى : وينزل تدريجيا إلى قراره وهو صوت العشيـران .",
         "stops": [
           {
             "type": "note",
@@ -2293,7 +2823,7 @@
             "type": "maqam",
             "value": "7",
             "startingNote": "ḥusaynī",
-            "direction": "descending"
+            "direction": ""
           },
           {
             "type": "note",
@@ -2340,7 +2870,7 @@
             "value": "ʿushayrān"
           }
         ],
-        "version": "2025-10-18T19:50:29.651Z"
+        "version": "2026-07-19T21:11:26.492Z"
       }
     ],
     "commentsEnglish": "",
@@ -2351,7 +2881,7 @@
         "page": "25"
       }
     ],
-    "version": "2025-10-18T19:50:29.651Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "37",
@@ -2379,7 +2909,7 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -2391,9 +2921,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 26,
+        "page": "26",
         "commentsEnglish": "Starts with bayyāt on ḥusaynī followed by nikrīz on rāst and returns to bayyāt al-ḥusaynī so it's tonal centre is ḥusaynī but they have today made it's qarār ʿushayrān",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ بعمل بياتى على الحسينى ثم عمل نـكريز على صوت الراست ويعود بياتى على الحسينى فالمحير والركوز على صوت الحسينى (وأما الآن فجعلوا قراره على صوت العشيران)",
         "stops": [
           {
             "type": "jins",
@@ -2413,18 +2943,19 @@
             "startingNote": "ḥusaynī",
             "direction": "none"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).",
+    "commentsArabic": "يجعل الشوّا القرار على الحسيني في الممارسة القديمة، ثم يضيف: «وأما الآن فجعلوا قراره على صوت العشيران» (١٩٤٦، ص٢٦).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "26"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "38",
@@ -2462,7 +2993,9 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
     "ghammaz": [
       "dūgāh"
     ],
@@ -2472,9 +3005,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 27,
+        "page": "27",
         "commentsEnglish": "Starts on ḥiṣār to render ḥijāz  on ḥusaynī followed by maqām nawā athar al-dūgāh then ḥijāz on ʿushayrān and it ends on its qarār ʿushayrān",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحصار لعمل حجاز على صوت الحسينى ثم تصوير مقام نوأثر على الدوكاه ثم حجاز على العشيران وينتهى قراره على صوت العشيران .",
         "stops": [
           {
             "type": "note",
@@ -2503,7 +3036,7 @@
             "value": "ʿushayrān"
           }
         ],
-        "version": "2026-07-16T08:53:11.250Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2514,7 +3047,7 @@
         "page": "27"
       }
     ],
-    "version": "2026-07-16T08:53:11.250Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "39",
@@ -2556,7 +3089,9 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
     "ghammaz": [
       "dūgāh"
     ],
@@ -2566,9 +3101,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 28,
+        "page": "28",
         "commentsEnglish": "Starts on chahārgāh to render maqām ṣabā on dūgāh with a highlighting of maqām ḥijāz on chahārgāh, then ascending to render bayyāt on muḥayyar followed by a descent in nahāwand on nawā followed by kurdī on dūgāh and it ends on its qarār with a rendering of maqām kurdī on ʿushayrān. In modern Turkish it is known as makam Şevkutarab.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل مقام صباه على صوت الدوكاه مع اظهار مقام حجاز على صوت الجهاركاه ثم صعودا لعمل بياتى على المحير يليه هبوطا لعمل نهاوند على صوت النواه ثم كوردى على صوت الدوكاه وينتهى قراره على صوت العشيران بعمل مقام كوردى عــلى صوت العشيران .",
         "stops": [
           {
             "type": "note",
@@ -2614,7 +3149,8 @@
             "type": "note",
             "value": "ʿushayrān"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2625,7 +3161,7 @@
         "page": "28"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "40",
@@ -2665,9 +3201,11 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
     "ghammaz": [
       "nawā"
     ],
@@ -2677,9 +3215,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 29,
+        "page": "29",
         "commentsEnglish": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rāst al-dūgāh then ascends to muḥayyar and during the descent 'ajam is used to render bayyāt dūgāh then kurd on dūgāh then ḥijaz on dūgāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayyāt 'ushayrān, second, jins rāst dūgāh, third, bayyāt ḥusaynī. Then ascend to render bayyāt muḥayyar and descend to render rāst nawā, followed by kurdī or ḥijāz dūgāh, then nikrīz rāst and ends with bayyāt 'ushayrān. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقـام يبدأ من عربة الحجاز لعمل مقام راست على صوت الدوكاه ثم صعودا إلى صوت المحير وعند الهبوط تستعمل عربة العجم لعمل بياتى على الدوكاه ثم كوردى على الدوكاه ثم حجاز على الدوكاه أيضا وينتهى قراره حسب شروط سلفه على صوت العشيران .",
         "stops": [
           {
             "type": "note",
@@ -2725,7 +3263,8 @@
             "startingNote": "ʿushayrān",
             "direction": "none"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2736,7 +3275,7 @@
         "page": "29"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "41",
@@ -2786,9 +3325,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 31,
+        "page": "31",
         "commentsEnglish": "Starts on chahārgāh ascending to kurdān and above to render ḥijāz chahārgāh, then descends from chahārgāh until it's qarār 'ajam 'ushayrān",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الجهاركاه صعوداً إلى الـكردان وما فوقه لعمل تصوير حجاز كار على صوت الجهاركاه ثم من الجهاركاه يصير النزول إلى القرار وقراره هو صوت العجم عشيران .",
         "stops": [
           {
             "type": "jins",
@@ -2816,18 +3355,19 @@
             "startingNote": "ʿajam ʿushayrān",
             "direction": "descending"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with nīm būselīk as an alternative.",
+    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والنيم بوسليك بديلاً عنها.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "31"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T10:12:09.875Z"
   },
   {
     "id": "42",
@@ -2867,7 +3407,9 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ʿajam"
+    ],
     "ghammaz": [
       "dūgāh"
     ],
@@ -2877,9 +3419,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 32,
+        "page": "32",
         "commentsEnglish": "Starts on kurdān ascending to jawāb nawā (saham/ramal tuti) then descends from nawā to its qarār using chahārgāh and kurdī. In the \"analysis\" it states that one must descend at the end to qarār ḥijāz before ending on 'ajam 'ushayrān.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكردان صعوداً إلى جواب النواه ثم هبوطاً : ومن صوت النواه إلى قرار المقام وقراره هو صوت العجم عشيران : مع استعمال صوتى الجهاركاه والـكوردى فى الهبوط بدلا من صوتى النيم حجاز والنيم بوسليك كذلك الحصار بدلا من الحسينى .",
         "stops": [
           {
             "type": "note",
@@ -2915,7 +3457,8 @@
             "type": "note",
             "value": "ʿajam ʿushayrān"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2926,7 +3469,7 @@
         "page": "32"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "43",
@@ -2954,9 +3497,11 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -2966,9 +3511,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 34,
+        "page": "34",
         "commentsEnglish": "Starts on chahārgāh until nawā to render bayyāt dūgāh, followed by rāst nawā, followed by bayyāt muḥayyar, then descends to render rāst nawā, followed by nahāwand nawā, followed by bayyāt dūgāh and from dūgāh descends until the qarār which is 'irāq.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ بصوت الجهاركاه إلى النواه لعمل مقام بياتى على صوت الدوكاه ثم راست على صوت النواه يليه مقام بياتى على صوت المحير ثم يعـود هبوطاً لعمل راست على صوت النواه ثم نهاوند على صوت النواه يلى ذلك بياتى على صوت الدوكاه ومن صوت الدوكاه يصير هبوطا إلى قرار المقام والارتكاز عليه وهو صوت العراق ويجوز أن يبدأ من صوت العجم صعوداً",
         "stops": [
           {
             "type": "note",
@@ -3018,7 +3563,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3029,7 +3575,7 @@
         "page": "34"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "44",
@@ -3057,9 +3603,11 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -3069,9 +3617,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 35,
+        "page": "35",
         "commentsEnglish": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayyāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on awj to render rāst kurdān, then 'irāq on awj, then descending until its qarār, 'irāq.\"Analysis\": jins segāh on 'irāq, jins rāst on dūgāh, jins bayyāt on muhayyar, then descends until 'irāq. Slightly conflicting directions. Must be clarified.",
-        "commentsArabic": "",
+        "commentsArabic": "يبدأ هذا المقام بعمل راست على الدوكاه ثم هبوطاً إلى صوت العراق : ومن صوت العراق هبوطاً إلى صوت اليك كاه ثم يعـود إلى التسليم لقـراره وقراره هو صوت العراق . « ملاحظه ، ويجب اظهار تصوير مقام البياتى على المحير عند الصعود : وطريقـة اخرى وهى يبدأ من الاوج لعمل راست على الـكردان ثم عراق على الاوج ثم هبوطا إلى القرار .",
         "stops": [
           {
             "type": "jins",
@@ -3102,7 +3650,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3113,7 +3662,7 @@
         "page": "35"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "45",
@@ -3149,7 +3698,9 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
     "ghammaz": [
       "dūgāh"
     ],
@@ -3159,9 +3710,9 @@
         "creatorEnglish": "al-Shawwā",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 37,
+        "page": "37",
         "commentsEnglish": "Starts on ṣabā dūgāh and it's qarār is irāq",
-        "commentsArabic": "",
+        "commentsArabic": "يبدأ هذا المقام بعمل نغمة الصباه على الدوكاه : وقراره على صوت العراق .",
         "stops": [
           {
             "type": "maqam",
@@ -3174,18 +3725,18 @@
             "value": "ʿirāq"
           }
         ],
-        "version": "2025-11-19T22:13:31.168Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives muḥayyar as the top ascending degree, with shahnāz as an alternative.",
+    "commentsArabic": "يعطي الشوّا المحير أعلى درجات الصعود، والشاهناز بديلاً عنها.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "37"
       }
     ],
-    "version": "2025-11-19T22:13:31.168Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "46",
@@ -3221,7 +3772,9 @@
     "secondaryJinsDegree": [
       "segāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "awj"
+    ],
     "ghammaz": [
       "segāh"
     ],
@@ -3231,9 +3784,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 38,
+        "page": "38",
         "commentsEnglish": "Rules: Starts on 'ajam and ascends to awj then descends to segāh, the ascends to to shahnāz and muḥayyar, and upon descent it ends on 'irāq. Analysis: nagham awj ara on 'irāq, jins musta'ār on segāh, jins awj on awj, descends according to its pitch classes until the qarār ('irāq)",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت العجم إلى الاوج صعوداً ثم هبوطاً إلى صوت الثيه كاه ثم صعوداً لغاية الشاهناز والمحير وعند الهبوط ينتهى قراره على صوت العراق .",
         "stops": [
           {
             "type": "note",
@@ -3275,7 +3828,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3286,7 +3840,7 @@
         "page": "38"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "47",
@@ -3324,7 +3878,9 @@
     "secondaryJinsDegree": [
       "segāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
     "ghammaz": [
       "segāh"
     ],
@@ -3334,9 +3890,9 @@
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
-        "page": 39,
+        "page": "39",
         "commentsEnglish": "Rules: Starts on kurdī to segāh and continues ascending to nawā, then from nawā ascends to buzurk, then descends to segāh and from segāh to it's qarār 'iraq. Analysis: jins awj arā on 'irāq, jins nagham musta'ār on segāh, jins būselīk on nawā then ascends until buzurk and descends stepwise until it's qarār",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكوردى إلى الثيه كاه وصعوداً لغايـة النواه ثم من النواه صعودا لغاية صوت البزرك ، جواب الثيه كاه ، وفى الهبوط يكون لصوت الثيه كاه ومنها لغاية القرار هبوطاً وقراره على صوت العراق .",
         "stops": [
           {
             "type": "note",
@@ -3382,7 +3938,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3393,7 +3950,7 @@
         "page": "39"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "48",
@@ -3429,7 +3986,40 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "70",
+        "commentsEnglish": "Begins from nīm būselīk or chahārgāh ascending, then the sayr returns descending to dūgāh while showing zīrgūleh, and its qarār is dūgāh, as shown in the descending form of its scale.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النيم بوسليك أو صوت الجهاركاه صعوداً ثم يعود السير فيــه هبوطاً لغاية صوت الدوكاه مع اظهار صوت الزير كولاه وينتهى قراره على صوت الدوكاه كما هو مبين فى تركيب سلمه فى حالة الهبوط :",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "zīrgūleh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -3438,7 +4028,7 @@
         "page": "70"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "49",
@@ -3466,13 +4056,52 @@
       "chahārgāh"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
+      "kurdān"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
       "chahārgāh"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "90",
+        "commentsEnglish": "Begins from ḥusaynī or ʿajam ascending, to perform rāst — or chahārgāh — on kurdān; then returns descending to the qarār of the maqām, which is chahārgāh. Before ascending to kurdān, chahārgāh may be performed on chahārgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحسينى أو العجم صعوداً لعمل راست على صوت الكردان أو جهاركاه : ثم يعود هبوطاً إلى قرار المقـام وقراره هـو صوت الجهاركاه : ويصح قبـل الصعود إلى صوت الكردان عمل جهاركاه على صوت الجهاركاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -3481,7 +4110,7 @@
         "page": "90"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "50",
@@ -3561,7 +4190,7 @@
         "sourceId": "alshawwa_1946",
         "page": "45",
         "commentsEnglish": "Starts from rāst until nawā using zirgūleh ascending and descending, then it uses dūgāh in place of zirgūleh and continues with the same sayr as maqām sōznāk and its qarār is rāst.\n\nIt also has another sayr which is to starts on ḥijaz to render maqām shat 'arabān and then it ends on its qarār which is rāst",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقـام لا يختلف عن مقام السوزناك إلا فى شروطه فقط إذ أن مقام الدلـكشا يبدأ من صـوت الراست إلى صـوت النواه مع استبدال بردة الدوكاه بعربة الزير كولاه فيكون « راست ، : زير كولاه : ثيه كاه : جهاركاه : نواه : صعوداً وهبوطاً مكررا ثم تستبدل عربة الزير كولاه ببردة الدوكاه كما هو فى تركيب مقـام السوزناك ويتبع السير فيه مثل مقـام السوزناك وقراره صوت الراست أيضا .\n( طريقة ثانية لمقام الدلـكشا ) يبدأ من صوت الحجاز لعمل مقام شت عربان ثم ينتهى قراره على صوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -3615,7 +4244,8 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3626,7 +4256,7 @@
         "page": "45"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T10:20:55.789Z"
   },
   {
     "id": "52",
@@ -3660,9 +4290,11 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
     "ghammaz": [
       "nawā"
     ],
@@ -3674,7 +4306,7 @@
         "sourceId": "alshawwa_1946",
         "page": "40",
         "commentsEnglish": "Starts with a transposition of maqām ṣabā on ḥusaynī, then rāst on nawā then, bayyātī on dūgāh and it's qarār ends on ʿirāq. Sometimes it starts bayyātī on ḥusaynī instead of ṣabā.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ بعمل تصوير مقام الصباه على صوت الحسينى ثم راست على النواه ثم بياتى على الدوكاه وينتهى قراره على صوت العراق ، وأحيانا يبدأ بياتى على الحسينى بدلا من الصباه ،",
         "stops": [
           {
             "type": "maqam",
@@ -3698,7 +4330,8 @@
             "type": "note",
             "value": "ʿirāq"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3709,7 +4342,7 @@
         "page": "40"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T12:15:11.065Z"
   },
   {
     "id": "54",
@@ -3789,7 +4422,7 @@
         "sourceId": "alshawwa_1946",
         "page": "46",
         "commentsEnglish": "This maqām starts from the upper octave, from kurdān or nīm mahūr and during it's descent it uses a brief chahārgāh on rāst and another brief nikrīz on rāst and ends on its qarār which is rāst",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من الجواب أى مـن صوت الـكردان أو من صوت النيم ماهور وعنـد الهبوط يعمـل تارة جهاركاه على صوت الراست وتارة أخرى نـكريز عـلى صوت الراست وينتهى قراره عـلى صوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -3813,7 +4446,8 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -3866,7 +4500,7 @@
         "sourceId": "alshawwa_1946",
         "page": "47",
         "commentsEnglish": "Starts from rāst ascending to nawā to render maqām rāst on nawā, then it ascends to kurdān. After that it descends to its qarār through maqām nahāwand on nawā and then it descends from nawā to rāst by highlighting the maqām sāzkār. It is compulsory to bring out maqām segāh before the closure. It's qarār is rāst.",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست صعوداً الى صوت النواه لعمل مقام راست على النواه ثم صعوداً الى الـكردان ويلى ذلك هبوطا الى القرار حسب شروط سلمه وقراره صوت الراست ويجب اظهار مقام الثيه كاه قبل الختام .",
         "stops": [
           {
             "type": "note",
@@ -3911,18 +4545,19 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with kurdī as an alternative.",
+    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والكردي بديلاً عنها.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "47"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-20T10:12:09.875Z"
   },
   {
     "id": "57",
@@ -3966,7 +4601,7 @@
         "sourceId": "alshawwa_1946",
         "page": "41",
         "commentsEnglish": "This maqām starts on chahārgāh to ʿajam to present the nagham of maqām ʿajam followed by a descent to dugāh using kurdī instead of segāh and it ends on it's qarār which is ʿirāq",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه الى صوت العجم لعمل مقـام « نغم عجم ، وبعـد ذلك تكراراً لاظهار مقام العجم يصير الهبوط لصوت الدوكاه مع لمس أى استعمال عربة الـكوردى بدلا من صوت الثيه كاه وينتهى قراره على صوت العراق .",
         "stops": [
           {
             "type": "note",
@@ -4006,7 +4641,7 @@
             "value": "ʿirāq"
           }
         ],
-        "version": "2025-12-10T16:32:53.399Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -4059,7 +4694,7 @@
         "sourceId": "alshawwa_1946",
         "page": "48",
         "commentsEnglish": "Starts from kurdān and ascends until saham/ramal tūtī using sunbuleh and jawāb ḥijāz, then it returns descending until its qarār. During the descent its possible to use nahāwand on nawā then from nawā the descent continues until the qarār using maqām nikrīz followed by rāst. ",
-        "commentsArabic": "",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكردان صعوداً الى صوت جواب النواه مع استعمال السنبله وجواب الحجاز ثم يعود هبوطاً الى القرار حسب شروط سلم المقام وقراره صوت الراست",
         "stops": [
           {
             "type": "note",
@@ -4101,7 +4736,8 @@
             "type": "note",
             "value": "rāst"
           }
-        ]
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -4148,9 +4784,9 @@
     ],
     "suyur": [],
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
-    "commentsArabic": "",
+    "commentsArabic": "من ابتكار سيد درويش (انظر دور في شرع مين: https://www.youtube.com/watch?v=DmEEUlWYJjo).",
     "sourcePageReferences": [],
-    "version": "2026-07-14T15:22:26.462Z"
+    "version": "2026-07-20T13:05:09.038Z"
   },
   {
     "id": "62",
@@ -4232,7 +4868,9 @@
     "secondaryJinsDegree": [
       "chahārgāh"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
     "ghammaz": [
       "chahārgāh"
     ],
@@ -4244,7 +4882,7 @@
         "sourceId": "alshawwa_1946",
         "page": "51",
         "commentsEnglish": "This maqām starts from chahārgāh descending to rāst, and from there descending to render maqām ḥijāz on yegāh and then ascends to chahāṝgāh to render maqām ḥijāz on chahārgāh, and from there ascends until kurdān and what's above it, and then it descends until its qarār which is rāst.\n\nThe maqām's analysis is jins nahāqand on rāst, pentachord of ḥijāz on chahārgāh, jins ḥijāz on kurdān. During it's descent maqām kurdī on nawā, and the descent completes from nawā to rāst as maqām nahāwand. ",
-        "commentsArabic": "",
+        "commentsArabic": "هـذا المقام يبدأ من صوت الجهاركاه هبوطا إلى صوت الراست ومن صوت الراست هبوطآ لعمل مقام حجاز على صوت اليك كاه ثم صعودا إلى صوت الجهاركاه لعمل مقام حجاز أيضآ على الجهاركاه ومن الجهاركاه يصير الصعود إلى الـكردان وما فوقه ثم يعود الهبوط إلى القرار وقراره صوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -4288,7 +4926,7 @@
             "value": "rāst"
           }
         ],
-        "version": "2025-12-10T17:28:47.376Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -4299,6 +4937,4392 @@
         "page": "51"
       }
     ],
-    "version": "2025-12-11T23:30:41.160Z"
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "64",
+    "idName": "maqam_pesendidah",
+    "name": "maqām pesendīdah",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "54",
+        "commentsEnglish": "Begins by performing nikrīz, entering from rāst (entering from nawā is also permitted), then ascends to nawā to perform būselīk, and after that ascends to the jawābs, i.e. kurdān and above; its qarār is rāst.",
+        "commentsArabic": "هذا المقام يبدأ بعمل نغم نـكريز والدخول من درجة الراست ويجوز من درجة النواه ثم الصعود إلى النواه لعمل نغم بوسليك وبعد ذلك الصعود إلى الاجوبه أى إلى الـكردان فما فوقه وقراره صوت الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "18",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "21",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives the 3rd ascending degree as kurdī, noting nīm būselīk as an alternative.",
+    "commentsArabic": "يعطي الشوّا الدرجة الثالثة صعوداً كردياً، ويذكر النيم بوسليك بديلاً عنها.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "54"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "65",
+    "idName": "maqam_tarznwin",
+    "name": "maqām ṭarznwīn",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "kurdī",
+      "chahārgāh",
+      "ṣabā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "shahnāz",
+      "jawāb nīm būselīk",
+      "māhūrān",
+      "saham/ramal tūtī"
+    ],
+    "descendingNoteNames": [
+      "saham/ramal tūtī",
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "shahnāz",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "ṣabā",
+      "chahārgāh",
+      "kurdī",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "55",
+        "commentsEnglish": "Begins from chahārgāh ascending gradually to kurdān, to perform ḥijāz on kurdān; then descends to the qarār of the maqām, which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه صعوداً بالتدريج إلى الـكردان لعمل نغم حجاز على صوت الـكردان ويلى ذلك هبوطاً لغاية قرار المقام وقراره صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā's 12-degree table tops out with jawāb chahārgāh and jawāb nawā; these are entered here under our octave names, māhūrān and saham/ramal tūtī.",
+    "commentsArabic": "يبلغ جدول الشوّا ذو الاثنتي عشرة درجة في أعلاه جواب الجهاركاه وجواب النوا، وقد أُدخلا هنا بأسماء الديوان عندنا: ماهوران وسهم/رمل توتي.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "55"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "66",
+    "idName": "maqam_ushshaq",
+    "name": "maqām ʿushshāq",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "60",
+        "commentsEnglish": "Its scale does not differ from maqām bayyāt; the difference is in the sayr — the reverse of bayyāt: it begins from rāst to nawā ascending and descending, then from nawā to muḥayyar, then returns descending to the qarārs and ends on dūgāh. This ʿushshāq is distinct from the ʿushshāq used in Egypt.",
+        "commentsArabic": "هذا المقـام لايختلف تركيب درجاته عن درجات سلم مقام البياتى إلا أن الاختلاف فى السـير إذ أن مقام البيــاتى يبدأ من صوت الجهاركاه أو النواه صعوداً إلى الحسينى والعجم والـكردان والمحير صعوداً وهبوطاً مراراً ثم يعود من بردة ، أى من صوت ، النواه إلى الجهاركاه والثيه كاه والدوكاه والراست الخ وينتهى قراره على صوت الدوكاه : وأما العشاق فبالعكس إذ أنه يبدأ من صوت الراست إلى النواه صعوداً وهبوطاً ثم من النواه إلى المحير ثم يعود هبوطاً إلى القرارات وينتهى قراره على صوت الدوكاه وهذا هو مقـام العشاق خلاف العشـاق المستعمل فى مصر .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā distinguishes this maqām from its Egyptian namesake: \"this is maqām ʿushshāq, unlike the ʿushshāq used in Egypt\" (1946, p.60). Its scale is that of maqām bayyāt; the two differ in sayr alone.",
+    "commentsArabic": "يميّز الشوّا هذا المقام من سميّه المصري: «وهذا هو مقام العشاق خلاف العشاق المستعمل في مصر» (١٩٤٦، ص٦٠). وسلّمه سلّم مقام البياتي، ولا يختلفان إلا في السير.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "60"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "67",
+    "idName": "maqam_ushshaq_misri",
+    "name": "maqām ʿushshāq miṣrī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "61",
+        "commentsEnglish": "Begins from nawā; its sayr shows a taṣwīr of maqām bayyāt on the fifth degree, ḥusaynī; in the descent awj is replaced by ʿajam, and its qarār ends on dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه ويستعمل فى سيره اظهار تصوير مقام البياتى على الصوت الخامس أى صوت الحسينى ثم فى الهبوط تستبدل بردة الاوج ببردة العجم وينتهى قراره على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "61"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "68",
+    "idName": "maqam_muhayyar",
+    "name": "maqām muḥayyar",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "62",
+        "commentsEnglish": "Begins from kurdān ascending to muḥayyar, then jawāb segāh and jawāb chahārgāh, touching jawāb ṣabā; then returns descending to nawā, then chahārgāh and segāh, and its qarār ends on dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكردان صعوداً إلى المحير فجواب الثيه كاه وجواب الجهاركاه ومس عربة جواب الصباه ثم يعود هبوطاً لغاية صوت النواه فصوت الجهاركاه والثيه كاه وينتهى قراره عـلى صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "buzurk"
+          },
+          {
+            "type": "note",
+            "value": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives awj in the descent, with ʿajam as an alternative. The jawāb segāh and jawāb chahārgāh named in the sayr are entered as buzurk and māhūrān; the jawāb ṣabā he calls for has no note name in the app yet.",
+    "commentsArabic": "يعطي الشوّا الأوج في الهبوط، والعجم بديلاً عنه. وجواب السيكاه وجواب الجهاركاه المذكوران في السير أُدخلا بزرك وماهوران، أما جواب الصبا الذي يطلبه فلا اسم له في أسماء النغم عندنا بعد.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "62"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "69",
+    "idName": "maqam_husayni",
+    "name": "maqām ḥusaynī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "63",
+        "commentsEnglish": "Begins from nawā ascending, to perform a taṣwīr of maqām bayyāt on ḥusaynī; then descends from kurdān passing through ʿajam, then nawā, chahārgāh and segāh, and its qarār ends on dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه صعوداً لعمل تصوير مقام البياتى على صوت الحسينى ثم يهبط من صوت الـكردان بالمرور على صوت العجم فصوت النواه والجهاركاه والثيه كاه وينتهى قراره عـلى صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "63"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "70",
+    "idName": "maqam_qarjahar",
+    "name": "maqām qarjahār",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "64",
+        "commentsEnglish": "Begins from chahārgāh to nawā, to perform ḥijāz on nawā, using sunbuleh instead of buzurk (i.e. instead of jawāb segāh); in the descent ʿajam and ḥusaynī are sometimes used instead of nīm māhūr and ḥiṣār; its qarār is dūgāh. Note: the scale of this maqām exceeds eight notes — it is ten.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه إلى النواه لعمل حجاز على النواه مع استعمال عربة السنبله بدلا من البزرك ، أى بدلا من جواب الثيه كاه ، ثم فى الهبوط يستعمل صوتى العجم والحسينى أحيانا بدلا من صوتى النيم ماهور والحصار : وقراره على صوت الدوكاه ، ملاحظه ، هذا المقام يزيد عدد أصوات سلمه عن ثمانية أصوات فهو عشرة أصوات .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "64"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "71",
+    "idName": "maqam_shahnaz",
+    "name": "maqām shahnāz",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz",
+      "muḥayyar",
+      "jawāb nīm būselīk",
+      "buzurk"
+    ],
+    "descendingNoteNames": [
+      "jawāb ḥijāz",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "muḥayyar"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "66",
+        "commentsEnglish": "Begins from muḥayyar with a touch of shahnāz, to perform ḥijāz on ḥusaynī; then ascends above muḥayyar, then descends to the qarār of the maqām, which is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت المحير مع لمس عربة الشاهناز لعمل حجاز على الحسينى ثم صعوداً إلى مافوق صوت المحير يليه هبوطا إلى قرار المقام وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "shahnāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints nīm būselīk as the 9th ascending degree; it is entered here as jawāb nīm būselīk, since the jawāb is intended.",
+    "commentsArabic": "يكتب الشوّا النيم بوسليك درجةً تاسعة صعوداً، وقد أُدخلت هنا جواب نيم بوسليك لأن الجواب هو المقصود.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "66"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "72",
+    "idName": "maqam_humayun",
+    "name": "maqām humāyūn",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "68",
+        "commentsEnglish": "Begins from rāst or zīrgūleh to perform maqām iṣfahān; then ascends to ḥusaynī and from there to muḥayyar; then descends performing maqām ḥijāz on dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبـدأ من صوت الراست أو الزير كولاه لعمل مقام أصفهان ثم يصير صعوداً إلى الحسينى ومنه إلى المحير ويـلى ذلك هبوطاً بعمل مقام حجاز على صوت الدوكاه وقراره هو صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "86",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives ʿajam in the ascent, with awj as an alternative.",
+    "commentsArabic": "يعطي الشوّا العجم في الصعود، والأوج بديلاً عنه.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "68"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "73",
+    "idName": "maqam_bayyat_araban",
+    "name": "maqām bayyāt ʿarabān",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "muḥayyar"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "73",
+        "commentsEnglish": "Begins from kurdān ascending to jawāb nawā, then descends to nawā to perform ḥijāz on nawā, then nahāwand on nawā, and its qarār ends on dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكردان صعوداً إلى جواب النواه ثم هبوطاً إلى النواه لعمل حجاز على النواه ثم نهاوند على النواه وينتهى قراره على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "73"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "74",
+    "idName": "maqam_nishaburek",
+    "name": "maqām nishābūrek",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "74",
+        "commentsEnglish": "Begins from nīm ḥijāz ascending; in the descent, zīrgūleh is touched before settling on dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من عربة النيم حجاز صعوداً ثم عند الهبوط تلمس عربة الزير كولاه قبل الركوز على الدوكاه وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm ḥijāz"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "zīrgūleh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives awj in the descent, with ʿajam as an alternative.",
+    "commentsArabic": "يعطي الشوّا الأوج في الهبوط، والعجم بديلاً عنه.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "74"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "75",
+    "idName": "maqam_hisar",
+    "name": "maqām ḥiṣār",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "ḥiṣār",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "ḥiṣār",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "75",
+        "commentsEnglish": "Begins from ḥiṣār to ḥusaynī, to perform ḥijāz on ḥusaynī, and returns descending to perform nawā athar on dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحصار إلى صوت الحسينى لعمل نغم حجاز على صوت الحسينى ويعود هبوطاً لعمل نغم نو أثر على الدوكاه وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥiṣār"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-20T07:58:17.338Z"
+      }
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "75"
+      }
+    ],
+    "version": "2026-07-20T12:17:39.575Z"
+  },
+  {
+    "id": "76",
+    "idName": "maqam_dugah",
+    "name": "maqām dūgāh",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ṣabā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "shahnāz",
+      "jawāb nīm būselīk",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "76",
+        "commentsEnglish": "Begins from chahārgāh to perform ṣabā on dūgāh, then ḥijāz on chahārgāh; in the descent there is sometimes ṣabā on dūgāh and sometimes ḥijāz on dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل صباه على الدوكاه ثم عمل حجاز على الجهاركاه ثم فى الهبوط يكون تارة صباه على الدوكاه واخرى حجاز على الدوكاه وقراره صوت الدوكــاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints nīm būselīk as the 9th ascending degree; it is entered here as jawāb nīm būselīk, since the jawāb is intended. His 8th descending degree is ḥijāz, with chahārgāh as an alternative. In the descent, ḥijāz on dūgāh alternates with the ṣabā ending.",
+    "commentsArabic": "يكتب الشوّا النيم بوسليك درجةً تاسعة صعوداً، وقد أُدخلت هنا جواب نيم بوسليك لأن الجواب هو المقصود. ودرجته الثامنة هبوطاً حجاز، والجهاركاه بديل عنها. وفي الهبوط يتناوب الحجاز على الدوكاه مع خاتمة الصبا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "76"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "77",
+    "idName": "maqam_ardibar",
+    "name": "maqām ʿarḍibār",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "79",
+        "commentsEnglish": "Begins from chahārgāh to perform maqām chahārgāh, then ḥijāz on nawā, then nahāwand on nawā, and returns descending to the qarār, which is dūgāh. Note: another path begins from ʿajam ascending to kurdān instead of entering from chahārgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل مقام جهاركاه ثم حجاز على صوت النواه ثم نهاوند على صوت النواه ويعود هبوطاً إلى القرار وقراره صوت الدوكاه .\n( ملاحظه ) لهذا المقام طريقة أخرى وهى أن يبدأ من صوت العجم صعوداً إلى صوت الــكردان بدلاً من دخوله من صوت الجهاركاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "49",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives ʿajam as the 6th ascending degree, with awj as an alternative.",
+    "commentsArabic": "يعطي الشوّا العجم درجةً سادسة صعوداً، والأوج بديلاً عنها.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "79"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "78",
+    "idName": "maqam_ajam/ajam_murassa",
+    "name": "maqām ʿajam/ʿajam muraṣṣaʿ",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "muḥayyar"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "80",
+        "commentsEnglish": "Begins from ḥusaynī, showing maqām ʿajam repeatedly from ʿajam to chahārgāh ascending and descending; then returns performing bayyāt from nawā to dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقــام يبدأ من صوت الحسينى لاظهار مقــام العجم تــكراراً من صوت العجم إلى صوت الجهاركاه صعوداً وهبوطاً ثم يعود بعمل بيــاتى من صوت النواه إلى صوت الدوكاه وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā titles this maqām ʿajam, or ʿajam muraṣṣaʿ. In the ascent he gives ḥusaynī, sometimes ḥiṣār, and ʿajam, sometimes nīm māhūr.",
+    "commentsArabic": "يعنون الشوّا هذا المقام بالعجم أو العجم المرصع. ويعطي في الصعود الحسيني وتارةً الحصار، والعجم وتارةً النيم ماهور.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "80"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "79",
+    "idName": "maqam_nishabur",
+    "name": "maqām nīshābūr",
+    "ascendingNoteNames": [
+      "segāh",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "segāh"
+    ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "awj"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "87",
+        "commentsEnglish": "Begins from nawā to segāh, then performs rāst or nahāwand on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه إلى صوت الثيه كاه ثم عمل نغم راست أو نهاوند على صوت النواه وبعد الصعود إلى الجواب يصير هبوطاً إلى قرار المقام وهو صوت الثيه كاه .\n، ملاحظه ، الاتراك يستبدلون القرار ، صوت الثيه كاه ، بصوت النيم بوسليك .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:12:09.875Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā notes that \"the Turks replace the qarār, the note segāh, with the note nīm būselīk\" (1946, p.87).",
+    "commentsArabic": "ينبّه الشوّا إلى أن «الاتراك يستبدلون القرار، صوت الثيه كاه، بصوت النيم بوسليك» (١٩٤٦، ص٨٧).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "87"
+      }
+    ],
+    "version": "2026-07-20T12:17:39.575Z"
+  },
+  {
+    "id": "80",
+    "idName": "maqam_maya",
+    "name": "maqām māya",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdān"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "88",
+        "commentsEnglish": "Begins from nawā to perform bayyāt on ḥusaynī, then ascends to the jawāb, then descends to rāst, and its qarār ends on segāh. Note: its scale is the same as maqām segāh — the difference between the two maqāmāt is in their conditions and analysis. Second note: another path avoids using awj.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت النواه لعمل نغم بيـاتى على صوت الحسينى ثم صعوداً إلى الجواب يليه هبوطاً إلى صوت الراست وينتهى قراره على صوت الثيه كاه .\n« ملاحظه ، سلم هـذا المقـام هو نفس مقـام الثيه كاه ولـكن الاختلاف فى شروط وتحليل المقامين . »\nملاحظه : ولهذا المقام طريقة اخرى وهى عدم استعمال صوت الاوج .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā notes that \"the scale of this maqām is the same as maqām segāh, but the difference lies in the conditions and the analysis of the two maqāmāt\", and adds a second path in which awj is not used (1946, p.88).",
+    "commentsArabic": "ينبّه الشوّا إلى أن «سلم هذا المقام هو نفس مقام الثيه كاه ولكن الاختلاف في شروط وتحليل المقامين»، ويضيف طريقةً أخرى لا يُستعمل فيها صوت الاوج (١٩٤٦، ص٨٨).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "88"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "81",
+    "idName": "maqam_wajh_ardibar",
+    "name": "maqām wajh ʿarḍibār",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "89",
+        "commentsEnglish": "Begins from ʿajam to perform nahāwand on nawā, then chahārgāh on chahārgāh, then returns to perform ḥijāz on nawā, and then descends to the qarār, which is segāh.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت العجم لعمل نهاوند على صوت النواه ثم جهاركاه على صوت الجهاركاه ثم يعود عمل حجاز على صوت النواه ويلى ذلك هبوطاً إلى القرار وهو صوت الثيـه كاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives awj as the 5th ascending degree, with ʿajam as an alternative.",
+    "commentsArabic": "يعطي الشوّا الأوج درجةً خامسة صعوداً، والعجم بديلاً عنها.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "89"
+      }
+    ],
+    "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "82",
+    "idName": "maqam_shawq_dil",
+    "name": "maqām shawq dil",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descendingNoteNames": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "22",
+        "commentsEnglish": "Begins by performing maqām māhūr repeatedly, then returns performing maqām sūznāk; after descending to rāst, it ascends again to perform maqām ḥijāz on nawā, finally settling on nawā, which is the qarār of this maqām.",
+        "commentsArabic": "يبدأ هذا المقام بعمل مقام الماهور مكرراً ثم يعود بعمل مقام السوزناك وبعد الهبوط إلى صوت الراست يعود صعودا لعمل مقام حجاز على صوت النواه والركوز أخيراً على صوت النواه وهو قرار هذا المقام .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "55",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "27",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as māhūr ascending and sūznāk descending. Its qarār is nawā.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل السلّم ماهور صعوداً وسوزناك هبوطاً. وقراره النوا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "22"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "83",
+    "idName": "maqam_anjah_rana",
+    "name": "maqām ʿanjah raʿnā",
+    "ascendingNoteNames": [
+      "segāh",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "segāh"
+    ],
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "22",
+        "commentsEnglish": "Opens by performing maqām nīshābūr ascending and descending, then its qarār ends on nawā.",
+        "commentsArabic": "يستهل هذا المقام بعمل مقام النيشابور صعوداً وهبوطاً ثم ينتهى قراره على صوت النواه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "79",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. He prints the name ʿanjah raʿnā.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل بسلّم النيشابور، إذ إن السير كلّه نيشابور وقراره النوا. ويكتب الاسم عنجه رعنا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "22"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "84",
+    "idName": "maqam_baba_tahir",
+    "name": "maqām bābā ṭāhir",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "82",
+        "commentsEnglish": "Like maqām bayyāt in its scale, differing only in the sayr: it begins by performing bayyāt on muḥayyar, entering from kurdān, until it reaches jawāb nawā; then in the descent there is rāst on nawā, and it ends by performing bayyāt on dūgāh.",
+        "commentsArabic": "هذا المقام مثل مقام البياتى فى تركيب درجات أصواته إلا أنه يختلف عن مقام البياتى فى السير فقط فهذا المقــام يبدأ بعمل نغم بياتى على صوت المحير والدخول من صوت الــكردان حتى يصل إلى جواب النواه ثم فى الهبوط يكون نغم راست على صوت النواه وينتهى بعمل بيــاتى على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives no scale table, but states that the scale is that of maqām bayyāt.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، غير أنه ينصّ على أن سلّمه سلّم مقام البياتي.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "85",
+    "idName": "maqam_gulazar",
+    "name": "maqām gulʿazār",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk",
+      "māhūrān"
+    ],
+    "descendingNoteNames": [
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "82",
+        "commentsEnglish": "Like maqām ʿarḍibār in its scale but differing in sayr and entry: it enters from awj ascending, then descends to perform bayyāt on ḥusaynī, then rāst on nawā, then ascends to perform rāst on kurdān; in the descent it performs ḥijāz on nawā, and its qarār is bayyāt on dūgāh, with nahāwand performed on nawā.",
+        "commentsArabic": "هذا المقام مثــل مقام العرضبار فى تركيب درجات أصواته إلا أنه يختلف عن مقــام العرضبار فى السير وفى دخول المقام فدخوله من صوت الاوج صعوداً ثم هبوطاً لعمل مقــام بياتى على صوت الحسينى ثم نغم راست على صوت النواه ثم صعودا لعمل نغم راست على صوت الــكردان ثم فى الهبوط يعمل نغم حجاز على صوت النواه وقراره بياتى على صوت الدوكاه مع عمل نهاوند على النواه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā gives no scale table, but states that the scale is that of maqām ʿarḍibār. He prints the name kāʿazār.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، غير أنه ينصّ على أن سلّمه سلّم مقام العرضبار. ويكتب الاسم كاعزار.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "86",
+    "idName": "maqam_isfahan",
+    "name": "maqām iṣfahān",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "67",
+        "commentsEnglish": "Work begins with maqām rāst on dūgāh, then ascending nahāwand on nawā, followed by maqām bayyāt on muḥayyar; in the descent, ʿajam is exchanged for awj to perform rāst on nawā instead of nahāwand; it ends by performing maqām rāst on dūgāh, or maqām bayyāt on dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ العمل فيه بمقـام راست على صوت الدوكاه ثم صعوداً عمل نهاوند على صوت النواه يليه مقام بيــاتى على صوت المحير : وعند الهبوط تستبدل عربة العجم بعربة الاوج لعمل راست على صوت النواه بدلا من النهاوند وينتهى بعمل مقام راست على الدوكاه أو مقام بياتى على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: rāst-on-dūgāh lower jins (dūgāh nīm-būselīk nīm-ḥijāz nawā, as in humāyūn's table) + nahāwand on nawā ascending; descent swaps in awj for rāst on nawā.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جنس راست على الدوكاه في الأسفل (دوكاه، نيم بوسليك، نيم حجاز، نوا، كما في جدول الهمايون)، مع نهاوند على النوا صعوداً. وفي الهبوط يحلّ الأوج ليصير راست على النوا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "67"
+      }
+    ],
+    "version": "2026-07-20T12:17:39.575Z"
+  },
+  {
+    "id": "87",
+    "idName": "maqam_nawa",
+    "name": "maqām nawā",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "67",
+        "commentsEnglish": "The same construction as maqām iṣfahān, but differing in the ascent: where iṣfahān performs nahāwand on nawā, this maqām performs rāst on nawā ascending; likewise in the descent it performs nahāwand on nawā where iṣfahān has rāst. Its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام هو نفس تركيب مقام الاصفهان إلا أنه يختلف فى الصعود عن الاصفهان إذ أن فى مقام الاصفهان يعمل مقام نهاوند على النواه وأما هذا المقام يعمل فيه صعودا راست على النواه بدلا من النهاوند . كذلك فى الهبوط يعمل فى هذا المقام نهاوند على صوت النواه بدلا من الراست كما هو فى مقام الاصفهان وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "86",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: iṣfahān's scale with the rāst/nahāwand-on-nawā swap (awj ascending, ʿajam descending).",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم الاصفهان مع تبادل الراست والنهاوند على النوا، أوج صعوداً وعجم هبوطاً.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "67"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "88",
+    "idName": "maqam_niyaz",
+    "name": "maqām niyāz",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "83",
+        "commentsEnglish": "Opens by performing maqām ḥijāz ascending and descending; after settling on dūgāh it turns to perform maqām iṣfahān, and its qarār ends on dūgāh according to iṣfahān's conditions — the reverse of maqām humāyūn's path.",
+        "commentsArabic": "هذا المقــام يستهل بعمل نغم أى مقام الحجاز صعودا وهبوطا وبعد الركوز على بردة الدوكاه يعود لعمل مقــام الاصفهان وينتهى قراره حسب شروط مقام الاصفهان على صوت الدوكاه وهو عكس طريقة مقام الهمايون .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "86",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: reverse of humāyūn — ḥijāz side ascending, iṣfahān side descending.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: عكس الهمايون، جانب الحجاز صعوداً وجانب الاصفهان هبوطاً.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "89",
+    "idName": "maqam_dilnishin",
+    "name": "maqām dilnishīn",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "58",
+        "commentsEnglish": "Composed of a taṣwīr of maqām ṣabā on ḥusaynī; then from ḥusaynī the descent proceeds to rāst — from ḥusaynī to nawā, then chahārgāh, segāh and dūgāh — and its qarār ends on rāst. At the opening, bayyāt on ḥusaynī may be performed instead of ṣabā.",
+        "commentsArabic": "هذا المقام مركب من تصوير مقـام الصباه على صوت الحسينى ثم من صوت الحسينى يصير الهبوط إلى صوت الراست أى من صوت الحسينى إلى النواه ثم الجهاركاه فصوت الثيه كاه والدوكاه وينتهى قراره على صوت الراست ، ويجوز فى الابتداء عمل مقام بياتى على الحسينى بدلا من الصبــاه ،",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: the stated descent (ḥusaynī–nawā–chahārgāh–segāh–dūgāh–rāst) over a rāst-scale frame, as in dilkesh ḥūrān (p.40) which shares this sayr on ʿirāq.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: الهبوط المنصوص عليه (حسيني، نوا، جهاركاه، سيكاه، دوكاه، راست) على إطار سلّم الراست، كما في دلكش حوران (ص٤٠) الذي يشاركه هذا السير على العراق.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "58"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "90",
+    "idName": "maqam_kuchek",
+    "name": "maqām kūchek",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "ḥijāz",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "81",
+        "commentsEnglish": "Opens with a taṣwīr of maqām bayyāt on ḥusaynī repeatedly; then in the descent it follows the sayr of maqām ṣabā and ends with maqām ṣabā; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقــام يستهل بعمل تصوير مقام بيــاتى على صوت الحسينى مراراً ثم عنــد الهبوط يتبع فيه سير مقام الصباه وينتهى بمقــام الصباه وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "15",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ascent = the bayyāt/ḥusaynī frame (bayyāt on ḥusaynī opening); descent = our maqām ṣabā descent.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: الصعود إطار البياتي على الحسيني باستهلال بياتي على الحسيني، والهبوط هبوط مقام الصبا عندنا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "81"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "91",
+    "idName": "maqam_kurdan",
+    "name": "maqām kurdān",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "81",
+        "commentsEnglish": "Its scale is built like maqām rāst — awj in the ascent, replaced by ʿajam in the descent, down to dūgāh for bayyāt on dūgāh; in other words it is close to maqām ḥusaynī. It begins from awj to perform bayyāt on ḥusaynī, then rāst on nawā, then nahāwand on kurdān, then bayyāt on muḥayyar, then bayyāt on ḥusaynī, then būselīk on nawā, and ends with bayyāt on dūgāh.",
+        "commentsArabic": "هذا المقــام تركيب درجات أصوات سلمه كتركيب سلم مقام الراست أى انه فى الصعود تستعمل بردة الاوج وفى الهبوط تســتبدل بردة الاوج بصوت عربة العجم ومنهــا إلى صوت الدوكاه لعمل بيــاتى على الدوكاه وبمعنى اخرى هو مقارب لمقــام الحسينى ويبدأ هذا المقام من صوت الاوج لعمل بيــاتى على صوت الحسينى ثم راست على صوت النواه ثم نهاوند على صوت الــكردان ثم بياتى على المحير ثم بياتى على الحسينى ثم بوسليك على النــواء وينتهى بيــاتى على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "21",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: anchored on the dūgāh qarār (the sayr ends with bayyāt on dūgāh and rāst-on-rāst never occurs in it); rāst-scale degrees are present via the kurdān octave (kurdān = jawāb rāst, awj ascending / ʿajam descending as stated), matching al-Shawwā's remark that it is close to maqām ḥusaynī.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: أُرسي على قرار الدوكاه، فالسير ينتهي ببياتي على الدوكاه ولا يرد فيه راست على الراست. ودرجات سلّم الراست حاضرة عبر ديوان الكردان (الكردان جواب الراست، أوج صعوداً وعجم هبوطاً كما نُصّ)، وهو ما يوافق قول الشوّا إنه مقارب لمقام الحسيني.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "81"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "92",
+    "idName": "maqam_khuzam_jadid",
+    "name": "maqām khuzām jadīd",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "41",
+        "commentsEnglish": "Begins from kurdān to muḥayyar and ascends to māhūrān using sunbuleh; then returns to perform ḥijāz on nawā; from nawā to dūgāh there is maqām bayyāt, and from there to ʿirāq, the qarār of the maqām. This amounts to showing the path of maqām bayyāt ʿarabān, ending on ʿirāq.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الـكردان إلى صوت المحير ويصير صعوداً إلى صوت المـاهوران مع استعمال عربة السنبله ثم يعـود لعمل حجاز على صوت النـواه ومن صوت النواه إلى صوت الدوكاه يكون مقـام بياتى ومنـه إلى صوت العراق وهو قرار المقـام « العراق ، وهذا عباره عن اظهار طريقة مقام البياتى عربان وينتهى على صوت العراق .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: bayyāt ʿarabān's scale extended down to the ʿirāq qarār, per al-Shawwā's own cross-reference.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم بياتي عربان ممتدّاً إلى قرار العراق، بحسب إحالة الشوّا نفسه.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "41"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "93",
+    "idName": "maqam_dhawq_tarab",
+    "name": "maqām dhawq ṭarab",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl"
+    ],
+    "descendingNoteNames": [
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "83",
+        "commentsEnglish": "Begins from kurdān ascending to muḥayyar, sunbuleh and above; returns through nīm māhūr and ḥiṣār to nawā; after nawā it descends to ḥijāz, then kurdī and dūgāh; then ascends from dūgāh through kurdī to chahārgāh. Before the close, ḥijāz on nawā may be performed, touching ḥusaynī and ʿajam, returning down to nawā, chahārgāh and kurdī; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من بردة الــكردان صعودا إلى المحــير والسنبله وما فوقهما ثم يعود إلى أصوات النيم ماهور والحصار إلى صوت النواه وبعده أى بعد صوت النواه يهبط إلى صوت عربة الحجاز ثم الــكوردى والدوكاه : ويصعد من صوت الدوكاه إلى عربة الــكوردى ثم الجهاركاه : ويجوز قبل الانتهاء عمــل حجــاز على صوت النواه ثم لمس بردة الحسينى وعربة العجم ويعود هبوطاً إلى النواه ثم جهاركاه وكوردى وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: assembled from the explicit note runs in the prose (upper register nīm māhūr/ḥiṣār; lower descent through the note ḥijāz and kurdī).",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جُمع من مسارات النغم المصرّح بها في النصّ، الطبقة العليا نيم ماهور وحصار، والهبوط الأدنى عبر نغمة الحجاز والكردي.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "94",
+    "idName": "maqam_hijaz_ushayran",
+    "name": "maqām ḥijāz ʿushayrān",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "descendingNoteNames": [
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh",
+      "rāst",
+      "ʿajam ʿushayrān",
+      "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "91",
+        "commentsEnglish": "Opens with maqām ḥijāz on dūgāh, then descends from dūgāh to rāst, followed by ʿajam ʿushayrān, and its qarār ends on ʿushayrān — that is, ḥijāz on dūgāh followed by maqām kurd from dūgāh down to ʿushayrān.",
+        "commentsArabic": "هذا المقام يستهل فيه بعمل مقام حجاز على صوت الدوكاه ثم من صوت الدوكاه يصير هبوطاً إلى صوت الراست يليه صوت العجم عشيران وينتهى قراره على صوت العشيران وهو عبارة عن مقام حجاز على الدوكاه ثم مقام كوردى من صوت الدوكاه إلى صوت العشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ḥijāz on dūgāh above the stated kurd descent dūgāh–rāst–ʿajam ʿushayrān–ʿushayrān.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: حجاز على الدوكاه فوق هبوط الكرد المنصوص عليه: دوكاه، راست، عجم عشيران، عشيران.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "91"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "95",
+    "idName": "maqam_janfaza",
+    "name": "maqām jānfazā",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz"
+    ],
+    "descendingNoteNames": [
+      "ḥijāz",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "91",
+        "commentsEnglish": "Opens with maqām ṣabā on dūgāh; then from dūgāh it descends to perform bayyāt on ʿushayrān — i.e. after ṣabā it descends from dūgāh through rāst to ʿirāq — and its qarār is ʿushayrān.",
+        "commentsArabic": "يستهل فى هذا المقـام بعمل مقام صباه على صوت الدوكاه ثم من صوت الدوكاه يصير هبوطاً لعمل بيـاتى على صوت العشيران أى بعد عمل مقـام الصباه فيهبط من صوت الدوكاه إلى صوت الراست إلى العراق وقراره صوت العشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: our ṣabā degrees on dūgāh over bayyāt on ʿushayrān (as in bayyātī ʿushayrān's lower jins).",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: درجات الصبا عندنا على الدوكاه فوق بياتي على العشيران، كما في الجنس الأدنى من بياتي عشيران.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "91"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "96",
+    "idName": "maqam_safa",
+    "name": "maqām ṣafā",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "ḥijāz",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "95",
+        "commentsEnglish": "Begins from buzurk, i.e. jawāb chahārgāh, to perform ṣabā on muḥayyar; then the descent from muḥayyar performs bayyāt on dūgāh, and it ends by performing ṣabā on dūgāh.",
+        "commentsArabic": "يبدأ من صوت البزرك أى جواب الجهاركاه لعمل نغم صباه على المحير ثم يصير الهبوط من المحير لعمل نغم بياتى على صوت الدوكاه ثم ينتهى بعمل نغم صباه على صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "buzurk"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ṣabā's scale (our degrees) with the ṣabā-on-muḥayyar opening from buzurk.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم الصبا بدرجاتنا مع استهلال صبا على المحير من البزرك.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "95"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "97",
+    "idName": "maqam_beste_hisar",
+    "name": "maqām beste ḥiṣār",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "ḥiṣār",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "ḥiṣār",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "94",
+        "commentsEnglish": "Begins by performing maqām ḥiṣār and ends on rāst.",
+        "commentsArabic": "هذا المقـام يبدأ بعمل مقام الحصار وينتهى على صوت الراست .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "75",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: maqām ḥiṣār's scale with the descent extended to the rāst qarār; al-Shawwā does not specify the approach to rāst. Ascent anchored on rāst (the stated ending) below the ḥiṣār scale.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم مقام الحصار مع امتداد الهبوط إلى قرار الراست، ولا يحدّد الشوّا كيفية الوصول إلى الراست. وقد أُرسي الصعود على الراست، وهو الخاتمة المنصوص عليها، أسفل سلّم الحصار.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "94"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "98",
+    "idName": "maqam_panchgah_zaid",
+    "name": "maqām panchgāh zāʾid",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "93",
+        "commentsEnglish": "Opens with maqām iṣfahān on dūgāh; after ascending to nawā it performs maqām rāst on nawā; then descends from nawā to rāst using chahārgāh and nīm būselīk, then dūgāh; its qarār is rāst.",
+        "commentsArabic": "هذا المقام يستهل بعمل مقام اصفهان على صوت الدوكاه ثم بعد الصعود الى صوت النواه يعمل مقام راست على صوت النواه ويلـى ذلك هبوطاً من صوت النواه الى صوت الراست مع استعمال أصوات الجهاركاه وعربة النيم بوسليك ثم بردة الدوكاه وقراره صوت الراست .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "86",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: iṣfahān on dūgāh below, rāst on nawā above; the stated descent uses chahārgāh and nīm būselīk then dūgāh to rāst.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: اصفهان على الدوكاه في الأسفل وراست على النوا في الأعلى، والهبوط المنصوص عليه يستعمل الجهاركاه والنيم بوسليك ثم الدوكاه إلى الراست.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "93"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "99",
+    "idName": "maqam_negar",
+    "name": "maqām negār",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "95",
+        "commentsEnglish": "Begins from ḥijāz or nawā to perform ḥijāz on nawā; the ascent proceeds as far as sunbuleh, then descends to nawā; from nawā the descent proceeds to rāst to perform rāst, using chahārgāh instead of ḥijāz.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الحجاز أو صوت النواه لعمل نغم حجاز على النواه ويصير الصعود لغاية عربة السنبله ثم هبوطاً إلى صوت النواه . ومن صوت النواه يصير الهبوط لغاية صوت الراست لعمل نغم راست مع استعمال بردة الجهاركاه بدلا من عربة الحجاز .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ḥijāz on nawā over a rāst base as in zāwīl (p.48); the descent substitutes chahārgāh for the note ḥijāz as stated.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: حجاز على النوا فوق أساس راست كما في زاويل (ص٤٨)، والهبوط يستبدل الجهاركاه بنغمة الحجاز كما نُصّ.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "95"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "100",
+    "idName": "maqam_tarz_jadid",
+    "name": "maqām ṭarz jadīd",
+    "ascendingNoteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst",
+      "ʿajam ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "94",
+        "commentsEnglish": "Begins with rāst on nawā, then ḥijāz on nawā, then rāst on nawā for the descent, to perform ḥijāz — or nikrīz — on dūgāh, then kurd on dūgāh, and ends by performing maqām ʿajam ʿushayrān.",
+        "commentsArabic": "يبدأ بعمل مقام راست على النواه : ثم حجاز على النواه : ثم راست على النواه للهبوط لعمل حجاز على الدوكاه أو نكريز ثم كوردى على الدوكاه وينتهى بعمل مقام العجم عشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "17",
+            "startingNote": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ends as maqām ʿajam ʿushayrān, so its scale is used; the nawā-region colours live in the stops.",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: ينتهي بمقام عجم عشيران فاعتُمد سلّمه، وألوان منطقة النوا مبيّنة في محطات السير.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "94"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "101",
+    "idName": "maqam_saba_buselik",
+    "name": "maqām ṣabā būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "71",
+        "commentsEnglish": "Begins with ṣabā, ends with the construction and conditions of būselīk.",
+        "commentsArabic": "هذا المقام يبدأ العمل فيه بنغم صباه وينتهى بتركيب وشروط نغم بوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "15",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ṣabā ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه صبا صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "71"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "102",
+    "idName": "maqam_ajam_buselik",
+    "name": "maqām ʿajam būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "71",
+        "commentsEnglish": "Begins with maqām ʿajam, ends with the construction and conditions of būselīk.",
+        "commentsArabic": "هذا المقام يبدأ بعمل مقام العجم وينتهى بتركيب وشروط مقام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "78",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending and būselīk descending, on the shawq dil precedent. ʿajam here is taken as al-Shawwā's maqām ʿajam/ʿajam muraṣṣaʿ (1946, entry 81, p.80).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه عجم/عجم مرصع صعوداً وبوسليك هبوطاً، على قياس شوق دل. والعجم هنا محمول على مقام العجم أو العجم المرصع عند الشوّا (١٩٤٦، النغمة ٨١، ص٨٠).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "71"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "103",
+    "idName": "maqam_hijaz_buselik",
+    "name": "maqām ḥijāz būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "71",
+        "commentsEnglish": "Begins with maqām ḥijāz, ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ بعمل نغم أى مقام الحجاز وينتهى بعمل مقام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ḥijāz ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حجاز صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "71"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "104",
+    "idName": "maqam_awj_buselik",
+    "name": "maqām awj būselīk",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "71",
+        "commentsEnglish": "Begins with maqām awj, ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ العمل فيه بمقام الاوج وينتهى بعمل مقام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "43",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as awj ascending / būselīk descending (shawq dil precedent). Note: awj is ʿirāq-based, so ascent and descent have different tonics (as with shawq dil). Descent extended below dūgāh to the shared ʿirāq tonic so both directions anchor together (app requirement).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه أوج صعوداً وبوسليك هبوطاً، على قياس شوق دل. والأوج قراره العراق، فيختلف قرار الصعود عن قرار الهبوط كما في شوق دل. وقد امتدّ الهبوط دون الدوكاه إلى قرار العراق المشترك ليستقرّ الاتجاهان على قرار واحد، وهو ما يقتضيه التطبيق.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "71"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "105",
+    "idName": "maqam_nawa_buselik",
+    "name": "maqām nawā būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "71",
+        "commentsEnglish": "Begins with maqām nawā, ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ العمل فيه بمقام النواه وينتهى بعمل مقام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "87",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as nawā ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه نوا صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "71"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "106",
+    "idName": "maqam_bayyat_buselik",
+    "name": "maqām bayyāt būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "72",
+        "commentsEnglish": "Begins with maqām bayyāt on dūgāh, ends with maqām būselīk.",
+        "commentsArabic": "هذا المقــام يبدأ بعمل مقام البياتى على صوت الدوكاه وينتهى بعمل مقام البوسليك",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "7",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as bayyāt ascending and būselīk descending, on the shawq dil precedent. al-Shawwā prints the name bayyātī būselīk; it is entered as bayyāt būselīk for continuity with our other names, as with bayyāt ʿarabān.",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه بياتي صعوداً وبوسليك هبوطاً، على قياس شوق دل. ويكتب الشوّا الاسم بياتى بوسليك، وأُدخل هنا بياتي بوسليك اتّساقاً مع سائر تسمياتنا، كما في بياتي عربان.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "72"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "107",
+    "idName": "maqam_husayni_buselik",
+    "name": "maqām ḥusaynī būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "72",
+        "commentsEnglish": "Begins from ḥusaynī to perform maqām ḥusaynī on dūgāh, then ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحسينى لعمل مقام الحسينى على صوت الدوكاه ثم ينتهى بعمل مقــام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "69",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ḥusaynī ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حسيني صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "72"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "108",
+    "idName": "maqam_shahnaz_buselik",
+    "name": "maqām shahnāz būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "72",
+        "commentsEnglish": "Begins with maqām shahnāz (opening from muḥayyar), ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ بعمل مقام الشاهناز وينتهى بعمل مقام البوسليك ويستهل من صوت المحير .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "71",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as shahnāz ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه شاهناز صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "72"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "109",
+    "idName": "maqam_isfahan_buselik",
+    "name": "maqām iṣfahān būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "72",
+        "commentsEnglish": "Begins with maqām iṣfahān, ends with maqām būselīk.",
+        "commentsArabic": "هذا المقام يبدأ بعمل مقام الاصفهان وينتهى بعمل مقام البوسليك .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "86",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as iṣfahān ascending / būselīk descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه اصفهان صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "72"
+      }
+    ],
+    "version": "2026-07-20T10:50:52.687Z"
+  },
+  {
+    "id": "110",
+    "idName": "maqam_mahur_buselik",
+    "name": "maqām māhūr būselīk",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm māhūr",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm būselīk",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "72",
+        "commentsEnglish": "Begins with māhūr — from awj or kurdān descending to nawā — then descends from nawā to dūgāh performing maqām būselīk; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ بمقام الماهور أى من صوت الاوج أوصوت الـكردان هبوطاً إلى صوت النواه ثم يهبط من النواه إلى صوت الدوكاه لعمل مقام البوسليك وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "55",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; anchored on the dūgāh qarār stated in the sayr — ascent carries the māhūr degrees above dūgāh (nīm māhūr, kurdān; the rāst tonic exists as kurdān's lower octave), descent is būselīk's. The māhūr entry from awj/kurdān lives in the sayr stops.",
+    "commentsArabic": "مقام مركّب، أُرسي على قرار الدوكاه المنصوص عليه في السير. يحمل الصعود درجات الماهور فوق الدوكاه (نيم ماهور والكردان، والراست حاضر بوصفه ديوان الكردان الأدنى)، والهبوط هبوط البوسليك. أما الدخول من الأوج أو الكردان على طريقة الماهور فمبيّن في محطات السير.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "72"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "111",
+    "idName": "maqam_ajam_kurdi",
+    "name": "maqām ʿajam kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Begins with the scale of maqām ʿajam, ends with the conditions and construction of kurd; its qarār is dūgāh.",
+        "commentsArabic": "هــذا المقام يبدأ العمل فيــه بتركيب سلم مقام العجم وينتهى بشروط وتركيب مقام الــكوردى وقراره صوت الدوكــاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "78",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending and kurd descending, on the shawq dil precedent. ʿajam here is taken as al-Shawwā's maqām ʿajam/ʿajam muraṣṣaʿ (1946, entry 81, p.80).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه عجم/عجم مرصع صعوداً وكرد هبوطاً، على قياس شوق دل. والعجم هنا محمول على مقام العجم أو العجم المرصع عند الشوّا (١٩٤٦، النغمة ٨١، ص٨٠).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "112",
+    "idName": "maqam_muhayyar_kurdi",
+    "name": "maqām muḥayyar kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Maqām muḥayyar ending with maqām kurd; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام هو مقــام المحير ، أى نغم المحير . وينتهى بعمل مقــام الــكوردى وقراره صوت الدوكــاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "68",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as muḥayyar ascending and kurd descending, on the shawq dil precedent. al-Shawwā's header is misprinted muḥayyar kūrī.",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه محير صعوداً وكرد هبوطاً، على قياس شوق دل. وعنوانه عند الشوّا مطبوع خطأً محير كورى.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "113",
+    "idName": "maqam_saba_kurdi",
+    "name": "maqām ṣabā kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Begins with ṣabā, ends with kurd; its qarār is dūgāh.",
+        "commentsArabic": "يبدأ بعمل نغم الصباه وينتهى بعمل نغم الكوردى وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "15",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ṣabā ascending / kurd descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه صبا صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "114",
+    "idName": "maqam_nawa_kurdi",
+    "name": "maqām nawā kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Begins with maqām nawā, ends with maqām kurd.",
+        "commentsArabic": "يبدأ بعمل مقام النواه وينتهى بعمل مقام الــكوردى .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "87",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as nawā ascending / kurd descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه نوا صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "115",
+    "idName": "maqam_hisar_kurdi",
+    "name": "maqām ḥiṣār kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "ḥiṣār",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Begins with maqām ḥiṣār, ends with maqām kurd.",
+        "commentsArabic": "يبدأ بعمل مقام الحصار وينتهى بمقــام الــكوردى .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "75",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as ḥiṣār ascending / kurd descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حصار صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "116",
+    "idName": "maqam_shahnaz_kurdi",
+    "name": "maqām shahnāz kurdī",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "78",
+        "commentsEnglish": "Begins with maqām shahnāz, ends with maqām kurd.",
+        "commentsArabic": "يبدأ بعمل مقام الشاهناز وينتهى بمقام الــكوردى .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "71",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "maqam",
+            "value": "3",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      }
+    ],
+    "commentsEnglish": "Compound maqām; scale deduced as shahnāz ascending / kurd descending (shawq dil precedent).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه شاهناز صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "78"
+      }
+    ],
+    "version": "2026-07-20T10:49:11.894Z"
   }
 ]
