@@ -99,3 +99,5 @@ CLAUDE.md
 
 # superpowers specs and plans (local workflow artifacts)
 docs/superpowers/
+# source scans, PDFs and working notes (never published)
+.references/
