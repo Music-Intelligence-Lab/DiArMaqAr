@@ -10,6 +10,7 @@ import useLanguageContext from "@/contexts/language-context";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { BASIC_WAVEFORMS, APERIODIC_WAVEFORMS, CUSTOM_WAVEFORMS } from "@/audio/waves";
 import getFirstNoteName from "@/functions/getFirstNoteName";
+import clampOctaveShift, { OCTAVE_SHIFT_MIN, OCTAVE_SHIFT_MAX } from "@/functions/clampOctaveShift";
 
 const SettingsCard = () => {
   const { patterns, selectedTuningSystem, allPitchClasses, referenceFrequencies, selectedIndices } = useAppContext();
@@ -442,11 +443,11 @@ const SettingsCard = () => {
                   onClick={() => {
                     setSoundSettings((prev) => ({
                       ...prev,
-                      octaveShift: Math.max(-3, prev.octaveShift - 1),
+                      octaveShift: clampOctaveShift(prev.octaveShift - 1),
                     }));
                   }}
                   className="settings-card__quick-action-button"
-                  disabled={soundSettings.octaveShift <= -3}
+                  disabled={soundSettings.octaveShift <= OCTAVE_SHIFT_MIN}
                 >
                   {t('settings.octaveDown')}
                 </button>
@@ -466,11 +467,11 @@ const SettingsCard = () => {
                   onClick={() => {
                     setSoundSettings((prev) => ({
                       ...prev,
-                      octaveShift: Math.min(3, prev.octaveShift + 1),
+                      octaveShift: clampOctaveShift(prev.octaveShift + 1),
                     }));
                   }}
                   className="settings-card__quick-action-button"
-                  disabled={soundSettings.octaveShift >= 3}
+                  disabled={soundSettings.octaveShift >= OCTAVE_SHIFT_MAX}
                 >
                   {t('settings.octaveUp')}
                 </button>
