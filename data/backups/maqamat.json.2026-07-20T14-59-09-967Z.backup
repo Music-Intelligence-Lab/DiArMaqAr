@@ -976,7 +976,7 @@
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2026-07-20T14:59:03.796Z"
+    "version": "2026-07-20T13:01:34.466Z"
   },
   {
     "id": "13",
@@ -6683,15 +6683,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no note names so they are deduced as maqām nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. ",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. He prints the name ʿanjah raʿnā.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل بسلّم النيشابور، إذ إن السير كلّه نيشابور وقراره النوا. ويكتب الاسم عنجه رعنا.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "22"
       }
     ],
-    "version": "2026-07-20T16:45:17.099Z"
+    "version": "2026-07-20T10:49:11.894Z"
   },
   {
     "id": "84",
@@ -8315,15 +8315,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "This is a compound maqām. al-Shawwā provides no note names only the sayr, so its construction is deduced based on that prose as ʿajam/ʿajam muraṣṣaʿ ascending and būselīk descending.",
-    "commentsArabic": "",
+    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending and būselīk descending, on the shawq dil precedent. ʿajam here is taken as al-Shawwā's maqām ʿajam/ʿajam muraṣṣaʿ (1946, entry 81, p.80).",
+    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه عجم/عجم مرصع صعوداً وبوسليك هبوطاً، على قياس شوق دل. والعجم هنا محمول على مقام العجم أو العجم المرصع عند الشوّا (١٩٤٦، النغمة ٨١، ص٨٠).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T16:38:38.320Z"
+    "version": "2026-07-20T10:49:11.894Z"
   },
   {
     "id": "103",

@@ -255,13 +255,8 @@
     ],
     "commentsEnglish": "Jins kurd on rast (C/Do) often has slightly different intervals to a standard transposition of jins kurd from dūgāh (D/Re) onto rāst. In many tuning systems it doesn't even transpose. Named jins ḥijāz kār kurd because it is the primary jins of maqām ḥijāz kār kurd.",
     "commentsArabic": "",
-    "sourcePageReferences": [
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "82"
-      }
-    ],
-    "version": "2026-07-20T18:08:14.163Z"
+    "sourcePageReferences": [],
+    "version": "2026-07-20T17:56:52.415Z"
   },
   {
     "id": "19",
@@ -721,8 +716,8 @@
   },
   {
     "id": "48",
-    "idName": "jins_shad_araban",
-    "name": "jins shad ʿarabān",
+    "idName": "jins_shadd_araban",
+    "name": "jins shadd ʿarabān",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -737,7 +732,7 @@
         "page": "82"
       }
     ],
-    "version": "2026-07-20T18:09:15.658Z"
+    "version": "2026-07-20T08:58:58.252Z"
   },
   {
     "id": "49",

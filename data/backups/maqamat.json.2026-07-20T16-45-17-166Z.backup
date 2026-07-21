@@ -974,7 +974,7 @@
     ],
     "suyur": [],
     "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsArabic": "test",
     "sourcePageReferences": [],
     "version": "2026-07-20T14:59:03.796Z"
   },
@@ -6683,15 +6683,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no note names so they are deduced as maqām nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. ",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. He prints the name ʿanjah raʿnā.",
+    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل بسلّم النيشابور، إذ إن السير كلّه نيشابور وقراره النوا. ويكتب الاسم عنجه رعنا.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "22"
       }
     ],
-    "version": "2026-07-20T16:45:17.099Z"
+    "version": "2026-07-20T10:49:11.894Z"
   },
   {
     "id": "84",

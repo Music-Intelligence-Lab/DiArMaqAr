@@ -70,7 +70,7 @@
         "version": "2025-12-10T17:00:39.497Z"
       },
       {
-        "id": "Sayr alsabbagh_1950",
+        "id": "sayralsabbagh_1950",
         "creatorEnglish": "Ṣabbāgh",
         "creatorArabic": "صبّاغ",
         "sourceId": "alsabbagh_1950",
@@ -260,7 +260,7 @@
     ],
     "suyur": [
       {
-        "id": "Sayr alshawwa_1946",
+        "id": "sayralshawwa_1946",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
@@ -337,7 +337,7 @@
     ],
     "suyur": [
       {
-        "id": "Sayr alshawwa_1946",
+        "id": "sayralshawwa_1946",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
@@ -676,7 +676,7 @@
           },
           {
             "type": "jins",
-            "value": "20",
+            "value": "6",
             "startingNote": "kurdān"
           },
           {
@@ -685,7 +685,7 @@
           },
           {
             "type": "jins",
-            "value": "20",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -958,7 +958,7 @@
         "page": "30"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-15T20:22:19.217Z"
   },
   {
     "id": "18",
@@ -1107,45 +1107,6 @@
       "nawā"
     ],
     "suyur": [
-      {
-        "id": "sayralshawwa_1946",
-        "creatorEnglish": "al-Shawwā, Sāmī",
-        "creatorArabic": "",
-        "sourceId": "alshawwa_1946",
-        "page": 36,
-        "commentsEnglish": "Starts with ḥijāz dūgāh, followed by rāst nawā. Descending it uses būselīk nawā, followed by ḥijāz dūgāh and ends on 'irāq",
-        "commentsArabic": "",
-        "stops": [
-          {
-            "type": "jins",
-            "value": "jins ḥijāz",
-            "startingNote": "dūgāh",
-            "direction": "none"
-          },
-          {
-            "type": "jins",
-            "value": "jins rāst",
-            "startingNote": "nawā",
-            "direction": "none"
-          },
-          {
-            "type": "jins",
-            "value": "jins nahāwand/būselīk",
-            "startingNote": "nawā",
-            "direction": "descending"
-          },
-          {
-            "type": "jins",
-            "value": "jins ḥijāz",
-            "startingNote": "dūgāh",
-            "direction": "descending"
-          },
-          {
-            "type": "note",
-            "value": "ʿirāq"
-          }
-        ]
-      },
       {
         "id": "sayralshawwa_1946",
         "creatorEnglish": "al-Shawwā, Sāmī",
@@ -1310,18 +1271,18 @@
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "chahārgāh",
       "nawā",
       "ḥiṣār",
-      "māhūr"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
-      "māhūr",
+      "nīm māhūr",
       "ḥiṣār",
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "zīrgūleh",
       "rāst"
     ],
@@ -1335,11 +1296,37 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "",
+        "commentsEnglish": "",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm māhūr"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": ""
+          }
+        ],
+        "version": "2026-07-19T18:17:35.583Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-19T18:20:43.803Z"
   },
   {
     "id": "24",
@@ -1367,11 +1354,11 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
-      "nawā"
+      "dūgāh"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -1471,7 +1458,7 @@
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -1481,7 +1468,7 @@
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -1598,44 +1585,6 @@
     "version": "2025-10-18T19:41:17.132Z"
   },
   {
-    "id": "28",
-    "idName": "maqam_bayyat_rast",
-    "name": "maqām bayyāt rāst",
-    "ascendingNoteNames": [
-      "rāst",
-      "tīk zīrgūleh",
-      "kurdī",
-      "chahārgāh",
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam"
-    ],
-    "descendingNoteNames": [
-      "ʿajam",
-      "ḥiṣār",
-      "nawā",
-      "chahārgāh",
-      "kurdī",
-      "tīk zīrgūleh",
-      "rāst"
-    ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
-  },
-  {
     "id": "29",
     "idName": "maqam_yegah",
     "name": "maqām yegāh",
@@ -1683,13 +1632,13 @@
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "nawā",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -1881,7 +1830,7 @@
           },
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "12",
             "startingNote": "nawā",
             "direction": "none"
           },
@@ -1970,13 +1919,13 @@
         "stops": [
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "12",
             "startingNote": "dūgāh",
             "direction": "none"
           },
@@ -2023,13 +1972,19 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
-        "id": "Sayr alshawwa_1946",
+        "id": "sayralshawwa_1946",
         "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
@@ -2235,25 +2190,25 @@
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ʿushayrān",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "ascending"
           },
@@ -2263,19 +2218,19 @@
           },
           {
             "type": "jins",
-            "value": "jins kurd",
+            "value": "7",
             "startingNote": "ḥusaynī",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ʿushayrān",
             "direction": "descending"
           },
@@ -2411,7 +2366,7 @@
             "value": "ʿushayrān"
           }
         ],
-        "version": "2025-10-18T19:50:29.651Z"
+        "version": "2026-07-19T18:23:10.155Z"
       }
     ],
     "commentsEnglish": "",
@@ -2422,7 +2377,7 @@
         "page": "25"
       }
     ],
-    "version": "2025-10-18T19:50:29.651Z"
+    "version": "2026-07-19T18:23:10.155Z"
   },
   {
     "id": "37",
@@ -2468,19 +2423,19 @@
         "stops": [
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nikrīz",
+            "value": "18",
             "startingNote": "rāst",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "none"
           }
@@ -2552,20 +2507,20 @@
             "value": "ḥiṣār"
           },
           {
-            "type": "jins",
-            "value": "8",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "17",
+            "type": "maqam",
+            "value": "6",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "8",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "ʿushayrān",
             "direction": "none"
           },
@@ -2573,7 +2528,8 @@
             "type": "note",
             "value": "ʿushayrān"
           }
-        ]
+        ],
+        "version": "2026-07-16T08:53:11.250Z"
       }
     ],
     "commentsEnglish": "",
@@ -2584,7 +2540,7 @@
         "page": "27"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-16T08:53:11.250Z"
   },
   {
     "id": "39",
@@ -2645,38 +2601,38 @@
             "value": "chahārgāh"
           },
           {
-            "type": "jins",
-            "value": "jins ṣabā",
+            "type": "maqam",
+            "value": "15",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "jins ḥijāz",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "chahārgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "muḥayyar",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins kurd",
+            "value": "7",
             "startingNote": "dūgāh",
             "direction": "ascending"
           },
           {
-            "type": "jins",
-            "value": "jins kurd",
+            "type": "maqam",
+            "value": "3",
             "startingNote": "ʿushayrān",
             "direction": "none"
           },
@@ -2757,7 +2713,7 @@
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "dūgāh",
             "direction": "ascending"
           },
@@ -2767,31 +2723,31 @@
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins kurd",
+            "value": "7",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "12",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nikrīz",
+            "value": "18",
             "startingNote": "rāst",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "ʿushayrān",
             "direction": "none"
           }
@@ -2862,7 +2818,7 @@
         "stops": [
           {
             "type": "jins",
-            "value": "jins ḥijāz",
+            "value": "12",
             "startingNote": "chahārgāh",
             "direction": "ascending"
           },
@@ -2876,13 +2832,13 @@
           },
           {
             "type": "jins",
-            "value": "jins ṣabā",
+            "value": "4",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins ʿajam",
+            "value": "5",
             "startingNote": "ʿajam ʿushayrān",
             "direction": "descending"
           }
@@ -2973,7 +2929,7 @@
           },
           {
             "type": "jins",
-            "value": "jins nahāwand",
+            "value": "6",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -3050,37 +3006,37 @@
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "nawā",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "muḥayyar",
             "direction": "descending"
           },
           {
             "type": "jins",
-            "value": "jins rāst",
+            "value": "19",
             "startingNote": "nawā",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "none"
           },
           {
             "type": "jins",
-            "value": "jins bayyāt",
+            "value": "2",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -3145,7 +3101,7 @@
         "stops": [
           {
             "type": "jins",
-            "value": "1",
+            "value": "19",
             "startingNote": "dūgāh",
             "direction": "descending"
           },
@@ -3414,7 +3370,7 @@
           },
           {
             "type": "jins",
-            "value": "jins mustaʿār",
+            "value": "13",
             "startingNote": "segāh",
             "direction": "ascending"
           },
@@ -3428,7 +3384,7 @@
           },
           {
             "type": "jins",
-            "value": "jins nahāwand/būselīk",
+            "value": "21",
             "startingNote": "nawā",
             "direction": "ascending"
           },
@@ -3952,7 +3908,7 @@
           },
           {
             "type": "maqam",
-            "value": "53",
+            "value": "1",
             "startingNote": "nawā",
             "direction": "ascending"
           },
@@ -4030,7 +3986,7 @@
     ],
     "suyur": [
       {
-        "id": "Sayr alshawwa_1946",
+        "id": "sayralshawwa_1946",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
@@ -4308,7 +4264,7 @@
     ],
     "suyur": [
       {
-        "id": "Sayr alshawwa_1946",
+        "id": "sayralshawwa_1946",
         "creatorEnglish": "",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",

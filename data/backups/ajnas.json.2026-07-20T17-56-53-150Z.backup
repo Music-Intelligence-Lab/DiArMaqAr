@@ -183,15 +183,15 @@
       "ḥijāz",
       "nawā"
     ],
-    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used across the Arabic speaking region. It is also a jins and maqām that has many variations in intonation, even if it has been consistently theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.\n\nal-Ḥilū gives an identical tetrachord under the name jins shahnāz.",
-    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو نظرياته مثبتة على أنه مبني من النغمات: دوكاه، كردي، حجاز، نوى. لهذا السبب نظيف نسخ متعددة منه ليُسمع ويُقارن مع التغيرات النغمية ضمن نظام تنغيم واحد أو عبر أنظمة تنغيم متعددة.\n\nيورد الحلو الجنس نفسه بأصواته ذاتها باسم جنس الشاهناز.",
+    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used maqāmāt across the Arabic speaking region. One major example of it's usage is in the Adhān (Muslim call to prayer). It is also a jins and maqām that has many variations in intonation, even if it has been consistantly theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.\n\nal-Ḥilū gives an identical tetrachord under the name jins shahnāz.",
+    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. ومن أبرز الأمثلة على استعماله في الأذان (النداء للصلاة في الإسلام). وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو كان منظّراً بثبات على أنه مبني من الدرجات الصوتية: دوكاه، كردي، حجاز، نوى. لهذا السبب أدرجنا نسخاً متعددة منه ليُسمع ويُقارن مع المتغيرات النغمية ضمن نظام تسوية واحد أو عبر أنظمة تسوية متعددة.\n\nيورد الحلو الجنس نفسه بأصواته ذاتها باسم جنس الشاهناز.",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T18:07:11.107Z"
+    "version": "2026-07-20T09:10:50.234Z"
   },
   {
     "id": "13",
@@ -244,24 +244,50 @@
     "version": "2025-10-18T19:34:26.343Z"
   },
   {
+    "id": "16",
+    "idName": "jins_rast_(nim_buselik)",
+    "name": "jins rāst (nīm būselīk)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
     "id": "17",
-    "idName": "jins_hijaz_kar_kurd",
-    "name": "jins ḥijāz kār kurd",
+    "idName": "jins_kurd_(binsir)",
+    "name": "jins kurd (binṣir)",
     "noteNames": [
       "rāst",
       "zīrgūleh",
       "kurdī",
       "chahārgāh"
     ],
-    "commentsEnglish": "Jins kurd on rast (C/Do) often has slightly different intervals to a standard transposition of jins kurd from dūgāh (D/Re) onto rāst. In many tuning systems it doesn't even transpose. Named jins ḥijāz kār kurd because it is the primary jins of maqām ḥijāz kār kurd.",
+    "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "82"
-      }
+    "sourcePageReferences": [],
+    "version": "2026-07-15T18:48:46.437Z"
+  },
+  {
+    "id": "18",
+    "idName": "jins_nikriz",
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
     ],
-    "version": "2026-07-20T18:08:14.163Z"
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
   },
   {
     "id": "19",
@@ -721,8 +747,8 @@
   },
   {
     "id": "48",
-    "idName": "jins_shad_araban",
-    "name": "jins shad ʿarabān",
+    "idName": "jins_shadd_araban",
+    "name": "jins shadd ʿarabān",
     "noteNames": [
       "yegāh",
       "qarār ḥiṣār",
@@ -737,7 +763,7 @@
         "page": "82"
       }
     ],
-    "version": "2026-07-20T18:09:15.658Z"
+    "version": "2026-07-20T08:58:58.252Z"
   },
   {
     "id": "49",

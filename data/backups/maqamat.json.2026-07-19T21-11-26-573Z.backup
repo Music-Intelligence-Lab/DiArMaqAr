@@ -321,7 +321,7 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
+      "nawā"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -334,8 +334,8 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "57",
-        "commentsEnglish": "Begins from ʿajam to kurdān, then ascends above kurdān; in the descent it performs kurdī on kurdān and continues descending to the qarār, which is rāst.\n\nal-Shawwā names this maqām kūrdīlī ḥijāz kār.",
-        "commentsArabic": "هذا المقام يـبدأ من صوت العجم إلى الـكردان ثم يصير الصعود إلى ما فوق صوت الـكردان وفى الهبوط يعمل نغم كوردى على الـكردان ويستمر فى الهبوط إلى القرار وقراره صــوت الراست .\n\nيسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+        "commentsEnglish": "Begins from ʿajam to kurdān, then ascends above kurdān; in the descent it performs kurdī on kurdān and continues descending to the qarār, which is rāst.\n\nal-Shawwā names this maqām kūrdīlī ḥijāz kār (كورديلى حجاز كار).",
+        "commentsArabic": "هذا المقام يـبدأ من صوت العجم إلى الـكردان ثم يصير الصعود إلى ما فوق صوت الـكردان وفى الهبوط يعمل نغم كوردى على الـكردان ويستمر فى الهبوط إلى القرار وقراره صــوت الراست .",
         "stops": [
           {
             "type": "note",
@@ -371,18 +371,18 @@
             "value": "rāst"
           }
         ],
-        "version": "2026-07-20T08:26:02.162Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā names this maqām kūrdīlī ḥijāz kār.",
-    "commentsArabic": "يسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+    "commentsEnglish": "al-Shawwā (1946, p.57) names this maqām kūrdīlī ḥijāz kār (كورديلى حجاز كار).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "57"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "5",
@@ -590,7 +590,7 @@
       "dūgāh"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
+      "nawā"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -638,7 +638,7 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
+    "commentsEnglish": "TESTING VERSION TIMESTAMP",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
@@ -646,7 +646,7 @@
         "page": "59"
       }
     ],
-    "version": "2026-07-20T13:01:34.466Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "8",
@@ -681,10 +681,10 @@
       "nawā"
     ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "test",
+    "commentsArabic": "تجريب",
     "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "9",
@@ -750,11 +750,9 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "tertiaryJinsDegree": [
       "nawā"
     ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -820,15 +818,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.49).",
-    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٤٩).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "49"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "11",
@@ -930,15 +928,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.50).",
-    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٥٠).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "50"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "12",
@@ -973,10 +971,10 @@
       "ḥusaynī"
     ],
     "suyur": [],
-    "commentsEnglish": "",
+    "commentsEnglish": "TESTING VERSION TIMESTAMP",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2026-07-20T14:59:03.796Z"
+    "version": "2025-10-18T19:41:51.331Z"
   },
   {
     "id": "13",
@@ -1012,9 +1010,9 @@
     ],
     "suyur": [],
     "commentsEnglish": "Also known as qārjagār",
-    "commentsArabic": "ويعرف أيضاً بالقارجغار.",
+    "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
+    "version": "2025-11-09T03:10:10.171Z"
   },
   {
     "id": "14",
@@ -1080,11 +1078,9 @@
       "dūgāh"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
+      "ḥusaynī"
     ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "ḥusaynī"
     ],
@@ -1095,8 +1091,8 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "69",
-        "commentsEnglish": "Begins from chahārgāh to perform ḥijāz on chahārgāh, then returns from ascent to descent according to the scale of the maqām, ending on dūgāh.\n\nNote: al-Shawwā gives the fourth degree as the note ṣabā, where our scale uses ḥijāz.",
-        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل حجاز عـلى صوت الجهاركاه ثم يعود من الصعود إلى الهبوط حسب تركيب سلم المقام وينتهى على صوت الدوكاه .\n\nملاحظة: يعطي الشوّا الدرجة الرابعة نغمةَ صبا، حيث يستعمل سلّمنا الحجاز.",
+        "commentsEnglish": "Begins from chahārgāh to perform ḥijāz on chahārgāh, then returns from ascent to descent according to the scale of the maqām, ending on dūgāh.\n\nNote: the book prints the fourth degree as the note ṣabā (صباه) where our scale uses ḥijāz.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل حجاز عـلى صوت الجهاركاه ثم يعود من الصعود إلى الهبوط حسب تركيب سلم المقام وينتهى على صوت الدوكاه .",
         "stops": [
           {
             "type": "note",
@@ -1120,7 +1116,7 @@
             "value": "dūgāh"
           }
         ],
-        "version": "2026-07-20T08:40:56.038Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1131,7 +1127,7 @@
         "page": "69"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "16",
@@ -1245,15 +1241,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "TEST",
+    "commentsArabic": "TEST",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "30"
       }
     ],
-    "version": "2026-07-20T13:01:34.466Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "18",
@@ -1371,9 +1367,7 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1384,7 +1378,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "84",
-        "commentsEnglish": "Begins from the qarār, segāh, then performs rāst on nawā, followed by awj on the note awj, then descends to the qarār, segāh. In the opening, kurdī must be touched. Note: al-Shawwā adds that this nagham has many paths other than this construction.",
+        "commentsEnglish": "Begins from the qarār, segāh, then performs rāst on nawā, followed by awj on the note awj, then descends to the qarār, segāh. In the opening, kurdī must be touched. Note: this nagham has many paths other than this construction.",
         "commentsArabic": "هذا المقــام يبدأ من القرار أى من صوت الثيه كاه ثم عمل راست على صوت النواه يلى ذلك عمل اوج على صوت الاوج ثم هبوطاً إلى القرار وهو صوت الثيه كاه : وفى الاستهلال يجب لمس عربة الــكوردى .\n( ملاحظه ) ولهذا النغم طرق كثيره خلاف هذا التركيب .",
         "stops": [
           {
@@ -1413,7 +1407,7 @@
             "value": "segāh"
           }
         ],
-        "version": "2026-07-20T10:20:55.789Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -1424,7 +1418,7 @@
         "page": "84"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "20",
@@ -1454,9 +1448,7 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1467,7 +1459,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "85",
-        "commentsEnglish": "Begins from segāh with a touch of kurdī, then performs ḥijāz on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.\n\nNote: al-Shawwā adds that sāzkār is sometimes performed on kurdān in this maqām.",
+        "commentsEnglish": "Begins from segāh with a touch of kurdī, then performs ḥijāz on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.\n\nNote: al-Shawwā adds that sāzkār is sometimes performed on kurdān in this maqām — to be encoded as a stop once sāzkār-on-kurdān can be referenced in the app.",
         "commentsArabic": "هذا المقـام يبدأ من صوت الثيه كاه مع لمس عربة السكوردى ثم عمل حجاز على النواه وبعد الصعود إلى الجواب يصير الهبوط إلى قرار المقام وهو صوت الثيه كاه .\nملاحظه : يستعمل أحيانا فى هذا المقام عمل سازكار على صوت الكردان .",
         "stops": [
           {
@@ -1496,18 +1488,18 @@
             "value": "segāh"
           }
         ],
-        "version": "2026-07-20T10:20:55.789Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives nīm māhūr as the fifth degree, noting that it \"was formerly awj\" (1946, p.85).",
-    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً خامسة، وينبّه إلى أنها «قديماً كان اوج» (١٩٤٦، ص٨٥).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "85"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "21",
@@ -1535,11 +1527,9 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": [
       "nawā"
     ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1593,7 +1583,7 @@
         "page": "36"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "22",
@@ -1621,7 +1611,7 @@
       "rāst"
     ],
     "secondaryJinsDegree": [
-      "chahārgāh"
+      "nawā"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -1693,15 +1683,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives segāh and nīm būselīk as alternatives to one another, segāh in the ascent and nīm būselīk in the descent.",
-    "commentsArabic": "يجعل الشوّا السيكاه والنيم بوسليك بديلين أحدهما من الآخر، السيكاه صعوداً والنيم بوسليك هبوطاً.",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "43"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "23",
@@ -1742,7 +1732,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "56",
-        "commentsEnglish": "Begins from nīm māhūr to kurdān to perform nahāwand on kurdān; after ascending above kurdān it returns descending, performing ḥijāz on kurdān when needed, then descends to the qarār, which is rāst.",
+        "commentsEnglish": "Begins from nīm māhūr to kurdān to perform nahāwand on kurdān; after ascending above kurdān it returns descending, performing ḥijāz on kurdān when needed, then descends to the qarār, which is rāst. Note: in the past this maqām used segāh and awj instead of nīm būselīk and nīm māhūr.",
         "commentsArabic": "هذا المقام يبدأ من صوت النيم ماهور إلى الـكردان لعمل نغم نهاوند عـلى الـكردان ثم بعدالصعود إلى مافوق الـكردان من الأصوات يعود للهبوط مع عمل نغم حجاز على الـكردان فى حالة اللزوم ثم يهبط للقرار وقراره هو صوت الراست .\n( ملاحظه ) كان هذا المقـام قديما يستعمل فيه صوتى الثيه كاه والاوج بدلا من صوتى النيم بوسليك والنيم ماهور .",
         "stops": [
           {
@@ -1759,18 +1749,18 @@
             "value": ""
           }
         ],
-        "version": "2026-07-20T10:12:09.875Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā notes that \"this maqām formerly used the notes segāh and awj instead of nīm būselīk and nīm māhūr\" (1946, p.56).",
-    "commentsArabic": "ينبّه الشوّا إلى أن «هذا المقام قديماً يستعمل فيه صوتي الثيه كاه والاوج بدلاً من صوتي النيم بوسليك والنيم ماهور» (١٩٤٦، ص٥٦).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "56"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2026-07-19T18:20:43.803Z"
   },
   {
     "id": "24",
@@ -1922,11 +1912,9 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": [
       "nawā"
     ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -1980,7 +1968,7 @@
         "page": "33"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "27",
@@ -2016,9 +2004,7 @@
     "secondaryJinsDegree": [
       "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -2078,7 +2064,7 @@
         "page": "44"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "29",
@@ -2166,15 +2152,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "Introducing the first maqām of the chapter, al-Shawwā sets out the convention followed throughout: \"the ascending degrees run from the qarār to the jawāb, and the descent from the jawāb to the qarār\" (1946, p.17).",
-    "commentsArabic": "يضع الشوّا عند تقديمه أول مقام في الفصل القاعدةَ المتّبعة في الكتاب كلّه: «درجات الصعود هي من القرار إلى الجواب والهبوط من الجواب إلى القرار» (١٩٤٦، ص١٧).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "17"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "30",
@@ -2319,7 +2305,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "20",
-        "commentsEnglish": "Begins from ḥijāz to perform a taṣwīr of ḥijāz on nawā; then from nawā it descends to chahārgāh, then kurdī, dūgāh, rāst, nīm kawasht, qarār ḥiṣār and yegāh; its qarār is yegāh.",
+        "commentsEnglish": "",
         "commentsArabic": "هذا المقام يبدأ من عربة الحجاز لعمل تصوير حجاز على صوت النواه ثم من النواه هبوطا إلى الجهاركاه فالكوردى والدوكاه والراست والنيم كوشت وقرار الحصار واليك كاه وقراره صوت اليك كاه .",
         "stops": [
           {
@@ -2361,7 +2347,7 @@
             "value": "yegāh"
           }
         ],
-        "version": "2026-07-20T07:58:17.338Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -2669,7 +2655,7 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
+      "nawā"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -2751,7 +2737,7 @@
         "page": "24"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "36",
@@ -2787,11 +2773,9 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
+      "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -2821,7 +2805,7 @@
           },
           {
             "type": "maqam",
-            "value": "7",
+            "value": "24",
             "startingNote": "ḥusaynī",
             "direction": ""
           },
@@ -2870,7 +2854,7 @@
             "value": "ʿushayrān"
           }
         ],
-        "version": "2026-07-19T21:11:26.492Z"
+        "version": "2026-07-19T21:10:55.727Z"
       }
     ],
     "commentsEnglish": "",
@@ -2881,7 +2865,7 @@
         "page": "25"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T21:10:55.727Z"
   },
   {
     "id": "37",
@@ -2909,7 +2893,7 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
+      "nawā"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -2947,15 +2931,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).",
-    "commentsArabic": "يجعل الشوّا القرار على الحسيني في الممارسة القديمة، ثم يضيف: «وأما الآن فجعلوا قراره على صوت العشيران» (١٩٤٦، ص٢٦).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "26"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "38",
@@ -2993,9 +2977,7 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "dūgāh"
     ],
@@ -3047,7 +3029,7 @@
         "page": "27"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-16T08:53:11.250Z"
   },
   {
     "id": "39",
@@ -3089,9 +3071,7 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": [
-      "chahārgāh"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "dūgāh"
     ],
@@ -3161,7 +3141,7 @@
         "page": "28"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "40",
@@ -3201,11 +3181,9 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
+      "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -3275,7 +3253,7 @@
         "page": "29"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "41",
@@ -3359,15 +3337,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with nīm būselīk as an alternative.",
-    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والنيم بوسليك بديلاً عنها.",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "31"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "42",
@@ -3407,9 +3385,7 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": [
-      "ʿajam"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "dūgāh"
     ],
@@ -3469,7 +3445,7 @@
         "page": "32"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "43",
@@ -3497,11 +3473,9 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": [
       "nawā"
     ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -3575,7 +3549,7 @@
         "page": "34"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "44",
@@ -3603,11 +3577,9 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": [
       "nawā"
     ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -3662,7 +3634,7 @@
         "page": "35"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "45",
@@ -3698,9 +3670,7 @@
     "secondaryJinsDegree": [
       "dūgāh"
     ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "dūgāh"
     ],
@@ -3728,15 +3698,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives muḥayyar as the top ascending degree, with shahnāz as an alternative.",
-    "commentsArabic": "يعطي الشوّا المحير أعلى درجات الصعود، والشاهناز بديلاً عنها.",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "37"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-11-19T22:13:31.168Z"
   },
   {
     "id": "46",
@@ -3772,9 +3742,7 @@
     "secondaryJinsDegree": [
       "segāh"
     ],
-    "tertiaryJinsDegree": [
-      "awj"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "segāh"
     ],
@@ -3840,7 +3808,7 @@
         "page": "38"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "47",
@@ -3878,9 +3846,7 @@
     "secondaryJinsDegree": [
       "segāh"
     ],
-    "tertiaryJinsDegree": [
-      "nawā"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "segāh"
     ],
@@ -3950,7 +3916,7 @@
         "page": "39"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "48",
@@ -4056,7 +4022,7 @@
       "chahārgāh"
     ],
     "secondaryJinsDegree": [
-      "kurdān"
+      "chahārgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
@@ -4110,7 +4076,7 @@
         "page": "90"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "50",
@@ -4256,7 +4222,7 @@
         "page": "45"
       }
     ],
-    "version": "2026-07-20T10:20:55.789Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "52",
@@ -4290,11 +4256,9 @@
       "ʿirāq"
     ],
     "secondaryJinsDegree": [
-      "dūgāh"
+      "nawā"
     ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -4342,7 +4306,7 @@
         "page": "40"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "54",
@@ -4549,15 +4513,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with kurdī as an alternative.",
-    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والكردي بديلاً عنها.",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "47"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "57",
@@ -4784,9 +4748,9 @@
     ],
     "suyur": [],
     "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
-    "commentsArabic": "من ابتكار سيد درويش (انظر دور في شرع مين: https://www.youtube.com/watch?v=DmEEUlWYJjo).",
+    "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
+    "version": "2026-07-14T15:22:26.462Z"
   },
   {
     "id": "62",
@@ -4868,9 +4832,7 @@
     "secondaryJinsDegree": [
       "chahārgāh"
     ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "chahārgāh"
     ],
@@ -4937,7 +4899,7 @@
         "page": "51"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2025-12-11T23:30:41.160Z"
   },
   {
     "id": "64",
@@ -4961,16 +4923,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5015,15 +4971,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives the 3rd ascending degree as kurdī, noting nīm būselīk as an alternative.",
-    "commentsArabic": "يعطي الشوّا الدرجة الثالثة صعوداً كردياً، ويذكر النيم بوسليك بديلاً عنها.",
+    "commentsEnglish": "Book prints the 3rd ascending degree as kurdī «وتارة نيم بوسليك» (sometimes nīm būselīk).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "54"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "65",
@@ -5057,18 +5013,10 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5104,15 +5052,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā's 12-degree table tops out with jawāb chahārgāh and jawāb nawā; these are entered here under our octave names, māhūrān and saham/ramal tūtī.",
-    "commentsArabic": "يبلغ جدول الشوّا ذو الاثنتي عشرة درجة في أعلاه جواب الجهاركاه وجواب النوا، وقد أُدخلا هنا بأسماء الديوان عندنا: ماهوران وسهم/رمل توتي.",
+    "commentsEnglish": "The book's 12-degree table prints جواب جهاركاه and جواب نواه at the top; entered with our octave names māhūrān and saham/ramal tūtī.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "55"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "66",
@@ -5136,16 +5084,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5192,15 +5134,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā distinguishes this maqām from its Egyptian namesake: \"this is maqām ʿushshāq, unlike the ʿushshāq used in Egypt\" (1946, p.60). Its scale is that of maqām bayyāt; the two differ in sayr alone.",
-    "commentsArabic": "يميّز الشوّا هذا المقام من سميّه المصري: «وهذا هو مقام العشاق خلاف العشاق المستعمل في مصر» (١٩٤٦، ص٦٠). وسلّمه سلّم مقام البياتي، ولا يختلفان إلا في السير.",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "60"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "67",
@@ -5224,16 +5166,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5277,7 +5213,7 @@
         "page": "61"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "68",
@@ -5301,16 +5237,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5365,15 +5295,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives awj in the descent, with ʿajam as an alternative. The jawāb segāh and jawāb chahārgāh named in the sayr are entered as buzurk and māhūrān; the jawāb ṣabā he calls for has no note name in the app yet.",
-    "commentsArabic": "يعطي الشوّا الأوج في الهبوط، والعجم بديلاً عنه. وجواب السيكاه وجواب الجهاركاه المذكوران في السير أُدخلا بزرك وماهوران، أما جواب الصبا الذي يطلبه فلا اسم له في أسماء النغم عندنا بعد.",
+    "commentsEnglish": "Book desc prints awj «أو عجم». The sayr's jawāb segāh / jawāb chahārgāh are entered as buzurk / māhūrān; the touched jawāb ṣabā has no app note name yet.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "62"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "69",
@@ -5397,16 +5327,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5470,7 +5394,7 @@
         "page": "63"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "70",
@@ -5500,18 +5424,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5547,7 +5463,7 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
+    "commentsEnglish": "Turkish karcığar; book spelling قرجهار.",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
@@ -5555,7 +5471,7 @@
         "page": "64"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "71",
@@ -5585,18 +5501,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
-    "tertiaryJinsDegree": [
-      "muḥayyar"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5636,15 +5544,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā prints nīm būselīk as the 9th ascending degree; it is entered here as jawāb nīm būselīk, since the jawāb is intended.",
-    "commentsArabic": "يكتب الشوّا النيم بوسليك درجةً تاسعة صعوداً، وقد أُدخلت هنا جواب نيم بوسليك لأن الجواب هو المقصود.",
+    "commentsEnglish": "The 9th ascending degree is printed نيم بوسليك; entered as jawāb nīm būselīk (jawāb intended).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "66"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "72",
@@ -5668,16 +5576,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5726,15 +5628,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives ʿajam in the ascent, with awj as an alternative.",
-    "commentsArabic": "يعطي الشوّا العجم في الصعود، والأوج بديلاً عنه.",
+    "commentsEnglish": "Book asc prints ʿajam او «اوج».",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "68"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "73",
@@ -5764,18 +5666,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": [
-      "muḥayyar"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5828,7 +5722,7 @@
         "page": "73"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "74",
@@ -5852,16 +5746,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5896,15 +5784,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives awj in the descent, with ʿajam as an alternative.",
-    "commentsArabic": "يعطي الشوّا الأوج في الهبوط، والعجم بديلاً عنه.",
+    "commentsEnglish": "Book desc prints awj «أو عجم».",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "74"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "75",
@@ -5928,16 +5816,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -5945,7 +5827,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "75",
-        "commentsEnglish": "Begins from ḥiṣār to ḥusaynī, to perform ḥijāz on ḥusaynī, and returns descending to perform nawā athar on dūgāh; its qarār is dūgāh.",
+        "commentsEnglish": "Begins from ḥiṣār to ḥusaynī, to perform ḥijāz on ḥusaynī, and returns descending to perform nawā athar on dūgāh; its qarār is dūgāh.\n\nNote: nawā-athar-on-dūgāh has no jins in the app yet — to be encoded once it can be referenced.",
         "commentsArabic": "هذا المقام يبدأ من صوت الحصار إلى صوت الحسينى لعمل نغم حجاز على صوت الحسينى ويعود هبوطاً لعمل نغم نو أثر على الدوكاه وقراره صوت الدوكاه .",
         "stops": [
           {
@@ -5966,16 +5848,11 @@
             "value": "descending"
           },
           {
-            "type": "jins",
-            "value": "33",
-            "startingNote": "dūgāh"
-          },
-          {
             "type": "note",
             "value": "dūgāh"
           }
         ],
-        "version": "2026-07-20T07:58:17.338Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
     "commentsEnglish": "",
@@ -5986,7 +5863,7 @@
         "page": "75"
       }
     ],
-    "version": "2026-07-20T12:17:39.575Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "76",
@@ -6016,16 +5893,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "chahārgāh"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6067,15 +5938,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā prints nīm būselīk as the 9th ascending degree; it is entered here as jawāb nīm būselīk, since the jawāb is intended. His 8th descending degree is ḥijāz, with chahārgāh as an alternative. In the descent, ḥijāz on dūgāh alternates with the ṣabā ending.",
-    "commentsArabic": "يكتب الشوّا النيم بوسليك درجةً تاسعة صعوداً، وقد أُدخلت هنا جواب نيم بوسليك لأن الجواب هو المقصود. ودرجته الثامنة هبوطاً حجاز، والجهاركاه بديل عنها. وفي الهبوط يتناوب الحجاز على الدوكاه مع خاتمة الصبا.",
+    "commentsEnglish": "The 9th ascending degree is printed نيم بوسليك; entered as jawāb nīm būselīk (jawāb intended). Book desc 8th prints ḥijāz ( أو جهاركاه ). In the descent, ḥijāz on dūgāh alternates with the ṣabā ending.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "76"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "77",
@@ -6105,18 +5976,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "tertiaryJinsDegree": [
-      "nawā"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6158,15 +6021,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives ʿajam as the 6th ascending degree, with awj as an alternative.",
-    "commentsArabic": "يعطي الشوّا العجم درجةً سادسة صعوداً، والأوج بديلاً عنها.",
+    "commentsEnglish": "Turkish arazbar; book spelling عرضبار. Book asc 6th prints ʿajam او «اوج».",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "79"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "78",
@@ -6196,18 +6059,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": [
-      "muḥayyar"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6252,15 +6107,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā titles this maqām ʿajam, or ʿajam muraṣṣaʿ. In the ascent he gives ḥusaynī, sometimes ḥiṣār, and ʿajam, sometimes nīm māhūr.",
-    "commentsArabic": "يعنون الشوّا هذا المقام بالعجم أو العجم المرصع. ويعطي في الصعود الحسيني وتارةً الحصار، والعجم وتارةً النيم ماهور.",
+    "commentsEnglish": "Book title: عجم أو عجم مرصع. Book asc prints ḥusaynī وتارة (ḥiṣār) and ʿajam وتارة (nīm māhūr).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "80"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "79",
@@ -6288,18 +6143,10 @@
       "ḥijāz",
       "segāh"
     ],
-    "primaryJinsDegree": [
-      "segāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": [
-      "awj"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6307,7 +6154,7 @@
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "87",
-        "commentsEnglish": "Begins from nawā to segāh, then performs rāst or nahāwand on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.",
+        "commentsEnglish": "Begins from nawā to segāh, then performs rāst or nahāwand on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh. Note: the Turks replace the qarār (segāh) with nīm būselīk.",
         "commentsArabic": "هذا المقام يبدأ من صوت النواه إلى صوت الثيه كاه ثم عمل نغم راست أو نهاوند على صوت النواه وبعد الصعود إلى الجواب يصير هبوطاً إلى قرار المقام وهو صوت الثيه كاه .\n، ملاحظه ، الاتراك يستبدلون القرار ، صوت الثيه كاه ، بصوت النيم بوسليك .",
         "stops": [
           {
@@ -6340,18 +6187,18 @@
             "value": "segāh"
           }
         ],
-        "version": "2026-07-20T10:12:09.875Z"
+        "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā notes that \"the Turks replace the qarār, the note segāh, with the note nīm būselīk\" (1946, p.87).",
-    "commentsArabic": "ينبّه الشوّا إلى أن «الاتراك يستبدلون القرار، صوت الثيه كاه، بصوت النيم بوسليك» (١٩٤٦، ص٨٧).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "87"
       }
     ],
-    "version": "2026-07-20T12:17:39.575Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "80",
@@ -6375,18 +6222,10 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": [
-      "segāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
-    "tertiaryJinsDegree": [
-      "kurdān"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6426,15 +6265,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā notes that \"the scale of this maqām is the same as maqām segāh, but the difference lies in the conditions and the analysis of the two maqāmāt\", and adds a second path in which awj is not used (1946, p.88).",
-    "commentsArabic": "ينبّه الشوّا إلى أن «سلم هذا المقام هو نفس مقام الثيه كاه ولكن الاختلاف في شروط وتحليل المقامين»، ويضيف طريقةً أخرى لا يُستعمل فيها صوت الاوج (١٩٤٦، ص٨٨).",
+    "commentsEnglish": "",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "88"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "81",
@@ -6462,18 +6301,10 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": [
-      "segāh"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "tertiaryJinsDegree": [
-      "nawā"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6515,15 +6346,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives awj as the 5th ascending degree, with ʿajam as an alternative.",
-    "commentsArabic": "يعطي الشوّا الأوج درجةً خامسة صعوداً، والعجم بديلاً عنها.",
+    "commentsEnglish": "Book asc 5th prints awj : أو عجم.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "89"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "82",
@@ -6553,16 +6384,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6604,15 +6429,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as māhūr ascending and sūznāk descending. Its qarār is nawā.",
-    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل السلّم ماهور صعوداً وسوزناك هبوطاً. وقراره النوا.",
+    "commentsEnglish": "No scale table in the book; entered per ruling as māhūr ascending / sūznāk descending. Note: the qarār is nawā.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "22"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:45:48.797Z"
   },
   {
     "id": "83",
@@ -6640,18 +6465,10 @@
       "ḥijāz",
       "segāh"
     ],
-    "primaryJinsDegree": [
-      "segāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": [
-      "ḥusaynī"
-    ],
-    "ghammaz": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6683,7 +6500,7 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no note names so they are deduced as maqām nīshābūr's, since the sayr is entirely nīshābūr with its qarār on nawā. ",
+    "commentsEnglish": "No scale table in the book; entered as nīshābūr's scale (the sayr is entirely nīshābūr, qarār nawā). Name printed عنجه رعنا — likely Persian غنچهٔ رعنا (ghunche-ye raʿnā).",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
@@ -6691,7 +6508,7 @@
         "page": "22"
       }
     ],
-    "version": "2026-07-20T16:45:17.099Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "84",
@@ -6715,16 +6532,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6770,15 +6581,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no scale table, but states that the scale is that of maqām bayyāt.",
-    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، غير أنه ينصّ على أن سلّمه سلّم مقام البياتي.",
+    "commentsEnglish": "No scale table in the book; the book states the scale is that of maqām bayyāt.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "85",
@@ -6808,16 +6619,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6881,15 +6686,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no scale table, but states that the scale is that of maqām ʿarḍibār. He prints the name kāʿazār.",
-    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، غير أنه ينصّ على أن سلّمه سلّم مقام العرضبار. ويكتب الاسم كاعزار.",
+    "commentsEnglish": "No scale table in the book; the book states the scale is that of maqām ʿarḍibār. Name printed كاعزار — likely گلعزار (gulʿazār / Turkish Gülizar).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:12:36.330Z"
   },
   {
     "id": "86",
@@ -6913,16 +6718,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -6968,15 +6767,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: rāst-on-dūgāh lower jins (dūgāh nīm-būselīk nīm-ḥijāz nawā, as in humāyūn's table) + nahāwand on nawā ascending; descent swaps in awj for rāst on nawā.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جنس راست على الدوكاه في الأسفل (دوكاه، نيم بوسليك، نيم حجاز، نوا، كما في جدول الهمايون)، مع نهاوند على النوا صعوداً. وفي الهبوط يحلّ الأوج ليصير راست على النوا.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: rāst-on-dūgāh lower jins (dūgāh nīm-būselīk nīm-ḥijāz nawā, as in humāyūn's table) + nahāwand on nawā ascending; descent swaps in awj for rāst on nawā.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "67"
       }
     ],
-    "version": "2026-07-20T12:17:39.575Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "87",
@@ -7000,16 +6799,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7045,15 +6838,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: iṣfahān's scale with the rāst/nahāwand-on-nawā swap (awj ascending, ʿajam descending).",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم الاصفهان مع تبادل الراست والنهاوند على النوا، أوج صعوداً وعجم هبوطاً.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: iṣfahān's scale with the rāst/nahāwand-on-nawā swap (awj ascending, ʿajam descending).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "67"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "88",
@@ -7077,16 +6870,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7127,15 +6914,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: reverse of humāyūn — ḥijāz side ascending, iṣfahān side descending.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: عكس الهمايون، جانب الحجاز صعوداً وجانب الاصفهان هبوطاً.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: reverse of humāyūn — ḥijāz side ascending, iṣfahān side descending.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "83"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "89",
@@ -7159,16 +6946,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7212,15 +6993,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: the stated descent (ḥusaynī–nawā–chahārgāh–segāh–dūgāh–rāst) over a rāst-scale frame, as in dilkesh ḥūrān (p.40) which shares this sayr on ʿirāq.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: الهبوط المنصوص عليه (حسيني، نوا، جهاركاه، سيكاه، دوكاه، راست) على إطار سلّم الراست، كما في دلكش حوران (ص٤٠) الذي يشاركه هذا السير على العراق.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: the stated descent (ḥusaynī–nawā–chahārgāh–segāh–dūgāh–rāst) over a rāst-scale frame, as in dilkesh ḥūrān (p.40) which shares this sayr on ʿirāq.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "58"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "90",
@@ -7244,16 +7025,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7286,15 +7061,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ascent = the bayyāt/ḥusaynī frame (bayyāt on ḥusaynī opening); descent = our maqām ṣabā descent.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: الصعود إطار البياتي على الحسيني باستهلال بياتي على الحسيني، والهبوط هبوط مقام الصبا عندنا.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: ascent = the bayyāt/ḥusaynī frame (bayyāt on ḥusaynī opening); descent = our maqām ṣabā descent.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "81"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "91",
@@ -7318,16 +7093,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7385,15 +7154,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: anchored on the dūgāh qarār (the sayr ends with bayyāt on dūgāh and rāst-on-rāst never occurs in it); rāst-scale degrees are present via the kurdān octave (kurdān = jawāb rāst, awj ascending / ʿajam descending as stated), matching al-Shawwā's remark that it is close to maqām ḥusaynī.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: أُرسي على قرار الدوكاه، فالسير ينتهي ببياتي على الدوكاه ولا يرد فيه راست على الراست. ودرجات سلّم الراست حاضرة عبر ديوان الكردان (الكردان جواب الراست، أوج صعوداً وعجم هبوطاً كما نُصّ)، وهو ما يوافق قول الشوّا إنه مقارب لمقام الحسيني.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: anchored on the dūgāh qarār (the sayr ends with bayyāt on dūgāh and rāst-on-rāst never occurs in it); rāst-scale degrees are present via the kurdān octave (kurdān = jawāb rāst, awj ascending / ʿajam descending as stated), matching the book's remark that it is close to maqām ḥusaynī.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "81"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "92",
@@ -7423,16 +7192,10 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": [
-      "ʿirāq"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7481,15 +7244,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: bayyāt ʿarabān's scale extended down to the ʿirāq qarār, per al-Shawwā's own cross-reference.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم بياتي عربان ممتدّاً إلى قرار العراق، بحسب إحالة الشوّا نفسه.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: bayyāt ʿarabān's scale extended down to the ʿirāq qarār, per the book's own cross-reference.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "41"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "93",
@@ -7517,16 +7280,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7594,15 +7351,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: assembled from the explicit note runs in the prose (upper register nīm māhūr/ḥiṣār; lower descent through the note ḥijāz and kurdī).",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جُمع من مسارات النغم المصرّح بها في النصّ، الطبقة العليا نيم ماهور وحصار، والهبوط الأدنى عبر نغمة الحجاز والكردي.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: assembled from the explicit note runs in the prose (upper register nīm māhūr/ḥiṣār; lower descent through the note ḥijāz and kurdī).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "83"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:45:48.797Z"
   },
   {
     "id": "94",
@@ -7626,16 +7383,10 @@
       "ʿajam ʿushayrān",
       "ʿushayrān"
     ],
-    "primaryJinsDegree": [
-      "ʿushayrān"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7671,15 +7422,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ḥijāz on dūgāh above the stated kurd descent dūgāh–rāst–ʿajam ʿushayrān–ʿushayrān.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: حجاز على الدوكاه فوق هبوط الكرد المنصوص عليه: دوكاه، راست، عجم عشيران، عشيران.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: ḥijāz on dūgāh above the stated kurd descent dūgāh–rāst–ʿajam ʿushayrān–ʿushayrān.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "91"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "95",
@@ -7703,16 +7454,10 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "primaryJinsDegree": [
-      "ʿushayrān"
-    ],
-    "secondaryJinsDegree": [
-      "dūgāh"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "dūgāh"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7745,15 +7490,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: our ṣabā degrees on dūgāh over bayyāt on ʿushayrān (as in bayyātī ʿushayrān's lower jins).",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: درجات الصبا عندنا على الدوكاه فوق بياتي على العشيران، كما في الجنس الأدنى من بياتي عشيران.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: our ṣabā degrees on dūgāh over bayyāt on ʿushayrān (as in bayyātī ʿushayrān's lower jins).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "91"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "96",
@@ -7777,16 +7522,10 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7828,15 +7567,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ṣabā's scale (our degrees) with the ṣabā-on-muḥayyar opening from buzurk.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم الصبا بدرجاتنا مع استهلال صبا على المحير من البزرك.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: ṣabā's scale (our degrees) with the ṣabā-on-muḥayyar opening from buzurk.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "95"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "97",
@@ -7864,16 +7603,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7901,15 +7634,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: maqām ḥiṣār's scale with the descent extended to the rāst qarār; al-Shawwā does not specify the approach to rāst. Ascent anchored on rāst (the stated ending) below the ḥiṣār scale.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: سلّم مقام الحصار مع امتداد الهبوط إلى قرار الراست، ولا يحدّد الشوّا كيفية الوصول إلى الراست. وقد أُرسي الصعود على الراست، وهو الخاتمة المنصوص عليها، أسفل سلّم الحصار.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: maqām ḥiṣār's scale with the descent extended to the rāst qarār; the approach to rāst is not specified in the book. Ascent anchored on rāst (the stated ending) below the ḥiṣār scale.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "94"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:38:35.498Z"
   },
   {
     "id": "98",
@@ -7933,16 +7666,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -7991,15 +7718,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: iṣfahān on dūgāh below, rāst on nawā above; the stated descent uses chahārgāh and nīm būselīk then dūgāh to rāst.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: اصفهان على الدوكاه في الأسفل وراست على النوا في الأعلى، والهبوط المنصوص عليه يستعمل الجهاركاه والنيم بوسليك ثم الدوكاه إلى الراست.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: iṣfahān on dūgāh below, rāst on nawā above; the stated descent uses chahārgāh and nīm būselīk then dūgāh to rāst.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "93"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "99",
@@ -8023,16 +7750,10 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8081,15 +7802,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ḥijāz on nawā over a rāst base as in zāwīl (p.48); the descent substitutes chahārgāh for the note ḥijāz as stated.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: حجاز على النوا فوق أساس راست كما في زاويل (ص٤٨)، والهبوط يستبدل الجهاركاه بنغمة الحجاز كما نُصّ.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: ḥijāz on nawā over a rāst base as in zāwīl (p.48); the descent substitutes chahārgāh for the note ḥijāz as stated.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "95"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "100",
@@ -8113,16 +7834,10 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
-    "primaryJinsDegree": [
-      "ʿajam ʿushayrān"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "chahārgāh"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8175,15 +7890,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: ends as maqām ʿajam ʿushayrān, so its scale is used; the nawā-region colours live in the stops.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: ينتهي بمقام عجم عشيران فاعتُمد سلّمه، وألوان منطقة النوا مبيّنة في محطات السير.",
+    "commentsEnglish": "Scale deduced by cross-reference (no table in the book) — verify: ends as maqām ʿajam ʿushayrān, so its scale is used; the nawā-region colours live in the stops.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "94"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "101",
@@ -8207,16 +7922,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8246,14 +7955,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as ṣabā ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه صبا صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "102",
@@ -8277,16 +7986,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8315,7 +8018,7 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "This is a compound maqām. al-Shawwā provides no note names only the sayr, so its construction is deduced based on that prose as ʿajam/ʿajam muraṣṣaʿ ascending and būselīk descending.",
+    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending / būselīk descending (shawq dil precedent). ʿajam here mapped to maqām ʿajam/ʿajam muraṣṣaʿ (book ٨١).",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
@@ -8323,7 +8026,7 @@
         "page": "71"
       }
     ],
-    "version": "2026-07-20T16:38:38.320Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "103",
@@ -8347,16 +8050,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8386,14 +8083,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as ḥijāz ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حجاز صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "104",
@@ -8421,16 +8118,10 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": [
-      "ʿirāq"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8460,14 +8151,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as awj ascending / būselīk descending (shawq dil precedent). Note: awj is ʿirāq-based, so ascent and descent have different tonics (as with shawq dil). Descent extended below dūgāh to the shared ʿirāq tonic so both directions anchor together (app requirement).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه أوج صعوداً وبوسليك هبوطاً، على قياس شوق دل. والأوج قراره العراق، فيختلف قرار الصعود عن قرار الهبوط كما في شوق دل. وقد امتدّ الهبوط دون الدوكاه إلى قرار العراق المشترك ليستقرّ الاتجاهان على قرار واحد، وهو ما يقتضيه التطبيق.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:45:48.797Z"
   },
   {
     "id": "105",
@@ -8491,16 +8182,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8530,14 +8215,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as nawā ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه نوا صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "106",
@@ -8561,16 +8246,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8599,15 +8278,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Compound maqām; scale deduced as bayyāt ascending and būselīk descending, on the shawq dil precedent. al-Shawwā prints the name bayyātī būselīk; it is entered as bayyāt būselīk for continuity with our other names, as with bayyāt ʿarabān.",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه بياتي صعوداً وبوسليك هبوطاً، على قياس شوق دل. ويكتب الشوّا الاسم بياتى بوسليك، وأُدخل هنا بياتي بوسليك اتّساقاً مع سائر تسمياتنا، كما في بياتي عربان.",
+    "commentsEnglish": "Compound maqām; scale deduced as bayyāt ascending / būselīk descending (shawq dil precedent). Book prints بياتى بوسليك; named bayyāt būselīk for continuity (as with bayyāt ʿarabān).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "72"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "107",
@@ -8631,16 +8310,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8670,14 +8343,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as ḥusaynī ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حسيني صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "72"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "108",
@@ -8701,16 +8374,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8740,14 +8407,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as shahnāz ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه شاهناز صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "72"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "109",
@@ -8771,16 +8438,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8810,14 +8471,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as iṣfahān ascending / būselīk descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه اصفهان صعوداً وبوسليك هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "72"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "110",
@@ -8841,16 +8502,10 @@
       "nīm būselīk",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8896,14 +8551,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; anchored on the dūgāh qarār stated in the sayr — ascent carries the māhūr degrees above dūgāh (nīm māhūr, kurdān; the rāst tonic exists as kurdān's lower octave), descent is būselīk's. The māhūr entry from awj/kurdān lives in the sayr stops.",
-    "commentsArabic": "مقام مركّب، أُرسي على قرار الدوكاه المنصوص عليه في السير. يحمل الصعود درجات الماهور فوق الدوكاه (نيم ماهور والكردان، والراست حاضر بوصفه ديوان الكردان الأدنى)، والهبوط هبوط البوسليك. أما الدخول من الأوج أو الكردان على طريقة الماهور فمبيّن في محطات السير.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "72"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:56:31.820Z"
   },
   {
     "id": "111",
@@ -8927,16 +8582,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -8965,15 +8614,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending and kurd descending, on the shawq dil precedent. ʿajam here is taken as al-Shawwā's maqām ʿajam/ʿajam muraṣṣaʿ (1946, entry 81, p.80).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه عجم/عجم مرصع صعوداً وكرد هبوطاً، على قياس شوق دل. والعجم هنا محمول على مقام العجم أو العجم المرصع عند الشوّا (١٩٤٦، النغمة ٨١، ص٨٠).",
+    "commentsEnglish": "Compound maqām; scale deduced as ʿajam/ʿajam muraṣṣaʿ ascending / kurd descending (shawq dil precedent). ʿajam here mapped to maqām ʿajam/ʿajam muraṣṣaʿ (book ٨١).",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "112",
@@ -8997,16 +8646,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -9035,15 +8678,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Compound maqām; scale deduced as muḥayyar ascending and kurd descending, on the shawq dil precedent. al-Shawwā's header is misprinted muḥayyar kūrī.",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه محير صعوداً وكرد هبوطاً، على قياس شوق دل. وعنوانه عند الشوّا مطبوع خطأً محير كورى.",
+    "commentsEnglish": "Compound maqām; scale deduced as muḥayyar ascending / kurd descending (shawq dil precedent). Book header misprinted محير كورى.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "113",
@@ -9067,16 +8710,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -9106,14 +8743,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as ṣabā ascending / kurd descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه صبا صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:29:39.178Z"
   },
   {
     "id": "114",
@@ -9137,16 +8774,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -9176,14 +8807,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as nawā ascending / kurd descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه نوا صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "115",
@@ -9207,16 +8838,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -9246,14 +8871,14 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as ḥiṣār ascending / kurd descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه حصار صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   },
   {
     "id": "116",
@@ -9277,16 +8902,10 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
+    "ghammaz": null,
     "suyur": [
       {
         "id": "sayralshawwa_1946",
@@ -9316,13 +8935,13 @@
       }
     ],
     "commentsEnglish": "Compound maqām; scale deduced as shahnāz ascending / kurd descending (shawq dil precedent).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه شاهناز صعوداً وكرد هبوطاً، على قياس شوق دل.",
+    "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "78"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-07-19T19:54:09.914Z"
   }
 ]
