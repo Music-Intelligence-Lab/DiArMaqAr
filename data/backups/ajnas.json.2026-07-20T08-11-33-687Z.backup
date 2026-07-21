@@ -1,0 +1,771 @@
+[
+  {
+    "id": "2",
+    "idName": "jins_bayyat",
+    "name": "jins bayyāt",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā"
+    ],
+    "commentsEnglish": "TESTING VERSION TIMESTAMP2",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "3",
+    "idName": "jins_segah",
+    "name": "jins segāh",
+    "noteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82). This jins is often given as a trichord (segāh, chahārgāh, nawā).",
+    "commentsArabic": "الحلو (١٩٥٧/١٩٦١، ص٨٢). كثيراً ما يورد هذا الجنس كجنس ثلاثي (سيكاه، جهاركاه، نوا).",
+    "sourcePageReferences": [],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "4",
+    "idName": "jins_saba",
+    "name": "jins ṣabā",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alkhuli_1904_2011",
+        "page": "55"
+      },
+      {
+        "sourceId": "alurmawialbaghdadi_1986_2017",
+        "page": "23"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "5",
+    "idName": "jins_ajam_ushayran",
+    "name": "jins ʿajam ʿushayrān",
+    "noteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī"
+    ],
+    "commentsEnglish": "TEST",
+    "commentsArabic": "TEST",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "6",
+    "idName": "jins_nahawand",
+    "name": "jins nahāwand",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "7",
+    "idName": "jins_kurd",
+    "name": "jins kurd",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "nawā"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) gives an identical tetrachord under the name jins al-ʿajam kurd.",
+    "commentsArabic": "يورد الحلو (١٩٥٧/١٩٦١، ص٨٢) الجنس نفسه بأصواته ذاتها باسم جنس العجم كرد.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "9",
+    "idName": "jins_saba_zamzam",
+    "name": "jins ṣabā zamzam",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "ḥijāz"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "10",
+    "idName": "jins_chahargah",
+    "name": "jins chahārgāh",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "nīm ḥusaynī",
+      "ʿajam"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "11",
+    "idName": "jins_athar_kurd",
+    "name": "jins athar kurd",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "ḥiṣār",
+      "ḥusaynī"
+    ],
+    "commentsEnglish": "TESTING VERSION TIMESTAMP",
+    "commentsArabic": "TEST",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:45.799Z"
+  },
+  {
+    "id": "12",
+    "idName": "jins_hijaz",
+    "name": "jins ḥijāz",
+    "noteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used maqāmāt across the Arabic speaking region. One major example of it's usage is in the Adhān (Muslim call to prayer).  It is also a jins and maqām that has many variations in intonation, even if it has been consistantly theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.\n\nal-Ḥilū (1957/1961, p.82) gives an identical tetrachord under the name jins al-shāhnāz.",
+    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. ومن أبرز الأمثلة على استعماله في الأذان (النداء للصلاة في الإسلام). وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو كان منظّراً بثبات على أنه مبني من الدرجات الصوتية: دوكاه، كردي، حجاز، نوى. لهذا السبب أدرجنا نسخاً متعددة منه ليُسمع ويُقارن مع المتغيرات النغمية ضمن نظام تسوية واحد أو عبر أنظمة تسوية متعددة.\n\nيورد الحلو (١٩٥٧/١٩٦١، ص٨٢) الجنس نفسه بأصواته ذاتها باسم جنس الشاهناز.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "13",
+    "idName": "jins_mustaar",
+    "name": "jins mustaʿār",
+    "noteNames": [
+      "ʿirāq",
+      "zīrgūleh",
+      "dūgāh",
+      "būselīk/ʿushshāq"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.84) gives these same notes among his ajnās no longer in use, as one family (فصيلة واحدة) whose members all repose on ʿirāq: ẓamyān, khāshiʿ, munā, ʿawāṭif, marāḥil.",
+    "commentsArabic": "يعطي الحلو (١٩٥٧/١٩٦١، ص٨٤) الأصوات نفسها ضمن الاجناس غير المستعملة، فصيلة واحدة يقع مستقر كل منها على درجة العراق: ظميان . خاشع . منا . عواطف . مراحل.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "84"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "14",
+    "idName": "jins_segah_baladi",
+    "name": "jins segāh baladī",
+    "noteNames": [
+      "nawā",
+      "tīk ḥiṣār",
+      "awj",
+      "kurdān"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "15",
+    "idName": "jins_hijaz_2",
+    "name": "jins ḥijāz 2",
+    "noteNames": [
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "tīk ḥijāz/ṣabā",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "16",
+    "idName": "jins_rast_(nim_buselik)",
+    "name": "jins rāst (nīm būselīk)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "17",
+    "idName": "jins_kurd_(binsir)",
+    "name": "jins kurd (binṣir)",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "kurdī",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-07-15T18:48:46.437Z"
+  },
+  {
+    "id": "18",
+    "idName": "jins_nikriz",
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "19",
+    "idName": "jins_rast",
+    "name": "jins rāst",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "21",
+    "idName": "jins_buselik_(al-shawwa)",
+    "name": "jins būselīk (al-Shawwā)",
+    "noteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "70"
+      }
+    ],
+    "version": "2025-10-18T19:34:26.343Z"
+  },
+  {
+    "id": "22",
+    "idName": "jins_buselik_(al-hilu)",
+    "name": "jins būselīk (al-Ḥilū)",
+    "noteNames": [
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "126"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:13:07.360Z"
+  },
+  {
+    "id": "23",
+    "idName": "jins_hijaz_kar",
+    "name": "jins ḥijāz kār",
+    "noteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "Ḥijāz tetrachord transposed to rāst.",
+    "commentsArabic": "جنس حجاز مصوّر على درجة الراست.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T08:08:49.578Z"
+  },
+  {
+    "id": "24",
+    "idName": "jins_awj_ara_(al-shawwa)",
+    "name": "jins awj ʾārāʾ (al-Shawwā)",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "kurdī",
+      "segāh"
+    ],
+    "commentsEnglish": "al-Shawwā (1946, p.38). al-Ḥilū (1957/1961, p.82) gives a different set of notes under the same name; see jins awj ʾārāʾ (al-Ḥilū).",
+    "commentsArabic": "الشوّا (١٩٤٦، ص٣٨). ويعطي الحلو (١٩٥٧/١٩٦١، ص٨٢) أصواتاً مغايرة بالاسم نفسه، انظر جنس أوج آرا (الحلو).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "38"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "26",
+    "idName": "jins_iraq",
+    "name": "jins ʿirāq",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82). This jins is often given as a trichord (ʿirāq, rāst, dūgāh).",
+    "commentsArabic": "الحلو (١٩٥٧/١٩٦١، ص٨٢). كثيراً ما يورد هذا الجنس كجنس ثلاثي (عراق، راست، دوكاه).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "31",
+    "idName": "jins_chahargah_(al-shawwa)",
+    "name": "jins chahārgāh (al-Shawwā)",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) gives the same notes as jins al-jahārkāh, pairing it with jins ʿajam ʿushayrān as sharing one interval structure.",
+    "commentsArabic": "يعطي الحلو (١٩٥٧/١٩٦١، ص٨٢) الأصوات نفسها باسم جنس الجهاركاه، ويقرنه بجنس العجم عشيران لتماثلهما في تركيب المسافات.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "32",
+    "idName": "jins_yegah",
+    "name": "jins yegāh",
+    "noteNames": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) pairs this with jins rāst as sharing one interval structure, the two differing only in their degree of repose, which here is yegāh.",
+    "commentsArabic": "يقرنه الحلو (١٩٥٧/١٩٦١، ص٨٢) بجنس الراست لتماثلهما في تركيب المسافات، ولا يختلفان إلا في درجة الاستقرار وهي هنا اليكاه.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "33",
+    "idName": "jins_nawa_athar",
+    "name": "jins nawā athar",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82). This jins fills the gap for the ʿiqd nawā athar named by al-Shawwā (1946, pp.20, 27, 52, 75).",
+    "commentsArabic": "الحلو (١٩٥٧/١٩٦١، ص٨٢). يسدّ هذا الجنس ما سمّاه الشوّا بعقد نوا أثر (١٩٤٦، ص٢٠، ٢٧، ٥٢، ٧٥).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "34",
+    "idName": "jins_hisar",
+    "name": "jins ḥiṣār",
+    "noteNames": [
+      "dūgāh",
+      "nīm būselīk",
+      "chahārgāh",
+      "ḥiṣār"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82), grouped with jins nawā athar. This jins fills the gap for the ʿiqd ḥiṣār named by al-Shawwā (1946, pp.27, 75), and matches the lower ʿiqd of his maqām ḥiṣār scale (p.75). Second degree to verify: al-Ḥilū prints būselīk, but the interval he gives from dūgāh is a semitone, i.e. nīm būselīk.",
+    "commentsArabic": "الحلو (١٩٥٧/١٩٦١، ص٨٢)، مقروناً بجنس نوا أثر. يسدّ هذا الجنس ما سمّاه الشوّا بعقد الحصار (١٩٤٦، ص٢٧، ٧٥)، ويطابق العقد الأدنى من سلّم مقام الحصار عنده (ص٧٥). درجة ثانية تحتاج إلى تدقيق: يكتب الحلو بوسليك، غير أن المسافة التي يعطيها من الدوكاه نصف مسافة، أي النيم بوسليك.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "35",
+    "idName": "jins_suzdal",
+    "name": "jins sūzdal",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "zīrgūleh",
+      "dūgāh"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) lists this among the ḥijāz-family ajnās — a ḥijāz tetrachord on ʿushayrān.",
+    "commentsArabic": "يورده الحلو (١٩٥٧/١٩٦١، ص٨٢) ضمن فصيلة الحجاز، وهو جنس حجاز على درجة العشيران.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "36",
+    "idName": "jins_farahnak",
+    "name": "jins faraḥnāk",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) pairs this with jins segāh as sharing one interval structure, its degree of repose being ʿirāq.",
+    "commentsArabic": "يقرنه الحلو (١٩٥٧/١٩٦١، ص٨٢) بجنس السيكاه لتماثلهما في تركيب المسافات، ومستقره درجة العراق.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "37",
+    "idName": "jins_huzam",
+    "name": "jins huzām",
+    "noteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82).",
+    "commentsArabic": "الحلو (١٩٥٧/١٩٦١، ص٨٢).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "38",
+    "idName": "jins_rahat_al-arwah",
+    "name": "jins rāḥat al-arwāḥ",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "kurdī"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) pairs this with jins huzām as sharing one interval structure, its degree of repose being ʿirāq.",
+    "commentsArabic": "يقرنه الحلو (١٩٥٧/١٩٦١، ص٨٢) بجنس الهزام لتماثلهما في تركيب المسافات، ومستقره درجة العراق.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "39",
+    "idName": "jins_qaf",
+    "name": "jins qāf",
+    "noteNames": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "ʿajam ʿushayrān",
+      "zīrgūleh"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». One family (فصيلة واحدة) whose members all repose on yegāh: qāf, dumūʿ al-karma, julnār, shiʿār al-ʿushayrān, shīrāziyya.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». فصيلة واحدة يقع مستقر كل منها على درجة اليكاه: قاف . دموع الكرمة . جلنار . شعار العشيران . شيرازيه.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "40",
+    "idName": "jins_bint_abqar",
+    "name": "jins bint ʿabqar",
+    "noteNames": [
+      "ʿushayrān",
+      "ʿajam ʿushayrān",
+      "rāst",
+      "zīrgūleh"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». One family (فصيلة واحدة) whose members all repose on ʿushayrān: bint ʿabqar, sulṭānat al-ʿushayrān, waḥy al-nūr.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». فصيلة واحدة يقع مستقر كل منها على درجة العشيران: بنت عبقر . سلطانة العشيران . وحي النُور.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "41",
+    "idName": "jins_mahran",
+    "name": "jins mahrān",
+    "noteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "segāh"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». One family (فصيلة واحدة) whose members all repose on ʿajam ʿushayrān: mahrān, ṣabā al-ʿajam, uṣūl al-ʿajam, marjānat al-ʿajam.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». فصيلة واحدة يقع مستقر كل منها على درجة العجم عشيران: مهران . صبا العجم . اصول العجم . مرجانة العجم.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "42",
+    "idName": "jins_ajam_sultani",
+    "name": "jins ʿajam sulṭānī",
+    "noteNames": [
+      "ʿajam ʿushayrān",
+      "zīrgūleh",
+      "dūgāh",
+      "kurdī"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». al-Ḥilū gives it on its own, reposing on ʿajam ʿushayrān.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». أورده الحلو وحده، ومستقره درجة العجم عشيران.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "43",
+    "idName": "jins_turaf",
+    "name": "jins ṭuraf",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "būselīk/ʿushshāq",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». al-Ḥilū gives it on its own, reposing on ʿirāq. He notes that the step from rāst to būselīk is two full tones.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». أورده الحلو وحده، ومستقره درجة العراق. وينبّه إلى أن المسافة بين الراست والبوسليك مسافتان كاملتان.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "44",
+    "idName": "jins_bulbula",
+    "name": "jins bulbula",
+    "noteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "tīk būselīk"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات قاف». One family (فصيلة واحدة) whose members all repose on ʿirāq: bulbula, ʿitāb, maḥāsin, hilāl al-ʿirāq, kam wa-kam, mustahām, darārī, mashārif.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات قاف». فصيلة واحدة يقع مستقر كل منها على درجة العراق: بلبله . عتاب . محاسن . هلال العراق . كم وكم . مستهام . دراري . مشارف.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "45",
+    "idName": "jins_mazij_al-tib",
+    "name": "jins mazīj al-ṭīb",
+    "noteNames": [
+      "ʿirāq",
+      "zīrgūleh",
+      "dūgāh",
+      "segāh"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.83), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات مزيج الطيب». One family (فصيلة واحدة) whose members all repose on ʿirāq: mazīj al-ṭīb, manhal, manāh, ʿarūs al-jinn, durriyya.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٣)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات مزيج الطيب». فصيلة واحدة يقع مستقر كل منها على درجة العراق: مزيج الطيب . منهل . مناه . عروس الجن . دُرِّية.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "83"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "47",
+    "idName": "jins_awraq_al-kharif",
+    "name": "jins awrāq al-kharīf",
+    "noteNames": [
+      "ʿirāq",
+      "zīrgūleh",
+      "dūgāh",
+      "kurdī"
+    ],
+    "commentsEnglish": "From al-Ḥilū's list of ajnās belonging to older nagham no longer in use in his time (1957/1961, p.84), recorded, in his words, for benefit and for the broadening of knowledge. He groups it under «اجناس نغمات مزيج الطيب». One family (فصيلة واحدة) whose members all repose on ʿirāq: ashwāq al-kharīf, hitāf al-kharīf, nasamāt al-kharīf, shams al-kharīf, balābil al-kharīf, tahānī ṣafar, bint al-ghāb, muṭawwaqa, rashafāt, rashfatayn, lafatatayn, asīrī. al-Ḥilū heads the family «اجناس نغمات اوراق الخريف»; the name here follows that heading.",
+    "commentsArabic": "من اجناس النغمات القديمة غير المستعملة عند الحلو (١٩٥٧/١٩٦١، ص٨٤)، دوّنها على حدّ قوله للافادة والتوسع في المعرفة. ويندرج عنده تحت «اجناس نغمات مزيج الطيب». فصيلة واحدة يقع مستقر كل منها على درجة العراق: اشواق الخريف . هتاف الخريف . نسمات الخريف . شمس الخريف . بلابل الخريف . تهاني صفر . بنت الغاب . مطوقة . رشفات . رشفتين . لفتتين . أسيري. وقد صدّر الحلو الفصيلة بعنوان «اجناس نغمات اوراق الخريف»، ومنه أُخذ الاسم هنا.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "84"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "48",
+    "idName": "jins_shadd_araban",
+    "name": "jins shadd ʿarabān",
+    "noteNames": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "kawasht",
+      "rāst"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) lists this among the ḥijāz-family ajnās — a ḥijāz tetrachord on yegāh. It differs from jins ḥijāz yegāh, which takes nīm kawasht as its third degree.",
+    "commentsArabic": "يورده الحلو (١٩٥٧/١٩٦١، ص٨٢) ضمن فصيلة الحجاز، وهو جنس حجاز على درجة اليكاه. ويختلف عن جنس حجاز يكاه الذي يتخذ النيم كوشت درجةً ثالثة.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  },
+  {
+    "id": "49",
+    "idName": "jins_awj_ara_(al-hilu)",
+    "name": "jins awj ʾārāʾ (al-Ḥilū)",
+    "noteNames": [
+      "kawasht",
+      "rāst",
+      "kurdī",
+      "būselīk/ʿushshāq"
+    ],
+    "commentsEnglish": "al-Ḥilū (1957/1961, p.82) lists this among the ḥijāz-family ajnās — a ḥijāz tetrachord on kawasht. al-Shawwā (1946, p.38) gives a different set of notes under the same name; see jins awj ʾārāʾ (al-Shawwā).",
+    "commentsArabic": "يورده الحلو (١٩٥٧/١٩٦١، ص٨٢) ضمن فصيلة الحجاز، وهو جنس حجاز على درجة الكوشت. ويعطي الشوّا (١٩٤٦، ص٣٨) أصواتاً مغايرة بالاسم نفسه، انظر جنس أوج آرا (الشوّا).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "82"
+      }
+    ],
+    "version": "2026-07-20T07:44:34.829Z"
+  }
+]

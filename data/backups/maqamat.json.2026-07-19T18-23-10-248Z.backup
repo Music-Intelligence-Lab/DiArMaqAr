@@ -1271,18 +1271,18 @@
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "chahārgāh",
       "nawā",
       "ḥiṣār",
-      "māhūr"
+      "nīm māhūr"
     ],
     "descendingNoteNames": [
-      "māhūr",
+      "nīm māhūr",
       "ḥiṣār",
       "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
+      "nīm būselīk",
       "zīrgūleh",
       "rāst"
     ],
@@ -1296,11 +1296,37 @@
     "ghammaz": [
       "nawā"
     ],
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayralshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "",
+        "commentsEnglish": "",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm māhūr"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": ""
+          }
+        ],
+        "version": "2026-07-19T18:17:35.583Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-19T18:20:43.803Z"
   },
   {
     "id": "24",
@@ -1328,11 +1354,11 @@
       "ʿushayrān"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "dūgāh"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
-      "nawā"
+      "dūgāh"
     ],
     "suyur": [],
     "commentsEnglish": "",
@@ -1893,7 +1919,7 @@
         "stops": [
           {
             "type": "jins",
-            "value": "21",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "none"
           },
@@ -2481,20 +2507,20 @@
             "value": "ḥiṣār"
           },
           {
-            "type": "jins",
-            "value": "12",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "ḥusaynī",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "17",
+            "type": "maqam",
+            "value": "6",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "12",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "ʿushayrān",
             "direction": "none"
           },
@@ -2502,7 +2528,8 @@
             "type": "note",
             "value": "ʿushayrān"
           }
-        ]
+        ],
+        "version": "2026-07-16T08:53:11.250Z"
       }
     ],
     "commentsEnglish": "",
@@ -2513,7 +2540,7 @@
         "page": "27"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-16T08:53:11.250Z"
   },
   {
     "id": "39",
@@ -2574,14 +2601,14 @@
             "value": "chahārgāh"
           },
           {
-            "type": "jins",
-            "value": "4",
+            "type": "maqam",
+            "value": "15",
             "startingNote": "dūgāh",
             "direction": "none"
           },
           {
-            "type": "jins",
-            "value": "12",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "chahārgāh",
             "direction": "none"
           },
@@ -2593,7 +2620,7 @@
           },
           {
             "type": "jins",
-            "value": "21",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "descending"
           },
@@ -2604,8 +2631,8 @@
             "direction": "ascending"
           },
           {
-            "type": "jins",
-            "value": "7",
+            "type": "maqam",
+            "value": "3",
             "startingNote": "ʿushayrān",
             "direction": "none"
           },
@@ -3003,7 +3030,7 @@
           },
           {
             "type": "jins",
-            "value": "21",
+            "value": "6",
             "startingNote": "nawā",
             "direction": "none"
           },
@@ -3881,7 +3908,7 @@
           },
           {
             "type": "maqam",
-            "value": "53",
+            "value": "1",
             "startingNote": "nawā",
             "direction": "ascending"
           },
