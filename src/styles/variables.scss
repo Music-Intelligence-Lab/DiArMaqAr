@@ -222,8 +222,8 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 
 // Section furniture — the WEIGHT DUET (chosen from the script-neutral
 // samples): fixed structural labels (the analysis headers' "taḥlīl" and
-// "cents tolerance", the dīwān/octave headers, the Suyūr/Intiqālāt page
-// headers) share their payload's size, and hierarchy comes purely from
+// "cents tolerance", the dīwān/octave headers, the Suyūr/Intiqālāt header
+// bands) share their payload's size, and hierarchy comes purely from
 // weight and ink — the true drawn 200 in quiet ink against the payload's
 // 300 in full ink. No case, no tracking, no marks: identical in both
 // scripts by construction. Pass the surface's payload size.
@@ -338,26 +338,6 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
-}
-
-// The stacked page-header lockup (furniture eyebrow above, entity name
-// below) — used by the Suyūr and Intiqālāt pages; height-critical surfaces
-// (the sticky analysis header) run the same two voices inline instead.
-@mixin section-page-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; // the tag hugs its text instead of stretching
-    gap: 4px;
-    width: 100%;
-    margin-bottom: $space-block;
-}
-
-@mixin section-page-header-name {
-    @include type-entity-name;
-    // 16px cap: Readex Pro reads clumsy at 18px+ (per ruling), so entity
-    // names top out at lg everywhere in the section-header system
-    font-size: $font-size-lg;
-    line-height: $line-height-tight;
 }
 
 // Filter chips — the checkbox+label row toggles under the analysis headers

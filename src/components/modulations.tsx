@@ -3,7 +3,7 @@
 import useAppContext, { ModulationChainHop } from "@/contexts/app-context";
 import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { MaqamatModulations, Maqam, shiftMaqamByOctaves } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
@@ -15,7 +15,7 @@ import { standardizeText } from "@/functions/export";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
 export default function Modulations() {
-  const { t, getDisplayName } = useLanguageContext();
+  const { t, getDisplayName, language } = useLanguageContext();
   const {
     maqamat,
     ajnas,
@@ -37,18 +37,19 @@ export default function Modulations() {
   const [modulationModes, setModulationModes] = useState<boolean[]>([false]);
   const [octaveShiftEnabled, setOctaveShiftEnabled] = useState<boolean[]>([false]);
 
-  const [collapsedHops, setCollapsedHops] = useState<boolean[]>([]);
+  // Which hop in the chain is currently open below the breadcrumb. The chain
+  // is a breadcrumb trail now (not a vertical stack of expandable hops), so
+  // exactly one hop's modulation columns show at a time — the active one.
+  const [activeHopIndex, setActiveHopIndex] = useState(0);
   const { clearHangingNotes } = useSoundContext();
 
   const [sourceMaqamStack, setSourceMaqamStack] = useState<Maqam[]>([]);
   const [modulationsStack, setModulationsStack] = useState<ModulationsPair[]>([]);
 
-  const hopsRefs = useRef<Array<HTMLDivElement | null>>([]);
-
   function getBothModulations(transposition: Maqam, stackIdx: number = 0, overrideOctaveShift?: boolean): ModulationsPair {
     const ajnasMods = modulate(allPitchClasses, ajnas, maqamat, transposition, true) as AjnasModulations;
     const maqamatMods = modulate(allPitchClasses, ajnas, maqamat, transposition, false) as MaqamatModulations;
-    
+
     // Apply octave shift if enabled for this stack index
     const shouldShift = overrideOctaveShift ?? (octaveShiftEnabled[stackIdx] || false);
     if (shouldShift) {
@@ -64,7 +65,7 @@ export default function Modulations() {
         modulationsOnSixthDegreeDesc: ajnasMods.modulationsOnSixthDegreeDesc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
         modulationsOnSixthDegreeIfNoThird: ajnasMods.modulationsOnSixthDegreeIfNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
       };
-      
+
       // Shift all maqamat modulations down by one octave
       const shiftedMaqamatMods = {
         ...maqamatMods,
@@ -77,13 +78,13 @@ export default function Modulations() {
         modulationsOnSixthDegreeDesc: maqamatMods.modulationsOnSixthDegreeDesc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
         modulationsOnSixthDegreeIfNoThird: maqamatMods.modulationsOnSixthDegreeIfNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
       };
-      
+
       return {
         ajnas: shiftedAjnasMods,
         maqamat: shiftedMaqamatMods,
       };
     }
-    
+
     return {
       ajnas: ajnasMods,
       maqamat: maqamatMods,
@@ -162,8 +163,8 @@ export default function Modulations() {
             setModulationsStack(replayed.modulations);
             setModulationModes(replayed.chain.map((hop) => hop.ajnasMode));
             setOctaveShiftEnabled(replayed.chain.map((hop) => hop.octaveShift));
-            // Collapse everything but the last hop so a long restored chain stays scannable
-            setCollapsedHops(replayed.chain.map((_, idx) => idx < replayed.chain.length - 1));
+            // Open the last hop of a restored chain; the rest wait in the breadcrumb
+            setActiveHopIndex(replayed.chain.length - 1);
             return;
           }
         }
@@ -172,7 +173,7 @@ export default function Modulations() {
       setSourceMaqamStack([transposition]);
       setModulationsStack([getBothModulations(transposition, 0)]);
       setModulationModes([false]); // default to maqamat for first hop
-      setCollapsedHops([false]); // not collapsed by default
+      setActiveHopIndex(0); // fresh single-hop chain: open the only hop
       setOctaveShiftEnabled([false]); // default to no octave shift
     }
   }, []);
@@ -227,7 +228,7 @@ export default function Modulations() {
         return [first];
       });
       setModulationModes([false]);
-      setCollapsedHops([false]);
+      setActiveHopIndex(0);
       setOctaveShiftEnabled([false]);
     }
     window.addEventListener("maqamTranspositionChange", handleMaqamTranspositionChange as EventListener);
@@ -264,23 +265,14 @@ export default function Modulations() {
       const newModes = [...prev.slice(0, stackIdx + 1), false];
       return newModes;
     });
-    setCollapsedHops((prev) => {
-      // When adding a hop, keep previous collapsed states, default new hop to not collapsed
-      const newCollapsed = [...prev.slice(0, stackIdx + 1), false];
-      return newCollapsed;
-    });
     setOctaveShiftEnabled((prev) => {
       // When adding a hop, keep previous octave shift states, default new hop to disabled
       const newEnabled = [...prev.slice(0, stackIdx + 1), false];
       return newEnabled;
     });
-    // Scroll to the new hop after a short delay to ensure DOM update
-    setTimeout(() => {
-      const nextIdx = stackIdx + 1;
-      if (hopsRefs.current[nextIdx]) {
-        hopsRefs.current[nextIdx]?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
+    // The new hop becomes the active one, so its columns open in place of the
+    // hop we branched from.
+    setActiveHopIndex(newStackIdx);
   };
 
   const removeLastHopsWrapper = () => {
@@ -296,22 +288,13 @@ export default function Modulations() {
       const newModes = prev.length > 1 ? prev.slice(0, -1) : prev;
       return newModes;
     });
-    setCollapsedHops((prev) => {
-      const newCollapsed = prev.length > 1 ? prev.slice(0, -1) : prev;
-      return newCollapsed;
-    });
     setOctaveShiftEnabled((prev) => {
       const newEnabled = prev.length > 1 ? prev.slice(0, -1) : prev;
       return newEnabled;
     });
-    // Scroll to the previous hop or first hop after a short delay
-    setTimeout(() => {
-      // Find the last non-null ref (should be the last hop in DOM)
-      const validRefs = hopsRefs.current.filter(Boolean);
-      if (validRefs.length > 0) {
-        validRefs[validRefs.length - 1]?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 100);
+    // Delete only ever removes the last hop (its button shows only when the
+    // active hop is the last), so the now-last hop becomes active.
+    setActiveHopIndex((prev) => Math.max(0, prev - 1));
   };
 
   // Handles toggling octave shift for a specific stack index
@@ -324,7 +307,7 @@ export default function Modulations() {
       }
       const newValue = !newEnabled[stackIdx];
       newEnabled[stackIdx] = newValue;
-      
+
       // Rebuild modulations stack for affected indices using the new state
       setModulationsStack((prevStack) => {
         const newStack = [...prevStack];
@@ -334,7 +317,7 @@ export default function Modulations() {
         }
         return newStack;
       });
-      
+
       return newEnabled;
     });
   };
@@ -365,394 +348,182 @@ export default function Modulations() {
 
   return (
     <div className="modulations__container">
-      {/* Stacked section lockup: furniture eyebrow over the chain root's name */}
-      <div className="modulations__page-header">
-        <span className="modulations__page-header-furniture">{t("tabs.intiqalat")}</span>
-        {sourceMaqamStack[0]?.name && (
-          <span className="modulations__page-header-name">{getDisplayName(sourceMaqamStack[0].name, "maqam")}</span>
-        )}
-      </div>
-      {sourceMaqamStack.map((sourceMaqam, stackIdx) => {
+      {/* Header band: the same transpositions-header-surface the Ajnās/
+          Maqāmāt taḥlīl and Suyūr headers use ($secondary fill, $grey border) —
+          a run-in furniture-eyebrow + entity-name row, so Intiqālāt reads as
+          one more analysis surface on the selected maqām, not a page of its own. */}
+      <header className="modulations__page-header">
+        <div className="modulations__title-row" dir={language === "ar" ? "rtl" : "ltr"}>
+          <span className="modulations__section-furniture">{t("tabs.intiqalat")}</span>
+          {sourceMaqamStack[0]?.name && (
+            <span className="modulations__entity-name">{getDisplayName(sourceMaqamStack[0].name, "maqam")}</span>
+          )}
+        </div>
+      </header>
+
+      {/* The modulation chain as a breadcrumb trail: the root maqām and every hop
+          branched from it read left-to-right as carousel-style chips. The active
+          chip's modulation columns show below; clicking any chip opens that hop,
+          so the whole path stays visible without collapse/expand. */}
+      {sourceMaqamStack.length > 0 && (
+        <nav className="modulations__breadcrumb" aria-label={t("tabs.intiqalat")}>
+          {sourceMaqamStack.map((hopMaqam, idx) => {
+            const hopTonic = hopMaqam.ascendingPitchClasses?.[0]?.noteName ?? "";
+            const isActive = idx === activeHopIndex;
+            return (
+              <React.Fragment key={idx}>
+                {idx > 0 && (
+                  <span className="modulations__breadcrumb-sep" aria-hidden="true">
+                    ›
+                  </span>
+                )}
+                <button
+                  type="button"
+                  className={"modulations__breadcrumb-item" + (isActive ? " modulations__breadcrumb-item_active" : "")}
+                  aria-current={isActive ? "true" : undefined}
+                  onClick={() => {
+                    setActiveHopIndex(idx);
+                    handleSourceMaqamClick(hopMaqam);
+                  }}
+                >
+                  <span className="modulations__breadcrumb-name">{hopMaqam.name ? getDisplayName(hopMaqam.name, "maqam") : "—"}</span>
+                  {hopTonic && (
+                    <span className="modulations__breadcrumb-tonic">
+                      {getDisplayName(hopTonic, "note")} / {getEnglishNoteName(hopTonic)}
+                    </span>
+                  )}
+                </button>
+              </React.Fragment>
+            );
+          })}
+        </nav>
+      )}
+
+      {/* The active hop's modulation surface: the mode toggle + octave shift,
+          then the eight degree columns. Only the active hop renders — the rest of
+          the chain lives in the breadcrumb above. */}
+      {(() => {
+        const stackIdx = activeHopIndex;
+        const sourceMaqam = sourceMaqamStack[stackIdx];
+        if (!sourceMaqam || !modulationsStack[stackIdx]) return null;
+
         const ascendingNoteNames = sourceMaqam.ascendingPitchClasses.map((pitchClass) => pitchClass.noteName);
         const descendingNoteNames = [...sourceMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.noteName)].reverse();
-        // Always calculate both counts independently, regardless of mode
-        const totalAjnasModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].ajnas, "ajnas") : 0;
-        const totalMaqamatModulations = modulationsStack[stackIdx] ? calculateNumberOfModulations(modulationsStack[stackIdx].maqamat, "maqamat") : 0;
+        const totalAjnasModulations = calculateNumberOfModulations(modulationsStack[stackIdx].ajnas, "ajnas");
+        const totalMaqamatModulations = calculateNumberOfModulations(modulationsStack[stackIdx].maqamat, "maqamat");
+
+        const isAjnasMode = modulationModes[stackIdx];
+        const modulations = isAjnasMode ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
+        const { noteName2pBelowThird: noteName2p } = modulations;
+
+        // Display note names, shifted down an octave when octave-shift is on.
+        let displayAscendingNoteNames = ascendingNoteNames;
+        let displayDescendingNoteNames = descendingNoteNames;
+        let displayNoteName2p = noteName2p;
+
+        if (octaveShiftEnabled[stackIdx]) {
+          const getShiftedNoteName = (pitchClass: any): string => {
+            const shifted = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
+            return shifted.noteName === "" ? "Octave Shift is beyond tuning system range" : shifted.noteName;
+          };
+          displayAscendingNoteNames = sourceMaqam.ascendingPitchClasses.map(getShiftedNoteName);
+          displayDescendingNoteNames = sourceMaqam.descendingPitchClasses.map(getShiftedNoteName).reverse();
+          const noteName2pPitchClass = allPitchClasses.find((pc) => pc.noteName === noteName2p);
+          if (noteName2pPitchClass) {
+            const shiftedNoteName2p = shiftPitchClassByOctave(allPitchClasses, noteName2pPitchClass, -1);
+            displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
+          }
+        }
+
+        // The eight degree columns, data-driven so their markup can't drift the
+        // way eight hand-copied blocks did.
+        const degreeColumns: { labelKey: string; note: string; list: any[] }[] = [
+          { labelKey: "modulations.tonic", note: displayAscendingNoteNames[0], list: modulations.modulationsOnFirstDegree },
+          { labelKey: "modulations.third", note: displayAscendingNoteNames[2], list: modulations.modulationsOnThirdDegree },
+          { labelKey: "modulations.thirdAlternative", note: displayNoteName2p, list: modulations.modulationsOnAltThirdDegree },
+          { labelKey: "modulations.fourth", note: displayAscendingNoteNames[3], list: modulations.modulationsOnFourthDegree },
+          { labelKey: "modulations.fifth", note: displayAscendingNoteNames[4], list: modulations.modulationsOnFifthDegree },
+          { labelKey: "modulations.sixthIfNoThird", note: displayAscendingNoteNames[5], list: modulations.modulationsOnSixthDegreeIfNoThird },
+          { labelKey: "modulations.sixthAscending", note: displayAscendingNoteNames[5], list: modulations.modulationsOnSixthDegreeAsc },
+          { labelKey: "modulations.sixthDescending", note: displayDescendingNoteNames[5], list: modulations.modulationsOnSixthDegreeDesc },
+        ];
+
         return (
-          <div
-            className="modulations__hops-wrapper"
-            key={stackIdx}
-            ref={(el) => {
-              hopsRefs.current[stackIdx] = el;
-            }}
-          >
-            {/* Maqam name/details at the top of each wrapper */}
-            <div className="modulations__wrapper-modulations-header">
-              <div className="modulations__source-maqam-name" onClick={() => handleSourceMaqamClick(sourceMaqam)} style={{ cursor: "pointer" }}>
-                {sourceMaqam.name ? getDisplayName(sourceMaqam.name, 'maqam') : "Unknown"} ({ascendingNoteNames ? getDisplayName(ascendingNoteNames[0], 'note') : "N/A"}/
-                {getEnglishNoteName(ascendingNoteNames ? ascendingNoteNames[0]! : "")})
+          <div className="modulations__hop-body">
+            <div className="modulations__controls-row">
+              <div className="modulations__mode-segments" role="group">
+                <button
+                  className={"modulations__mode-segment" + (isAjnasMode ? " modulations__mode-segment_active" : "")}
+                  aria-pressed={isAjnasMode}
+                  onClick={() =>
+                    setModulationModes((prev) => {
+                      const newModes = [...prev];
+                      newModes[stackIdx] = true;
+                      return newModes;
+                    })
+                  }
+                >
+                  {totalAjnasModulations} {t("modulations.ajnasModulations")}
+                </button>
+                <button
+                  className={"modulations__mode-segment" + (!isAjnasMode ? " modulations__mode-segment_active" : "")}
+                  aria-pressed={!isAjnasMode}
+                  onClick={() =>
+                    setModulationModes((prev) => {
+                      const newModes = [...prev];
+                      newModes[stackIdx] = false;
+                      return newModes;
+                    })
+                  }
+                >
+                  {totalMaqamatModulations} {t("modulations.maqamatModulations")}
+                </button>
               </div>
               <button
-                className="modulations__collapse-arrow"
-                aria-label={collapsedHops[stackIdx] ? t('modulations.expand') : t('modulations.collapse')}
-                onClick={() =>
-                  setCollapsedHops((prev) => {
-                    const updated = [...prev];
-                    updated[stackIdx] = !updated[stackIdx];
-                    return updated;
-                  })
-                }
+                className={`modulations__octave-shift ${octaveShiftEnabled[stackIdx] ? "modulations__octave-shift_active" : ""}`}
+                aria-pressed={octaveShiftEnabled[stackIdx]}
+                onClick={() => handleOctaveShiftToggle(stackIdx)}
               >
-                <span className="modulations__collapse-arrow-icon" style={{ transform: collapsedHops[stackIdx] ? "rotate(0deg)" : "rotate(90deg)" }}>
-                  ▶
-                </span>
+                {octaveShiftEnabled[stackIdx] ? "✓ " : ""}
+                {t("modulations.octaveShift")}
               </button>
+              {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
+                <button className="modulations__delete-hop-btn" onClick={removeLastHopsWrapper}>
+                  {t("modulations.deleteHop")}
+                </button>
+              )}
             </div>
 
-            {/* Only render modulations if not collapsed */}
-            {modulationsStack[stackIdx] &&
-              !collapsedHops[stackIdx] &&
-              (() => {
-                const modulations = modulationModes[stackIdx] ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
-                const { noteName2pBelowThird: noteName2p } = modulations;
-                
-                // Calculate display note names (shifted if octave shift is enabled)
-                let displayAscendingNoteNames = ascendingNoteNames;
-                let displayDescendingNoteNames = descendingNoteNames;
-                let displayNoteName2p = noteName2p;
-                
-                if (octaveShiftEnabled[stackIdx]) {
-                  // When octave shift is enabled, we need to check each pitch class individually
-                  // Some may be shiftable while others are out of bounds
-                  
-                  // Helper function to get shifted note name or fallback message
-                  const getShiftedNoteName = (pitchClass: any): string => {
-                    const shifted = shiftPitchClassByOctave(allPitchClasses, pitchClass, -1);
-                    return shifted.noteName === "" ? "Octave Shift is beyond tuning system range" : shifted.noteName;
-                  };
-                  
-                  // Check each ascending pitch class individually
-                  displayAscendingNoteNames = sourceMaqam.ascendingPitchClasses.map(getShiftedNoteName);
-                  displayDescendingNoteNames = sourceMaqam.descendingPitchClasses.map(getShiftedNoteName).reverse();
-                  
-                  // For noteName2p, we need to shift it as well to match other note names
-                  // Find the pitch class that matches noteName2p and shift it
-                  const noteName2pPitchClass = allPitchClasses.find(pc => pc.noteName === noteName2p);
-                  if (noteName2pPitchClass) {
-                    const shiftedNoteName2p = shiftPitchClassByOctave(allPitchClasses, noteName2pPitchClass, -1);
-                    displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
-                  } else {
-                    displayNoteName2p = noteName2p;
-                  }
-                }
-                
-                return (
-                  <>
-                    <div style={{ display: "flex", gap: "8px", marginBottom: "12px", alignItems: "center", justifyContent: "center" }}>
-                      <button
-                        className={"modulations__ajnas-count" + (modulationModes[stackIdx] ? " modulations__ajnas-count_active" : "")}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setModulationModes((prev) => {
-                            const newModes = [...prev];
-                            newModes[stackIdx] = true;
-                            return newModes;
-                          });
-                        }}
-                      >
-                        {totalAjnasModulations} {t('modulations.ajnasModulations')}
-                      </button>
-                      <button
-                        className={"modulations__maqamat-count" + (!modulationModes[stackIdx] ? " modulations__maqamat-count_active" : "")}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setModulationModes((prev) => {
-                            const newModes = [...prev];
-                            newModes[stackIdx] = false;
-                            return newModes;
-                          });
-                        }}
-                      >
-                        {totalMaqamatModulations} {t('modulations.maqamatModulations')}
-                      </button>
-                      <button
-                        className={`modulations__octave-shift ${octaveShiftEnabled[stackIdx] ? "modulations__octave-shift_active" : ""}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOctaveShiftToggle(stackIdx);
-                        }}
-                      >
-                        {octaveShiftEnabled[stackIdx] ? "✓ " : ""}{t('modulations.octaveShift')}
-                      </button>
-                      {/* Move delete button here, only on last hop and if more than one exists */}
-                      {stackIdx === sourceMaqamStack.length - 1 && sourceMaqamStack.length > 1 && (
+            <div className="modulations__degrees">
+              {degreeColumns.map((col, colIdx) => (
+                <div className="modulations__modulations-list" key={colIdx}>
+                  <div className="modulations__header">
+                    <span className="modulations__header-text">{t(col.labelKey)}</span>
+                    <span className="modulations__header-degree">
+                      {getDisplayName(col.note, "note")}
+                      <span className="modulations__header-count">({col.list ? col.list.length : 0})</span>
+                    </span>
+                  </div>
+                  <div className="modulations__column-scroll">
+                    {[...(col.list ?? [])]
+                      .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                      .map((hop, index) => (
                         <button
-                          className="modulations__delete-hop-btn"
-                          onClick={() => {
-                            // Load previous hop's source maqam before removing
-                            const prevIdx = sourceMaqamStack.length - 2;
-                            const prevSourceMaqam = sourceMaqamStack[prevIdx];
-                            if (prevSourceMaqam) {
-                              handleSourceMaqamClick(prevSourceMaqam);
-                              setCollapsedHops((prev) => {
-                                const updated = [...prev];
-                                updated[prevIdx] = false; // Uncollapse previous hop
-                                return updated;
-                              });
-                            }
-                            removeLastHopsWrapper();
-                          }}
+                          type="button"
+                          className="modulations__modulation-item"
+                          key={index}
+                          onClick={() => handleModulationClick(hop, stackIdx)}
                         >
-                          {t('modulations.deleteHop')}
+                          {getDisplayName(hop.name, isAjnasMode ? "jins" : "maqam")}
                         </button>
-                      )}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.tonic')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[0], 'note')} ({modulations?.modulationsOnFirstDegree ? modulations.modulationsOnFirstDegree.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnFirstDegree]
-                        .sort((a: any, b: any) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                // Only collapse if not in ajnas mode
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.third')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[2], 'note')} ({modulations?.modulationsOnThirdDegree ? modulations.modulationsOnThirdDegree.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnThirdDegree]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.thirdAlternative')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayNoteName2p, 'note')} ({modulations?.modulationsOnAltThirdDegree ? modulations.modulationsOnAltThirdDegree.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnAltThirdDegree]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.fourth')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[3], 'note')} ({modulations?.modulationsOnFourthDegree ? modulations.modulationsOnFourthDegree.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnFourthDegree]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.fifth')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[4], 'note')} ({modulations?.modulationsOnFifthDegree ? modulations.modulationsOnFifthDegree.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnFifthDegree]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.sixthIfNoThird')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeIfNoThird ? modulations.modulationsOnSixthDegreeIfNoThird.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnSixthDegreeIfNoThird]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.sixthAscending')}:
-                          <br />{" "}
-                        </span>
-                        {getDisplayName(displayAscendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeAsc ? modulations.modulationsOnSixthDegreeAsc.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnSixthDegreeAsc]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                    <div className="modulations__modulations-list">
-                      <span className="modulations__header">
-                        <span className="modulations__header-text">
-                          {t('modulations.sixthDescending')}: <br />{" "}
-                        </span>
-                        {getDisplayName(displayDescendingNoteNames[5], 'note')} ({modulations?.modulationsOnSixthDegreeDesc ? modulations.modulationsOnSixthDegreeDesc.length : 0})
-                      </span>
-                      {[...modulations.modulationsOnSixthDegreeDesc]
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((hop, index) => (
-                          <span
-                            className="modulations__modulation-item"
-                            key={index}
-                            onClick={() => {
-                              if (!modulationModes[stackIdx]) {
-                                setCollapsedHops((prev) => {
-                                  const updated = [...prev];
-                                  updated[stackIdx] = true;
-                                  return updated;
-                                });
-                              }
-                              handleModulationClick(hop, stackIdx);
-                            }}
-                            style={{ cursor: "pointer" }}
-                          >
-                            {getDisplayName(hop.name, modulationModes[stackIdx] ? 'jins' : 'maqam')}
-                          </span>
-                        ))}
-                    </div>
-                  </>
-                );
-              })()}
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         );
-      })}
+      })()}
     </div>
   );
 }

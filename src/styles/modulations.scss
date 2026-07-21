@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "./maqam-jins-shared-ui";
 @use "sass:color";
 
 // Ensure hops scroll into view below sticky pitch class wheel
@@ -11,62 +12,188 @@
 
   }
 
-  // Page-level section lockup (shared stacked role)
+  // The SAME header band the Ajnās/Maqāmāt taḥlīl and Suyūr surfaces use:
+  // solid $secondary fill, $grey border — a real analysis-header surface, not
+  // a page title. Intiqālāt is one more lens on the selected maqām, so it
+  // earns the identical band. Mirrors sayr-manager's __header so the two
+  // can't drift. (The element stays __page-header rather than __header
+  // because __header is already the degree-column header below.)
   &__page-header {
-    @include section-page-header;
+    width: 100%;
+    @include maqam-jins-shared-ui.transpositions-header-surface;
+    margin-bottom: $space-block;
+    padding: 8px 20px;
   }
 
-  &__page-header-furniture {
+  &__title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  &__section-furniture {
     @include section-furniture($font-size-lg);
   }
 
-  &__page-header-name {
-    @include section-page-header-name;
+  &__entity-name {
+    @include type-entity-name;
+    font-size: $font-size-lg;
+    line-height: $line-height-tight;
   }
 
-  &__header {
-    font-weight: $font-weight-regular;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    min-height: 40px;
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 10px;
-    }
-  }
-
-  &__header-text {
-    font-weight: $font-weight-regular;
-  }
-
-  &__wrapper-modulations-header {
-    text-align: center;
+  // ── The breadcrumb trail ────────────────────────────────────────────────
+  // The chain reads left-to-right as carousel-style chips: the root maqām, then
+  // each hop branched from it. The active chip is the selected-item tier; the
+  // rest are the available tier. Wraps to a new row when the trail runs long.
+  // It sits in its own box on the carousel's black ground ($black), so the
+  // trail reads as one surface — the same strip the ajnās/maqāmāt carousels
+  // above it sit in.
+  &__breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 10px;
+    gap: $space-block-half;
+    width: 100%;
+    margin-bottom: $space-block;
+    padding: $space-block-half;
+    background-color: $black;
   }
 
-  &__source-maqam-name {
-    color: $text !important;
-    font-size: $font-size-3xl; // was 24px, nearest scale step (26px)
-    font-weight: $font-weight-regular;
-    text-decoration: none !important;
-    padding: 0px;
-    margin-bottom: 20px;
-    display: inline-flex;
+  &__breadcrumb-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-width: 120px;
+    padding: 6px 10px;
+    border: none;
+    background-color: $surface-available;
+    color: $text;
+    cursor: pointer;
+    text-align: start;
+    transition: background-color 0.2s;
 
     &:hover {
-      text-decoration: underline !important;
-      outline: none;
+      background-color: $surface-available-hover;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $gold;
+      outline-offset: -2px;
+    }
+
+    // The active hop — the one whose columns show below — is the selected tier.
+    &_active {
+      background-color: $surface-selected;
+
+      &:hover {
+        background-color: $surface-selected;
+      }
+    }
+
+    [dir="rtl"] & {
+      align-items: flex-end;
+      text-align: right;
     }
   }
 
-  // Mode toggles + octave shift — the shared functional pill; active state
-  // uses the same tertiary treatment as the transposition-table toggle
-  // (replaces the old underline + hardcoded-blue inline styles).
-  &__ajnas-count,
-  &__maqamat-count,
+  &__breadcrumb-name {
+    @include type-entity-name;
+    font-size: $font-size-md;
+    line-height: $line-height-snug;
+  }
+
+  // The tonic the hop is built on (localized note / English+octave) — the quiet
+  // counterpart line, same role as a carousel card's transposition count.
+  &__breadcrumb-tonic {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    color: $text-quiet;
+    line-height: $line-height-snug;
+    letter-spacing: $letter-spacing-translit;
+
+    [dir="rtl"] & {
+      letter-spacing: $letter-spacing-normal;
+    }
+  }
+
+  // The chevron between chips — a quiet direction cue, not a control. It points
+  // along reading order, so under RTL (trail runs right-to-left) it flips.
+  &__breadcrumb-sep {
+    color: $text-quiet;
+    font-size: $font-size-lg;
+    user-select: none;
+
+    [dir="rtl"] & {
+      transform: scaleX(-1);
+    }
+  }
+
+  // ── Degree columns ──────────────────────────────────────────────────────
+  // Degree column header ("Tonic" over "dūgāh (56)"). It sits ABOVE the
+  // column's scroll area (a separate box), so the scroll rail starts below the
+  // header rather than running the full column height behind it.
+  &__header {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 40px;
+    padding-bottom: $space-block-half;
+  }
+
+  // The fixed degree label ("Tonic") in the section-furniture voice — the
+  // quiet-ink half of the weight duet; the note name below is the payload.
+  &__header-text {
+    @include section-furniture($font-size-md);
+  }
+
+  &__header-degree {
+    @include type-entity-name;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: $font-size-md;
+    line-height: $line-height-snug;
+  }
+
+  // The count of modulations available at this degree — quiet tabular numeral.
+  &__header-count {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-regular;
+    color: $text-quiet;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: $letter-spacing-normal;
+  }
+
+  // The controls row: the Ajnās/Maqāmāt segmented toggle, the octave-shift
+  // pill, and (on the last hop of a chain) the delete-hop action.
+  &__controls-row {
+    display: flex;
+    gap: $space-block-half;
+    margin-bottom: $space-block;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Either/or mode toggle → the app's canonical segmented control (same as the
+  // manager group-by): one control, the active mode filled in $tertiary, no gap
+  // between the two halves so they read as a single object rather than two
+  // independent "active" pills.
+  &__mode-segments {
+    @include manager-groupby-segments;
+  }
+
+  &__mode-segment {
+    @include manager-groupby-segment;
+
+    &_active {
+      @include manager-groupby-segment-active;
+    }
+  }
+
+  // Octave-shift — an independent modifier, so it stays a standalone functional
+  // pill (not folded into the segmented toggle); active in $tertiary.
   &__octave-shift {
     @include button-functional;
 
@@ -79,207 +206,79 @@
     }
   }
 
-  // Pill geometry; color ruling pending (delete action — red like admin
-  // deletes, or stay in the functional purple family).
+  // Delete-hop — the app's delete convention is $delete red (the sayr and
+  // manager delete buttons all use it), so this joins it rather than staying
+  // in the functional purple family.
   &__delete-hop-btn {
-    @include button-functional;
+    @include button-functional($bg: $delete, $bg-hover: $hovered-delete);
   }
 
-  &__hops-wrapper {
+  &__hop-body {
     width: 100%;
-    margin-bottom: 0px;
-    scroll-margin-top: 120px;
   }
 
+  // The eight degree columns in one flex row. Under RTL the row lays itself out
+  // right-to-left (Tonic on the right) on its own, so no per-direction override.
+  &__degrees {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-block-half;
+    width: 100%;
+  }
+
+  // One degree column: a fixed header, then the scrolling list of cards. The
+  // column is capped at a shared height so the eight headers stay aligned and
+  // the page never grows to the tallest column (Tonic can hold 50+ cards).
   &__modulations-list {
-    display: inline-flex; // makes each list of modulations appear side by side
+    display: flex;
     flex-direction: column;
-
-    &:not(:last-child) {
-      margin-right: 10px; // for column gap if you switch to row direction
-    }
-
-    gap: 10px;
-    width: calc(100% / 8 - 10px);
-    padding: 10px 0px;
-
-    // RTL support
-    [dir="rtl"] & {
-      &:not(:last-child) {
-        margin-right: 0;
-        margin-left: 10px;
-      }
-    }
+    flex: 1 1 0;
+    min-width: 0;
+    max-height: 55vh;
   }
 
+  // The scroll area — only the cards scroll, beneath the fixed header, so the
+  // rail starts below the header (it used to run the full column height).
+  &__column-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: $space-block-half;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    @include scrollbar-thin;
+  }
+
+  // Each modulation card wears the app's entity-name identity (regular weight,
+  // full ink, transliteration tracking, RTL-zeroed) on the available-item
+  // surface — the same card language as the carousel and sayr lists. A real
+  // <button>, so it takes the app's focus ring; flex:none holds its height when
+  // the column scrolls.
   &__modulation-item {
+    @include type-entity-name;
+    flex: none;
+    width: 100%;
+    border: none;
     text-align: left;
-    padding: 10px 10px;
+    padding: 6px 10px;
     font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    background-color: rgba($primary, 0.3);
+    line-height: $line-height-snug;
+    background-color: $surface-available;
+    cursor: pointer;
+    transition: background-color 0.2s;
 
     &:hover {
-      background-color: $primary;
+      background-color: $surface-available-hover;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $gold;
+      outline-offset: -2px;
     }
 
     // RTL support
     [dir="rtl"] & {
       text-align: right;
-    }
-  }
-
-  &__list {
-    width: 100%;
-    background-color: $black;
-    display: grid;
-    grid-template-columns: repeat(16, (minmax(250px, 1fr)));
-    grid-template-rows: repeat(3, auto);
-    gap: 10px;
-    height: 225px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    position: relative;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    &::-webkit-scrollbar {
-      height: 6px;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $primary;
-      cursor: pointer;
-      position: relative;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: $medium-grey;
-      cursor: pointer;
-      position: relative;
-    }
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    padding: 10px;
-    background-color: rgba($primary, 0.5);
-    font-size: $font-size-md;
-    color: $text;
-    cursor: pointer;
-    // box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-
-    &:hover {
-      background-color: $tertiary;
-    }
-
-    &_active {
-      &:hover {
-        background-color: rgba($primary, 0.9);
-      }
-    }
-
-    &_selected {
-      background-color: $tertiary;
-
-      &:hover {
-        background-color: $tertiary;
-      }
-    }
-  }
-
-  &__item-name {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
-    font-weight: $font-weight-regular;
-
-    &-transpositions {
-      color: rgba(255, 255, 255, 1);
-      font-size: $font-size-md;
-      margin-top: 3px;
-      font-weight: $font-weight-light;
-    }
-  }
-
-  &__carousel {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-
-    .carousel-button {
-      background: none;
-      border: none;
-      font-size: 30px;
-      cursor: pointer;
-      color: $text;
-      padding: 0px;
-
-      &:hover {
-        color: $tertiary;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev,
-    .carousel-button-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-      height: calc(100% - 20px);
-      width: 25px;
-      background-color: $black;
-
-      &:hover {
-        color: $tertiary;
-        transition: color 0.1s ease-in-out;
-      }
-    }
-
-    .carousel-button-prev {
-      left: 0;
-    }
-
-    .carousel-button-next {
-      right: 0;
-    }
-  }
-
-  &__collapse-arrow {
-    display: inline-flex;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 10px;
-    color: #888;
-    outline: none;
-    //align-items: center;
-    padding: 0;
-    transition: color 0.2s;
-
-    &:hover {
-      color: $primary;
-    }
-
-    &-icon {
-      //display: inline-block;
-      transition: transform 0.2s;
-    }
-
-    // RTL support
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: 10px;
     }
   }
 }
