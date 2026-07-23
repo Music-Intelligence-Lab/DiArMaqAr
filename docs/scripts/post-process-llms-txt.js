@@ -33,6 +33,12 @@ Tip: \`options=true\` on a detail endpoint needs only \`tuningSystem\` —
 it returns the valid starting notes (idNames), and once \`startingNote\`
 is added, the valid \`transposeTo\` tonics.
 
+Tip: compare one value across EVERY tuning system in a single call with
+\`tuningSystems=all\` on any /compare endpoint (combine with \`startingNote=all\`
+for all framings), e.g.
+\`GET https://diarmaqar.net/api/pitch-classes/note-names/segah/compare?tuningSystems=all&startingNote=all&pitchClassDataType=cents\`.
+\`all\` cannot be combined with explicit IDs.
+
 If you omit required parameters, the API returns a 400 response whose
 body contains a \`hint\` field pointing at the next URL to call.
 
