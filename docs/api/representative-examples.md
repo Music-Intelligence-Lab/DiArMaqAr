@@ -39,7 +39,7 @@ Jump to specific example categories:
 
 **REQUIRED Parameters for Detail Endpoints:**
 
-All detail endpoints (`/api/maqamat/{id}`, `/api/ajnas/{id}`) **MUST** include these two parameters:
+All detail endpoints (`https://diarmaqar.net/api/maqamat/{id}`, `https://diarmaqar.net/api/ajnas/{id}`) **MUST** include these two parameters:
 
 1. **`tuningSystem`** - ID of the tuning system (e.g., `ibnsina_1037`)
 2. **`startingNote`** - Starting note in URL-safe format (e.g., `yegah`, `ushayran`, `rast`)
@@ -56,19 +56,19 @@ And should almost always include a third:
 **Not sure which combinations are valid?** Every maqām and jins has an availability endpoint that lists every valid `tuningSystem` + `startingNote` pair:
 
 ```bash
-GET /api/maqamat/maqam_rast/availability
-GET /api/ajnas/jins_rast/availability
+GET https://diarmaqar.net/api/maqamat/maqam_rast/availability
+GET https://diarmaqar.net/api/ajnas/jins_rast/availability
 ```
 
 **Example - CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 **Example - WRONG (missing parameters):**
 ```bash
-GET /api/maqamat/maqam_rast  # ❌ Missing required parameters
-GET /api/maqamat/rast  # ❌ Wrong endpoint format AND missing parameters
+GET https://diarmaqar.net/api/maqamat/maqam_rast  # ❌ Missing required parameters
+GET https://diarmaqar.net/api/maqamat/rast  # ❌ Wrong endpoint format AND missing parameters
 ```
 
 ---
@@ -79,40 +79,40 @@ GET /api/maqamat/rast  # ❌ Wrong endpoint format AND missing parameters
 
 **WRONG:**
 ```bash
-GET /api/maqamat/maqam_rast
-GET /api/ajnas/jins_rast
+GET https://diarmaqar.net/api/maqamat/maqam_rast
+GET https://diarmaqar.net/api/ajnas/jins_rast
 ```
 
 **CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
-GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ### 2. Wrong Endpoint Format
 
 **WRONG:**
 ```bash
-GET /api/maqamat/rast  # Missing "maqam_" prefix
-GET /api/ajnas/rast     # Missing "jins_" prefix
+GET https://diarmaqar.net/api/maqamat/rast  # Missing "maqam_" prefix
+GET https://diarmaqar.net/api/ajnas/rast     # Missing "jins_" prefix
 ```
 
 **CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast  # Includes "maqam_" prefix
-GET /api/ajnas/jins_rast     # Includes "jins_" prefix
+GET https://diarmaqar.net/api/maqamat/maqam_rast  # Includes "maqam_" prefix
+GET https://diarmaqar.net/api/ajnas/jins_rast     # Includes "jins_" prefix
 ```
 
 ### 3. Using Display Names Instead of URL-Safe IDs
 
 **WRONG:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)&startingNote=yegah
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=Ibn Sīnā (1037)&startingNote=yegah
 ```
 
 **CORRECT:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah
 ```
 
 **Note:** Entity and tuning-system IDs must be exact URL-safe `idName` values (lowercase, no spaces or display formatting). Note-name parameters (`startingNote`, `transposeTo`) are matched diacritics-insensitively — `yegah` and `yegāh` both resolve — but the URL-safe form is canonical and recommended.
@@ -122,7 +122,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah
 If you need to discover available parameters, use `options=true`:
 
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
 ```
 
 This returns available parameters instead of data, which is useful for programmatic discovery.
@@ -130,7 +130,7 @@ This returns available parameters instead of data, which is useful for programma
 **Precondition:** discovery mode requires a valid `tuningSystem`. `startingNote` is optional — without it the response lists the tuning system's valid starting notes and returns `transposeTo.options: null` (transpositions depend on the starting note). If you don't have a valid tuning system yet, start with the availability endpoint instead:
 
 ```bash
-GET /api/maqamat/maqam_rast/availability
+GET https://diarmaqar.net/api/maqamat/maqam_rast/availability
 ```
 
 ---
@@ -142,14 +142,14 @@ GET /api/maqamat/maqam_rast/availability
 1. **Always include required parameters** (`tuningSystem`, `startingNote`, `pitchClassDataType`) for detail endpoints
 2. **Use Representative Examples** (this page) as the source of truth for correct API usage
 3. **Reference the OpenAPI specification** at `/docs/openapi.json` for complete parameter documentation
-4. **Use the availability endpoint first** (`/api/maqamat/{idName}/availability`, `/api/ajnas/{idName}/availability`) when you don't already have a known-valid `tuningSystem` + `startingNote` combination
+4. **Use the availability endpoint first** (`https://diarmaqar.net/api/maqamat/{idName}/availability`, `https://diarmaqar.net/api/ajnas/{idName}/availability`) when you don't already have a known-valid `tuningSystem` + `startingNote` combination
 5. **Use parameter discovery** (`options=true`) once you know a valid `tuningSystem` — `startingNote` is optional in discovery mode and the response lists the valid ones
 
 **If a request fails with HTTP 400:** the response body contains `error`, `hint`, and `validOptions` fields explaining exactly what to fix — but many AI HTTP tools cannot read 4xx response bodies, so you may only see the status code. In that case do not guess: call the availability endpoint for the entity and rebuild the request from a listed combination.
 
 **Example Parameter Discovery Request:**
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options=true
 ```
 
 **Response includes:**
@@ -232,9 +232,9 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
     "formatOptions": "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
   },
   "examples": [
-    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true",
-    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=qarar_rast&includeModulations=true",
-    "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all&includeSuyur=true"
+    "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&includeIntervals=true",
+    "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&transposeTo=qarar_rast&includeModulations=true",
+    "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=all&includeSuyur=true"
   ]
 }
 ```
@@ -244,7 +244,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&options
 - Always include all three required parameters
 - Use `cents` as the default `pitchClassDataType` for most use cases
 - For users who don't know specific names, use `maqam_rast` with `ibnsina_1037` and `yegah` as safe defaults
-- For valid `filterByFamily` values, use `GET /api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah`
+- For valid `filterByFamily` values, use `GET https://diarmaqar.net/api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah`
 
 ---
 
@@ -339,7 +339,7 @@ API responses are complex nested structures, not simple arrays. A typical respon
 
 **Example**:
 ```bash
-GET /api/tuning-systems/alkindi_874/ushayran/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/alkindi_874/ushayran/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -358,7 +358,7 @@ GET /api/tuning-systems/alkindi_874/ushayran/pitch-classes?pitchClassDataType=ce
 
 **Example**:
 ```
-GET /api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -378,7 +378,7 @@ GET /api/tuning-systems/alfarabi_950g/ushayran/pitch-classes?pitchClassDataType=
 
 **Example**:
 ```
-GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -398,7 +398,7 @@ GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cent
 
 **Example**:
 ```
-GET /api/tuning-systems/meshshaqa_1899/yegah/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/meshshaqa_1899/yegah/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -419,7 +419,7 @@ GET /api/tuning-systems/meshshaqa_1899/yegah/pitch-classes?pitchClassDataType=ce
 
 **Example**:
 ```
-GET /api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -439,7 +439,7 @@ GET /api/tuning-systems/cairocongresstuningcommittee_1929/rast/pitch-classes?pit
 
 **Example**:
 ```
-GET /api/tuning-systems/alsabbagh_1954/rast/pitch-classes?pitchClassDataType=cents
+GET https://diarmaqar.net/api/tuning-systems/alsabbagh_1954/rast/pitch-classes?pitchClassDataType=cents
 ```
 
 **Good for testing**:
@@ -463,12 +463,12 @@ GET /api/tuning-systems/alsabbagh_1954/rast/pitch-classes?pitchClassDataType=cen
 
 **Required Parameters:**
 - `tuningSystem`: `ibnsina_1037`, `alfarabi_950g`, `meshshaqa_1899`, or `cairocongresstuningcommittee_1929`
-- `startingNote`: e.g. `yegah` (IbnSina, Meshshaqa), `ushayran` (al-Farabi), `rast` (CairoCongress) — several systems accept more than one starting note; `GET /api/ajnas/jins_rast/availability` lists every valid combination
+- `startingNote`: e.g. `yegah` (IbnSina, Meshshaqa), `ushayran` (al-Farabi), `rast` (CairoCongress) — several systems accept more than one starting note; `GET https://diarmaqar.net/api/ajnas/jins_rast/availability` lists every valid combination
 - `pitchClassDataType`: `cents` (or `fraction`, `all`, etc.)
 
 **Example**:
 ```bash
-GET /api/ajnas/jins_rast?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -483,7 +483,7 @@ GET /api/ajnas/jins_rast?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchCla
 
 **Example**:
 ```
-GET /api/ajnas/jins_bayyat?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -498,7 +498,7 @@ GET /api/ajnas/jins_bayyat?tuningSystem=cairocongresstuningcommittee_1929&starti
 
 **Example**:
 ```
-GET /api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -513,7 +513,7 @@ GET /api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&startingNote=rast&pitchCla
 
 **Example**:
 ```
-GET /api/ajnas/jins_saba?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_saba?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -530,7 +530,7 @@ GET /api/ajnas/jins_saba?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchCla
 
 **Example**:
 ```
-GET /api/ajnas/jins_nikriz?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_nikriz?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -545,7 +545,7 @@ GET /api/ajnas/jins_nikriz?tuningSystem=alkindi_874&startingNote=ushayran&pitchC
 
 **Example**:
 ```
-GET /api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -560,7 +560,7 @@ GET /api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchCla
 
 **Example**:
 ```
-GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_kurd_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -575,7 +575,7 @@ GET /api/ajnas/jins_kurd_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&p
 
 **Example**:
 ```
-GET /api/ajnas/jins_nahawand?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_nahawand?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -590,7 +590,7 @@ GET /api/ajnas/jins_nahawand?tuningSystem=alkindi_874&startingNote=ushayran&pitc
 
 **Example**:
 ```
-GET /api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -605,7 +605,7 @@ GET /api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClas
 
 **Example**:
 ```
-GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_hijaz_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -624,12 +624,12 @@ GET /api/ajnas/jins_hijaz_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&
 
 **Required Parameters:**
 - `tuningSystem`: `ibnsina_1037`, `alfarabi_950g`, `meshshaqa_1899`, or `cairocongresstuningcommittee_1929`
-- `startingNote`: e.g. `yegah` (IbnSina, Meshshaqa), `ushayran` (al-Farabi), `rast` (CairoCongress) — several systems accept more than one starting note; `GET /api/maqamat/maqam_rast/availability` lists every valid combination
+- `startingNote`: e.g. `yegah` (IbnSina, Meshshaqa), `ushayran` (al-Farabi), `rast` (CairoCongress) — several systems accept more than one starting note; `GET https://diarmaqar.net/api/maqamat/maqam_rast/availability` lists every valid combination
 - `pitchClassDataType`: `cents` (or `fraction`, `all`, etc.)
 
 **Example**:
 ```bash
-GET /api/maqamat/maqam_rast?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=cairocongresstuningcommittee_1929&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -644,7 +644,7 @@ GET /api/maqamat/maqam_rast?tuningSystem=cairocongresstuningcommittee_1929&start
 
 **Example**:
 ```
-GET /api/maqamat/maqam_bayyat?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_bayyat?tuningSystem=meshshaqa_1899&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -659,7 +659,7 @@ GET /api/maqamat/maqam_bayyat?tuningSystem=meshshaqa_1899&startingNote=yegah&pit
 
 **Example**:
 ```
-GET /api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&startingNote=rast&pitchClassDataType=cents
 ```
 
 ---
@@ -676,7 +676,7 @@ GET /api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&startingNote=rast&pitch
 
 **Example**:
 ```
-GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -691,7 +691,7 @@ GET /api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yeg
 
 **Example**:
 ```
-GET /api/maqamat/maqam_bestenegar?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_bestenegar?tuningSystem=alfarabi_950g&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -708,7 +708,7 @@ GET /api/maqamat/maqam_bestenegar?tuningSystem=alfarabi_950g&startingNote=ushayr
 
 **Example**:
 ```
-GET /api/maqamat/maqam_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -723,7 +723,7 @@ GET /api/maqamat/maqam_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitch
 
 **Example**:
 ```
-GET /api/maqamat/maqam_athar_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_athar_kurd?tuningSystem=alkindi_874&startingNote=ushayran&pitchClassDataType=cents
 ```
 
 ---
@@ -738,7 +738,7 @@ GET /api/maqamat/maqam_athar_kurd?tuningSystem=alkindi_874&startingNote=ushayran
 
 **Example**:
 ```
-GET /api/maqamat/maqam_dilkesh_huran?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_dilkesh_huran?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---

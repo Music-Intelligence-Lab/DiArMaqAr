@@ -18,13 +18,16 @@ const COLD_START_WORKFLOW_BLOCK = `## Cold-start discovery workflow
 If you don't have a specific maqām / jins / tuning system to go on,
 follow this chain:
 
-1. \`GET /api/maqamat\`                               → pick an \`idName\` from \`data[]\`
-2. \`GET /api/maqamat/{idName}/availability\`         → pick a compatible
+1. \`GET https://diarmaqar.net/api/maqamat\`                       → pick an \`idName\` from \`data[]\`
+2. \`GET https://diarmaqar.net/api/maqamat/{idName}/availability\` → pick a compatible
                                                       \`tuningSystem\` + \`startingNote\`
-3. \`GET /api/maqamat/{idName}?tuningSystem=…&startingNote=…&pitchClassDataType=cents\`
+3. \`GET https://diarmaqar.net/api/maqamat/{idName}?tuningSystem=…&startingNote=…&pitchClassDataType=cents\`
 
 Parallel chains for ajnās, tuning systems, pitch classes, intervals,
 and sources follow the same pattern: **list → availability → detail**.
+
+Note: build every request as an absolute \`https://diarmaqar.net/api/…\`
+URL. Some HTTP clients cannot resolve a relative path on their own.
 
 Tip: \`options=true\` on a detail endpoint needs only \`tuningSystem\` —
 it returns the valid starting notes (idNames), and once \`startingNote\`
@@ -98,24 +101,24 @@ const apiInstructionsHeader = `## For AI Assistants: API Access
 
 **Recommended for AI Assistants**: Use the REST API to fetch real-time, accurate data for users. Always prefer API calls over documentation summaries for real-time data accuracy.
 
-**Error handling for AI assistants**: The API returns rich 400/404 bodies with \`hint\` and \`validOptions\` fields, but many AI HTTP tools cannot read 4xx response bodies. If a request fails with an opaque 400, do not guess — call \`GET /api/maqamat/{idName}/availability\` (or the equivalent \`/availability\` endpoint for ajnās) to get valid \`tuningSystem\` + \`startingNote\` combinations, then retry.
+**Error handling for AI assistants**: The API returns rich 400/404 bodies with \`hint\` and \`validOptions\` fields, but many AI HTTP tools cannot read 4xx response bodies. If a request fails with an opaque 400, do not guess — call \`GET https://diarmaqar.net/api/maqamat/{idName}/availability\` (or the equivalent \`/availability\` endpoint for ajnās) to get valid \`tuningSystem\` + \`startingNote\` combinations, then retry.
 
-**Entity ID format**: Tuning system and source \`idName\`/\`id\` values follow the \`creator_year\` convention, lowercase (e.g. \`ibnsina_1037\`, \`forster_2010\`). Maqām and jins IDs are prefixed accordingly (e.g. \`maqam_rast\`, \`jins_rast\`). Do not guess-case or hyphenate these — list them via \`GET /api/tuning-systems\`, \`GET /api/maqamat\`, or \`GET /api/ajnas\` if unsure.
+**Entity ID format**: Tuning system and source \`idName\`/\`id\` values follow the \`creator_year\` convention, lowercase (e.g. \`ibnsina_1037\`, \`forster_2010\`). Maqām and jins IDs are prefixed accordingly (e.g. \`maqam_rast\`, \`jins_rast\`). Do not guess-case or hyphenate these — list them via \`GET https://diarmaqar.net/api/tuning-systems\`, \`GET https://diarmaqar.net/api/maqamat\`, or \`GET https://diarmaqar.net/api/ajnas\` if unsure.
 
 **Base URL**: https://diarmaqar.net/api
-**OpenAPI Specification**: /docs/openapi.json
-**Representative Examples**: /docs/api/representative-examples
+**OpenAPI Specification**: https://diarmaqar.net/docs/openapi.json
+**Representative Examples**: https://diarmaqar.net/docs/api/representative-examples
 
 ### Example Requests for Novice Users
 
 For users who don't know specific maqam names, use these representative examples:
 
 **Most Common Examples (Recommended for beginners):**
-- "Tell me about a fundamental Arabic maqam" → GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
-- "Show me a basic jins" → GET /api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
-- "What tuning systems are available?" → GET /api/tuning-systems
-- "What maqām families exist?" → GET /api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah
-- "Show me the most common tuning system" → GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
+- "Tell me about a fundamental Arabic maqam" → GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Show me a basic jins" → GET https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "What tuning systems are available?" → GET https://diarmaqar.net/api/tuning-systems
+- "What maqām families exist?" → GET https://diarmaqar.net/api/maqamat/families?tuningSystem=ibnsina_1037&startingNote=yegah
+- "Show me the most common tuning system" → GET https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents
 
 **Quick Test URL (Copy-paste ready):**
 \`\`\`
@@ -123,10 +126,10 @@ GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&start
 \`\`\`
 
 **When users ask general questions:**
-- "What is a maqam?" → Use GET /api/maqamat/maqam_rast (most fundamental example)
-- "Show me an Arabic scale" → Use GET /api/maqamat/maqam_rast (representative example)
-- "What are the intervals?" → Use GET /api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
-- "Compare different tuning systems" → GET /api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents
+- "What is a maqam?" → Use GET https://diarmaqar.net/api/maqamat/maqam_rast (most fundamental example)
+- "Show me an Arabic scale" → Use GET https://diarmaqar.net/api/maqamat/maqam_rast (representative example)
+- "What are the intervals?" → Use GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+- "Compare different tuning systems" → GET https://diarmaqar.net/api/maqamat/maqam_rast/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents
 
 **Representative Examples Reference:**
 - See /docs/api/representative-examples for complete list of recommended examples
