@@ -17,8 +17,9 @@ info:
     follow a lowercase `creator_year` convention (e.g. `ibnsina_1037`,
     `alshawwa_1946`), with maqām/jins IDs additionally prefixed (`maqam_rast`,
     `jins_rast`). Do not construct or guess-case an ID; always obtain it from a
-    list endpoint (`GET /api/tuning-systems`, `GET /api/maqamat`,
-    `GET /api/ajnas`) or an `availability` endpoint.
+    list endpoint (`GET https://diarmaqar.net/api/tuning-systems`,
+    `GET https://diarmaqar.net/api/maqamat`, `GET https://diarmaqar.net/api/ajnas`)
+    or an `availability` endpoint.
 
   contact:
     name: Khyam Allami
@@ -518,9 +519,10 @@ paths:
             - When provided, returns the specified data type for all pitch classes in the maqām
             - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
             - Use 'all' for complete pitch class data across all available formats
+            - `pitchClassIndex` and `scaleDegree` return the minimal field set explicitly
           schema:
             type: string
-            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName]
+            enum: [all, abjadName, englishName, solfege, fraction, cents, centsDeviation, decimalRatio, stringLength, fretDivision, midiNoteNumber, midiNoteDeviation, frequency, referenceNoteName, pitchClassIndex, scaleDegree]
           example: "cents"
         - name: transposeTo
           in: query
@@ -2281,6 +2283,7 @@ paths:
             enum:
               - all
               - englishName
+              - solfege
               - fraction
               - cents
               - decimalRatio
@@ -6655,6 +6658,7 @@ paths:
             enum:
               - all
               - englishName
+              - solfege
               - fraction
               - cents
               - decimalRatio

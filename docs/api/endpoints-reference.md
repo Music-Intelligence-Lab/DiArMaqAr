@@ -340,7 +340,8 @@ Requirements:
   - When provided, returns the specified data type for all pitch classes in the maqām
   - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
   - Use 'all' for complete pitch class data across all available formats
- - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (14 total)
+  - `pitchClassIndex` and `scaleDegree` return the minimal field set explicitly
+ - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (16 total)
   - Example: `cents`
 - `transposeTo` (optional): Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of maqām data
@@ -1029,7 +1030,7 @@ systems and/or multiple modal transpositions.
   namespace) rather than pitch data.
  - Type: `string`
   - Example: `rast,yegah,ushayran`
-- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
+- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `solfege`, `fraction`, `cents`, ... (14 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
 Defaults to `"false"` when omitted..
@@ -2717,7 +2718,7 @@ across historical tuning systems and/or multiple modal transpositions.
   namespace) rather than pitch data.
  - Type: `string`
   - Example: `rast,yegah,ushayran`
-- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `fraction`, `cents`, `decimalRatio`, ... (13 total) - Default: `all`
+- `pitchClassDataType` (optional): Output format for pitch class data. Defaults to `all` when omitted. - Type: `string` - Valid values: `all`, `englishName`, `solfege`, `fraction`, `cents`, ... (14 total) - Default: `all`
   - Example: `cents`
 - `includeIntervals` (optional): Whether to include interval data between adjacent pitch classes on each cell.
 Defaults to `"false"` when omitted..

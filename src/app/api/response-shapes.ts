@@ -15,8 +15,12 @@ export function getCanonicalSelfUrl(request: Request): string {
   return `${CANONICAL_BASE}${url.pathname}${url.search}`;
 }
 
-/** Build canonical URL from path (with optional query string) */
+/** Build canonical URL from path (with optional query string).
+ *  Idempotent: an input that is already an absolute http(s) URL is returned
+ *  unchanged, so it is safe to run over link values that may already have
+ *  been absolutized (e.g. `self` via getCanonicalSelfUrl). */
 export function getCanonicalApiUrl(path: string): string {
+  if (/^https?:\/\//i.test(path)) return path;
   return `${CANONICAL_BASE}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
@@ -129,8 +133,23 @@ export interface LinksNamespace {
   [key: string]: unknown;
 }
 
+/**
+ * Absolutize every link value to a canonical https://diarmaqar.net/… URL.
+ *
+ * Call sites pass relative `/api/…` path literals (with `self` sometimes
+ * already absolute via getCanonicalSelfUrl/getCanonicalApiUrl). Many LLM HTTP
+ * fetch tools can only request an absolute URL that has appeared verbatim in
+ * context — a relative onward link like `/api/maqamat/{id}/availability` is
+ * unreachable for them, which silently breaks the list → availability → detail
+ * discovery chain one hop in. Absolutizing here (idempotent for values that are
+ * already absolute) fixes every route's links at the root, in one place.
+ */
 export function buildLinksNamespace(links: LinksNamespace): LinksNamespace {
-  return stripUndefined(links);
+  const absolutized: LinksNamespace = {};
+  for (const [key, value] of Object.entries(links)) {
+    absolutized[key] = typeof value === "string" ? getCanonicalApiUrl(value) : value;
+  }
+  return stripUndefined(absolutized);
 }
 
 interface BuildListResponseOptions {

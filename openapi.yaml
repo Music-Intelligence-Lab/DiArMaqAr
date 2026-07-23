@@ -17,8 +17,9 @@ info:
     follow a lowercase `creator_year` convention (e.g. `ibnsina_1037`,
     `alshawwa_1946`), with maqām/jins IDs additionally prefixed (`maqam_rast`,
     `jins_rast`). Do not construct or guess-case an ID; always obtain it from a
-    list endpoint (`GET /api/tuning-systems`, `GET /api/maqamat`,
-    `GET /api/ajnas`) or an `availability` endpoint.
+    list endpoint (`GET https://diarmaqar.net/api/tuning-systems`,
+    `GET https://diarmaqar.net/api/maqamat`, `GET https://diarmaqar.net/api/ajnas`)
+    or an `availability` endpoint.
 
   contact:
     name: Khyam Allami
