@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAjnas, getTuningSystems } from "@/functions/import";
+import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
@@ -390,9 +391,25 @@ export async function GET(
       );
     }
 
-    // Parse comma-separated tuning system IDs
-    const tuningSystemIds = tuningSystemsParam.split(",").map(id => id.trim()).filter(id => id.length > 0);
-    
+    // Parse comma-separated tuning system IDs (or expand the `all` sentinel)
+    const resolvedTuningSystems = resolveTuningSystemsParam(
+      tuningSystemsParam,
+      getTuningSystems().map((t) => t.getId())
+    );
+    if (!resolvedTuningSystems.ok) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: resolvedTuningSystems.error,
+            message: resolvedTuningSystems.message,
+            hint: resolvedTuningSystems.hint,
+          },
+          { status: 400 }
+        )
+      );
+    }
+    const tuningSystemIds = resolvedTuningSystems.ids;
+
     if (tuningSystemIds.length === 0) {
       return addCorsHeaders(
         NextResponse.json(
