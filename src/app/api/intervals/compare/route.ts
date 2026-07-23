@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getTuningSystems } from "@/functions/import";
+import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -207,7 +208,23 @@ export async function GET(request: Request) {
 
 
     const tuningSystems = getTuningSystems();
-    const tuningSystemIds = tuningSystemsParam.split(",").map(id => id.trim()).filter(Boolean);
+    const resolvedTuningSystems = resolveTuningSystemsParam(
+      tuningSystemsParam,
+      tuningSystems.map((t) => t.getId())
+    );
+    if (!resolvedTuningSystems.ok) {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: resolvedTuningSystems.error,
+            message: resolvedTuningSystems.message,
+            hint: resolvedTuningSystems.hint,
+          },
+          { status: 400 }
+        )
+      );
+    }
+    const tuningSystemIds = resolvedTuningSystems.ids;
 
     // Validate all tuning systems exist
     const selectedTuningSystems = tuningSystemIds.map(id => {
