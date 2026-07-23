@@ -2258,7 +2258,8 @@ paths:
           description: |
             Comma-separated list of tuning system IDs. The response computes the Cartesian
             product of these tuning systems with the requested `startingNotes` (outer loop =
-            `tuningSystems`, inner loop = `startingNotes`).
+            `tuningSystems`, inner loop = `startingNotes`). Use `all` to include every tuning
+            system in the archive (cannot be combined with explicit IDs).
           schema:
             type: string
           example: "alsabbagh_1954,ibnsina_1037"
@@ -6633,7 +6634,8 @@ paths:
           description: |
             Comma-separated list of tuning system IDs. The response computes the Cartesian
             product of these tuning systems with the requested `startingNotes` (outer loop =
-            `tuningSystems`, inner loop = `startingNotes`).
+            `tuningSystems`, inner loop = `startingNotes`). Use `all` to include every tuning
+            system in the archive (cannot be combined with explicit IDs).
           schema:
             type: string
           example: "alsabbagh_1954,ibnsina_1037"
@@ -8176,7 +8178,7 @@ paths:
         - name: tuningSystems
           in: query
           required: true
-          description: Comma-separated tuning system IDs
+          description: Comma-separated tuning system IDs, or `all` for every tuning system (cannot be combined with explicit IDs)
           schema:
             type: string
           example: "meshshaqa_1899,cairocongresstuningcommittee_1929"
@@ -8624,7 +8626,7 @@ paths:
         - name: tuningSystems
           in: query
           required: true
-          description: Comma-separated tuning system IDs
+          description: Comma-separated tuning system IDs, or `all` for every tuning system (cannot be combined with explicit IDs)
           schema:
             type: string
           example: "alfarabi_950g,cairocongresstuningcommittee_1929"

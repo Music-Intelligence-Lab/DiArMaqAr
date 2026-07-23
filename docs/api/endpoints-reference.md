@@ -1020,7 +1020,8 @@ systems and/or multiple modal transpositions.
 **Query Parameters:**
 - `tuningSystems` **(required)**: Comma-separated list of tuning system IDs.
   product of these tuning systems with the requested `startingNotes` (outer loop =
-  `tuningSystems`, inner loop = `startingNotes`).
+  `tuningSystems`, inner loop = `startingNotes`). Use `all` to include every tuning
+  system in the archive (cannot be combined with explicit IDs).
  - Type: `string`
   - Example: `alsabbagh_1954,ibnsina_1037`
 - `startingNotes` **(required)**: Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
@@ -2708,7 +2709,8 @@ across historical tuning systems and/or multiple modal transpositions.
 **Query Parameters:**
 - `tuningSystems` **(required)**: Comma-separated list of tuning system IDs.
   product of these tuning systems with the requested `startingNotes` (outer loop =
-  `tuningSystems`, inner loop = `startingNotes`).
+  `tuningSystems`, inner loop = `startingNotes`). Use `all` to include every tuning
+  system in the archive (cannot be combined with explicit IDs).
  - Type: `string`
   - Example: `alsabbagh_1954,ibnsina_1037`
 - `startingNotes` **(required)**: Comma-separated list of starting note names (URL-safe, diacritics-insensitive).
@@ -4045,7 +4047,7 @@ Returns comprehensive data for each tuning system including:
   - Example: `rast`
 
 **Query Parameters:**
-- `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
+- `tuningSystems` **(required)**: Comma-separated tuning system IDs, or `all` for every tuning system (cannot be combined with explicit IDs). - Type: `string`
   - Example: `meshshaqa_1899,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `yegah`
@@ -4300,7 +4302,7 @@ as it is not meaningful in this context.
 **Query Parameters:**
 - `noteNames` **(required)**: Comma-separated note names. Note names can come from any octave. - Type: `string`
   - Example: `rast,dugah,segah`
-- `tuningSystems` **(required)**: Comma-separated tuning system IDs - Type: `string`
+- `tuningSystems` **(required)**: Comma-separated tuning system IDs, or `all` for every tuning system (cannot be combined with explicit IDs). - Type: `string`
   - Example: `alfarabi_950g,cairocongresstuningcommittee_1929`
 - `startingNote` **(required)**: Starting note (applies to all tuning systems), or "all" to include all available starting notes for each tuning system. - Type: `string`
   - Example: `ushayran`
