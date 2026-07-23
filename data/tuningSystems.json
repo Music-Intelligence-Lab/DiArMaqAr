@@ -1124,11 +1124,15 @@
       {
         "sourceId": "allami_2022",
         "page": "215"
+      },
+      {
+        "sourceId": "farmer_1937",
+        "page": "249"
       }
     ],
     "creatorEnglish": "Allami",
     "creatorArabic": "اللامي",
-    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding al-Farabi's 27:22 to each chromatic interval creating a \"segāh\" for each note",
+    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding al-Farabi's wusta Zalzal (zalzal's 2nd/middle finger) of 27:22 to each chromatic interval creating a zalzalian interval for each of the 12 chromatic notes.",
     "commentsArabic": "تچربة",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1266,7 +1270,7 @@
       "yegāh": 97.999,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-07-23T14:36:09.920Z"
   },
   {
     "id": "angloeuropean_1800",
@@ -2311,10 +2315,15 @@
     "year": "2024",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "farmer_1937",
+        "page": "255"
+      }
+    ],
     "creatorEnglish": "Allami",
     "creatorArabic": "اللامي",
-    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding Ibn Sīnā's 39/32 to each chromatic interval creating a \"segāh\" for each note",
+    "commentsEnglish": "Created using al-Kindi's 12-tone system and adding Ibn Sīnā's Zalzalian interval of 39/32 to each chromatic interval creating a zalzalian interval for each of the 12 chromatic notes.\n",
     "commentsArabic": "تجربة",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -2425,7 +2434,7 @@
     "referenceFrequencies": {
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-07-23T14:42:54.532Z"
   },
   {
     "id": "alurmawi_1294b",
