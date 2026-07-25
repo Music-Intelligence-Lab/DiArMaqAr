@@ -2469,17 +2469,78 @@
           }
         ],
         "version": "2026-07-20T07:58:17.338Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "97",
+        "commentsEnglish": "Method of procedure: the work in maqām shad ʿarabān begins from the third ʿiqd, and entering it from the note nawā or around it is obligatory; then the descent to the second ʿiqd to work within its circle in its first and second forms. Then it returns to the ascent up to the fourth if possible. Then the descent ʿiqd by ʿiqd, and upon reaching the second ʿiqd it is worked in its two forms or its three forms, namely: ḥijāz, nahāwand and nawā athar, the first on dūgāh and the second and third on rāst. The repose is on the degree yegāh, the resting place of the maqām, and touching the qarār of ḥijāz or its jawāb is commendable if repose on the degree nawā is desired.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من مقام الشدعربان من العقد الثالث ويحتم الدخول اليه من درجة النوا أو ما حولها ـ ثم الهبوط الى العقد الثاني للعمل في دائرته بشكليه الاول والثاني . ثم يعود الى الصعود حتى الرابع اذا امكن . ثم الهبوط عقداً فعقداً وعند الوصول الى العقد الثاني يعمل بشكليه أو بأشكاله الثلاثة وهي : الحجاز والنهاوند والنوأثر . الاول على الدوكاه والثاني والثالث على الراست . والاستقرار على درجة اليكاه مستقر المقام ويستحسن لمس قرار الحجاز أو جوابه اذا اريد الاستقرار على درجة النوا .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-25T15:28:02.561Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.20) and al-Ḥilū (1961, p.96). al-Ḥilū analyses it as \"qalb maqām al-shadd ʿarabāh\"; shad ʿarabān is a naming variant of shat ʿarabān. The two sources differ at the third degree: nīm kawasht derives from al-Shawwā, while al-Ḥilū gives kawasht, a comma-level difference, his 24-tone gamut having no comma degrees; they agree on the other degrees. The descending chahārgāh, from al-Shawwā, corresponds to al-Ḥilū's printed substitution among his note names: on ḥijāz, \"and it is substituted by chahārgāh so that it becomes nahāwand of the fifth on rāst\", and at the octave, \"and it is substituted by jawāb al-chahārgāh so that it becomes nahāwand of the fifth on kurdān\" (1961, p.96). Where this entry gives rāst as ghammāz, al-Ḥilū's footnote makes the upper tetrachord the ghammāz of the lower: \"because its upper tetrachord jins is the ghammāz of the lower tetrachord, which is the source of the melody\" (1961, p.96). His footnote reads in full: \"This maqām is attributed to the family of the old ḥijāz, which reposes on dūgāh and in which the degree segāh used to be employed instead of kurd; this interval, 1 1/2, was used by the Arabs for a period of time in maqām ḥijāz, and the Turks took it from the Arabs. The Arabs then adjusted this interval, substituting kurd for segāh so that the interval became 1 1/2, whereby it became a modern melody among the ḥijāz melodies transposed onto the degree yegāh or onto its jawāb, with a slight difference in character and procedure. Since shad ʿarabān is free of quarter tones, playing it is easy on (fixed-pitch) Western instruments, and among the Frankish melodies it is equivalent to the D minor harmonic melody, turning to G minor harmonic at the close. As for its name: the Turks pronounce it shadd ʿarabān and the Egyptians shath ʿarabān, as written in the Turkish compilations. The word shath means transposition in the Turkish language, and this is the reason it was named shath ʿarabān, and because its upper tetrachord jins is the ghammāz of the lower tetrachord, which is the source of the melody and which was transposed away from its original centre. In al-Risāla al-Shihābiyya it appears written shadd, and this treatise is older than the Turkish publications. When the Turks took it from the Arabs they deformed it, so it took the form by which it became known, and they introduced into its name the word shath in the sense of transposition; transposition was not known among the Arabs but is an invention of the Turks. Those who introduced the word shath into the melody's name were mistaken, because the Turkish word ʿarabān corresponds to ʿarbāh among the Arabs; thus shath ʿarabān means the transposition of ʿarbāh, which is the ḥijāz melody\" (1961, p.96).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص20) والحلو (1961، ص96). يحلله الحلو بعنوان «قلب مقام الشدعرباه»، والشدعربان صيغة اسمية لهذا المقام. يختلف المصدران في الدرجة الثالثة: نيم كوشت مصدرها الشوا، بينما يعطي الحلو كوشت، وهو فرق كوما اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما، ويتفقان في باقي الدرجات. الجهاركاه في الهبوط، ومصدرها الشوا، تقابل بديل الحلو المطبوع بين اسماء درجاته: على الحجاز «ويستبدل بالجهاركاه ليصبح نهاوند ذو الخمس على الراست»، وفي الجواب «ويستبدل بجواب الجهاركاه ليصبح نهاوند ذو الخمس على الكردان» (1961، ص96). الغماز في هذه المدونة راست، بينما تجعل حاشية الحلو الجنس الاعلى غمازاً للادنى: «لان جنس ذي الاربع الاعلى منه هو غماز لذي الاربع الادنى الذي هو مصدر اللحن» (1961، ص96). ونص حاشيته كاملاً: «ينسب هذا المقام الى فصيلة الحجاز القديم الذي يستقر على الدوكاه ، وكان يستعمل فيه درجة السيكاه بدلاً من الكرد وهذه المسافة استعملها العرب مدة من الزمن في مقام الحجاز وهي ١/٢ ١ واخذها الاتراك عن العرب . ثم عدل العرب هذه المسافة فأبدلوا السيكاه بالكرد فصارت المسافة ١/٢ ١ وبذلك اصبح لحناً عصرياً من الحان الحجاز المصور على درجة البكاه أو على جوابه مع اختلاف بسيط في الطابع والاجراء . وبما ان الشدعربان خال من الارباع الصوتية فن عزفه على الميسور على الآلات الغربية ( الثابتة ) ويعادل من الالحان الفرنجية لحن ( دومينور هارمونيك ) ويحول الى ( صول مينور هارمونيك ) عند الختام . اما اسه : فينطقه الاتراك شدّ عَرَبان والمصريون شث عربان كما هو مدون في المؤلفات التركية . وكلمة شث معناها باللغة التركية تصوير وهي سبب تسميته بشث عربان ولان جنس ذي الاربع الاعلى منه هو غماز لذي الاربع الادنى الذي هو مصدر اللحن والذي صُوِّر على غير مركزه الاصلي . وقد ورد في الرسالة الشهابية مكتوباً ( شَدّ ) وهذه الرسالة هي اقدم من المطبوعات التركية . والاتراك حينا اخذوه عن العرب مسخوه فأصبح بهذا الشكل الذي صار معروفاً به ، وادخل بضمهم على اسمه كلمة شث عربان بمنى تصوير ، والتصوير لم يكن معروفاً عند العرب ، بل هو من ابتكار الاتراك . والذين ادخلوا كلمة شث ضمن اسم اللحن كانوا مخطئين ، لان كلمة عَرَبان عند الاتراك يقابلها ( عَرْباه ) عند العرب . فشث عربان معناها ( تصوير العرباه ) الذي هو لحن الحجاز» (1961، ص96).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "20"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "96"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-25T15:28:02.561Z"
   },
   {
     "id": "32",
