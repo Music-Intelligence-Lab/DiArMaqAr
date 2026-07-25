@@ -2164,17 +2164,87 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "94",
+        "commentsEnglish": "Method of procedure: the nature of maqām yegāh necessitates beginning from it by presenting the third ʿiqd, entering it from the note ḥijāz, then descending to the second ʿiqd and the first ʿiqd, then ascending ʿiqd by ʿiqd up to the fourth if possible.\n\nIn the descent, it is permissible in maqām yegāh, by way of variety, to perform jins bayyāt on the note ʿushayrān al-ḥusaynī; and in the ascent, to perform awj on awj, the latter being among the incidental ajnās together with jins chahārgāh on chahārgāh. Likewise, when performing bayyāt on muḥayyar, it is permissible to transform it into jins kurd in addition to transforming it into jins ḥijāz.\n\nThis maqām settles in the end on yegāh.",
+        "commentsArabic": "اجراء العمل ـ ان طبيعة مقام اليكاه تحتم البدء منه باظهار العقد الثالث دخولاً اليه من درجة الحجاز ثم الهبوط الى العقد الثاني ، والعقد الاول ، ثم الصعود عقداً فعقداً حتى الرابع اذا امكن .\n\nوفي الهبوط ـ يجوز في مقام اليكاه على سبيل التنويع عمل جنس البياتي على درجة عشيران الحسيني ، وفي الصعود عمل الاوج على الاوج وهذا الاخير من العرضيات هو وجنس الجهاركاه على الجهاركاه وكذلك عند عمل البياتي على المحير يجوز تحويله الى جنس كرد بالاضافة الى تحويله الى جنس الحجاز .\n\nويستقر هذا المقام في النهاية على اليكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-25T14:29:46.732Z"
       }
     ],
-    "commentsEnglish": "Introducing the first maqām of the chapter, al-Shawwā sets out the convention followed throughout: \"the ascending degrees run from the qarār to the jawāb, and the descent from the jawāb to the qarār\" (1946, p.17).",
-    "commentsArabic": "يضع الشوّا عند تقديمه أول مقام في الفصل القاعدةَ المتّبعة في الكتاب كلّه: «درجات الصعود هي من القرار إلى الجواب والهبوط من الجواب إلى القرار» (١٩٤٦، ص١٧).",
+    "commentsEnglish": "Introducing the first maqām of the chapter, al-Shawwā sets out the convention followed throughout: \"the ascending degrees run from the qarār to the jawāb, and the descent from the jawāb to the qarār\" (1946, p.17).\n\nal-Ḥilū's ladder for maqām yegāh (1961, p.94) gives segāh and chahārgāh in both directions, with printed substitutions that produce the ascending form: on segāh, \"and it is substituted by būselīk to make jins chahārgāh on dūgāh\"; on chahārgāh, \"and it is substituted by ḥijāz at the opening and the close\"; and in the upper octave, jawāb al-segāh \"is substituted by sunbuleh in the ascent\" and jawāb al-chahārgāh \"is substituted by jawāb al-ḥijāz in the ascent\" (1961, p.94). His 24-tone gamut carries no comma degrees, so his būselīk and ḥijāz correspond to the nīm būselīk and nīm ḥijāz of this entry's ascending scale.",
+    "commentsArabic": "يضع الشوّا عند تقديمه أول مقام في الفصل القاعدةَ المتّبعة في الكتاب كلّه: «درجات الصعود هي من القرار إلى الجواب والهبوط من الجواب إلى القرار» (١٩٤٦، ص١٧).\n\nسلّم مقام اليكاه عند الحلو (1961، ص94) يعطي السيكاه والجهاركاه في الاتجاهين، مع بدائل مطبوعة تنتج صيغة الصعود: على السيكاه «ويستبدل بالبوسليك لعمل جنس الجهاركاه على الدوكاه»، وعلى الجهاركاه «ويستبدل بالحجاز عند البدء والختام»، وفي الديوان الثاني «ويستبدل بسنبله في الصعود» لجواب السيكاه و«ويستبدل بجواب الحجاز في الصعود» لجواب الجهاركاه (1961، ص94). سلّمه ذو الاربعة والعشرين صوتاً لا يحمل درجات الكوما، فبوسليكه وحجازه يقابلان نيم بوسليك ونيم حجاز في سلّم الصعود هنا.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "17"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "94"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2026-07-25T14:29:46.732Z"
   },
   {
     "id": "30",
