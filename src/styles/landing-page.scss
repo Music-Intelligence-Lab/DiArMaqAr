@@ -192,25 +192,15 @@ body {
   // Secondary ways in: gold links, each marked with the qalam nuqta — the
   // page's own vocabulary (the feature cards carry the same diamond). Clearly
   // clickable and clearly gold "ways in", but lighter than the solid CTA.
-  // All four on one line when they fit; otherwise a clean 2×2, then a single
-  // column — never an uneven 3-and-1. Media queries switch between the three
-  // arrangements at widths chosen for the label lengths.
+  // A centred, wrapping row: however many links there are stay centred as a
+  // group and drop to the next line only when they no longer fit — no
+  // hardcoded column count to fall out of sync with the button list.
   // Vertical rhythm lives in the hero group hierarchy; this owns layout only.
   .button-row {
-    display: grid;
-    grid-template-columns: repeat(4, max-content);
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: $space-xs $space-lg;
-
-    // Two-up only once four genuinely no longer fit on one line.
-    @media (max-width: 950px) {
-      grid-template-columns: repeat(2, max-content);
-    }
-
-    // Single column on narrow screens.
-    @media (max-width: 480px) {
-      grid-template-columns: max-content;
-    }
   }
 
   .button {
