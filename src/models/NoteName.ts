@@ -7,8 +7,8 @@ export const octaveZeroNoteNames = [
   "qarār nīm ʿushayrān",
   "qarār ʿushayrān",
   "qarār nīm ʿajam ʿushayrān",
-  "qarār ʿajam ʿushayrān",
   "qarār nayrūz",
+  "qarār ʿajam ʿushayrān",
   "qarār tīk ʿajam ʿushayrān",
   "qarār ʿirāq",
   "qarār rahāwī",
@@ -46,8 +46,8 @@ export const octaveOneNoteNames = [
   "nīm ʿushayrān", //5
   "ʿushayrān", //6
   "nīm ʿajam ʿushayrān", // 7
-  "ʿajam ʿushayrān", // 8
-  "nayrūz", //9
+  "nayrūz", // 8 — one comma below ʿajam ʿushayrān (al-Shawwā 1946:13)
+  "ʿajam ʿushayrān", // 9
   "tīk ʿajam ʿushayrān",
   "ʿirāq", // 11
   "rahāwī", //12
@@ -85,8 +85,8 @@ export const octaveTwoNoteNames = [
   "nīm ḥusaynī",
   "ḥusaynī",
   "nīm ʿajam",
-  "ʿajam",
   "jawāb nayrūz",
+  "ʿajam",
   "tīk ʿajam",
   "awj",
   "jawāb rahāwī",
@@ -124,8 +124,8 @@ export const octaveThreeNoteNames = [
   "jawāb nīm ḥusaynī",
   "jawāb ḥusaynī",
   "jawāb nīm ʿajam",
-  "jawāb ʿajam",
   "jawāb jawāb nayrūz",
+  "jawāb ʿajam",
   "jawāb tīk ʿajam",
   "jawāb awj",
   "jawāb jawāb rahāwī",
@@ -164,8 +164,8 @@ export const octaveFourNoteNames = [
   "jawāb jawāb nīm ḥusaynī",
   "jawāb jawāb ḥusaynī",
   "jawāb jawāb nīm ʿajam",
-  "jawāb jawāb ʿajam",
   "jawāb jawāb jawāb nayrūz",
+  "jawāb jawāb ʿajam",
   "jawāb jawāb tīk ʿajam",
   "jawāb jawāb awj",
   "jawāb jawāb jawāb rahāwī",
@@ -173,6 +173,7 @@ export const octaveFourNoteNames = [
   "jawāb jawāb māhūr",
   "jawāb jawāb tīk māhūr",
   "jawāb jawāb kurdān",
+  "jawāb jawāb tīk kurdān",
   "jawāb jawāb nīm shahnāz",
   "jawāb jawāb shahnāz",
   "jawāb jawāb jawāb tīk zīrgūleh",
