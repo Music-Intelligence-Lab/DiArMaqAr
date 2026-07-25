@@ -2338,17 +2338,54 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "95",
+        "commentsEnglish": "Method of procedure: the work in maqām faraḥfazzā begins by presenting the third ʿiqd, entering it from chahārgāh or ʿajam. Some make it obligatory to enter it from the note nawā, but it is not stipulated that nawā be the presenter of the melody (2); touching the ḥassās (3) before the repose is obligatory, and this repose was originally on yegāh only. Today it has also become permissible on nawā, regarded as the jawāb.\n\n(2) The ẓahīr is a note a whole interval below the resting note; it is good to descend to it before the repose and to enter from it at the opening.\n\n(3) The ḥassās is the seventh note of the scale of the maqām, any maqām, with half an interval between it and the eighth; by touching the ḥassās we mean here the qarār of this seventh, which is also the ẓahīr itself.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من مقام الفرحفزا باظهار العقد الثالث دخولاً اليه من الجهاركاه او العجم . والبعض يحتم الدخول اليه من درجة النوا ، ولكنه لا يشترط ان يكون النوا مظهراً للحن (٢) ومحتوم لمس الحساس (٣) قبل الاستقرار ، وهذا الاستقرار كان في الاصل على اليكاه فقط . فاصبح اليوم يجوز ايضاً على النوا باعتباره الجواب .\n\n(٢) الظهير ـ هو صوت ذو مسافة كاملة يسفل المستقر يحسن الهبوط اليه قبل الاستقرار والدخول منه عند الاستهلال .\n\n(٣) الحسّاس ـ هو الصوت السابع من سلم المقام ـ أي مقام ـ بينه وبين الثامن نصف مسافة ، ونعني هنا بلمس الحساس قرار هذا السابع الذي هو ايضاً الظهير بذاته .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "qarār chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-25T15:22:12.206Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Ḥilū's ladder for maqām faraḥfazzā (1961, p.95) is symmetric, with chahārgāh in both directions; ḥijāz enters only as a substitution at the repose: \"and at the repose ḥijāz is substituted for chahārgāh\" (1961, p.95). His footnote stresses that \"the note ḥijāz is not part of the constitution of faraḥfazzā; rather it occurs incidentally at the repose\", unlike sulṭānī yegāh where its occurrence \"is considered fundamental to the constitution of the maqām\" (1961, p.95). This entry's descending ḥijāz (al-Shawwā) corresponds to that substitution. In descent al-Ḥilū also transforms the jins on rāst: \"and in the descent the jins nahāwand on rāst turns into the jins nawā athar on rāst\" (1961, p.95). On the ghammāz, where this entry gives rāst, al-Ḥilū writes of the chahārgāh-on-chahārgāh ʿiqd joining the ʿajam on ʿajam ʿushayrān: \"from these two ʿiqds is formed the ʿajam colour, whose ghammāz is chahārgāh\" (1961, p.95). His footnote further compares the maqām with sulṭānī yegāh, called by the Turks malī sulṭānī: \"the two maqāms are in truth nothing but nahāwand transposed onto the degree yegāh\", their difference being \"very slight, like the difference between ḥijāz kār and shad ʿarabān\" (1961, p.95).",
+    "commentsArabic": "سلّم مقام الفرحفزا عند الحلو (1961، ص95) متماثل في الاتجاهين بالجهاركاه، ولا يدخل الحجاز الا بديلاً عند الاستقرار: «وعند الاستقرار يستبدل الحجاز بالجهاركاه» (1961، ص95). وتشدد حاشيته على «ان نغمة الحجاز ليست داخلة في تكوين الفرحفزا ، بل ترد عرضاً عند الاستقرار» بخلاف السلطاني يكاه حيث «ورودها في السلطاني يكاه يعتبر اساساً في تكوين المقام» (1961، ص95). الحجاز في سلّم الهبوط هنا (عن الشوا) يقابل هذا الاستبدال. وفي الهبوط ايضاً يحوّل الحلو الجنس على الراست: «وفي الهبوط يتحول جنس النهاوند على الراست الى جنس نوأثر على الراست» (1961، ص95). اما الغماز، وهو راست في هذه المدونة، فيكتب الحلو عن اشتراك عقد الجهاركاه على الجهاركاه مع العجم على عجم العشيران: «يتألف من هذين العقدين نغمة العجم وغمازها الجهاركاه» (1961، ص95). وتقارن حاشيته المقام بالسلطاني يكاه المسمى عند الاتراك ملي سلطاني: «والمقامان ليسا في الحقيقة سوى النهاوند مصوراً على درجة اليكاه» والفرق بينهما «بسيط جداً ، فهو كالفرق بين الحجازكار والشد عربان» (1961، ص95).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "19"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "95"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-07-25T15:22:12.206Z"
   },
   {
     "id": "31",
