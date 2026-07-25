@@ -3113,17 +3113,82 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "98",
+        "commentsEnglish": "The descent is like the ascent, except that in the descent one works with the jins nikrīz of the fifth on the degree rāst, and bayyāt of the fifth on the degree dūgāh.\n\nMethod of procedure: the work begins by presenting the third ʿiqd, then descending to the second ʿiqd to present it strongly, then descending to the first ʿiqd. Entering from the degree ḥusaynī is obligatory, then presenting the third ʿiqd (bayyāt on ḥusaynī) because it is the centre of the melody.\n\nNote: in the case of ascending after the third ʿiqd to the fourth, if possible, the descent becomes gradual, ʿiqd by ʿiqd, down to the first ʿiqd.",
+        "commentsArabic": "والهبوط كالصعود غير انه في الهبوط يعمل بجنس نكريز ذي الخمس على درجة الراست ؛ وبياتي ذي الخمس على درجة الدوكاه .\n\nاجراء العمل ـ يبدأ العمل باظهار العقد الثالث ـ ثم الهبوط الى العقد الثاني لاظهاره بقوة . ثم الهبوط الى العقد الاول . ويحتم الدخول من درجة الحسيني ثم اظهار العقد الثالث ( بياتي على الحسيني ) لانه مركز النغمة .\n\nملاحظة : في حالة الصعود بعد العقد الثالث الى الرابع اذا امكن . يصير الهبوط تدريجياً عقداً فعقداً حتى العقد الاول .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ʿushayrān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ],
+        "version": "2026-07-25T15:43:38.170Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).",
-    "commentsArabic": "يجعل الشوّا القرار على الحسيني في الممارسة القديمة، ثم يضيف: «وأما الآن فجعلوا قراره على صوت العشيران» (١٩٤٦، ص٢٦).",
+    "commentsEnglish": "al-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).\n\nThis maqām's data is compiled from al-Shawwā (1946, p.26) and al-Ḥilū (1961, p.98). The two sources agree on the scale in both directions, al-Ḥilū's descent working \"with the jins nikrīz of the fifth on the degree rāst, and bayyāt of the fifth on the degree dūgāh\" (1961, p.98) where the ascent has segāh and chahārgāh. al-Ḥilū titles the analysis with a double name, maqām ḥusaynī al-ʿushayrān or ʿushayrān al-ḥusaynī, and prints the qarār degree itself as ʿushayrān al-ḥusaynī (1961, p.98). On the maqām's character, where this entry's ghammāz is nawā, al-Ḥilū emphasises ḥusaynī: \"the prominence of the degree ḥusaynī because it is the centre of the melody\" (1961, p.98).",
+    "commentsArabic": "يجعل الشوّا القرار على الحسيني في الممارسة القديمة، ثم يضيف: «وأما الآن فجعلوا قراره على صوت العشيران» (١٩٤٦، ص٢٦).\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص26) والحلو (1961، ص98). يتفق المصدران على السلّم في الاتجاهين، ويعمل هبوط الحلو «بجنس نكريز ذي الخمس على درجة الراست ؛ وبياتي ذي الخمس على درجة الدوكاه» (1961، ص98) حيث يكون الصعود بالسيكاه والجهاركاه. يعنون الحلو التحليل باسم مزدوج «مقام حسيني العشيران أو عشيران الحسيني» ويطبع درجة القرار نفسها باسم عشيران الحسيني (1961، ص98). اما شخصية المقام، والغماز في هذه المدونة نوا، فيبرز الحلو الحسيني: «البروز بدرجة الحسيني لانها مركز النغمة» (1961، ص98).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "26"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "98"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-25T15:43:38.170Z"
   },
   {
     "id": "38",

@@ -762,5 +762,26 @@
       }
     ],
     "version": "2026-07-20T08:58:58.252Z"
+  },
+  {
+    "id": "50",
+    "idName": "jins_nikriz",
+    "name": "jins nikrīz",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā"
+    ],
+    "commentsEnglish": "Pentachord (dhū al-khams) from al-Ḥilū, who works the descent of maqām ḥusaynī ʿushayrān \"with the jins nikrīz of the fifth on the degree rāst\" (1961, p.98).",
+    "commentsArabic": "ذو خمس عند الحلو، الذي يعمل هبوط مقام حسيني العشيران «بجنس نكريز ذي الخمس على درجة الراست» (1961، ص98).",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "98"
+      }
+    ],
+    "version": "2026-07-25T15:43:38.170Z"
   }
 ]
