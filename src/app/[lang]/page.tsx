@@ -82,13 +82,6 @@ export default function LandingPage() {
   // Secondary ways in, shown under both the hero CTA and the closing CTA.
   const secondaryLinks = (
     <div className="button-row">
-      <a className="button" href="#">
-        {language === "ar"
-          ? "ابدأوا جولة تفاعلية"
-          : language === "fr"
-          ? "Faire une visite interactive"
-          : "Take an Interactive Tour"}
-      </a>
       <Link className="button" href="/docs/">
         {language === "ar"
           ? "اطّلعوا على التوثيق"
@@ -102,13 +95,6 @@ export default function LandingPage() {
           : language === "fr"
           ? "Accéder au code source"
           : "Access the Source Code"}
-      </a>
-      <a className="button" href="#">
-        {language === "ar"
-          ? "اقرأوا الرسالة البحثية"
-          : language === "fr"
-          ? "Lire l'article académique"
-          : "Read the Academic Paper"}
       </a>
     </div>
   );
