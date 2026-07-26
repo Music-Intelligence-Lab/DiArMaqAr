@@ -141,7 +141,8 @@ $font-weight-semibold: 500; // sole emphasis step — replaces all former bold/6
 // Line height — unitless ratios.
 $line-height-tight:   1.2;  // headings, single-line titles
 $line-height-snug:    1.25; // table th/td, eyebrow/caption text
-$line-height-normal:  1.4;  // body text, tooltips, settings descriptions, numeric data values
+$line-height-normal:  1.4;  // dense UI text, tooltips, numeric data values, table cells
+$line-height-loose:   1.6;  // in-app longform prose (comments, settings descriptions) — see type-body-prose
 $line-height-relaxed: 1.7;  // long-form marketing prose
 
 // Letter spacing.
@@ -196,6 +197,20 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     font-weight: $font-weight-regular;
     letter-spacing: $letter-spacing-tracked;
     text-transform: uppercase;
+}
+
+// In-app longform body prose — multi-sentence paragraphs meant to be READ,
+// not scanned: entity commentary and settings descriptions. One role so both
+// surfaces share the same reading measure instead of drifting (they were md/300
+// and md/200 respectively before this unified them). Looser leading than the
+// dense-UI $line-height-normal because paragraphs need vertical air between
+// lines that table cells and one-line labels do not. Weight stays 300 — the app
+// gets its hierarchy from size and spacing, not weight. NOT for tooltips or
+// short hints (those are type-tooltip); this is for running text only.
+@mixin type-body-prose {
+    font-size: $font-size-md;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-loose;
 }
 
 @mixin type-tooltip {
@@ -401,9 +416,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 @mixin comments-sources-section($grow) {
     flex: $grow 1 0;
     min-width: 0;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    line-height: $line-height-normal;
+    @include type-body-prose; // running commentary/source prose — reads as body text
     color: $text;
 
     h3 {
@@ -430,9 +443,7 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
 }
 
 @mixin type-settings-description {
-    font-size: $font-size-md;
-    font-weight: $font-weight-light;
-    line-height: $line-height-normal;
+    @include type-body-prose; // settings descriptions are running prose — same body role as comments
 }
 
 @mixin type-heading-h1 {
