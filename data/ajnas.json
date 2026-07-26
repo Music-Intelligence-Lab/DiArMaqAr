@@ -774,15 +774,19 @@
       "ḥijāz",
       "nawā"
     ],
-    "commentsEnglish": "Pentachord (dhū al-khams) from al-Ḥilū, who works the descent of maqām ḥusaynī ʿushayrān \"with the jins nikrīz of the fifth on the degree rāst\" (1961, p.98).",
-    "commentsArabic": "ذو خمس عند الحلو، الذي يعمل هبوط مقام حسيني العشيران «بجنس نكريز ذي الخمس على درجة الراست» (1961، ص98).",
+    "commentsEnglish": "Pentachord (dhū al-khams) from al-Ḥilū, who works the descent of maqām ḥusaynī ʿushayrān \"with the jins nikrīz of the fifth on the degree rāst\" (1961, p.98). It is also the constituent ʿiqd of maqām al-nikrīz, seated on rāst and on kurdān (1961, p.111).",
+    "commentsArabic": "ذو خمس عند الحلو، الذي يعمل هبوط مقام حسيني العشيران «بجنس نكريز ذي الخمس على درجة الراست» (1961، ص98). وهو ايضاً عقد مقام النكريز، جالساً على الراست وعلى الكردان (1961، ص111).",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
         "page": "98"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "111"
       }
     ],
-    "version": "2026-07-25T15:43:38.170Z"
+    "version": "2026-07-26T08:52:18.967Z"
   },
   {
     "id": "51",

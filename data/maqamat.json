@@ -528,17 +528,87 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "111",
+        "commentsEnglish": "Method of procedure: the work in maqām al-nikrīz begins with the presentation of the first ʿiqd, entering it from the degree rāst while touching the degree ʿirāq. It is permissible to open this maqām from the second ʿiqd, that is [būselīk on nawā], entering it from the degree kurdān; but the first way is sounder, since the first ʿiqd is the maqām's fundamental ʿiqd, that is, the ʿiqd with which it begins and closes.\n\nThere follows: the ascent to the second ʿiqd, then the third, and from it to the fourth if possible.\n\nIn the descent the degree ʿajam is substituted by awj so as to work with the jins rāst on nawā, and this rāst is in the origin of the maqām; then the descent to the first ʿiqd, and before the repose on the degree rāst, the resting place of the maqām, the degree ʿirāq is touched.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من مقام النكريز في اظهار العقد الاول دخولاً اليه من درجة الراست مع لمس درجة العراق ، ويجوز الاستهلال من هذا المقام من العقد الثاني اي [ بوسليك على النوا ] دخولاً اليه من درجة الكردان والطريقة الاولى اصح نظراً لكون العقد الاول هو العقد الاساسي للمقام اي العقد الذي يبدأ ويختم به .\n\nيلي ذلك : الصعود الى العقد الثاني ثم الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط تستبدل درجة العجم بالاوج للعمل بجنس الراست على النوا ، وهذا الراست في اصل المقام ـ ثم الهبوط الى العقد الاول ، وقبل الاستقرار على درجة الراست مستقر المقام يلمس درجة العراق .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:52:18.967Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.53) and al-Ḥilū (1961, p.111). The two sources agree on the scale in both directions; al-Ḥilū's construction runs two identical octaves, rāst to jawāb kurdān, with the disjunctive tone below rāst and at the kurdān-muḥayyar boundary. He prints one directional substitution: \"ʿajam, and it is substituted by awj in the descent so as to work with the jins rāst on nawā, and this rāst is in the origin of the maqām\" (1961, p.111). On the maqām's character: \"it rests on presenting būselīk and rāst on the degree nawā\" (1961, p.111), agreeing with this entry's ghammāz nawā.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص53) والحلو (1961، ص111). يتفق المصدران على السلّم في الاتجاهين؛ تكوين الحلو ديوانان متطابقان من الراست الى جواب الكردان، والفاصل الطنيني تحت الراست وعند حد الكردان والمحير. يطبع بديلاً اتجاهياً واحداً: «عجم ـ ويستبدل بالاوج عند الهبوط ليعمل بجنس راست على النوا وهذا الراست هو في اصل المقام» (1961، ص111). عن شخصية المقام: «تقوم على اظهار البوسليك والراست على درجة النوا» (1961، ص111)، بما يوافق غماز هذه المدونة النوا.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "53"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "111"
       }
     ],
-    "version": "2025-12-10T18:46:59.797Z"
+    "version": "2026-07-26T08:52:18.967Z"
   },
   {
     "id": "6",
