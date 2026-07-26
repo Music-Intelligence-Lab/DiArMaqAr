@@ -446,17 +446,85 @@
           }
         ],
         "version": "2026-07-20T08:26:02.162Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "117",
+        "commentsEnglish": "Method of procedure: the work begins from the maqām's jawāb region, working in the circle of the third ʿiqd, entering it from the degree ʿajam as a ẓahīr for kurdān; then the ascent to the fourth ʿiqd if possible.\n\nIn the descent the gradation is ʿiqd by ʿiqd down to the second; then come partial reposes on the two degrees kurdān and chahārgāh, then the descent to the first ʿiqd, and the final work turns between the two degrees kurdān and rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من المنطقة الجوابية للمقام للعمل في دائرة العقد الثالث دخولاً اليه من درجة العجم كظهير للكردان ، ثم الصعود الى العقد الرابع اذا امكن .\n\nوفي الهبوط يكون التدرج عقداً فعقداً حتى الثاني . ثم يصير استقرارات جزئية على درجتي الكردان والجهاركاه ثم النزول الى العقد الاول ، ويدور العمل النهائي بين درجتي الكردان والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:20:11.576Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā names this maqām kūrdīlī ḥijāz kār.",
-    "commentsArabic": "يسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+    "commentsEnglish": "al-Shawwā names this maqām kūrdīlī ḥijāz kār.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.57) and al-Ḥilū (1961, p.117). The two sources agree on the scale in both directions, al-Ḥilū extending it over two identical octaves, rāst to jawāb kurdān: \"and the descent is like the ascent, with no difference between them\" (1961, p.117). He titles it with the double name ḥijāz kār kurd or kurd-balī ḥijāz kār, the footnote also spelling it al-kurd yalī ḥijāz kār, cognate with al-Shawwā's kūrdīlī above. On the maqām's character: \"it rests on presenting the jins nahāwand on the degree chahārgāh and the jins kurd on the two degrees kurdān and rāst\" (1961, p.117). His footnote quotes a Turkish researcher on the name: \"the composite maqāms are mostly transferred from their fundamental resting place... instead of calling this transferred kurdī maqām shadd kurdī, some called it ḥijāz kār kurdī, in view of their opening this maqām with ḥijāz kār, which accompanied it for a time; the maqām was later modified and reshaped, but the name remained as they had applied it from the beginning\" (1961, p.117). He then quotes the late Iskandar Shalfūn at length: the Turks themselves transferred the kurdī melody, which rests on dūgāh, onto the degree rāst, whereby \"it acquired a new character, a stamp of its own, and a special style of musical composition entirely different\" from the original kurdī; the melody \"was unknown in Egypt, Syria and Lebanon until about the year 1910\", brought to Egypt by the musician Ṣafar Bek ʿAlī, who composed from it the Tripoli anthem at the time of the Italian-Turkish war; Ibrāhīm al-Qabbānī and Dāwūd Ḥusnī each composed a dawr in it, al-Qabbānī's conforming to the maqām's rule while Dāwūd's, being of the utmost mastery, spread through Egypt and the Arab lands, though it later appeared that Dāwūd had composed it in a melody other than the one intended, resting it on dūgāh and inadvertently altering its positions, so that some musicians, among them Muḥammad Sālim the elder, proposed a new name for his dawr's melody (1961, p.117).",
+    "commentsArabic": "يسمّي الشوّا هذا المقام كورديلى حجاز كار.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص57) والحلو (1961، ص117). يتفق المصدران على السلّم في الاتجاهين، ويمده الحلو على ديوانين متطابقين من الراست الى جواب الكردان: «والهبوط كالصعود ولا فرق بينهما» (1961، ص117). يعنونه باسم مزدوج «الحجازكاركرد أو كردبلي حجازكار»، وتكتبه حاشيته ايضاً «الكرد يلي حجازكار»، بما يقارب تسمية الشوا اعلاه. عن شخصية المقام: «تقوم على اظهار جنس النهاوند على درجة الجهاركاه وجنس الكرد على درجتي الكردان والراست» (1961، ص117). تنقل حاشيته عن احد الباحثين الاتراك في سبب الاسم: «ان المقامات المركبة تكون غالباً منقولة من مستقرها الاساسي . . . وبدلًا من اطلاقهم على مقام الكردي المنقول هذا ( شدكردي ) اطلق بعضهم ( حجازكاركردي ) نظراً لاستهلالهم هذا المقام بالحجازكار الذي لازمه مدة من الزمن ، ثم تطرق لهذا المقام تعديلاً وتحويراً ولكن الاسم ظل على ما اطلقوه عليه من البدء» (1961، ص117). ينقل بعدها عن المرحوم اسكندر شلفون ان الاتراك انفسهم نقلوا نغمة الكردي المستقرة على الدوكاه الى درجة الراست «وبهذا الانتقال اكتسبت شخصية جديدة وطابعاً ذاتياً واسلوباً خاصاً في الانشاء الموسيقي يختلف تمام الاختلاف عن طابع وشخصية واسلوب نغمة الكردي الاصلية»، وان النغمة «لم تكن معروفة في مصر ولا في سوريا ولبنان الا في سنة ١٩١٠ او ما يقرب من ذلك»، وان الذي جاء بها الى مصر هو صفر بك علي الذي لحن منها نشيد طرابلس ابان حرب الطليان والاتراك، وان ابراهيم القباني وداود حسني لحن كل منهما دوراً منها، فجاء دور القباني منطبقاً على قاعدة المقام، اما دور داود فشاع لاتقانه مع انه لحنه «من نغمة غير النغمة التي كان يقصد التلحين فيها . أي انه جعل مستقرها على الدوكاه مُبَدّلاً في اوضاعها وقياسات اصواتها عفواً»، فاقترح عليه بعض الموسيقيين ومنهم محمد سالم الكبير اسماً جديداً لنغمة دوره (1961، ص117).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "57"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "117"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:20:11.576Z"
   },
   {
     "id": "5",
