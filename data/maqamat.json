@@ -3701,17 +3701,70 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "101",
+        "commentsEnglish": "Method of procedure: according to the Turkish convention, the work begins by presenting nawā athar on ʿajam at times, and nawā athar on kurd at other times. Then a phrase of ḥijāz on chahārgāh, touching ʿajam, ḥusaynī, ṣabā and chahārgāh, or nawā athar on kurd, by adding kurd to the notes of ḥijāz al-chahārgāh. After resting on kurd, the work is closed with the close of maqām ʿajam ʿushayrān on ʿajam al-ʿushayrān: either by presenting ʿajam, ḥiṣār, nawā, chahārgāh, kurdī, dūgāh, rāst and ʿajam al-ʿushayrān, or by contenting oneself with presenting nawā, then chahārgāh, then kurd, then dūgāh, then rāst, then ʿajam al-ʿushayrān, on which the maqām reposes.\n\nSome find it commendable to add a phrase of nawā athar on ʿajam al-ʿushayrān with which the work of the maqām is closed: after the stop on ʿajam al-ʿushayrān as above, one touches rāst, then zīrgūleh, then būselīk, then zīrgūleh, then rāst, then ʿajam al-ʿushayrān.",
+        "commentsArabic": "اجراء العمل ـ بموجب الاصطلاح التركي ، يبدأ العمل باظهار النوأثر على العجم تارة والنوأثر على الكرد تارة اخرى . ثم عبارة حجاز على الجهاركاه يلمس العجم والحسيني والصبا والجهاركاه ـ أو النوأثر على الكرد . وذلك باضافة الكرد على اصوات حجاز الجهاركاه . وبعد الاستقرار على الكرد يختم العمل بختام مقام العجم عشيران على عجم العشيران . ويكون ذلك اما باظهار العجم والحصار والنوا والجهاركاه والكردي والدوكاه والراست وعجم العشيران ـ أو الاكتفاء باظهار النوا ثم الجهاركاه ثم الكرد ثم الدوكاه فالراست فعجم العشيران الذي يستقر عليه المقام .\n\nوالبعض يستحسن اضافة عبارة من النوأثر على عجم العشيران . يختم بها العمل من المقام وذلك انه بعد الوقوف على عجم العشيران كما تقدم يلمس الراست فالزركولاه فالبوسليك ثم الزركولاه فالراست فعجم العشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-26T08:09:32.658Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with nīm būselīk as an alternative.",
-    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والنيم بوسليك بديلاً عنها.",
+    "commentsEnglish": "al-Shawwā gives segāh as the third ascending degree, with nīm būselīk as an alternative.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.31) and al-Ḥilū (1961, p.101). al-Ḥilū's note names are the same in both directions and correspond to this entry's descending form: kurdī at the fourth degree, and a conjunct upper octave seating shahnāz and jawāb būselīk, the latter a comma-level variant of jawāb nīm būselīk, his 24-tone gamut having no comma degrees; the ascending segāh and the octave-copy upper degrees (muḥayyar, sunbuleh/zawāl) derive from al-Shawwā. al-Ḥilū prints the sixth degree as ṣabā, his alternate name for the ḥijāz position, confirmed by his printed half-tone interval from chahārgāh to ṣabā (1961, p.101). An erratum in the print: the interval between kurdān and shahnāz is printed 1 1/2 where 1/2 is required, since the second octave must close at jawāb al-ʿajam, the octave of ʿajam (1961, p.101). On the maqām's character: \"it rests on presenting nawā athar on kurd and on ʿajam, and the two chahārgāh genera on chahārgāh with ḥijāz substituted for nawā, and ʿajam on ʿushayrān al-ʿajam or ʿajam al-ʿushayrān, the meaning being one\" (1961, p.101).",
+    "commentsArabic": "يعطي الشوّا السيكاه درجةً ثالثة صعوداً، والنيم بوسليك بديلاً عنها.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص31) والحلو (1961، ص101). اسماء الدرجات عند الحلو واحدة في الاتجاهين وتقابل صيغة الهبوط في هذه المدونة: كرد في الدرجة الرابعة، وديوان اعلى متصل فيه شاهناز وجواب البوسليك، وهذه الاخيرة فرق كوما عن جواب نيم بوسليك اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما؛ اما السيكاه صعوداً ودرجتا الجواب المطابقتان (محير، سنبله/زوال) فمصدرها الشوا. يطبع الحلو الدرجة السادسة باسم صبا، وهو اسمه البديل لموضع الحجاز، ويؤكده بُعده المطبوع من الجهاركاه الى الصبا وهو نصف طنيني (1961، ص101). خطأ مطبعي في الاصل: البعد بين الكردان والشاهناز مطبوع 1 1/2 والصواب 1/2 لان الديوان الثاني يجب ان يُقفل على جواب العجم، جواب درجة العجم (1961، ص101). عن شخصية المقام: «تقوم على اظهار النوأثر على الكرد وعلى العجم وجنسي الجهاركاه على الجهاركاه بابدال الحجاز بالنوا ـ والعجم على عشيران العجم أو عجم العشيران والمعنى واحد» (1961، ص101).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "31"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "101"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2026-07-26T08:09:32.658Z"
   },
   {
     "id": "42",
