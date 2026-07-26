@@ -72,15 +72,15 @@
     "ISBN": "9789779112459"
   },
   {
-    "id": "alkhuli_1904_2011",
+    "id": "alkhulai_1904_2011",
     "titleEnglish": "Kitāb al-Mūsiqā al-Sharqī",
     "titleArabic": "كتاب الموسيقى الشرقي",
     "sourceType": "Book",
     "contributors": [
       {
         "type": "Author",
-        "firstNameEnglish": "Mohammad Kāmil",
-        "lastNameEnglish": "al-Khuli",
+        "firstNameEnglish": "Muḥammad Kāmil",
+        "lastNameEnglish": "al-Khulaʿī",
         "firstNameArabic": "محمد كامل",
         "lastNameArabic": "الخلعي"
       }
@@ -91,7 +91,7 @@
     "publicationDateArabic": "٢٠١١",
     "url": "https://www.hindawi.org/books/46319638/",
     "dateAccessed": "21-05-2025",
-    "version": "2025-10-18T19:50:31.664Z",
+    "version": "2026-07-26T14:06:59.646Z",
     "originalPublicationDateEnglish": "1904",
     "originalPublicationDateArabic": "١٩٠٤",
     "publisherEnglish": "Hindawi Foundation for Education and Culture",
