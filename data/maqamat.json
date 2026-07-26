@@ -6934,17 +6934,104 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "126",
+        "commentsEnglish": "Method of procedure: the work begins by presenting the first ʿiqd, entering it from the degree nawā up to ḥusaynī and returning to nawā, to complete the first ʿiqd, būselīk on dūgāh.\n\nThere follows: the work in the second ʿiqd [bayyāt on ḥusaynī], joined incidentally by the ʿiqd of rāst on nawā, and by another, būselīk on nawā, which is a fundamental ʿiqd, at the time of drawing near to the descent; then the movement ʿiqd by ʿiqd up to the third. Finally the return by the same ʿuqūd, that is: būselīk on muḥayyar, and būselīk on nawā, and būselīk on dūgāh, where the repose takes place on this dūgāh.\n\nIt is obligatory in maqām al-ʿushshāq, before the descent to dūgāh, which is the resting place of the maqām, that the fundamental jins representing the spirit of the maqām be shown, so that the way to the close is paved with this fundamental jins; accordingly, when the descent to the resting place is desired, one must work with the jins ʿushshāq on nawā, that is, with what resembles būselīk on nawā, then close with the jins al-ʿushshāq on dūgāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل باظهار العقد الاول دخولاً اليه من درجة النوا الى الحسيني والعودة الى النوا لاكمال العقد الاول بوسليك على الدوكاه .\n\nيلي ذلك : العمل في العقد الثاني [ بياتي على الحسيني ] ويشترك معه عقد الراست على النوا بصورة عرضية ، وآخر هو بوسليك على النوا وهو عقد اساسي وذلك وقت الدنو الى الهبوط ثم الانتقال عقداً فعقداً حتى الثالث . والعودة اخيراً بذات العقود اي ـ بوسليك على المحير . وبوسليك على النوا . وبوسليك على الدوكاه . حيث يكون الاستقرار على هذا الدوكاه .\n\nيحتم في مقام العشاق قبل الهبوط الى الدوكاه الذي هو مستقر المقام ، ان يظهر الجنس الاساسي الذي يمثل روح المقام ولكي تكون طريق الختام ممهدة بهذا الجنس الاساسي وعلى ذلك يجب عندما يراد الهبوط الى المستقر ان يعمل بجنس عشاق على النوا اي بما يشبه البوسليك على النوا ثم يختم بجنس العشاق على الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:41:33.114Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.61) and al-Ḥilū (1961, pp.126-127). The sources agree on the scale and on the ghammāz; the sixth degree's two colours are distributed across directions in this entry (awj ascending, ʿajam descending), while al-Ḥilū prints the degree as the dual \"ʿajam — awj\", his intervals (a half tone above ḥusaynī, a whole tone below kurdān) resolving to ʿajam (1961, p.126). He counts the maqām at 11 notes by disjunct assembly, of \"the family of būselīk, or ḥusaynī būselīk founded on the degree dūgāh\" (1961, p.126): a complete lower octave and a short upper series ending at jawāb al-nawā. On the ghammāz his footnote is explicit, agreeing with this entry's ḥusaynī: rāst on nawā \"is not among the fundamental ajnās constituting maqām al-ʿushshāq... the nearest jins (for variety) in this maqām is the jins bayyāt on the degree ḥusaynī, because ḥusaynī is the principal ghammāz centre of the degree dūgāh on which the maqām reposes\"; the same footnote records \"a tune called (Mastavi) resembling the Egyptian ʿushshāq in its first, that is lowest, jins\" (1961, p.126). On the maqām's character: \"it rests on presenting the jins būselīk on nawā and the jins bayyāt on ḥusaynī\" (1961, p.126). A second footnote preserves the engineer Ghaṭṭās ʿAbd al-Malik's measurements of \"the true intervals heard in the Egyptian songs in this maqām\": dūgāh 1 būselīk 3/8 chahārgāh al-ʿushshāq (diminished) 9/8 nawā, then a disjunction — this is ʿushshāq on dūgāh; and ʿushshāq on nawā: nawā 1 ḥusaynī 3/8 diminished ʿajam 9/8 kurdān 1 muḥayyar (1961, p.127).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص61) والحلو (1961، ص126-127). يتفق المصدران على السلّم وعلى الغماز؛ لونا الدرجة السادسة موزعان على الاتجاهين في هذه المدونة (اوج صعوداً، عجم هبوطاً)، بينما يطبع الحلو الدرجة مزدوجة «عجم ـ أوج» وتحسمها مسافاته (نصف فوق الحسيني، طنيني تحت الكردان) الى العجم (1961، ص126). يعد المقام 11 صوتاً بالجمع المنفصل، «من فصيلة البوسليك أو الحسيني بوسليك المؤسس على درجة الدوكاه» (1961، ص126): ديوان ادنى كامل وسلسلة عليا قصيرة تنتهي عند جواب النوا. عن الغماز حاشيته صريحة بما يوافق حسيني هذه المدونة: جنس الراست على النوا «ليس من الاجناس الاساسية المكونة لمقام العشاق . . . اقرب الاجناس ( للتنويع ) في هذا المقام هو جنس البياتي على درجة الحسيني لان الحسيني هو مركز الغماز الاساسي لدرجة الدوكاه الذي يستقر عليه المقام»، وتسجل الحاشية نفسها «نغمة تسمى ( مَسْتَافي ) Mastavi تشبه نغمة العشاق المصرية في جنسها الاول أي الادنى» (1961، ص126). عن شخصية المقام: «تقوم على اظهار جنس البوسليك على النوا وجنس البياتي على الحسيني» (1961، ص126). حاشية ثانية تحفظ قياسات المهندس غطاس عبدالملك «للابعاد أي المسافات الصوتية الصحيحة التي تسمع من الاغاني المصرية في مقام العشاق المصري»: «دوكاه ١ بوسليك ٣/٨ جهاركاه العشاق ( الناقص ) ٩/٨ نوا ثم انفصال . هذا هو العشاق على الدوكاه . اما العشاق على النوا فهو هكذا : نوا ١ حسيني ٣/٨ عجم ناقص ٩/٨ كردان ١ محير» (1961، ص127).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "61"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "126"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "127"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-07-26T09:41:33.114Z"
   },
   {
     "id": "68",
