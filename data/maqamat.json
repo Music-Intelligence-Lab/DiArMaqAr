@@ -5614,17 +5614,132 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "129",
+        "commentsEnglish": "Method of procedure: the work begins in the circle of the first ʿiqd, entering it from the degree būselīk to chahārgāh, and from it to nawā, then ḥusaynī, to descend after that to dūgāh with the jins būselīk. By this working the character of the maqām becomes clear.\n\nThere follows: the ascent to the second ʿiqd, to work at times with the jins ḥijāz on ḥusaynī, and at other times with the jins ḥiṣār on dūgāh or būselīk on nawā. Then comes the ascent to the third ʿiqd, and from it to the fourth if possible.\n\nThen the descent to the second ʿiqd, to work at times with the jins bayyāt on ḥusaynī and at other times with the jins rāst on nawā; and before the descent to the first ʿiqd, to work with the jins būselīk on dūgāh, it is permitted incidentally to work kurd on ḥusaynī or with the jins būselīk on nawā (1); then the repose takes place with the jins būselīk on dūgāh after touching the degree zīrgūleh — an obligatory touching, that is, the touching of zīrgūleh is required before the repose on dūgāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في دائرة العقد الاول دخولاً اليه من درجة البوسليك الى الجهاركاه ومنها الى النوا فالحسيني للهبوط بعد ذلك الى الدوكاه بجنس البوسليك . وبهذا العمل تتبين شخصية المقام .\n\nيلي ذلك : الصعود الى العقد الثاني للعمل تارة بجنس الحجاز على الحسيني ، وتارة اخرى بجنس الحصار على الدوكاه او البوسليك على النوا . ثم يكون الصعود الى العقد الثالث ومنه الى الرابع اذا امكن .\n\nثم الهبوط الى العقد الثاني للعمل تارة بجنس بياتي على الحسيني وتارة اخرى بجنس راست على النوا وقبل الهبوط الى العقد الاول للعمل بجنس البوسليك على الدوكاه ، يجوز بصفة عرضية عمل الكرد على الحسيني او بجنس البوسليك على النوا (1) ثم يكون الاستقرار بجنس البوسليك على الدوكاه بعد مداعبة درجة الزركولاه مداعبة حتمية أي يحتم لمس الزركولاه قبل الاستقرار على الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "jawāb ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "zīrgūleh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:49:29.606Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.70) and al-Ḥilū (1961, pp.128-129). The sources agree on the seven-degree scale on dūgāh and on the obligatory touch of zīrgūleh before the close: al-Shawwā's sayr shows zīrgūleh in the descent to the qarār, and al-Ḥilū makes it a rule — \"the repose takes place with the jins būselīk on dūgāh after touching the degree zīrgūleh — an obligatory touching, that is, the touching of zīrgūleh is required before the repose on dūgāh\" (1961, p.129). al-Ḥilū counts the maqām at two dīwāns by conjunct assembly, \"of the family of būselīk\" (1961, p.128); his upper dīwān is not a clean octave of the lower, for against kurdān he prints \"and it is replaced by shahnāz to form the jins ḥijāz on ḥusaynī\" (1961, p.128), so the top of his construction runs jawāb shahnāz then jawāb muḥayyar where the octaves of kurdān and muḥayyar would otherwise sit. He likewise notes against nawā \"and it is replaced by ḥiṣār to form ḥiṣār on dūgāh\" (1961, p.128). His second degree is printed būselīk, at a whole tone above dūgāh, which is this entry's nīm būselīk. On the maqām's character: \"it rests on presenting the degree būselīk and the jins būselīk on the degree nawā, and the jins ḥijāz on ḥusaynī and the jins bayyāt on ḥusaynī, the last two ʿuqūd being among the incidentals\" (1961, p.129) — the seat nawā agreeing with this entry's ghammāz. A footnote adds an incidental practice: \"Among the incidentals: chahārgāh is sometimes taken as a resting place for the naghma of ʿajam pictured upon it; after it the degree būselīk is touched, then the degree dūgāh, that the degree of repose may fall upon it, after touching the degree zīrgūleh\" (1961, p.129).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص70) والحلو (1961، ص128-129). يتفق المصدران على السلّم السباعي على الدوكاه وعلى لمس الزركولاه قبل الختام: سير الشوا يظهر الزركولاه في الهبوط الى القرار، والحلو يجعله قاعدة: «ثم يكون الاستقرار بجنس البوسليك على الدوكاه بعد مداعبة درجة الزركولاه مداعبة حتمية أي يحتم لمس الزركولاه قبل الاستقرار على الدوكاه» (1961، ص129). يعد الحلو المقام ديوانين بالجمع المتصل «من فصيلة البوسليك» (1961، ص128)؛ وديوانه الاعلى ليس جواباً خالصاً للادنى، فبجانب الكردان يطبع «ويستبدل بالشاهناز لعمل جنس الحجاز على الحسيني» (1961، ص128)، فيصير اعلى بنائه جواب شاهناز ثم جواب محير حيث كان يقع جوابا الكردان والمحير. ويلاحظ بجانب النوا «ويستبدل بالحصار لعمل حصار على الدوكاه» (1961، ص128). ودرجته الثانية مطبوعة «بوسليك» على بعد طنيني من الدوكاه، وهي نيم بوسليك هذه المدونة. عن شخصية المقام: «تقوم على اظهار درجة البوسليك وجنس البوسليك على درجة النوا . وجنس الحجاز على الحسيني وجنس البياتي على الحسيني والعقدين الاخيرين من العرضيات» (1961، ص129)، وموضع النوا موافق لغماز هذه المدونة. وتضيف حاشية ممارسة عرضية: «ومن العرضيات ـ ان الجهاركاه تتخذ احياناً مستقراً لنغمة العجم مصورة عليه ، يلمس بعدها درجة البوسليك ثم درجة الدوكاه ليكون عليه درجة الاستقرار بعد مداعبة درجة الزركولاه» (1961، ص129).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "70"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "128"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "129"
       }
     ],
-    "version": "2026-07-19T19:12:36.330Z"
+    "version": "2026-07-26T09:49:29.606Z"
   },
   {
     "id": "49",
