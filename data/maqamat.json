@@ -100,17 +100,91 @@
           }
         ],
         "version": "2025-12-10T17:03:21.299Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "107",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām rāst to begin by touching the degree rāst and descending from it to the degree yegāh, passing over the notes ʿirāq and ʿushayrān, so as to work with the jins rāst transposed onto this yegāh; then it returns to working in the circle of the first ʿiqd, and moves from it to the second ʿiqd to make the jins rāst on nawā, then to the third ʿiqd, then to the fourth if possible.\n\nIn the descent to the resting place, awj is substituted by ʿajam to make būselīk on nawā, or for passing and returning directly to the degree rāst, the resting place of the maqām. Some find it commendable to descend once more to yegāh before the repose on the degree rāst.",
+        "commentsArabic": "اجراء العمل ــ جرت العادة بأن يبدأ العمل من مقام الراست بلمس درجة الراست ويهبط منها الى درجة اليكاه بالمرور على اصوات العراق والعشيران للعمل بجنس الراست مصوراً على هــذا اليكاه ، ثم يعود الى العمل بدائرة العقد الاول ، وينتقل منه الى العقد الثاني لعمل جنس الراست على النوا ثم الى العقد الثالث ثم الى الرابع اذا امكن .\n\nوفي الهبوط الى المستقر يستبدل الاوج بالعجم لعمل البوسليك على النوا او للمرور والعودة رأساً الى درجة الراست مستقر المقام . والبعض يستحسن الهبوط مرة اخرى الى اليكاه قبل الاستقرار على درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:29:30.593Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.42), al-Ṣabbāgh (1950, p.41) and al-Ḥilū (1961, p.107). The sources agree on the scale in both directions: al-Ḥilū's construction runs two identical disjunct octaves, rāst to jawāb kurdān, and his printed note against awj, \"and in the descent it is substituted by ʿajam\", independently reproduces this entry's descending ʿajam; his ḥusaynī row is annotated \"to make būselīk on nawā\" (1961, p.107). On the maqām's character: \"it rests on presenting the jins rāst on the two degrees nawā and yegāh\" (1961, p.107), agreeing with this entry's ghammāz nawā. His footnote explains the maqām's canonical standing: \"this maqām rāst is composed of the succession of the natural tonal degrees, as we indicated earlier; for that disposition, and because from each of these eight notes, that is its degrees, an Arab maqām standing in its own right is composed, it has been considered the fundamental scale in Arab music. In view of this standing of it, we ought to have presented it in analysis and notation before the other maqāms, were it not that the necessity of our ordering the maqāms in this book according to the degrees of their finals, from the deepest note upwards in sequence, made us fix it here in its rank, that is, in the centre of the tonal register on which it rests\" (1961, p.107).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص42) والصباغ (1950، ص41) والحلو (1961، ص107). تتفق المصادر على السلّم في الاتجاهين: تكوين الحلو ديوانان منفصلان متطابقان من الراست الى جواب الكردان، وملاحظته المطبوعة عند الاوج «وفي الهبوط يستبدل بالعجم» تعيد باستقلال انتاج العجم في هبوط هذه المدونة؛ وصف الحسيني عنده معلّم «لعمل بوسليك على النوا» (1961، ص107). عن شخصية المقام: «تقوم على اظهار جنس الراست على درجتي النوا واليكاه» (1961، ص107)، بما يوافق غماز هذه المدونة النوا. تشرح حاشيته مكانة المقام: «ان مقام الراست هذا يتألف من تتابع الدرجات الصوتية الطبيعية كما اشرنا سابقاً ، فهو لذلك الوضع ولكون اصواته أي درجاته الثمانية هــذه يتألف من كل منها مقام عربي قائم في ذاته . قد اعتبر السلم الاساسي في الموسيقى العربية . ونظراً لمقامه هذا ، فقد كان يجب علينا ان نقدمه في التحليل والتدوين على سواه من المقامات لولا ان وجوب ترتيبنا وضع المقامات في هذا الكتاب بحسب درجات ارتكازاتها من اغلظ صوت الى ما فوقه حدّةً على التوالي جعلنا نثبته هنا في صفه ، اي في مركز طبقته الصوتية التي يستقر عليها» (1961، ص107).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "42"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "107"
       }
     ],
-    "version": "2025-12-10T17:03:34.565Z"
+    "version": "2026-07-26T08:29:30.593Z"
   },
   {
     "id": "2",
