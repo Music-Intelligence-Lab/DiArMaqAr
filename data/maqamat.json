@@ -4726,7 +4726,7 @@
         "version": "2026-07-26T09:06:58.608Z"
       }
     ],
-    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.35) and al-Ḥilū (1961, p.115). al-Ḥilū analyses faraḥnāk as a 14-note composite on ʿirāq, his footnote stating: \"this maqām is in its formation (composite) and cannot be used in the notation of melodies and their analysis\" (1961, p.115). The scale here corresponds to his descending form: his descent voices rāst on dūgāh through būselīk and nīm ḥijāz in three-quarter steps, matching this entry's nīm ḥijāz, and its būselīk differing from the entry's nīm būselīk only by the comma his 24-tone gamut lacks; his ascending note names instead run būselīk and ḥijāz in whole tones, the jins chahārgāh on dūgāh form. Of the two openings he writes: \"it usually begins by presenting the second ʿiqd [chahārgāh on dūgāh], or nīshābūr, that is [rāst voiced on dūgāh], and the first is sounder\" (1961, p.115; the square brackets are printed in the original). On the maqām's character, where this entry's ghammāz is nawā: \"it rests on presenting the jins rāst on the degree dūgāh\" (1961, p.115). His upper octave is deliberately asymmetric, seating buzurk and māhūrān, the bayyāt-on-muḥayyar flavour, where the lower octave has būselīk and ḥijāz, and it stops at jawāb al-ḥusaynī, short of jawāb al-ʿirāq. His first ʿiqd he names māyah on ʿirāq (see jins māyah in this data).",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.35) and al-Ḥilū (1961, p.115). al-Ḥilū analyses faraḥnāk as a 14-note composite on ʿirāq, his footnote stating: \"this maqām is in its formation (composite) and cannot be used in the notation of melodies and their analysis\" (1961, p.115). The scale here corresponds to his descending form: his descent voices rāst on dūgāh through būselīk and nīm ḥijāz in three-quarter steps, matching this entry's nīm ḥijāz, and its būselīk differing from the entry's nīm būselīk only by the comma his 24-tone gamut lacks; his ascending note names instead run būselīk and ḥijāz in whole tones, the jins chahārgāh on dūgāh form. Of the two openings he writes: \"it usually begins by presenting the second ʿiqd [chahārgāh on dūgāh], or nīshābūr, that is [rāst voiced on dūgāh], and the first is sounder\" (1961, p.115; the square brackets are printed in the original). On the maqām's character, where this entry's ghammāz is nawā: \"it rests on presenting the jins rāst on the degree dūgāh\" (1961, p.115). His upper octave is deliberately asymmetric, seating buzurk and māhūrān, the bayyāt-on-muḥayyar flavour, where the lower octave has būselīk and ḥijāz, and it stops at jawāb al-ḥusaynī, short of jawāb al-ʿirāq. His first ʿiqd he names māyeh on ʿirāq (see jins māyeh in this data).",
     "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص35) والحلو (1961، ص115). يحلل الحلو الفرحناك مقاماً مركباً من 14 صوتاً على العراق، وتقول حاشيته: «هذا المقام في تكوينه ( مركّب ) ولا يمكن استعماله في تدوين الالحان وتحليلها» (1961، ص115). السلّم هنا يقابل صيغته في الهبوط: هبوطه يصوّر الراست على الدوكاه عبر البوسليك ونيم الحجاز بخطوات ثلاثة ارباع، بما يوافق نيم حجاز هنا، وبوسليكه لا يفارق نيم بوسليك هذه المدونة الا بالكوما التي لا يحملها سلّمه؛ اما اسماء درجاته صعوداً فتجري بالبوسليك والحجاز بخطوات طنينية، صيغة جنس الجهاركاه على الدوكاه. عن الاستهلالين يكتب: «يبدأ عادة باظهار العقد الثاني [ جهاركاه على الدوكاه ] ، او نيشابور أي [ راست مصور على الدوكاه ] والاول اصح» (1961، ص115؛ الاقواس المربعة مطبوعة في الاصل). عن شخصية المقام، والغماز في هذه المدونة نوا: «تقوم على اظهار جنس الراست على درجة الدوكاه» (1961، ص115). ديوانه الاعلى غير متناظر عمداً، يجلس فيه البزرك والماهوران، نكهة البياتي على المحير، حيث في الديوان الادنى بوسليك وحجاز، ويقف عند جواب الحسيني دون جواب العراق. عقده الاول يسميه مايه على العراق (انظر جنس المايه في هذه البيانات).",
     "sourcePageReferences": [
       {
@@ -7625,7 +7625,7 @@
   {
     "id": "80",
     "idName": "maqam_maya",
-    "name": "maqām māya",
+    "name": "maqām māyeh",
     "ascendingNoteNames": [
       "segāh",
       "chahārgāh",
@@ -7703,7 +7703,7 @@
         "page": "88"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:18:51.195Z"
   },
   {
     "id": "81",

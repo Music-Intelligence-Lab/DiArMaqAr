@@ -814,15 +814,15 @@
   },
   {
     "id": "52",
-    "idName": "jins_mayah",
-    "name": "jins māyah",
+    "idName": "jins_mayeh",
+    "name": "jins māyeh",
     "noteNames": [
       "ʿirāq",
       "rāst",
       "dūgāh",
       "būselīk/ʿushshāq"
     ],
-    "commentsEnglish": "From al-Ḥilū's ʿuqūd of maqām faraḥnāk: \"māyah on ʿirāq, of the four\", named in both his ascending and descending ʿuqūd lists (1961, p.115) and attested only there in his maqāmāt chapter. The notes follow his ladder (3/4, 1, 1): like jins ʿirāq but with būselīk in place of segāh at the top. Distinct from maqām māya in this data, which is seated on segāh.",
+    "commentsEnglish": "From al-Ḥilū's ʿuqūd of maqām faraḥnāk: \"māyeh on ʿirāq, of the four\", named in both his ascending and descending ʿuqūd lists (1961, p.115) and attested only there in his maqāmāt chapter. The notes follow his ladder (3/4, 1, 1): like jins ʿirāq but with būselīk in place of segāh at the top. Distinct from maqām māyeh in this data, which is seated on segāh.",
     "commentsArabic": "من عقود مقام الفرحناك عند الحلو: «مايه على العراق ذو اربع»، مسماة في قائمتي عقوده صعوداً وهبوطاً (1961، ص115) ولا ترد سواهما في باب المقامات عنده. اصواتها من سلّمه (3/4، 1، 1): كجنس العراق لكن بالبوسليك مكان السيكاه في الاعلى. وهي غير مقام المايه في هذه البيانات الجالس على السيكاه.",
     "sourcePageReferences": [
       {
@@ -830,6 +830,6 @@
         "page": "115"
       }
     ],
-    "version": "2026-07-26T09:06:58.608Z"
+    "version": "2026-07-26T09:18:51.195Z"
   }
 ]
