@@ -1977,7 +1977,7 @@
     "version": "2025-10-18T19:42:23.643Z"
   },
   {
-    "id": "alkhuliandragheb_1904",
+    "id": "alkhulaiandragheb_1904",
     "titleEnglish": "",
     "titleArabic": "",
     "year": "1904",
@@ -1989,9 +1989,9 @@
         "page": "51-52"
       }
     ],
-    "creatorEnglish": "al-Khul'ī and Rāgheb",
-    "creatorArabic": "الخلعي وراحب",
-    "commentsEnglish": "Also in Shawqi, Youssef. Qiyās al-Sullam al-Mūsīqī al-'Arabī. Dar al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in Khulī's measurements.",
+    "creatorEnglish": "al-Khulaʿī and Rāgheb",
+    "creatorArabic": "الخلعي وراغب",
+    "commentsEnglish": "Also in Shawqi, Youssef. Qiyās al-Sullam al-Mūsīqī al-'Arabī. Dar al-Kutub, Cairo, 1969. pp. 28-29.\n\nShawqi says that whole tone (888 mm) doesn't add up to 10:9 or 9:8 as one would expect (1969:29) but the descrepency is only -1.732 cents and is infact the same as the descrepency between the perfect fourth (750 mm / 4:3) and the perfect fifth (666 mm / 3:2) which he states are correct in al-Khulaʿī's measurements.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1000",
@@ -2102,7 +2102,7 @@
     "referenceFrequencies": {
       "yegāh": 97.999
     },
-    "version": "2026-07-26T14:10:40.802Z"
+    "version": "2026-07-26T16:55:52.740Z"
   },
   {
     "id": "ibnmunajjim_912",
