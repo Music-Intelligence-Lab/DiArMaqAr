@@ -2308,17 +2308,86 @@
           }
         ],
         "version": "2026-07-20T10:20:55.789Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "132",
+        "commentsEnglish": "Method of procedure: the work in maqām al-huzām begins in the circle of the first ʿiqd, which represents the maqām's fundamental character, entering it from the degree segāh with a touching of the two degrees kurd and rāst. There follows: the work in the circle of the second ʿiqd with the jins ḥijāz on nawā; then the first and second ʿuqūd join together. Then comes the ascent to the third ʿiqd, to work with the jins rāst on kurdān in the ascent; and in the descent there is added to the jins rāst on kurdān, incidentally, the jins al-bayyāt on muḥayyar; then it passes by the jins būselīk on nawā once more, and at the close the repose falls on the degree segāh with a touching of the two degrees kurd and rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الهزام في دائرة العقد الاول الذي يمثل شخصية المقام الاساسية دخولاً اليه من درجة السيكاه مع مداعبة درجتي الكرد والراست . يلي ذلك : العمل في دائرة العقد الثاني بجنس الحجاز على النوا « ثم يشترك العقدان الاول والثاني معاً . ثم يكون الصعود الى العقد الثالث للعمل بجنس الراست على الكردان في الصعود وفي الهبوط يضاف الى جنس الراست على الكردان بصفة عرضية جنس البياتي على المحير ، ثم يمر بجنس البوسليك على النوا مرة اخرى وعند الختام يكون الاستقرار على درجة السيكاه مع مداعبة درجتي الكرد والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-26T09:58:06.402Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives nīm māhūr as the fifth degree, noting that it \"was formerly awj\" (1946, p.85).",
-    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً خامسة، وينبّه إلى أنها «قديماً كان اوج» (١٩٤٦، ص٨٥).",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.85) and al-Ḥilū (1961, p.132). The sources agree on the ghammāz nawā and on the jins ḥijāz on nawā as the maqām's marker — both suyūr present it, and al-Ḥilū's character statement reads \"it rests on presenting the jins al-ḥijāz on al-nawā\" (1961, p.132) — and on touching kurd at the opening (in al-Ḥilū, rāst as well). al-Ḥilū titles his analysis \"maqām al-huzām, or al-ḥuzām, or the Turkish segāh\" and describes it as \"a composite maqām that cannot be used in the formation of melodies and their analysis\" (1961, p.132), counting it at 13 notes of the family of segāh, with two short dīwāns ending at jawāb al-kurdān. His fourth degree is printed as the dual \"ḥiṣār or ḥusaynī\", and his interval, a half tone above nawā, resolves it to this entry's ḥiṣār. At the fifth degree al-Shawwā gives nīm māhūr, noting that it \"was formerly awj\" (1946, p.85), while al-Ḥilū prints nuhuft (his name for māhūr) at a tone and a half above ḥiṣār, a quarter step above this entry's nīm māhūr, his 24-note gamut having no position between the two. The descent through ʿajam and ḥusaynī in this entry's descending form does not appear in al-Ḥilū, who gives no distinct descending construction and adds in his sayr only an incidental jins bayyāt on muḥayyar in the descent. His footnote gives the naming history in full: \"The maqām al-huzām is originally called maqām al-segāh; it is an authentic Arab maqām, called in Tunis (ṭabʿ al-segāh) or (ṭabʿ inqilāb al-segāh); the Turks took it from the Arabs and gave it the name (maqām 'hazzām'). Its second ʿiqd — al-ḥijāz on al-nawā — which the Arabs used before the Turks, has existed in it since antiquity, and all the old adwār and mazrūfāt of this nagham in which ḥijāz on nawā is worked are known among the Arabs as being of maqām (al-segāh), that is, maqām al-huzām itself; but those who cling to the multiplication of names insisted on making it two different maqāms, as they did with others among the Arab maqāms\" (1961, p.132). al-Shawwā adds that sāzkār is sometimes worked on kurdān in this maqām (1946, p.85).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص85) والحلو (1961، ص132). يتفق المصدران على الغماز نوا وعلى جنس الحجاز على النوا علامة للمقام: فكلا السيرين يظهره، ويقول الحلو في شخصية المقام: «تقوم على اظهار جنس الحجاز على النوا» (1961، ص132)، كما يتفقان على لمس الكرد في الاستهلال (وعند الحلو الراست ايضاً). يعنون الحلو تحليله «مقام الهزام او الحزام او السيكاه التركي» ويصفه بأنه «مقام مركب لا يمكن استعماله في تكوين الالحان وتحليلها» (1961، ص132)، ويعده 13 صوتاً من فصيلة السيكاه بديوانين قصيرين ينتهيان عند جواب الكردان. درجته الرابعة مطبوعة مزدوجة «حصار أو حسيني» وتحسمها مسافته (نصف فوق النوا) الى حصار هذه المدونة. وفي الدرجة الخامسة يعطي الشوا نيم ماهور منبهاً الى انها «قديماً كان اوج» (1946، ص85)، بينما يطبع الحلو «نهفت» (اسمه للماهور) على بعد طنيني ونصف فوق الحصار، اي ربع مسافة فوق نيم ماهور هذه المدونة، وليس في سلّمه ذي الاربعة والعشرين صوتاً موقع بينهما. اما الهبوط بالعجم والحسيني في الصورة الهابطة لهذه المدونة فلا يرد عند الحلو الذي لا يعطي سلّماً هابطاً مغايراً، ويكتفي في سيره بجنس بياتي عرضي على المحير عند الهبوط. وتقدم حاشيته تاريخ التسمية كاملاً: «ان مقام الهزام يدعى في الاصل مقام السيكاه ، وهو مقام عربي اصيل يسمى في تونس ( طبع السيكاه ) أو ( طبع انقلاب السيكاه ) اخذه الاتراك عن العرب واطلقوا عليه اسم ( مقام «هزّام» ) والعقد الثاني منه وهو ـ الحجاز على النوا ـ الذي يستعمله العرب قبل الاتراك فهو موجود فيه منذ القدم وكل الادوار والمزروفات القديمة التي من هذا النغم ويعمل فيها الحجاز على النوا . تعرف عند العرب بأنها من مقام ( السيكاه ) أي مقام الهزام بذاته ، ولكن المتمسكين بتعدد الاسماء أبوا الا ان يجعلوه مقامين مختلفين كما فعلوا في غيره من المقامات العربية» (1961، ص132). ويذكر الشوا ان السازكار يعمل احياناً على الكردان في هذا المقام (1946، ص85).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "85"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "132"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:58:06.402Z"
   },
   {
     "id": "21",
