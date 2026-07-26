@@ -2326,17 +2326,80 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "108",
+        "commentsEnglish": "Method of procedure: the work begins by presenting the first ʿiqd; some find it good to open from its second ʿiqd, then descend from it to the first and return to the second, and from it to the third, then the fourth if possible.\n\nThe old systematists made it obligatory to begin from the degree chahārgāh followed by nawā, and the moderns have annulled this rule. Some modern Arabs toy with the jins ḥijāz transposed onto the degree rāst at the opening, in keeping with the Turkish way of opening this maqām. Some analyse this maqām from two connected ajnās of the fifth kind, as is the case in maqām al-nikrīz. Some of them also proceed in the descent to maqām ḥijāz transposed onto the degree yegāh, that is maqām [shadd ʿarabān], or ḥijāz kār transposed onto yegāh, in response to and consistency with its second ʿiqd [ḥijāz on nawā].",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل باظهار العقد الاول ، وبعضهم يستحسن الاستهلال من عقده الثاني ثم الهبوط منه الى الاول والعودة الى الثاني . ومنه الى الثالث ثم الرابع اذا امكن .\n\nوالنظاميون القدماء يحتمون البدء من درجة الجهاركاه متبوعة بالنوا . وقد ابطل المحدثون هذه القاعدة . وبعض المحدثين العرب يداعبون جنس الحجاز المصور على درجة الراست في الاستهلال تمشياً مع الطريقة التركية في استهلالهم من هذا المقام . والبعض يحلل هذا المقام من جنسين من ذوات الذي بالخمس متصلين كما هو الحال في مقام النكريز . ومنهم ايضاً من يتطرق في الهبوط الى مقام الحجاز مصوراً على درجة اليكاه اي مقام [ شدعربان ] او حجازكار مصوراً على اليكاه وذلك تجاوباً واتساقاً مع عقده الثاني [ حجاز على النوا ] .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:32:24.654Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.44) and al-Ḥilū (1961, p.108). The sources agree on the scale up to a comma-level difference at the seventh degree: nīm māhūr derives from al-Shawwā, while al-Ḥilū's note names give nahaft, that is māhūr, his 24-tone gamut having no comma degrees. His printed descending substitutions, \"and in the descent the nahaft is substituted by ʿajam\" and \"the ḥiṣār by ḥusaynī, to make būselīk on nawā\", reproduce this entry's descending ʿajam and ḥusaynī (1961, p.108). He counts the maqām at 14 notes: the upper series carries sunbuleh where the octave of segāh would sit, matching the sunbuleh/zawāl this entry carries at the same slot, and stops at jawāb nahaft. On the maqām's character: \"it rests on presenting the ḥijāz on the degree nawā\" (1961, p.108), agreeing with this entry's ghammāz nawā. He adds the Turkish variant: \"there is a maqām sūznāk also called [balāzar kūlāh] in which the degree [zīrgūleh] is used instead of the degree dūgāh at the opening, then dūgāh instead of zīrgūleh at the close; this is the Turks' manner and of their invention\" (1961, p.108; the square brackets are printed in the original).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص44) والحلو (1961، ص108). يتفق المصدران على السلّم عدا فرق كوما في الدرجة السابعة: نيم ماهور مصدرها الشوا، بينما تعطي اسماء الدرجات عند الحلو النهفت اي الماهور، اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما. بديلاه المطبوعان في الهبوط، «وفي الهبوط يستبدل النهفت بالعجم» و«والحصار بالحسيني لعمل بوسليك على النوا»، يعيدان انتاج العجم والحسيني في هبوط هذه المدونة (1961، ص108). يعد المقام 14 صوتاً: السلسلة العليا تحمل سنبله حيث كان يقع جواب السيكاه، بما يوافق سنبله/زوال في الموضع نفسه هنا، وتقف عند جواب النهفت. عن شخصية المقام: «تقوم على اظهار الحجاز على درجة النوا» (1961، ص108)، بما يوافق غماز هذه المدونة النوا. يضيف الصيغة التركية: «ويوجد مقام سوزناك تسمى ايضاً [ بلازر كولاه ] يستعمل فيه درجة [ الزركولاه ] بدلاً من درجة الدوكاه عند الاستهلال ثم الدوكاه بدلاً من الزركولاه عند الختام وهذه طريقة الاتراك ومن ابتكارهم» (1961، ص108؛ الاقواس المربعة مطبوعة في الاصل).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "44"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "108"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:32:24.654Z"
   },
   {
     "id": "29",
