@@ -46,22 +46,18 @@ next-env.d.ts
 
 # exports
 /exports/*
-/scripts/batch-export/batch-export-runner.ts
-/scripts/exports/*/*.json
-/scripts/exports/*.json
 # public/data is runtime/generated data (statistics, analytics, exports) — untracked
 /public/data/
+
+# Local-only internal folders (scripts tooling, article/shawwa_article sources).
+# Not part of the public-facing project; kept on disk under .untracked/.
+/.untracked/
 
 # serena mcp
 .serena/
 
 # playwright mcp
 .playwright-mcp/
-
-# article
-
-/article/*
-/shawwa_article/*
 
 # VitePress
 docs/.vitepress/dist
