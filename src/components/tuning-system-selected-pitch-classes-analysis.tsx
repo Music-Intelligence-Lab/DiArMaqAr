@@ -117,7 +117,11 @@ export default function SelectedPitchClassesAnalysis() {
   ): string => {
     switch (unit) {
       case "fraction":
-        return pitchClass.fraction.replace("/", ":");
+        // Slash, not colon: a pitch class is a ratio against the tonic and
+        // renders as "3/2" in every other table. The colon is reserved for
+        // intervals (see formatIntervalValue), so it is what tells the two
+        // apart in this matrix, where both kinds of value share a grid.
+        return pitchClass.fraction;
       case "cents":
         return parseFloat(pitchClass.cents).toFixed(3);
       case "centsFromZero":

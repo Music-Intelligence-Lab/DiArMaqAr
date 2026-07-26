@@ -473,8 +473,16 @@
   // rotated (marker class applied by useRotateOverflowingCells); left/right-
   // aligned otherwise. The th/td element selectors match the specificity of
   // the [dir="rtl"] table alignment rules above so centering wins in Arabic.
+  // Note names are excluded from rotation (see useRotateOverflowingCells): they
+  // wrap onto extra lines at full column width instead of turning sideways, so
+  // in a rotated table they are the one horizontal row left. Centering them
+  // keeps each name over its own centered degree numeral rather than hanging
+  // off the column's leading edge. td only: jins renders its note-name cells as
+  // th, which the hook's td-only selector never rotated either, so those tables
+  // already read this way and are left exactly as they were.
   [class*="__table--rotated"] th[class*="--scale-degree"],
   [class*="__table--rotated"] td[class*="--scale-degree"],
+  [class*="__table--rotated"] tr[data-row-type="noteNames"] td,
   [class*="__table--rotated"] td[data-column-type="play-button"] {
     text-align: center;
   }
