@@ -1623,17 +1623,97 @@
           }
         ],
         "version": "2026-07-20T08:40:56.038Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "122",
+        "commentsEnglish": "Method of procedure: it has been customary to begin maqām al-ṣabā by entering the first ʿiqd from the degree chahārgāh [and it is the mother of this maqām's centres], while toying with the degree segāh, so as to work with the jins ḥijāz on chahārgāh. This ḥijāz jins then acts jointly with the jins ṣabā on dūgāh.\n\nThere follows: the course to the third ʿiqd, to work with the jins ḥijāz on kurdān as the completer of what precedes it, as an independent jins; then the fourth ʿiqd if possible.\n\nIn the case of the descent, one works with the jins ṣabā on muḥayyar and the jins ḥijāz on kurdān, and after that the jins ḥijāz on chahārgāh. At the close, the repose is on the degree dūgāh with the jins ṣabā.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة ان يبدأ من مقام الصبا بالدخول الى العقد الاول من درجة الجهاركاه [وهي ام مراكز هذا المقام] مع مداعبة درجة السيكاه للعمل بجنس الحجاز على الجهاركاه . ثم يشترك جنس الحجاز هذا مع جنس الصبا على الدوكاه .\n\nيلي ذلك : السير الى العقد الثالث للعمل بجنس الحجاز على الكردان بصفته متمم لما قبله كجنس مستقل . ثم العقد الرابع اذا امكن .\n\nوفي حالة الهبوط يعمل بجنس الصبا على المحير وجنس الحجاز على الكردان ، وبعد ذلك جنس الحجاز على الجهاركاه . وعند الختام يكون الاستقرار على درجة الدوكاه بجنس الصبا .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:32:50.270Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.69) and al-Ḥilū (1961, p.122). The two sources agree on the scale of this entry degree for degree; al-Ḥilū prints the fourth degree as ṣabā, his alternate name for the ḥijāz position. He counts the maqām at 14 notes over two structurally different spans: a dūgāh-rooted lower span whose first ʿiqd is \"ṣabā on dūgāh, of the four less half an interval\" (1961, p.122), and a kurdān-rooted upper span seating shahnāz and jawāb al-segāh — the degrees are printed as duals, \"shahnāz or muḥayyar\" and \"būselīk or jawāb segāh\", the upper ṣabā jins reproducing the augmented second of the lower — so the upper span is not an octave copy of the lower. On the ghammāz, where this entry gives ḥusaynī, al-Ḥilū enters the maqām from chahārgāh, \"and it is the mother of this maqām's centres\" (1961, p.122), and its character \"rests on presenting the jins ḥijāz on the two degrees chahārgāh and kurdān\" (1961, p.122). His closing note documents the zamzama variant: \"there is a melody called [ṣabā zamzama]; it is the melody ṣabā itself with all its requisites, except that in ṣabā zamzama, at the ending, that is before the final repose on dūgāh, one touches the degree kurd instead of segāh\" (1961, p.122; the square brackets are printed in the original; compare maqām ṣabā zamzam in this data).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص69) والحلو (1961، ص122). يتفق المصدران على سلّم هذه المدونة درجة درجة؛ يطبع الحلو الدرجة الرابعة باسم صبا، وهو اسمه البديل لموضع الحجاز. يعد المقام 14 صوتاً على مدىين مختلفي البنية: مدى ادنى جذره الدوكاه عقده الاول «صبا على الدوكاه ذو اربع ناقص نصف مسافة» (1961، ص122)، ومدى اعلى جذره الكردان يجلس فيه الشاهناز وجواب السيكاه، والدرجتان مطبوعتان مزدوجتين «شاهناز أو محير» و«بوسليك أو جواب سيكاه»، ويعيد جنس الصبا الاعلى ثانية الادنى الزائدة، فليس المدى الاعلى نسخة جوابية للادنى. اما الغماز، وهو حسيني في هذه المدونة، فيدخل الحلو الى المقام من الجهاركاه «وهي ام مراكز هذا المقام» (1961، ص122)، وشخصيته «تقوم على اظهار جنس الحجاز على درجتي الجهاركاه والكردان» (1961، ص122). ملاحظته الختامية توثق صيغة الزمزمة: «هناك نغمة تسمى [صبا زمزمه] هي عبارة عن نغمة الصبا بذاته وبكل مستلزماته ، غير انه في نغمة الصبا زمزمه يعمل عند الانتهاء أي قبل الاستقرار النهائي على الدوكاه على لمس درجة الكرد بدلاً من السيكاه» (1961، ص122؛ الاقواس المربعة مطبوعة في الاصل؛ قارن مقام صبا زمزم في هذه البيانات).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "69"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "122"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:32:50.270Z"
   },
   {
     "id": "16",
