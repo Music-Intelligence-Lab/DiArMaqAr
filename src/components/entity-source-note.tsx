@@ -5,6 +5,7 @@ import Link from "next/link";
 import useLanguageContext from "@/contexts/language-context";
 import { stringifySource, Source, SourcePageReference } from "@/models/bibliography/Source";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
+import CommentText from "./comment-text";
 
 /**
  * The maqām's or jins's own commentary and source attribution, rendered
@@ -54,7 +55,7 @@ export default function EntitySourceNote({
     <div className="maqam-jins-transpositions-shared__comments-sources-container" dir={language === "ar" ? "rtl" : "ltr"}>
       <div className="maqam-jins-transpositions-shared__comments-section">
         <h3>{commentsLabel}:</h3>
-        <div className="maqam-jins-transpositions-shared__comments-text">{text}</div>
+        <CommentText text={text ?? ""} className="maqam-jins-transpositions-shared__comments-text" />
       </div>
 
       <div className="maqam-jins-transpositions-shared__sources-section">

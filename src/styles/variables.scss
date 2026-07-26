@@ -423,6 +423,17 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
         @include section-furniture($font-size-lg);
         margin-bottom: $space-block-half;
     }
+
+    // Comment paragraphs (CommentText). Spacing sits between paragraphs only —
+    // the first and last must not add space above or below the block, or the
+    // comment stops aligning with the sources column beside it.
+    p {
+        margin: 0;
+
+        + p {
+            margin-top: $space-block-half;
+        }
+    }
 }
 
 @mixin type-button-label {

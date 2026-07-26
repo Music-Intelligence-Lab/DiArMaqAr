@@ -33,6 +33,7 @@ import { canTransposeMaqamToNote } from "@/functions/transpose";
 import FrequencyKnob from "./frequency-knob";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
+import CommentText from "./comment-text";
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -1348,20 +1349,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           <div className="tuning-system-manager__comments-sources-container">
             <div className="tuning-system-manager__comments-section">
               <h3>{t("tuningSystem.comments")}</h3>
-              <div>
-                {(language === "ar" &&
-                selectedTuningSystem.getCommentsArabic().trim()
-                  ? selectedTuningSystem.getCommentsArabic()
-                  : selectedTuningSystem.getCommentsEnglish()
-                )
-                  .split("\n")
-                  .map((line, index) => (
-                    <span key={index}>
-                      {line}
-                      <br />
-                    </span>
-                  ))}
-              </div>
+              <CommentText
+                text={
+                  language === "ar" && selectedTuningSystem.getCommentsArabic().trim()
+                    ? selectedTuningSystem.getCommentsArabic()
+                    : selectedTuningSystem.getCommentsEnglish()
+                }
+              />
             </div>
 
             <div className="tuning-system-manager__sources-section">

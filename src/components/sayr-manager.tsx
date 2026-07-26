@@ -18,6 +18,7 @@ import { updateMaqamat } from "@/functions/update";
 import { transposeSayr } from "@/functions/transpose";
 import JinsData from "@/models/Jins";
 import Link from "next/link";
+import CommentText from "./comment-text";
 import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import { stringifySource } from "@/models/bibliography/Source";
@@ -884,7 +885,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
                 {comment && (
                   <div className="sayr-manager__comments-section">
                     <h3>{t("sayr.comments")}:</h3>
-                    <div className="sayr-manager__comments-text">{comment}</div>
+                    <CommentText text={comment ?? ""} className="sayr-manager__comments-text" />
                   </div>
                 )}
                 {source && (
