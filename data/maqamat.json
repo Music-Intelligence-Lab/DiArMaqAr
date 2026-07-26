@@ -2136,17 +2136,106 @@
           }
         ],
         "version": "2026-07-20T10:20:55.789Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "131",
+        "commentsEnglish": "Method of procedure: the work in maqām al-segāh begins in the circle of the first ʿiqd, entering it from the degree rāst, with a slight touching of kurd at the beginning and the end.\n\nThere follows: the ascent to the second ʿiqd, to work with the jins rāst on nawā. Then awj on awj is worked incidentally, for variety. Then the work moves to the third ʿiqd, to work with the jins rāst on kurdān, and the ascent from it to the fourth if possible.\n\nAnd in the descent one passes over the jins al-bayyāt on muḥayyar [incidentally], or works with the jins rāst on kurdān once more, then with the jins būselīk on nawā, and the repose comes finally with the jins segāh on the degree segāh, with a touching of kurd.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام السيكاه في دائرة العقد الاول دخولاً اليه من درجة الراست مع مداعبة الكرد قليلاً عند البداية والنهاية .\n\nيلي ذلك : الصعود الى العقد الثاني للعمل بجنس الراست على النوا . ثم يعمل الاوج على الاوج بصفة عرضية للتنويع . ثم ينتقل العمل الى العقد الثالث للعمل بجنس الراست على الكردان والصعود منه الى الرابع اذا امكن .\n\nوفي الهبوط يمر على جنس البياتي على المحير [ بصفة عرضية ] أو يعمل بجنس الراست على الكردان مرة اخرى ، ثم بجنس البوسليك على النوا والاستقرار اخيراً بجنس السيكاه على درجة السيكاه مع مداعبة الكرد .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-26T09:53:57.214Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.84) and al-Ḥilū (1961, p.131). The sources agree on the scale, including the direction-distributed sixth degree: this entry ascends with awj and descends with ʿajam, and al-Ḥilū prints awj with the marginal note \"and it is replaced by ʿajam in the descent\" (1961, p.131). His under-staff annotation makes the pairing explicit: \"jins rāst on nawā and jins būselīk on nawā, replacing awj with ʿajam, of the fourth\" (1961, p.131). They also agree on the ghammāz nawā and on the obligatory touch of the degree kurd at the opening — al-Shawwā: \"in the opening, kurdī must be touched\"; al-Ḥilū: \"with a slight touching of kurd at the beginning and the end\" (1961, p.131). al-Ḥilū counts the maqām at 13 notes, of the family of segāh: a lower dīwān identical to this entry's scale and a short upper dīwān in which every degree is the jawāb of its lower counterpart, ending at jawāb al-kurdān. On the maqām's character: \"it rests on presenting the jins rāst and būselīk on nawā\" (1961, p.131). A footnote on its formation refers the reader elsewhere in his book: \"see the explanation of the maqāms ʿirāq and segāh on the analysis page of maqām al-ʿirāq\" (1961, p.131) — he treats ʿirāq and segāh as a paired discussion under his ʿirāq analysis (1961, p.102).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص84) والحلو (1961، ص131). يتفق المصدران على السلّم بما فيه الدرجة السادسة الموزعة على الاتجاهين: تصعد هذه المدونة بالاوج وتهبط بالعجم، ويطبع الحلو الاوج ومعه الملاحظة «ويستبدل بالعجم عند الهبوط» (1961، ص131). ويوضح تعليقه تحت المدرج هذا الاقتران صراحة: «جنس راست على النوا وجنس بوسليك على النوا باستبدال الأوج بالعجم ذو أربع» (1961، ص131). كما يتفقان على الغماز نوا وعلى وجوب لمس درجة الكرد في الاستهلال: الشوا «وفى الاستهلال يجب لمس عربة الــكوردى»، والحلو «مع مداعبة الكرد قليلاً عند البداية والنهاية» (1961، ص131). يعد الحلو المقام 13 صوتاً من فصيلة السيكاه: ديوان ادنى مطابق لسلّم هذه المدونة وديوان اعلى قصير كل درجة فيه جواب نظيرتها السفلى، ينتهي عند جواب الكردان. عن شخصية المقام: «تقوم على اظهار جنس الراست والبوسليك على النوا» (1961، ص131). وتحيل حاشية تكوينه الى موضع آخر من كتابه: «راجع شرح مقامي العراق والسيكاه في صفحة تحليل مقام العراق» (1961، ص131)، فهو يعالج العراق والسيكاه معالجة مقترنة ضمن تحليله للعراق (1961، ص102).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "84"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "131"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:53:57.214Z"
   },
   {
     "id": "20",
