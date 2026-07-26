@@ -268,17 +268,105 @@
           }
         ],
         "version": "2026-07-19T19:29:39.178Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "121",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām ḥijāz to begin from the circle of the first ʿiqd, entering it from rāst as a ẓahīr for dūgāh. After presenting this ʿiqd, which represents the spirit of the maqām, comes the descent to yegāh with the jins rāst transposed onto the degree yegāh, then the ascent to the second ʿiqd, working at times with the jins būselīk on nawā and at other times with the jins rāst on nawā and bayyāt on ḥusaynī. There follows: the ascent to the third ʿiqd with the jins ḥijāz and būselīk on muḥayyar, and from it to the fourth ʿiqd if possible.\n\nIn the descent, kurdān is substituted by shahnāz to make ḥijāz on ḥusaynī, then būselīk or rāst on nawā in the second ʿiqd, by substituting awj for ʿajam; and from it to the first ʿiqd. It is commendable, before the repose on dūgāh, the resting place of the maqām, that the degree rāst be touched.",
+        "commentsArabic": "اجراء العمل ــ جرت العادة ان يبدأ العمل في مقام الحجاز من دائرة العقد الاول دخولاً اليه من الراست كظهيراً للدوكاه . وبعد اظهار هذا العقد الذي يمثل روح المقام يكون الهبوط الى اليكاه بجنس الراست المصور على درجة اليكاه ثم الصعود الى العقد الثاني للعمل تارة بجنس البوسليك على النوا وتارة اخرى بجنس الراست على النوا والبياتي على الحسيني . يلي ذلك : الصعود الى العقد الثالث بجنس الحجاز والبوسليك على المحير ، ومنه الى العقد الرابع اذا امكن .\n\nوفي الهبوط يستبدل الكردان بالشاهناز لعمل الحجاز على الحسيني ثم البوسليك أو الراست على النوا في العقد الثاني ، وذلك باستبدال العجم بالاوج . ومنه الى العقد الاول . ويستحسن قبل الاستقرار على الدوكاه مستقر المقام ان تلمس درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:30:18.187Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.65) and al-Ḥilū (1961, pp.120-121). The sources agree on the ḥijāz-on-dūgāh spine, the qarār and the ghammāz nawā, and share the same two colours at the sixth and seventh degrees while assigning them to opposite directions: this entry ascends awj and descends ʿajam, whereas al-Ḥilū's construction ascends ʿajam and kurdān, substituting in the descent: \"in the descent kurdān is substituted by shahnāz to make ḥijāz on ḥusaynī, then būselīk or rāst on nawā in the second ʿiqd, by substituting awj for ʿajam\" (1961, p.121). His table prints the alternates as duals on the degrees themselves: ʿajam or awj, kurdān or shahnāz, and in the upper octave jawāb būselīk or sunbuleh, jawāb al-chahārgāh or jawāb ḥijāz (1961, p.120). His construction is disjunct (bi-l-jamʿ al-munfaṣil), the upper octave running a būselīk spine rather than mirroring the lower ḥijāz octave; his footnote allows the conjunct reading too: \"maqām ḥijāz may also be analysed by conjunct assembly if its second ʿiqd in its two forms, rāst and būselīk resting on the degree nawā, is considered its second ʿiqd immediately after the first; therefore it is analysed in two ways\" (1961, p.120). On the maqām's character: \"it rests on presenting the jins rāst on the two degrees nawā and yegāh\" (1961, p.121). His second footnote is historical: \"this ḥijāz used in our age, containing an interval between kurd and ḥijāz equal to a whole interval and a half, that is roughly 5/6 of the complete distance, is of recent date and has no origin in the old compilations. We mention on this occasion that there is a melody called gharīb al-ḥijāz, its resting place also dūgāh, its fundamental octave composed of dūgāh, kurd, ḥijāz, nawā, ḥiṣār, nuhuft, kurdān, muḥayyar; it resembles the melody ḥijāzayn, which rests originally on the degree ʿushayrān; what we draw attention to in this melody is its fifth degree, separated from the fourth by a whole interval and a half, as is the case in the maqām ḥijāz used today\" (1961, p.120).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص65) والحلو (1961، ص120-121). يتفق المصدران على عمود الحجاز على الدوكاه والقرار والغماز نوا، ويشتركان في لوني الدرجتين السادسة والسابعة مع توزيعهما على اتجاهين متعاكسين: تصعد هذه المدونة بالاوج وتهبط بالعجم، بينما يصعد تكوين الحلو بالعجم والكردان ويستبدل في الهبوط: «وفي الهبوط يستبدل الكردان بالشاهناز لعمل الحجاز على الحسيني ثم البوسليك أو الراست على النوا في العقد الثاني ، وذلك باستبدال العجم بالاوج» (1961، ص121). يطبع جدوله البدائل مزدوجة على الدرجات نفسها: «عجم ــ أو أوج»، «كردان ــ أو شاهناز»، وفي الديوان الاعلى «بوسليك ــ أو سنبله»، «جهاركاه ــ أو جواب حجاز» (1961، ص120). تكوينه بالجمع المنفصل، يجري ديوانه الاعلى على عمود بوسليكي ولا يعكس ديوان الحجاز الادنى، وتجيز حاشيته القراءة المتصلة ايضاً: «ويجوز تحليل مقام الحجاز بالجمع المتصل اذا اعتبر عقده الثاني بشكليه ــ الراست والبوسليك اللذين يستقران على درجة النوا ، هو عقده الثاني بعد الاول مباشرة . . ولذلك فهو يحلل على وجهين» (1961، ص120). عن شخصية المقام: «تقوم على اظهار جنس الراست على درجتي النوا واليكاه» (1961، ص121). حاشيته الثانية تاريخية: «هذا الحجاز المستعمل في عصرنا هذا المحتوي على بعد ما بين الكرد والحجاز يساوي مسافة كاملة ونصف المسافة ، اي ما يقرب من ٥/٦ البعد الكامل . فهو حديث العهد وليس له اصل في المؤلفات القديمة . ونذكر في هذه المناسبة انه يوجد نغمة تسمى نغمة غريب الحجاز مستقرها الدوكاه ايضاً ويتركب ديوانها الاساسي من دوكاه كرد حجاز نوا حصار نهفت كردان محير ، وهي شبيهة بنغمة حجازين التي تستقر في الاصل على درجة العشيران . والذي نلفت الانظار اليه هنا في هذه النغمة هي درجتها الخامسة التي يفصلها عن الدرجة الرابعة مسافة كاملة ونصف المسافة على نحو ما هو عليه مقام الحجاز المستعمل اليوم» (1961، ص120).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "65"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "120"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "121"
       }
     ],
-    "version": "2026-07-19T19:29:39.178Z"
+    "version": "2026-07-26T09:30:18.187Z"
   },
   {
     "id": "3",
