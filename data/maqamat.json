@@ -7845,17 +7845,110 @@
           }
         ],
         "version": "2026-07-20T07:58:17.338Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "130",
+        "commentsEnglish": "Method of procedure: the work begins by presenting the second ʿiqd, entering it from the degree ḥiṣār to the degree ḥusaynī, to work with the jins ḥijāz on the degree ḥusaynī. There follows: the descent to the first ʿiqd, to work with the jins ḥiṣār, that is [al-nawʾathar] on dūgāh; the ʿiqd of bayyāt on dūgāh may be omitted, since it is considered among the incidentals, not the fundamentals. Then the ascent to the second ʿiqd, to work with an incidental jins, kurd on ḥusaynī, or with another incidental jins, būselīk on nawā. There follows: the ascent to the third ʿiqd, būselīk on muḥayyar, and from it to būselīk on jawāb al-nawā if possible.\n\nAnd in the descent it is permitted to work the jins chahārgāh on the degree kurdān, then the return to the jins ḥijāz on the degree ḥusaynī and the descent from it to the first ʿiqd, that the work may end with the jins ḥiṣār on dūgāh, on which it reposes after touching the degree rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل باظهار العقد الثاني دخولاً اليه من درجة الحصار الى درجة الحسيني للعمل بجنس الحجاز على درجة الحسيني ، يلي ذلك : النزول الى العقد الاول للعمل بجنس الحصار أي [ النوأثر ] على الدوكاه ، ويمكن اغفال عقد البياتي على الدوكاه لانه يعتبر من العرضيات لا من الاساسيات . ثم الصعود الى العقد الثاني للعمل بجنس عرضي هو الكرد على الحسيني او بجنس عرضي آخر هو البوسليك على النوا . يلي ذلك : الصعود الى العقد الثالث بوسليك على المحير ، ومنه الى بوسليك على جواب النوا اذا امكن .\n\nوفي الهبوط يجوز عمل جنس الجهاركاه على درجة الكردان ثم العودة الى جنس الحجاز على درجة الحسيني والهبوط منه الى العقد الاول لينتهي العمل بجنس الحصار على الدوكاه فيستقر عليه بعد لمس درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥiṣār"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:51:36.413Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.75) and al-Ḥilū (1961, p.130). The sources agree on the seven-degree scale, on the ghammāz ḥusaynī, and on the maqām's two pillars: both suyūr enter from ḥiṣār to ḥusaynī to work ḥijāz on ḥusaynī, and both settle with the ḥiṣār/nawā-athar jins on dūgāh. al-Ḥilū places it \"of the family of al-nawʾathar pictured on the degree dūgāh\" (1961, p.130) and counts it at 14 notes by conjunct assembly: a lower dīwān identical to this entry's scale plus a short upper dīwān ending at jawāb kurdān, whose degrees follow the ordinary octave frame rather than reproducing the ḥiṣār pentachord. His second degree is printed as the dual \"būselīk — segāh\", and his interval, a whole tone above dūgāh, resolves it to this entry's nīm būselīk. On the maqām's character: \"it rests on presenting the jins ḥiṣār, that is the jins [al-nawʾathar] pictured on the degree dūgāh, and the jins ḥijāz on ḥusaynī\" (1961, p.130). He states the descent equals the ascent with one restriction distinguishing the closes of the two neighbouring maqāms: \"the descent is like the ascent, except that it is not permitted to work the jins al-bayyāt on dūgāh in the first ʿiqd at the repose in maqām al-būselīk, lest it be confused with maqām al-ḥiṣār, which is the fundamental stamp of the maqām\" (1961, p.130); his sayr likewise makes the touch of rāst before settling on dūgāh part of the close.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص75) والحلو (1961، ص130). يتفق المصدران على السلّم السباعي وعلى الغماز حسيني وعلى ركني المقام: فكلا السيرين يدخل من الحصار الى الحسيني للعمل بجنس الحجاز على الحسيني، وكلاهما يستقر بجنس الحصار/النوأثر على الدوكاه. يجعله الحلو «من فصيلة النوأثر المصور على درجة الدوكاه» (1961، ص130) ويعده 14 صوتاً بالجمع المتصل: ديوان ادنى مطابق لسلّم هذه المدونة وديوان اعلى قصير ينتهي عند جواب الكردان، تجري درجاته على الاطار الطبيعي للجواب دون اعادة خماسي الحصار. ودرجته الثانية مطبوعة مزدوجة «بوسليك ـ سيكاه»، وتحسمها مسافته (طنيني فوق الدوكاه) الى نيم بوسليك هذه المدونة. عن شخصية المقام: «تقوم على اظهار جنس الحصار أي جنس [ النوأثر ] المصور على درجة الدوكاه ـ وجنس الحجاز على الحسيني» (1961، ص130). ويقرر ان الهبوط كالصعود مع قيد يميز ختام المقامين المتجاورين: «والهبوط كالصعود ، غير انه لا يجوز عمل جنس البياتي على الدوكاه في العقد الاول عند الاستقرار في مقام البوسليك حتى لا يلتبس بمقام الحصار الذي هو الطابع الاساسي للمقام» (1961، ص130)؛ كما يجعل سيره لمس درجة الراست قبل الاستقرار على الدوكاه جزءاً من الختام.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "75"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "130"
       }
     ],
-    "version": "2026-07-20T12:17:39.575Z"
+    "version": "2026-07-26T09:51:36.413Z"
   },
   {
     "id": "76",
