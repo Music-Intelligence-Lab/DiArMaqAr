@@ -2093,17 +2093,101 @@
           }
         ],
         "version": "2026-07-20T10:12:09.875Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "112",
+        "commentsEnglish": "Method of procedure: the nature of maqām ḥijāz kār requires beginning from its jawāb, not from its qarār — that is, from the degree nahaft, for example, down to kurdān, to work in the circle of the third ʿiqd in its two forms [ḥijāz on kurdān, and nahāwand on kurdān], then ascending from it to the fourth if possible. In the descent the player passes through the third ʿiqd [nahāwand on kurdān] and also ḥijāz on kurdān, then moves from it to the second ʿiqd to work with the jins ḥijāz on nawā, and at times with the jins nahāwand on chahārgāh of the fifth. There follows: the descent to the first ʿiqd. Before the repose on the degree rāst, which is the resting place of the maqām, it is commendable to touch the degree kawasht, which represents the ḥassās note of the maqām.",
+        "commentsArabic": "اجراء العمل ـ ان طبيعة مقام الحجازكار (١) توجب البدء من جوابه لا من قراره ، اي من درجة النهفت مثلاً الى الكردان للعمل في دائرة العقد الثالث بشكليه [حجاز على الكردان ـ ونهاوند على الكردان] ثم الصعود منه الى الرابع اذا امكن . وفي الهبوط يمر العازف بالعقد الثالث [نهاوند على الكردان] وايضاً حجاز على الكردان ، ثم الانتقال منه الى العقد الثاني للعمل بجنس حجاز على النوا وتارة بجنس نهاوند على الجهاركاه ذي خمس . يلي ذلك : الهبوط الى العقد الاول . وقبل الاستقرار على درجة الراست التي هي مستقر المقام يستحسن لمس درجة الكوشت التي تمثل صوت الحساس للمقام .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "māhūr"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kawasht"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:56:24.471Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā notes that \"this maqām formerly used the notes segāh and awj instead of nīm būselīk and nīm māhūr\" (1946, p.56).",
-    "commentsArabic": "ينبّه الشوّا إلى أن «هذا المقام قديماً يستعمل فيه صوتي الثيه كاه والاوج بدلاً من صوتي النيم بوسليك والنيم ماهور» (١٩٤٦، ص٥٦).",
+    "commentsEnglish": "al-Shawwā notes that \"this maqām formerly used the notes segāh and awj instead of nīm būselīk and nīm māhūr\" (1946, p.56).\n\nThis maqām's data is compiled from al-Shawwā (1946, p.56) and al-Ḥilū (1961, p.112). The two sources agree on the scale except at the third and seventh degrees: nīm būselīk and nīm māhūr derive from al-Shawwā, while al-Ḥilū's note names give būselīk and nahaft, that is māhūr — comma-level differences, his 24-tone gamut having no comma degrees, and cognate with al-Shawwā's own remark above about the older segāh/awj usage. His construction is disjunct over two octaves sharing the kurdān degree. In descent he works nahāwand in place of ḥijāz: \"the descent is like the ascent, except that in the descent one works with the jins nahāwand on chahārgāh, of the fifth, and on kurdān as well\" (1961, p.112). On the maqām's character: \"it rests on presenting the jins ḥijāz on the two degrees nawā and rāst\" (1961, p.112), consistent with this entry's ghammāz nawā. His footnote gives the etymology: \"the meaning of ḥijāz kār: a Persian and Turkish word composed of two words, ḥijāz meaning maqām al-ḥijāz and kār meaning craft; joining the two, the meaning is the craft of ḥijāz. This melody, that is al-ḥijāz, is attributed to the people of the Ḥijāz; among the Arabs, Persians and Turks it holds great esteem and a distinguished quality, and it is among the oldest Eastern melodies. It rests originally on its resting place, the open dūgāh string of the ʿūd and the violin; but the Turks, and perhaps the Persians before them, crafted it, that is transposed it, onto the degree rāst, whereby it acquired a special colour and its stamp, and the course of work in it came to differ slightly from the original ḥijāz melody\" (1961, p.112).",
+    "commentsArabic": "ينبّه الشوّا إلى أن «هذا المقام قديماً يستعمل فيه صوتي الثيه كاه والاوج بدلاً من صوتي النيم بوسليك والنيم ماهور» (١٩٤٦، ص٥٦).\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص56) والحلو (1961، ص112). يتفق المصدران على السلّم عدا الدرجتين الثالثة والسابعة: نيم بوسليك ونيم ماهور مصدرهما الشوا، بينما تعطي اسماء الدرجات عند الحلو بوسليك ونهفت اي ماهور، وهما فرقا كوما اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما، وذلك قريب من ملاحظة الشوا اعلاه عن استعمال السيكاه والاوج قديماً. تكوينه عنده بالجمع المنفصل على ديوانين يشتركان في درجة الكردان. في الهبوط يعمل النهاوند مكان الحجاز: «والهبوط كالصعود ـ غير انه يعمل في الهبوط بجنس نهاوند على الجهاركاه ذو خمس وعلى الكردان ايضاً» (1961، ص112). عن شخصية المقام: «تقوم على اظهار جنس الحجاز على درجتي النوا والراست» (1961، ص112)، بما يوافق غماز هذه المدونة النوا. تعطي حاشيته اشتقاق الاسم: «معنى حجازكار ـ لفظ فارسي وتركي ، مركب من كلمتين ( حجاز ) بمعنى مقام الحجاز و ( كار ) بمعنى ( صنعة ) وبانضمام الكلمتين يكون المعنى ( صناعة الحجاز ) وتنسب هذه النغمة اي ( الحجاز ) الى اهل الحجاز ، ولها عند العرب والفرس والاتراك اعتبار كبير وصفة ممتازة ، وهي من اقدم النغمات الشرقية ، وترتكز في الاصل على مستقرها وهو مطلق وتر الدوكاه في آلتي العود والكمان ، ولكن الاتراك وربما الفرس قبلهم صنعوها اي صوروها على درجة الراست ، فاكتسبت بذلك لوناً خاصاً وانتسمت ناطقتها واصبح سير العمل فيها يختلف قليلاً عن نغمة الحجاز الاصلية» (1961، ص112).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "56"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "112"
       }
     ],
-    "version": "2026-07-20T10:12:09.875Z"
+    "version": "2026-07-26T08:56:24.471Z"
   },
   {
     "id": "24",
