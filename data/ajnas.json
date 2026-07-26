@@ -117,15 +117,15 @@
       "chahārgāh",
       "nawā"
     ],
-    "commentsEnglish": "al-Ḥilū gives an identical tetrachord under the name jins ʿajam kurd.",
-    "commentsArabic": "يورد الحلو الجنس نفسه بأصواته ذاتها باسم جنس العجم كرد.",
+    "commentsEnglish": "In his table of the well-known ajnās, al-Ḥilū prints beneath this jins the line \"and like it, jins al-ʿajam kurd\" with a note-for-note identical row — dūgāh, kurd, chahārgāh, nawā — recording ʿajam kurd as another name carrying the same jins (1961, p.82).",
+    "commentsArabic": "في جدوله للاجناس المشهورة يطبع الحلو تحت هذا الجنس سطر «ومثله جنس العجم كرد» بدرجات مطابقة تماماً: دوكاه، كرد، جهاركاه، نوا، مثبتاً العجم كرد اسماً آخر يحمل الجنس نفسه (1961، ص82).",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T09:10:50.234Z"
+    "version": "2026-07-26T13:39:15.732Z"
   },
   {
     "id": "9",
@@ -183,15 +183,15 @@
       "ḥijāz",
       "nawā"
     ],
-    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used across the Arabic speaking region. It is also a jins and maqām that has many variations in intonation, even if it has been consistently theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.\n\nal-Ḥilū gives an identical tetrachord under the name jins shahnāz.",
-    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو نظرياته مثبتة على أنه مبني من النغمات: دوكاه، كردي، حجاز، نوى. لهذا السبب نظيف نسخ متعددة منه ليُسمع ويُقارن مع التغيرات النغمية ضمن نظام تنغيم واحد أو عبر أنظمة تنغيم متعددة.\n\nيورد الحلو الجنس نفسه بأصواته ذاتها باسم جنس الشاهناز.",
+    "commentsEnglish": "Jins ḥijāz, and its maqām ḥijāz, is one of the most widely used across the Arabic speaking region. It is also a jins and maqām that has many variations in intonation, even if it has been consistently theorised as being constructed from the note names dūgāh, kurdī, ḥijāz, nawā. For this reason we have included multiple versions of it so that it can be heard and compared with intonational variants within a single or across multiple tuning systems.\n\nIn his table of the well-known ajnās, al-Ḥilū lists ( al-shāhnāz ) within the ḥijāz family with a note-for-note identical row — dūgāh, kurd, ḥijāz, nawā — recording shāhnāz as another name carrying the same jins (1961, p.82).",
+    "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو نظرياته مثبتة على أنه مبني من النغمات: دوكاه، كردي، حجاز، نوى. لهذا السبب نظيف نسخ متعددة منه ليُسمع ويُقارن مع التغيرات النغمية ضمن نظام تنغيم واحد أو عبر أنظمة تنغيم متعددة.\n\nفي جدوله للاجناس المشهورة يدرج الحلو ( الشاهناز ) ضمن فصيلة الحجاز بدرجات مطابقة تماماً: دوكاه، كرد، حجاز، نوا، مثبتاً الشاهناز اسماً آخر يحمل الجنس نفسه (1961، ص82).",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T18:07:11.107Z"
+    "version": "2026-07-26T13:39:15.732Z"
   },
   {
     "id": "13",
@@ -313,8 +313,8 @@
       "chahārgāh",
       "nawā"
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Ḥilū prints this jins as a single row under two names, headed \"and like it, jins al-būselīk and jins al-ʿushshāq\" — the book equates the two names for one construction — and pairs it (\"wa-mithluhu\") with jins nahāwand, which shares its intervals (1961, p.82).",
+    "commentsArabic": "يطبع الحلو هذا الجنس سطراً واحداً باسمين، بعنوان «ومثله جنس البوسليك وجنس العشاق»، فالكتاب يساوي بين الاسمين لبناء واحد، ويقرنه («ومثله») بجنس نهاوند الذي يشاركه مسافاته (1961، ص82).",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
@@ -325,7 +325,7 @@
         "page": "82"
       }
     ],
-    "version": "2026-07-20T07:13:07.360Z"
+    "version": "2026-07-26T13:39:15.732Z"
   },
   {
     "id": "23",
