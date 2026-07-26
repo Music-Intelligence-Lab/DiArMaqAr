@@ -696,17 +696,75 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "114",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām al-nawā athar to begin by presenting the first ʿiqd, working with the jins nawā athar on the degree rāst; then the move to the second ʿiqd, working with the jins ḥijāz on nawā.\n\nThere follows: the ascent to the third ʿiqd, and from it to the fourth if possible.\n\nThe descent is like the ascent, except that it is commendable to descend to the degree yegāh so that the jins ḥijāz may be voiced upon it before the repose with the jins nawā athar on rāst; this is also permissible during the work, the choice returning to the composer's taste.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ العمل من مقام النوأثر باظهار العقد الاول للعمل بجنس النوأثر على درجة الراست . ثم الانتقال الى العقد الثاني للعمل بجنس الحجاز على النوا .\n\nيلي ذلك : الصعود الى العقد الثالث ومنه الى الرابع اذا امكن .\n\nوالهبوط كالصعود ـ غير انه يستحسن الهبوط الى درجة اليكاه ليصور عليه جنس الحجاز قبل الاستقرار بجنس النوأثر على الراست ويجوز هذا ايضاً اثناء العمل واختيــار ذلك يعود الى ذوق الملحن .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:00:42.939Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.52) and al-Ḥilū (1961, p.114). The two sources agree on the scale except at the seventh degree: nīm māhūr derives from al-Shawwā, while al-Ḥilū's note names give nahaft, that is māhūr — a comma-level difference, his 24-tone gamut having no comma degrees. His two octaves are joined by the disjunctive tone between kurdān and muḥayyar, every upper degree the octave of its lower counterpart, with the augmented second between kurd and ḥijāz present in both. On the maqām's character: \"it rests on presenting the jins ḥijāz on nawā, and the jins ḥiṣār on the degree rāst\" (1961, p.114) — ḥiṣār on rāst being his name for the maqām's tonic pentachord within its family (min faṣīlat al-ḥiṣār) — agreeing with this entry's ghammāz nawā.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص52) والحلو (1961، ص114). يتفق المصدران على السلّم عدا الدرجة السابعة: نيم ماهور مصدرها الشوا، بينما تعطي اسماء الدرجات عند الحلو النهفت اي الماهور، وهو فرق كوما اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما. ديواناه موصولان بالفاصل الطنيني بين الكردان والمحير، كل درجة عليا جواب نظيرتها السفلى، والثانية الزائدة بين الكرد والحجاز حاضرة في الديوانين. عن شخصية المقام: «تقوم على اظهار جنس الحجاز على النوا ، وجنس الحصار على درجة الراست» (1961، ص114)، والحصار على الراست تسميته لعقد المقام الاول ضمن فصيلته (من فصيلة الحصار)، بما يوافق غماز هذه المدونة النوا.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "52"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "114"
       }
     ],
-    "version": "2025-12-10T18:28:28.107Z"
+    "version": "2026-07-26T09:00:42.939Z"
   },
   {
     "id": "7",
