@@ -906,17 +906,95 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "118",
+        "commentsEnglish": "Method of procedure: the work in maqām al-bayyātī begins in the circle of the first ʿiqd, entering it from nawā in the manner of the Turks. The modern Arabs, however, have abandoned this narrow restriction and given themselves the freedom to enter from any of the maqām's concordant notes, such as dūgāh, which is the resting place of the maqām, or its ghammāz, which is the note ḥusaynī, or its ẓahīr, which is the note rāst. There follows: entry into the circle of the second ʿiqd, working at times with the jins būselīk on nawā and at other times with the jins chahārgāh on chahārgāh, and occasionally, incidentally, with the jins ʿajam on ʿajam. Then the ascent to the third ʿiqd in its two forms, bayyāt, and būselīk on muḥayyar in the descent, and from it to the fourth if possible. The descent is like the ascent, except that in descending it is permissible to work the jins būselīk on muḥayyar instead of bayyāt on muḥayyar. Before the repose on dūgāh, the resting place of the maqām, it is commendable to toy with the two degrees ʿirāq and rāst.",
+        "commentsArabic": "اجراء العمل ــ يبدأ العمل من مقام البياتي في دائرة العقد الاول . دخولاً اليه من النوا على طريقة الاتراك . اما المحدثين من العرب فقد اهملوا هذا التقيــد الضيق واطلقوا لانفسهم حرية الدخول من اي صوت من اصوات المقام المتآلفة امثال ــ الدوكاه الذي هو مستقر المقام ، أو غمازه الذي هو صوت الحسيني أو ظهيره الذي هو صوت الراست ، يلي ذلك : الدخول في دائرة العقد الثاني للعمل تارة بجنس البوسليك على النوا وتارة اخرى بجنس الجهاركاه على الجهاركاه واحياناً وبطريق العرض بجنس عجم على العجم . ثم الصعود الى العقد الثالث بشكليه البياتي والبوسليك على المحير عند الهبوط ومنه الى الرابع اذا امكن . والهبوط كالصعود . غير انه في حالة الهبوط يجوز عمل جنس البوسليك على المحير بدلاً من بياتي على المحير . وقبل الاستقرار على الدوكاه مستقر المقام يستحسن مداعبة درجتي ــ العراق والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:27:30.693Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.59) and al-Ḥilū (1961, pp.118-119). The two sources agree on the scale in both directions, al-Ḥilū extending it over two identical octaves, dūgāh to jawāb muḥayyar. His one printed substitution is directional: on jawāb al-segāh, \"and it is substituted by jawāb al-būselīk so as to work, in the descent, with the jins būselīk on muḥayyar\" (1961, p.118). On the ghammāz, where this entry gives nawā, al-Ḥilū names ḥusaynī: entry may be made from dūgāh \"which is the resting place of the maqām, or its ghammāz, which is the note ḥusaynī, or its ẓahīr, which is the note rāst\" (1961, p.118). On the maqām's character: \"it rests on presenting the jins būselīk on nawā and chahārgāh on chahārgāh\" (1961, p.118). His note on the maqāms resembling bayyāt reads: \"among the many maqāms resembling maqām al-bayyātī are the following: maqām al-ḥusaynī — it is bayyāt itself, but in ḥusaynī a bayyāt is worked on the degree ḥusaynī and another bayyāt rests on the degree muḥayyar, and a bayyāt rests on dūgāh, the resting place of the maqām; in the descent one works with the jins būselīk on nawā instead of bayyāt on ḥusaynī. Likewise maqām al-muḥayyar, which begins with bayyāt on muḥayyar and in the descent goes down to the second ʿiqd to work būselīk on nawā, and bayyāt on dūgāh exactly as in maqām al-bayyātī, with the addition of bayyāt on ḥusaynī, then the return to būselīk on nawā, then it closes with bayyāt on dūgāh. Likewise in maqām [al-bayyātī shūrī], called by the Turks [thārjfār], two ajnās share its second ʿiqd, ḥijāz and būselīk on nawā — this būselīk being in the origin of maqām al-bayyātī as it is in the origin of the maqāms thārjfār, muḥayyar and ḥusaynī just mentioned. In maqām al-shūrī, that is thārjfār, there is added by way of variety another ʿiqd, the emphasis on chahārgāh, at times joined in the descent by būselīk on nawā; this maqām also ends like maqām al-bayyātī, that is with the jins bayyāt on dūgāh. Likewise in maqām al-gulʿazār, which consists of working rāst on nawā, and būselīk and ḥijāz also on the degree nawā, and bayyāt on the degree ḥusaynī and bayyāt on the degree muḥayyar, ending with bayyāt on dūgāh; and like this maqām gulʿazār are maqām kurdāniyah, maqām bayyātī sulṭānī and maqām ʿarḍibār — this last works in its second ʿiqd chahārgāh on chahārgāh and ḥijāz on nawā or nikrīz on chahārgāh, and exceeds the maqāms resembling it only by working the jins kurd on the degree muḥayyar in its third ʿiqd\" (1961, p.119; the square brackets are printed in the original).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص59) والحلو (1961، ص118-119). يتفق المصدران على السلّم في الاتجاهين، ويمده الحلو على ديوانين متطابقين من الدوكاه الى جواب المحير. بديله المطبوع الوحيد اتجاهي: على جواب السيكاه «ويستبدل بجواب البوسليك للعمل عند الهبوط بجنس البوسليك على المحير» (1961، ص118). اما الغماز، وهو نوا في هذه المدونة، فيسميه الحلو الحسيني: يجوز الدخول من الدوكاه «الذي هو مستقر المقام ، أو غمازه الذي هو صوت الحسيني أو ظهيره الذي هو صوت الراست» (1961، ص118). عن شخصية المقام: «تقوم على اظهار جنس البوسليك على النوا والجهاركاه على الجهاركاه» (1961، ص118). ملاحظته عن المقامات الشبيهة بالبياتي نصها: «ان من المقامات الكثيرة الشبيهة بمقام البياتي المقامات التالية : مقام الحسيني ــ هو البياتي بعينه ، لكن في الحسيني يعمل بياتي على درجة الحسيني وبياتي آخر يرتكز على درجة المحير . وبياتي يرتكز على الدوكاه مستقر المقام . وفي الهبوط يعمل بجنس بوسليك على النوا بدلاً من بياتي على الحسيني . كذلك مقام المحير ، فانه يبدأ ببياتي على المحير وفي الهبوط ينزل الى العقد الثاني لعمل بوسليك على النوا . وبياتي على الدوكاه كما في مقام البياتي تماماً ، انما يضاف الى ذلك بياتي على الحسيني ثم العودة الى بوسليك على النوا ثم يختم بياتي على الدوكاه . كذلك في مقام [ البياتي شوري ] المسمى عند الاتراك [ ثارجفار ] فيشترك في عقده الثاني جنسان هما الحجاز والبوسليك على النوا ، والبوسليك هذا هو في اصل مقام البياتي كما هو في اصل مقامات الثارجفار والمحير والحسيني المار ذكرهم . وفي مقام الشوري اي الثارجفار يضاف الى ما ذكرناه عقداً آخر على سبيل التنويع هو التركيز على الجهاركاه وتارة يشترك معه في الهبوط البوسليك على النوا . وينتهي هذا المقام كمقام البياتي ايضاً اي بجنس بياتي على الدوكاه . كذلك في مقام الكلعزار الذي هو عبارة عن عمل الراست على النوا والبوسليك والحجاز ايضاً على درجة النوا وبياتي على درجة الحسيني وبياتي على درجة المحير وينتهي بياتي على الدوكاه ، ومثل مقام الكلعزار هذا مقام كردانيه . ومقام بياتي سلطاني . ومقام عرضبار . وهذا الاخير يعمل في عقده الثاني جهاركاه على الجهاركاه وحجاز على النوا أو نكريز على الجهاركاه ولا يزيد عما ذكرناه عن المقامات الشبيهة به الا بعمل جنس الكرد على درجة المحير في عقده الثالث» (1961، ص119؛ الاقواس المربعة مطبوعة في الاصل).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "59"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "118"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "119"
       }
     ],
-    "version": "2026-07-20T13:01:34.466Z"
+    "version": "2026-07-26T09:27:30.693Z"
   },
   {
     "id": "8",
