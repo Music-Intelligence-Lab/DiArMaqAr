@@ -5969,17 +5969,87 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "133",
+        "commentsEnglish": "Method of procedure: the work in maqām al-chahārgāh begins in the circle of the first ʿiqd, entering it from the degree ʿajam or chahārgāh. Then comes the movement to the second ʿiqd with the jins chahārgāh on kurdān, joined incidentally by the jins rāst on kurdān; and from it to the third ʿiqd, then the fourth if possible. The descent is like the ascent, with no difference between them. And at the end the maqām reposes on the degree chahārgāh with the jins ʿajam, that is, chahārgāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الجهاركاه في دائرة العقد الاول دخولاً اليه من درجة العجم او الجهاركاه . ثم يكون الانتقال الى العقد الثاني بجنس جهاركاه على الكردان ويشترك معه جنس الراست على الكردان بصفة عرضية ، ومنه الى العقد الثالث ثم الرابع اذا امكن . والهبوط كالصعود ولا فرق بينهما . وفي النهاية يستقر المقام على درجة الجهاركاه بجنس العجم أي الجهاركاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "jawāb kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          }
+        ],
+        "version": "2026-07-26T09:59:40.039Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.90) and al-Ḥilū (1961, p.133). The sources agree on the scale in both directions — al-Ḥilū states outright \"the descent is like the ascent, with no difference between them\" (1961, p.133) — and their suyūr run parallel: both enter from around ʿajam (al-Shawwā from ḥusaynī or ʿajam, al-Ḥilū from ʿajam or chahārgāh), both work rāst on kurdān, and both repose on chahārgāh. al-Ḥilū counts the maqām at two dīwāns by disjunct assembly, \"of the family of chahārgāh and ʿajam\" (1961, p.133), the two dīwāns fully octave-parallel; his seventh degree is printed \"al-būselīk — and it is replaced by jawāb al-segāh\" (1961, p.133), both printed names designating this entry's buzurk. He names the maqām's tetrachord \"chahārgāh, that is ʿajam\" throughout — one jins under either name. This entry's ghammāz is chahārgāh; al-Ḥilū names no ghammāz here, but seats his second ʿiqd on kurdān, this entry's secondary jins degree, and gives the character as \"it rests on presenting the jins al-ʿajam suspended on the degree ʿajam\" (1961, p.133). His footnote explains the maqām's identity in full: \"The maqām al-chahārgāh is in truth maqām al-ʿajam ʿushayrān itself, but pictured on the degree chahārgāh, that is, it has become founded on the degree chahārgāh and is called by its name; and by this picturing it has acquired a colour of its own. There is a Turkish chahārgāh maqām called (shāh war) which resembles this Arab chahārgāh, but the Turks sometimes exchange, in their maqām, the degree nawā for the degree ṣabā, so that a jins ṣabā is formed on the degree dūgāh — yet suspended on the degree chahārgāh, so it becomes like maqām al-ḥijāzkār pictured on the degree chahārgāh\" (1961, p.133).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص90) والحلو (1961، ص133). يتفق المصدران على السلّم في الاتجاهين، ويصرح الحلو: «والهبوط كالصعود ولا فرق بينهما» (1961، ص133)، ويتوازى السيران: فكلاهما يدخل من جوار العجم (الشوا من الحسيني او العجم، والحلو من العجم او الجهاركاه)، وكلاهما يعمل الراست على الكردان ويستقر على الجهاركاه. يعد الحلو المقام ديوانين بالجمع المنفصل «من فصيلة الجهاركاه والعجم» (1961، ص133) والديوانان متوازيان جواباً تاماً؛ ودرجته السابعة مطبوعة «البوسليك ـ ويستبدل بجواب السيكاه» (1961، ص133)، وكلا الاسمين يعني بزرك هذه المدونة. ويسمي رباعي المقام «جهاركاه أي عجم» في كل مواضعه، جنساً واحداً باسمين. غماز هذه المدونة هو الجهاركاه؛ ولا يسمي الحلو غمازاً هنا، لكنه يجلس عقده الثاني على الكردان، وهي درجة الجنس الثاني في هذه المدونة، ويقول في شخصية المقام: «تقوم على اظهار جنس العجم المعلَّق على درجة العجم» (1961، ص133). وتشرح حاشيته هوية المقام كاملة: «ان مقام الجهاركاه هو في الحقيقة مقام العجم عشيران بذاته ، ولكنه مصوراً على درجة الجهاركاه أي انه اصبح مؤسساً على درجــة الجهاركاه ويسمى باسمها . وقد اكتسب بهذا التصوير لوناً خاصاً به . ويوجد مقام جهاركاه تركي يسمى ( شاه ور ) هو شبيه بالجهاركاه العربي هذا ، ولكن الاتراك يبدلون احياناً في مقامهم درجة النوا بدرجة الصبا ليتكوّن جنس صبا على درجة الدوكاه . ولكنه يكون معلقاً على درجة الجهاركاه ، فيصبح كمقام الحجازكار مصوراً على درجة الجهاركاه» (1961، ص133).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "90"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "133"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:59:40.039Z"
   },
   {
     "id": "50",
