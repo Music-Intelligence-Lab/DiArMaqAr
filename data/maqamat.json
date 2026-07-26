@@ -2026,17 +2026,82 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "102",
+        "commentsEnglish": "The descent is like the ascent, except that the jins awj is replaced by ʿajam in the third ʿiqd; then one descends from it to the second ʿiqd and from it to the first, where it reposes on ʿirāq, the resting place of the maqām.\n\nMethod of procedure: it has been customary for the work in maqām ʿirāq to begin by presenting the first ʿiqd, entering it usually from the degree rāst, with the note yegāh used as a ẓahīr for it; then comes the move to the second ʿiqd [bayyāt on dūgāh], ascending from it to the third [rāst on nawā], where another ʿiqd acts jointly with it, namely awj on awj; and from it to the fourth if possible; then the descent is as noted above.",
+        "commentsArabic": "والهبوط كالصعود غير انه يبدل جنس الاوج بالعجم في العقد الثالث . ثم يهبط منه الى العقد الثاني ومنه الى الاول حيث يستقر على العراق مستقر المقام .\n\nاجراء العمل ـ جرت العادة ان يبدأ العمل في مقام العراق باظهار العقد الاول دخولاً اليه عادة من درجة الراست مع استعمال صوت اليكاه كظهير له ، ثم يصير الانتقال الى العقد الثاني [بياتي على الدوكاه] ويصعد منه الى الثالث [راست على النوا] حيث يشترك معه عقد آخر هو اوج على الاوج . ومنه الى الرابع اذا امكن ثم يكون الهبوط كما هو مدون اعلاه",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "26",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "buzurk"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:17:32.275Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.33) and al-Ḥilū (1961, p.102). The two sources agree on the scale in both directions; al-Ḥilū extends it over two identical octaves, ʿirāq to jawāb awj, marking awj as the jawāb of ʿirāq and the boundary of the two diwans. In the descent he substitutes one genus: \"the descent is like the ascent, except that the jins awj is replaced by ʿajam in the third ʿiqd\" (1961, p.102). On the maqām's character: \"it rests on presenting the jins bayyāt on the degree dūgāh\" (1961, p.102). His footnote records a methodological caveat on ʿirāq and segāh: \"some analyse the two maqāms ʿirāq and segāh from a [dhū al-thalāth] jins for the first ʿiqd; this trichordal measure has no existence in the formation of the Arab and non-Arab ajnās, for the jins, as is known, is built on the principle of the [four-note] interval composed of four notes enclosing intervals whose sum is two and a half intervals, without increase or decrease. If we consider this jins ʿirāq as a trichord, the sum of its intervals falls short by three quarters of an interval, and if we consider it composed of [the four-note kind] it exceeds by a quarter of an interval; therefore this composite maqām [ʿirāq] and its likes cannot be used in the formation of melodies and their analysis, in presenting the families on the basis of the scientific method followed\" (1961, p.102; the square brackets are printed in the original).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص33) والحلو (1961، ص102). يتفق المصدران على السلّم في الاتجاهين؛ يمده الحلو على ديوانين متطابقين من العراق الى جواب الاوج، ويجعل الاوج جواب العراق وحد الديوانين. في الهبوط يبدل جنساً واحداً: «والهبوط كالصعود غير انه يبدل جنس الاوج بالعجم في العقد الثالث» (1961، ص102). عن شخصية المقام: «تقوم على اظهار جنس البياتي على درجة الدوكاه» (1961، ص102). تسجل حاشيته تحفظاً منهجياً عن العراق والسيكاه: «يحلل البعض مقامي العراق والسيكاه من جنس [ ذو الثلاث ] للعقد الاول . وهذا القياس الثلاثي لا وجود له في تكوين الاجناس العربية وغير العربية . لان الجنس كما هو معلوم مبني على مبدأ البعد [ الذي بالاربع ] المؤلف من اربعة اصوات تنحصر بينها مسافات مجموعها مسافتان ونصف المسافة دون زيادة او نقصان . فاذا اعتبرنا جنس العراق هذا من ذي الثلاث ، فان مجموع مسافاته تنقص ثلاثة ارباع المسافة . واذا اعتبرناه مؤلفاً من [ الذي بالاربع ] فانه يزيد ربع مسافة ، لذلك ، لا يمكن استعمال هذا المقام [ العراق ] المركب وامثاله في تكوين الالحان وتحليلها في اظهار الفصائل على اساس الطريقة العلمية المتبعة» (1961، ص102؛ الاقواس المربعة مطبوعة في الاصل).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "33"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "102"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:17:32.275Z"
   },
   {
     "id": "27",
