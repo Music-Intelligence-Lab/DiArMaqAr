@@ -4251,17 +4251,79 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "104",
+        "commentsEnglish": "Method of procedure: one opens in maqām bestenegār, which is [a composite maqām], by working ṣabā on dūgāh. After the stop on this dūgāh, one works with the jins ʿirāq on ʿirāq, by touching rāst and ʿirāq. Then one ascends ʿiqd by ʿiqd up to the fourth ʿiqd in its first and second forms, if possible.\n\nThen the descent proceeds gradually like the ascent, and one works with the jins awj on awj, by substituting awj for ʿajam and muḥayyar for shahnāz. This ʿiqd and others among the ʿuqūd called the incidentals, or whatever occurs upon this maqām or other Arab maqāms: these indeterminate, unbounded changes are nothing but incidentals from which it is permissible to work even though they are absent from the origin of the maqām, whether this maqām is simple or composite.",
+        "commentsArabic": "اجراء العمل ـ يستهل في مقام البسته نكار وهو [ مقام مركب ] بعمل الصبا على الدوكاه . وبعــد الوقوف على هذا الدوكاه ، يعمل بجنس عراق على العراق وذلك بلمس الراست والعراق . ثم يصعــد عقداً فعقداً حتى العقد الرابع بشكليه الاول والثاني اذا امكن .\n\nثم يصير الهبوط تدريجياً كالصعود ويعمل بجنس اوج على الاوج وذلك باستبدال العجم بالاوج والشاهناز بالمحير . وهذا العقد وسواه من العقود التي تسمى بالعرضيات أو ما يطرأ على هذا المقام او سواه من المقامات العربية ، فليست هذه التغيرات الغير معينة او محدودة سوى عرضيات يجوز العمل منها مع عدم وجودها في اصل المقام . ان كان هذا المقام صحيح او مركب .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "26",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:23:08.922Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives muḥayyar as the top ascending degree, with shahnāz as an alternative.",
-    "commentsArabic": "يعطي الشوّا المحير أعلى درجات الصعود، والشاهناز بديلاً عنها.",
+    "commentsEnglish": "al-Shawwā gives muḥayyar as the top ascending degree, with shahnāz as an alternative.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.37) and al-Ḥilū (1961, p.104). The sources agree on the scale through the ninth degree, with al-Ḥilū's sixth degree printed ṣabā, his alternate name for the ḥijāz position, confirmed by his half-tone interval from chahārgāh to ṣabā (1961, p.104). At the tenth degree al-Ḥilū gives shahnāz, corroborating the alternative this entry's descent carries, while the ascending muḥayyar derives from al-Shawwā; he counts the maqām at 12 notes, continuing two degrees higher through jawāb būselīk to māhūrān (1961, p.104). He analyses it as a composite of ʿirāq and ṣabā: on its character, \"it rests on presenting ṣabā on dūgāh and ʿirāq on ʿirāq\" (1961, p.104). His footnote groups it with the resembling maqāms: \"see the explanation of the two maqāms ʿirāq and segāh on the page of the analysis of maqām ʿirāq; maqām bestenegār too, and every maqām previously analysed from the dhū al-thalāth, falls under the rule of the maqāms ʿirāq and segāh in their first ʿiqd; these maqāms and their likes are called the resembling maqāms\" (1961, p.104).",
+    "commentsArabic": "يعطي الشوّا المحير أعلى درجات الصعود، والشاهناز بديلاً عنها.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص37) والحلو (1961، ص104). يتفق المصدران على السلّم حتى الدرجة التاسعة، ويطبع الحلو الدرجة السادسة باسم صبا، وهو اسمه البديل لموضع الحجاز، ويؤكده بُعده المطبوع من الجهاركاه الى الصبا وهو نصف طنيني (1961، ص104). في الدرجة العاشرة يعطي الحلو شاهناز مؤكداً البديل الذي يحمله الهبوط هنا، اما المحير صعوداً فمصدره الشوا؛ ويعد المقام 12 صوتاً متابعاً درجتين اعلى عبر جواب البوسليك الى الماهوران (1961، ص104). يحلله مركباً من العراق والصبا: عن شخصيته «تقوم على اظهار الصبا على الدوكاه والعراق على العراق» (1961، ص104). تجمع حاشيته المقام مع المقامات المتشابهة: «انظر شرح مقامي العراق والسيكاه في صفحة تحليل مقام العراق . فمقام البسته نكار هو ايضاً وكل مقام حلل سابقاً من ذي الثلاث يكون حكمه حكم مقامي العراق والسيكاه في عقدهما الاول . وهذه المقامات وامثالها يطلق عليها المقامات المتشابهة» (1961، ص104).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "37"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "104"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:23:08.922Z"
   },
   {
     "id": "46",
