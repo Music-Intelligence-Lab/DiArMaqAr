@@ -1884,17 +1884,87 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "110",
+        "commentsEnglish": "Method of procedure: the meaning of this construction is that maqām al-sūzdalārā is made up of several maqāms which distinguish it from the other maqāms of the rāst family, especially the occurrence of certain pauses in it on maqām bayyāt al-ḥusaynī and the phrases of rāst and of the suspended nikrīz that sometimes run through it.\n\nThe work begins from the būselīk colour in the first ʿiqd, entering it from the degree chahārgāh or rāst; rāst on rāst acts jointly with it, as does al-bayyātī al-ḥusaynī on dūgāh and on ḥusaynī, by substituting awj for ʿajam. Then the descent is from the degree ḥusaynī to dūgāh with the jins būselīk, or sometimes bayyāt, or nikrīz on rāst; and the repose is with the jins rāst on rāst, touching the degrees ʿirāq and ʿushayrān al-ḥusaynī before the repose on rāst.",
+        "commentsArabic": "اجراء العمل ـ معنى هذا التركيب ان مقام السوزدلارا يتكون من عدة مقامات تميزه عن سائر المقامات التي من فصيلة الراست لا سيما حصول بعض وقفات فيه على مقام بياتي الحسيني وما يتخلله من عبارات الراست والنكريز المعلق احياناً .\n\nويبدأ العمل من نغمة البوسليك في العقد الاول دخولاً اليه من درجة الجهاركاه او الراست يشترك معه الراست على الراست والبياتي الحسيني على الدوكاه وعلى الحسيني باستبدال العجم بالاوج . ثم يكون الهبوط من درجة الحسيني الى الدوكاه بجنس بوسليك او البياتي احياناً او النكريز على الراست ، والاستقرار يكون بجنس راست على الراست مع لمس درجات العراق وعشيران الحسيني قبل الاستقرار على الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "69",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:49:57.213Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives segāh and nīm būselīk as alternatives to one another, segāh in the ascent and nīm būselīk in the descent.",
-    "commentsArabic": "يجعل الشوّا السيكاه والنيم بوسليك بديلين أحدهما من الآخر، السيكاه صعوداً والنيم بوسليك هبوطاً.",
+    "commentsEnglish": "al-Shawwā gives segāh and nīm būselīk as alternatives to one another, segāh in the ascent and nīm būselīk in the descent.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.43) and al-Ḥilū (1961, pp.109-110). The two sources agree on the ascending scale; the descending nīm būselīk derives from al-Shawwā's segāh/nīm-būselīk alternation, while al-Ḥilū's note names are symmetric, with segāh in both directions. He counts the maqām at 14 notes, every upper degree the jawāb of its lower counterpart, and prints three substitutions: on ʿajam, \"and it is substituted by awj to make ḥusaynī on ḥusaynī\"; on jawāb al-segāh, \"and it is substituted by jawāb būselīk\"; and on jawāb al-ḥusaynī, \"or jawāb tīk ḥiṣār, to make rāst on jawāb al-chahārgāh\" (1961, p.109). His segāh row carries a naming note that parallels al-Shawwā's alternation: \"at times būselīk and at other times kurd; but if segāh is used once and būselīk another, with ʿajam constant instead of awj, it is called maqām sāzkār\" (1961, p.109; compare maqām sāzkār in this data). In the header he writes \"this maqām is composite and cannot be used in the notation of melodies and their analysis\" (1961, p.109), and his footnote states: \"maqām al-sūzdalārā is a maqām composed of several ajnās; as for its first ʿiqd, it is either rāst on rāst or bayyāt on dūgāh, not chahārgāh as some have wrongly stated; maqām al-sūzdalārā is Turkish in origin but is the very maqām rāst, distinguished from it only by the clear appearance of maqām al-ḥusaynī on dūgāh and by the variety of its numerous ʿuqūd\" (1961, p.110). On its character: \"the character of this composite maqām rests on presenting the two colours būselīk on dūgāh and ḥusaynī on ḥusaynī\" (1961, p.110). Cross-reference note: his \"al-bayyātī al-ḥusaynī\" here is read as the colour of maqām al-ḥusaynī, per that footnote and per his own definition, \"maqām al-ḥusaynī is bayyāt itself, but in ḥusaynī a bayyāt is worked on the degree ḥusaynī and another bayyāt rests on the degree muḥayyar, and a bayyāt rests on dūgāh, the resting place of the maqām\" (1961, p.119) — hence the sayr references maqām ḥusaynī, whose qarār is dūgāh.",
+    "commentsArabic": "يجعل الشوّا السيكاه والنيم بوسليك بديلين أحدهما من الآخر، السيكاه صعوداً والنيم بوسليك هبوطاً.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص43) والحلو (1961، ص109-110). يتفق المصدران على سلّم الصعود؛ نيم بوسليك في الهبوط مصدرها تبادل السيكاه والنيم بوسليك عند الشوا، اما اسماء الدرجات عند الحلو فمتماثلة بالسيكاه في الاتجاهين. يعد المقام 14 صوتاً، كل درجة عليا جواب نظيرتها السفلى، ويطبع ثلاثة بدائل: على العجم «ويستبدل بالاوج لعمل حسيني على الحسيني»، وعلى جواب السيكاه «ويستبدل بجواب بوسليك»، وعلى جواب الحسيني «او جواب تيك حصار لعمل راست على جواب الجهاركاه» (1961، ص109). يحمل صف السيكاه عنده ملاحظة تسمية توازي تبادل الشوا: «وتارة بوسليك وتارة اخرى كرد اما اذا استعملت السيكاه مرة واخرى بوسليك مع دوام العجم بدلاً من الاوج فيسمى مقام سازكار» (1961، ص109؛ قارن مقام سازكار في هذه البيانات). في الترويسة يكتب «هذا المقام مركب ولا يمكن استعماله في تدوين الالحان وتحليلها» (1961، ص109)، وتقول حاشيته: «ان مقام السوزدلارا مقام مركب من عدة اجناس . اما عقده الاول فهو ، اما راست على الراست او بياتي على الدوكاه لا الجهاركاه كما ذكر البعض خطأ . ومقام السوزدلارا تركي الاصل ولكنه نفس مقام الراست ولا يتميز عنه الا بظهور مقام الحسيني على الدوكاه ظهوراً واضحاً وبتنويع العقود العديدة» (1961، ص110). عن شخصيته: «هذا المقام المركب ـ تقوم شخصيته على اظهار نغمتي البوسليك على الدوكاه والحسيني على الحسيني» (1961، ص110). ملاحظة تحقيق: «البياتي الحسيني» عنده مقروء نغمةَ مقام الحسيني، بدلالة تلك الحاشية وبتعريفه هو: «مقام الحسيني ــ هو البياتي بعينه ، لكن في الحسيني يعمل بياتي على درجة الحسيني وبياتي آخر يرتكز على درجة المحير . وبياتي يرتكز على الدوكاه مستقر المقام» (1961، ص119)، ولذلك يحيل السير الى مقام الحسيني الذي قراره الدوكاه.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "43"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "109"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "110"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:49:57.213Z"
   },
   {
     "id": "23",
