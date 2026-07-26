@@ -8633,17 +8633,106 @@
           }
         ],
         "version": "2026-07-19T19:29:39.178Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "125",
+        "commentsEnglish": "Method of procedure: the work begins in the circle of the first ʿiqd by making the jins rāst on the degree dūgāh, contrary to the convention of the Turks, who begin with the following degrees: ḥijāz, nawā, ʿajam, kurdān, muḥayyar. The Arab convention works with the jins nīshābūrak, that is rāst, on the degree dūgāh, and the jins bayyāt on the degree dūgāh. There follows: the ascent to the second ʿiqd, to work with the jins būselīk or rāst on the degree nawā; then the arrival at the third ʿiqd, working with the jins bayyāt on muḥayyar; then it ascends to the fourth ʿiqd if possible. The descent is to the second ʿiqd, to work with the jins rāst, then with the jins būselīk on nawā; and from the second ʿiqd it descends to the first ʿiqd, to work with the jins bayyāt on dūgāh, on which the final repose takes place after touching the degree rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في دائرة العقد الاول بعمل جنس الراست على درجة الدوكاه ، وذلك خلاف ما اصطلح عليه الاتراك الذين يبدأون بالدرجات الآتية : حجاز . نوا . عجم . كردان . محير . اما الاصطلاح العربي فيعمل بجنس نيشابورك اي راست على درجة الدوكاه ، وجنس البياتي على درجة الدوكاه . يلي ذلك : الصعود الى العقد الثاني للعمل بجنس البوسليك او الراست على درجة النوا . ثم الوصول الى العقد الثالث والعمل بجنس البياتي على المحير . ثم يصعد الى العقد الرابع اذا امكن . ويكون الهبوط الى العقد الثاني للعمل بجنس الراست ثم بجنس البوسليك على النوا ومن العقد الثاني يهبط الى العقد الاول للعمل بجنس البياتي على الدوكاه الذي يكون الاستقرار النهائي عليه بعد لمس درجة الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:39:28.369Z"
       }
     ],
-    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: rāst-on-dūgāh lower jins (dūgāh nīm-būselīk nīm-ḥijāz nawā, as in humāyūn's table) + nahāwand on nawā ascending; descent swaps in awj for rāst on nawā.",
-    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جنس راست على الدوكاه في الأسفل (دوكاه، نيم بوسليك، نيم حجاز، نوا، كما في جدول الهمايون)، مع نهاوند على النوا صعوداً. وفي الهبوط يحلّ الأوج ليصير راست على النوا.",
+    "commentsEnglish": "Scale deduced by cross-reference, since al-Shawwā gives no table. To verify: rāst-on-dūgāh lower jins (dūgāh nīm-būselīk nīm-ḥijāz nawā, as in humāyūn's table) + nahāwand on nawā ascending; descent swaps in awj for rāst on nawā.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.67) and al-Ḥilū (1961, pp.124-125), whose table now verifies the scale deduced above: his lower octave runs dūgāh, nīm būselīk, nīm ḥijāz, nawā, ḥusaynī, ʿajam, kurdān exactly, the second and third degrees printed as duals (\"būselīk — segāh\", \"nīm ḥijāz — chahārgāh\") whose whole-tone and three-quarter steps force the raised nīshābūrak forms; and his descent box works awj in place of ʿajam, \"that is, in the descent one works with the jins būselīk on nawā and the jins rāst on rāst\" (1961, p.124) — precisely this entry's descending form. He counts 14 notes, of the two families bayyāt and rāst: the complete lower octave is nīshābūrak-altered while the short upper series reverts to plain segāh/chahārgāh octaves. On the maqām's character: \"it rests on presenting the jins rāst on dūgāh [nīshābūrak] and bayyāt on dūgāh\" (1961, p.125; the square brackets are printed in the original), his procedure equating the names: \"the Arab convention works with the jins nīshābūrak, that is rāst, on the degree dūgāh\", in contrast with the Turks, \"who begin with the following degrees: ḥijāz, nawā, ʿajam, kurdān, muḥayyar\" (1961, p.125).",
+    "commentsArabic": "استُنتج السلّم بالمقابلة، إذ لا يعطي الشوّا جدولاً له. ويحتاج إلى تدقيق: جنس راست على الدوكاه في الأسفل (دوكاه، نيم بوسليك، نيم حجاز، نوا، كما في جدول الهمايون)، مع نهاوند على النوا صعوداً. وفي الهبوط يحلّ الأوج ليصير راست على النوا.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص67) والحلو (1961، ص124-125) الذي يثبت جدوله الآن السلّم المستنتج اعلاه: ديوانه الادنى يجري دوكاه، نيم بوسليك، نيم حجاز، نوا، حسيني، عجم، كردان تماماً، ودرجتاه الثانية والثالثة مطبوعتان مزدوجتين («بوسليك — سيكاه»، «نيم حجاز — جهاركاه») تفرض خطواتهما الطنينية والثلاثة ارباع صيغ النيشابورك المرفوعة؛ وصندوق هبوطه يعمل الاوج مكان العجم: «أي انه يعمل عند الهبوط بجنس بوسليك على النوا وجنس راست على الراست» (1961، ص124)، وهذه صيغة الهبوط في هذه المدونة بعينها. يعد 14 صوتاً، من فصيلتي البياتي والراست: الديوان الادنى الكامل نيشابوركي التعديل بينما تعود السلسلة العليا القصيرة الى جوابات السيكاه والجهاركاه الصريحة. عن شخصية المقام: «تقوم على اظهار جنس الراست على الدوكاه [ نيشابورك ] والبياتي على الدوكاه» (1961، ص125؛ الاقواس المربعة مطبوعة في الاصل)، ويطابق اجراؤه بين الاسمين: «اما الاصطلاح العربي فيعمل بجنس نيشابورك اي راست على درجة الدوكاه»، بخلاف الاتراك «الذين يبدأون بالدرجات الآتية : حجاز . نوا . عجم . كردان . محير» (1961، ص125).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "67"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "124"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "125"
       }
     ],
-    "version": "2026-07-20T12:17:39.575Z"
+    "version": "2026-07-26T09:39:28.369Z"
   },
   {
     "id": "87",
