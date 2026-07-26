@@ -3270,17 +3270,72 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "99",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in this maqām to begin by presenting the second ʿiqd [ḥiṣār on dūgāh], entering upon it from the degree nawā, with an occasional touch of ḥiṣār, which is the ẓahīr of nawā; then the descent to the first ʿiqd; then the gradual ascent to the fourth if possible. The descent follows the method noted above.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة ان يبدأ العمل في هذا المقام باظهار العقد الثاني [ حصار على الدوكاه ] دخولاً عليه من درجة النوا مع لمس الحصار احياناً الذي هو ظهيراً للنوا . ثم النزول الى العقد الاول . ثم الصعود تدريجياً الى الرابع اذا امكن . والهبوط يتبع الطريقة المدونة اعلاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ʿushayrān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "qarār ḥiṣār"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          }
+        ],
+        "version": "2026-07-26T08:03:23.791Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.27) and al-Ḥilū (1961, p.99). The two sources agree on the scale in both directions up to a comma-level difference at the fifth degree: nīm būselīk derives from al-Shawwā, while al-Ḥilū's note names give būselīk, a whole tone above dūgāh, his 24-tone gamut having no comma degrees. al-Ḥilū extends the maqām over two full octaves, ʿushayrān to jawāb ḥusaynī, every upper degree mirroring its lower counterpart, and prints the qarār as ʿushayrān al-ḥusaynī (1961, p.99). In the descent he adds a single approach note: \"in the descent it follows the very method of the ascent, with no difference between them except that it touches the degree qarār al-ḥiṣār before the repose on ʿushayrān al-ḥusaynī, the resting place of the maqām\" (1961, p.99). On the maqām's character he writes: \"it rests on presenting the jins ḥiṣār on the degree dūgāh, and the jins ḥijāz on the degree ḥusaynī; and the presentation of these two ajnās, that is [ḥijāz on ḥusaynī and ḥiṣār on dūgāh], serves only to distinguish this maqām from its look-alike, maqām shahnāz transposed onto ʿushayrān al-ḥusaynī\" (1961, p.99; the square brackets are printed in the original).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص27) والحلو (1961، ص99). يتفق المصدران على السلّم في الاتجاهين عدا فرق كوما في الدرجة الخامسة: نيم بوسليك مصدرها الشوا، بينما تعطي اسماء الدرجات عند الحلو بوسليك على بعد طنيني كامل فوق الدوكاه، اذ لا يحمل سلّمه ذو الاربعة والعشرين صوتاً درجات الكوما. يمد الحلو المقام على ديوانين كاملين من العشيران الى جواب الحسيني، كل درجة عليا مرآة نظيرتها السفلى، ويطبع القرار باسم عشيران الحسيني (1961، ص99). يضيف في الهبوط درجة اقتراب واحدة: «في الهبوط يتبع ذات طريقة الصعود ولا فرق بينهما غير انه يلمس درجة قرار الحصار قبل الاستقرار على عشيران الحسيني مستقر المقام» (1961، ص99). عن شخصية المقام يكتب: «تقوم على اظهار جنس الحصار على درجة الدوكاه . وجنس الحجاز على درجة الحسيني . وما اظهار هذين الجنسين أي [ الحجاز على الحسيني ـ والحصار على الدوكاه ] الا لتميز هذا المقام عن شبيهه مقام الشاهناز المصوّر على عشيران الحسيني» (1961، ص99؛ الاقواس المربعة مطبوعة في الاصل).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "27"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "99"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:03:23.791Z"
   },
   {
     "id": "39",
