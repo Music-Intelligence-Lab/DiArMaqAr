@@ -4643,16 +4643,16 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
   "count": 2,
   "data": [
     {
-      "id": "al-Khulʿī-(1904/2011)",
-      "displayName": "al-Khulʿī-(1904/2011)",
+      "id": "alkhulai_1904_2011",
+      "displayName": "alkhulai_1904_2011",
       "sourceType": "Book",
       "title": "Kitāb al-Mūsiqā al-Sharqī",
       "titleAr": "كتاب الموسيقى الشرقي",
       "contributors": [
         {
           "type": "Author",
-          "firstName": "Mohammad Kāmil",
-          "lastName": "al-Khulʿī",
+          "firstName": "Muḥammad Kāmil",
+          "lastName": "al-Khulaʿī",
           "firstNameAr": "محمد كامل",
           "lastNameAr": "الخلعي"
         }
@@ -4764,9 +4764,9 @@ Return detailed information for a single bibliographic source by ID.
 - `id`: The unique identifier for the bibliographic source.
 
 Examples:
-- `al-Khuli-(2011)` - Book source ID (URL-safe, diacritics removed)
-- `Farmer-(1937)` - Article source ID
-- `Allami-(2022)` - Thesis source ID
+- `alkhulai_1904_2011` - Book source ID (URL-safe, diacritics removed)
+- `farmer_1937` - Article source ID
+- `allami_2022` - Thesis source ID
 
 **Note**: Source IDs use only the publication date (not original publication date)
 and are URL-safe with diacritics removed for compatibility.
@@ -4797,15 +4797,15 @@ curl "https://diarmaqar.net/api/sources/Farmer-(1937)?includeArabic=true"
 ```json
 {
   "source": {
-    "id": "al-Khuli-(2011)",
-    "displayName": "al-Khuli-(2011)",
+    "id": "alkhulai_1904_2011",
+    "displayName": "alkhulai_1904_2011",
     "sourceType": "Book",
     "title": "Kitāb al-Mūsiqā al-Sharqī",
     "contributors": [
       {
         "type": "Author",
-        "firstName": "Mohammad Kāmil",
-        "lastName": "al-Khulʿī"
+        "firstName": "Muḥammad Kāmil",
+        "lastName": "al-Khulaʿī"
       }
     ],
     "edition": "",

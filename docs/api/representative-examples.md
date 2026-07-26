@@ -509,7 +509,7 @@ GET https://diarmaqar.net/api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&start
 
 **Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
-**Source**: [al-Khulʿī (2011:55)](../../bibliography?source=al-Khulʿī-(2011)), [al-Urmawī-al-Baghdādī (2017:23)](../../bibliography?source=al-Urmawī-al-Baghdādī-(2017))
+**Source**: [al-Khulaʿī (2011:55)](../../bibliography?source=alkhulai_1904_2011), [al-Urmawī-al-Baghdādī (2017:23)](../../bibliography?source=al-Urmawī-al-Baghdādī-(2017))
 
 **Example**:
 ```

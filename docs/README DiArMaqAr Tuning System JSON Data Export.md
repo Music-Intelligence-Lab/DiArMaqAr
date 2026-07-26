@@ -495,7 +495,7 @@ The `allAjnasData` section contains all melodic genera available in the tuning s
       "commentsEnglish": "",
       "commentsArabic": "",
       "SourcePageReferences": [
-        {"sourceId": "al-Khulʿī-(2011)", "page": "55"},
+        {"sourceId": "alkhulai_1904_2011", "page": "55"},
         {"sourceId": "al-Urmawī-al-Baghdādī-(2017)", "page": "23"}
       ],
       "version": "2025-10-18T19:34:26.343Z"

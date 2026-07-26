@@ -50,7 +50,7 @@ The `sources.json` corpus maintains a comprehensive bibliographic database suppo
 
 **Modern Scholarship (19th–20th centuries):**
 - Meshshāqa (1899)
-- Al-Khulʿī (1904/2011)
+- Al-Khulaʿī (1904/2011)
 - Ronzevalle (1904) — Modernist Arabic 24-tone tuning
 - Cairo Congress for Arabic Music (1932)
 - Al-Shawwā (1946) — including the modulation guidelines formalised in DiArMaqAr
@@ -76,7 +76,7 @@ The Persian-Arab-Ottoman note naming convention compiled in DiArMaqAr totals **3
 The compiled note names are drawn from:
 
 - Meshshāqa (1899:18)
-- Al-Khulʿī (1904/2011:50-54 and 77-78)
+- Al-Khulaʿī (1904/2011:50-54 and 77-78)
 - Al-Shawwā (1946:11-12)
 - Allāh Wīrdī (1949:58, 153, 157, 177, 198, 203, 207)
 - Al-Ṣabbāgh (1954:47)
@@ -166,7 +166,7 @@ Many of DiArMaqAr's tuning systems are reconstructed by re-reading primary Arabi
 Sources span from the 9th century to the present:
 - **9th–13th centuries**: Medieval polymath theorists (al-Kindī, al-Fārābī, Ibn Sīnā, al-Urmawī)
 - **14th–16th centuries**: al-Shīrāzī and al-Irbilī (first attested uses of Persian-Arab-Ottoman note names), al-Lādhiqī
-- **19th–20th centuries**: Modern systematisation (Meshshāqa, al-Khulʿī, Ronzevalle, al-Shawwā, Allāh Wīrdī, al-Ṣabbāgh, al-Ḥilū); Cairo Congress (1932)
+- **19th–20th centuries**: Modern systematisation (Meshshāqa, al-Khulaʿī, Ronzevalle, al-Shawwā, Allāh Wīrdī, al-Ṣabbāgh, al-Ḥilū); Cairo Congress (1932)
 - **Late 20th century – contemporary**: Abbās (1986), al-Rejab (2002), Beyhom (2010), Farraj & Shumays (2019)
 
 DiArMaqAr enables immediate access to over a thousand years of musical and mathematical scholarship.
