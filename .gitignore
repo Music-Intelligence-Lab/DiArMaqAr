@@ -49,7 +49,8 @@ next-env.d.ts
 /scripts/batch-export/batch-export-runner.ts
 /scripts/exports/*/*.json
 /scripts/exports/*.json
-/public/data/full_json_exports/*
+# public/data is runtime/generated data (statistics, analytics, exports) — untracked
+/public/data/
 
 # serena mcp
 .serena/
