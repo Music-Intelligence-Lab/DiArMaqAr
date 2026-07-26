@@ -1639,17 +1639,80 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "103",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām rāḥat al-arwāḥ to begin by presenting the second ʿiqd, that is [ḥijāz on dūgāh]; to which is added, if desired, the third ʿiqd with awj replaced in it by ʿajam so as to make the jins būselīk on nawā as an additional ʿiqd. There follows: the move to the third ʿiqd [rāst on nawā], then the ascent to the fourth ʿiqd if possible; then the return, according to the descending ʿuqūd, to where the maqām reposes in the first ʿiqd.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة ان يبدأ العمل في مقام راحة الارواح باظهار العقد الثاني أي [ الحجاز على الدوكاه ] يضاف اليه اذا اريد العقد الثالث مبدلاً فيه الاوج بالعجم لعمل جنس البوسليك على النوا كعقد اضافي . يلي ذلك : الانتقال الى العقد الثالث [راست على النوا] ثم الصعود الى العقد الرابع اذا امكن . ثم العودة بموجب عقود الهبوط الى حيث مستقر المقام في العقد الاول .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "26",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:19:23.440Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.36) and al-Ḥilū (1961, p.103). The two sources agree on the scale in both directions; al-Ḥilū counts the maqām at 14 notes, its upper octave mirroring the lower degree for degree but stopping at jawāb al-ḥusaynī, one degree short of jawāb al-awj. In descent he projects different genera over the same degrees: būselīk on nawā in place of rāst on nawā, and a second form bayyāt on muḥayyar beside ḥijāz on muḥayyar, the būselīk formed \"with awj replaced in it by ʿajam\" (1961, p.103). On the maqām's character: \"it rests on presenting the jins ḥijāz on the two degrees dūgāh and muḥayyar\" (1961, p.103). His footnote refers back to the trichord-versus-tetrachord caveat stated under maqām ʿirāq (1961, p.102).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص36) والحلو (1961، ص103). يتفق المصدران على السلّم في الاتجاهين؛ يعد الحلو المقام 14 صوتاً، ديوانه الاعلى مرآة الادنى درجة درجة لكنه يقف عند جواب الحسيني، درجة واحدة دون جواب الاوج. في الهبوط يبسط اجناساً مختلفة على الدرجات نفسها: بوسليك على النوا مكان راست على النوا، وشكل ثانٍ بياتي على المحير الى جانب حجاز على المحير، ويتكون البوسليك «مبدلاً فيه الاوج بالعجم» (1961، ص103). عن شخصية المقام: «تقوم على اظهار جنس الحجاز على درجتي الدوكاه والمحير» (1961، ص103). تحيل حاشيته الى تحفظ ذي الثلاث والذي بالاربع المذكور تحت مقام العراق (1961، ص102).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "36"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "103"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:19:23.440Z"
   },
   {
     "id": "22",
