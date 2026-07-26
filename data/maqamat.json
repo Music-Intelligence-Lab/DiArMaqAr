@@ -4417,17 +4417,77 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "106",
+        "commentsEnglish": "As for the method of procedure in this maqām: it begins by presenting the second ʿiqd [mustaʿār on segāh] after presenting maqām al-awj, and sunbuleh is sometimes substituted by muḥayyar.\n\nThere follows the ascent to the third ʿiqd, and from it to the fourth if possible.\n\nIn the descent one works on the degree awj either with the jins mustaʿār or with the jins awj or with the two ajnās jointly; then the descent to the first ʿiqd, where it reposes on the degree ʿirāq.",
+        "commentsArabic": "اما اجراء العمل في هذا المقام فإنه يبدأ باظهار العقد الثاني [مستعار على السيكاه] بعد اظهار مقام الاوج ويستبدل احياناً السنبلة بالمحير .\n\nيلي ذلك ، الصعود الى العقد الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط يعمل على درجة الاوج اما بجنس مستعار او بجنس أوج او باشتراك الجنسين . ثم الهبوط الى العقد الاول حيث يستقر على درجة العراق .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "43"
+          },
+          {
+            "type": "jins",
+            "value": "13",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "jins",
+            "value": "13",
+            "startingNote": "buzurk"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "jins",
+            "value": "49",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:26:43.048Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.38) and al-Ḥilū (1961, pp.105-106). The scale here matches the Arab form al-Ḥilū records from the Cairo Congress proceedings; on p.105 he also tabulates the Turkish original in a dual ladder with Turkish and Arab note names side by side, resting on the kawasht pitch, \"Turkish in origin, of a special family resembling ḥijāz kār transposed onto the Turkish ʿirāq degree, or being that very thing\", counted at \"12 notes together with the note of the ẓahīr\", the ʿajam below the qarār which the Turks place outside the ʿuqūd (1961, p.105). Of the Arabs' adaptation he writes: \"the Arabs took this maqām from the Turks, but they used it on the degree ʿirāq, not kawasht, then altered its positions until it became another maqām, other than the Turkish awj ʾārā, for they made it rest first on the Arab ʿirāq with awj as its jawāb\" (1961, p.105). He criticises the Turkish construction for its quarter-tone steps: \"the least the interval must be is a half interval, and its presence in this maqām is an error in the formation of melodies among the Arabs and among the Turks\" (1961, p.105). From the Congress record: \"Shaykh Darwīsh al-Ḥarīrī observed the corruptness of this maqām's construction, believing that the sound ear inclines against its unsuitability to sound taste; the experiment was carried out by voice, and the masters ʿAlī al-Darwīsh and Kāmil al-Khulaʿī sang from this maqām and approved this construction\" (1961, p.106), followed by the degree list whose tenth degree sunbuleh is \"sometimes substituted by muḥayyar\", the reading this entry carries. On the family dispute he concludes: \"it finally resulted in their considering this maqām of the ḥijāz kār family, not of the ʿirāq family as some wrongly claimed; and the belief is that this maqām in truth belongs to neither of these two maqāms, but is a composite maqām ending on the Turkish ʿirāq in a manner resembling shahnāz\" (1961, p.106). On its character: \"it rests on presenting al-awj on al-awj and al-mustaʿār on al-segāh\" (1961, p.106), agreeing with this entry's ghammāz segāh.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص38) والحلو (1961، ص105-106). السلّم هنا يطابق الصيغة العربية التي يسجلها الحلو عن محضر مؤتمر القاهرة؛ وفي ص105 يجدول ايضاً الاصل التركي في سلّم مزدوج باسماء الدرجات التركية والعربية جنباً الى جنب، مستقراً على درجة الكوشت، وهو «تركي الاصل . ومن فصيلة خاصة تشبه الحجازكار المصور على درجة العراق التركية او هو بذاته . عدد اصواته 12 صوتاً مع صوت الظهير»، والظهير هو العجم تحت القرار يضعه الاتراك خارج العقود (1961، ص105). عن تعديل العرب يكتب: «ولقد اخذ العرب هذا المقام من الاتراك ، ولكنهم استعملوه على درجة العراق لا الكوشت ، ثم غيروا في اوضاعه حتى اصبح مقاماً آخر غير مقام الاوج آرا التركي ، لانهم جعلوه اولا يستقر على العراق العربي وجوابه الاوج» (1961، ص105). ينتقد التركيب التركي لخطواته الربعية: «فأقل ما يجب ان تكون المسافة ( نصف مسافة ) ووجودها في هذا المقام خطأ في تكوين الالحان عند العرب وعند الاتراك» (1961، ص105). من محضر المؤتمر: «لاحظ الشيخ درويش الحريري فساد تركيب هذا المقام معتقداً ان الاذن الصحيحة تتجه لعدم ملاءمته الطبع السليم . وقد اجريت التجربة بالصوت وغنى من هذا المقام الاستاذان علي الدرويش وكامل الخلعي فوافقا على هذا التركيب» (1961، ص106)، وتلي ذلك قائمة الدرجات التي درجتها العاشرة سنبله «ويستبدل احياناً السنبلة بالمحير»، وهي القراءة المعتمدة هنا. عن خلاف الفصيلة يخلص: «واسفر اخيراً عن اعتبارهم هذا المقام من فصيلة الحجازكار لا من فصيلة العراق كما ادعى البعض خطأ . والمعتقد ، ان هذا المقام لا ينتمي في الحقيقة الى هذين المقامين ، بل هو مقام مركب ينتهي على العراق التركي بطريقة تشبه الشاهناز» (1961، ص106). عن شخصيته: «تقوم على اظهار الأوج على الأوج والمستعار على السيكاه» (1961، ص106)، بما يوافق غماز هذه المدونة السيكاه.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "38"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "105"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "106"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T08:26:43.048Z"
   },
   {
     "id": "47",
