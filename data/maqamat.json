@@ -363,19 +363,11 @@
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
-        "page": "18"
-      },
-      {
-        "sourceId": "alshawwa_1946",
-        "page": "65"
+        "page": "18, 65"
       },
       {
         "sourceId": "alhilu_1957_1961",
-        "page": "120"
-      },
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "121"
+        "page": "120-121"
       }
     ],
     "version": "2026-07-26T09:30:18.187Z"
