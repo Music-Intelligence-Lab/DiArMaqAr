@@ -962,17 +962,83 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "113",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām nahāwand to begin by presenting the first ʿiqd, entering it mostly from nawā, with a touch of chahārgāh or rāst as a ẓahīr for nawā. There follows: the ascent to the second ʿiqd, then to the third, and from it to the fourth if possible.\n\nIn the descent, ʿajam is substituted by nahaft so as to arrive at the voicing of ḥijāz on nawā at times, and the emphasis of chahārgāh at other times; the second ʿiqd may also be kept as it is. Before the repose on the degree rāst, which is the resting place of the maqām, it is commendable to touch the degrees of the jins ḥijāz transposed onto the degree yegāh.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ بالعمل من مقام النهاوند بإظهار العقد الاول دخولاً اليه غالباً من النوا مع لمس الجهاركاه او الراست كظهير للنوا . يلي ذلك : الصعود الى العقد الثاني ثم الى الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط ـ يستبدل العجم بالنهفت ليصار الى تصوير الحجاز على النوا تارة ، والتركيز على الجهاركاه تارة اخرى ، ويمكن ابقاء العقد الثاني على ما هو عليه . وقبل الاستقرار على درجة الراست الذي هو مستقر المقام ، يستحسن لمس درجات جنس الحجاز المصور على درجة اليكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:58:50.162Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.49).",
-    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٤٩).",
+    "commentsEnglish": "al-Shawwā gives nīm māhūr as the seventh degree, noting that it \"was formerly awj\" (1946, p.49).\n\nThis maqām's data is compiled from al-Shawwā (1946, p.49) and al-Ḥilū (1961, p.113). The sources share the natural-minor scale through the sixth degree and distribute the seventh degree's two colours differently: al-Shawwā ascends with nīm māhūr and descends with ʿajam, while al-Ḥilū's note names give ʿajam in both directions, his printed substitution supplying the other colour only in descent: \"or nahaft in the descent, to make ḥijāz on nawā\" (1961, p.113) — nahaft being his name for māhūr, a comma from al-Shawwā's nīm māhūr. His construction is conjunct over two octaves sharing the kurdān degree. On the maqām's character: \"it rests on presenting the jins nahāwand on chahārgāh\" (1961, p.113), consistent with this entry's secondary jins degree chahārgāh. His footnotes add: \"some have fixed this maqām nahāwand at fourteen notes, and I know not what the wisdom is in docking a note from its second octave\", and \"some introduce the jins nikrīz of the fifth transposed onto the degree chahārgāh in addition to the jins nahāwand transposed on chahārgāh, so the two ʿiqds act jointly in the work\" (1961, p.113).",
+    "commentsArabic": "يعطي الشوّا النيم ماهور درجةً سابعة، وينبّه إلى أنها «كان قديماً اوج» (١٩٤٦، ص٤٩).\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص49) والحلو (1961، ص113). يشترك المصدران في السلّم الصغير الطبيعي حتى الدرجة السادسة ويوزعان لوني الدرجة السابعة توزيعاً مختلفاً: يصعد الشوا بنيم ماهور ويهبط بالعجم، بينما تعطي اسماء الدرجات عند الحلو العجم في الاتجاهين، وبديله المطبوع يورد اللون الآخر في الهبوط فقط: «أو نهفت في الهبوط لعمل حجاز على النوا» (1961، ص113)، والنهفت اسمه للماهور، على بعد كوما من نيم ماهور عند الشوا. تكوينه عنده بالجمع المتصل على ديوانين يشتركان في درجة الكردان. عن شخصية المقام: «تقوم على اظهار جنس النهاوند على الجهاركاه» (1961، ص113)، بما يوافق درجة الجنس الثاني هنا الجهاركاه. تضيف حاشيتاه: «حدد بعضهم مقام النهاوند هذا بأربعة عشر صوتاً ، ولست ادري ما هي الحكمة بانتقاص صوت من ديوانه الثاني ؟» و«يدخل البعض جنس النكريز ذي الخمس مصوراً على درجة الجهاركاه بالاضافة الى جنس النهاوند المصور على الجهاركاه فيشترك العقدان معاً في العمل» (1961، ص113).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "49"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "113"
       }
     ],
-    "version": "2026-07-21T11:40:51.114Z"
+    "version": "2026-07-26T08:58:50.162Z"
   },
   {
     "id": "11",
