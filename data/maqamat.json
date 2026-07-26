@@ -6300,17 +6300,88 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "116",
+        "commentsEnglish": "Method of procedure: the opening is in the circle of the second ʿiqd [ḥijāz on chahārgāh], entering it from the last of the degrees of the first ʿiqd. There follows: the ascent to the third ʿiqd [ḥijāz on kurdān], then the ascent to the fourth ʿiqd if possible.\n\nIn the descent one works with the jins ḥijāz on jawāb al-chahārgāh instead of nahāwand on jawāb al-chahārgāh, and in the third ʿiqd [jawāb al-būselīk] is substituted by sunbuleh so as to work with the jins kurd on kurdān instead of ḥijāz on kurdān.\n\nThere follows: the descent to the second ʿiqd, and from it to the first, where the repose is with the jins kurd on the degree rāst, touching the degree ʿushayrān al-ʿajam before the repose.",
+        "commentsArabic": "اجراء العمل ـ يكون الاستهلال بدائرة العقد الثاني [حجاز على الجهاركاه] دخولاً اليه من آخر درجات العقد الاول . يلي ذلك : الصعود الى العقد الثالث [حجاز على الكردان] ثم الصعود الى العقد الرابع اذا امكن .\n\nوفي الهبوط يعمل بجنس الحجاز على جواب الجهاركاه بدلاً من النهاوند على جواب الجهاركاه ويستبدل في العقد الثالث [جواب البوسليك] بالسنبلة للعمل بجنس كرد على الكردان بدلاً من الحجاز على الكردان .\n\nيلي ذلك : النزول الى العقد الثاني ، ومنه الى الاول حيث يكون الاستقرار بجنس الكرد على درجة الراست مع لمس درجة عشيران العجم قبل الاستقرار .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:10:56.339Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā's 12-degree table tops out with jawāb chahārgāh and jawāb nawā; these are entered here under our octave names, māhūrān and saham/ramal tūtī.",
-    "commentsArabic": "يبلغ جدول الشوّا ذو الاثنتي عشرة درجة في أعلاه جواب الجهاركاه وجواب النوا، وقد أُدخلا هنا بأسماء الديوان عندنا: ماهوران وسهم/رمل توتي.",
+    "commentsEnglish": "al-Shawwā's 12-degree table tops out with jawāb chahārgāh and jawāb nawā; these are entered here under our octave names, māhūrān and saham/ramal tūtī.\n\nThis maqām's data is compiled from al-Shawwā (1946, p.55) and al-Ḥilū (1961, p.116). The sources agree on the qarār rāst, the kurd family, and the ḥijāz signature on chahārgāh; the fifth and tenth degrees differ by the commas his 24-tone gamut lacks: al-Shawwā's ṣabā and jawāb nīm būselīk against al-Ḥilū's ṣabā printed at the ḥijāz position (his half-tone step above chahārgāh) and jawāb būselīk. al-Ḥilū counts 14 notes, continuing past saham/ramal tūtī to jawāb ḥiṣār and jawāb ʿajam, with a partial upper series that deliberately differs from the lower octave. His descent substitutes two genera: \"in the descent one works with the jins ḥijāz on jawāb al-chahārgāh instead of nahāwand on jawāb al-chahārgāh, and in the third ʿiqd [jawāb al-būselīk] is substituted by sunbuleh so as to work with the jins kurd on kurdān instead of ḥijāz on kurdān\" (1961, p.116; the square brackets are printed in the original) — the sunbuleh this entry's descent already carries. On the maqām's character, where this entry's ghammāz is nawā: \"it rests on presenting the jins ḥijāz on the degree chahārgāh\" (1961, p.116).",
+    "commentsArabic": "يبلغ جدول الشوّا ذو الاثنتي عشرة درجة في أعلاه جواب الجهاركاه وجواب النوا، وقد أُدخلا هنا بأسماء الديوان عندنا: ماهوران وسهم/رمل توتي.\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص55) والحلو (1961، ص116). يتفق المصدران على القرار راست وفصيلة الكرد وطابع الحجاز على الجهاركاه؛ وتختلف الدرجتان الخامسة والعاشرة بالكومات التي لا يحملها سلّمه ذو الاربعة والعشرين صوتاً: صبا وجواب نيم بوسليك عند الشوا مقابل صبا الحلو المطبوعة في موضع الحجاز (خطوته نصف طنيني فوق الجهاركاه) وجواب البوسليك. يعد الحلو 14 صوتاً، متابعاً بعد سهم/رمل توتي الى جواب الحصار وجواب العجم، بسلسلة عليا جزئية تخالف الديوان الادنى عمداً. هبوطه يبدل جنسين: «وفي الهبوط يعمل بجنس الحجاز على جواب الجهاركاه بدلاً من النهاوند على جواب الجهاركاه ويستبدل في العقد الثالث [جواب البوسليك] بالسنبلة للعمل بجنس كرد على الكردان بدلاً من الحجاز على الكردان» (1961، ص116؛ الاقواس المربعة مطبوعة في الاصل)، والسنبله يحملها هبوط هذه المدونة فعلاً. عن شخصية المقام، والغماز في هذه المدونة نوا: «تقوم على اظهار جنس الحجاز على درجة الجهاركاه» (1961، ص116).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "55"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "116"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-07-26T09:10:56.339Z"
   },
   {
     "id": "66",
