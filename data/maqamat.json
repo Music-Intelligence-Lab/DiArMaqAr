@@ -1243,17 +1243,73 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "100",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām ʿajam ʿushayrān to begin by presenting the second ʿiqd, entering it from the degree chahārgāh, which is the ghammāz of the maqām.\n\nThere follows: the descent to the first ʿiqd, then the return to the second ʿiqd, and from it to the fourth ʿiqd if possible, and the repose on the resting place of the maqām.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ العمل في مقام العجم عشيران بإظهار العقد الثاني دخولاً اليه من درجة الجهاركاه التي هي غماز المقام .\n\nيلي ذلك : النزول الى العقد الاول ثم العودة الى العقد الثاني ، ومنه الى العقد الرابع اذا امكن ، والاستقرار على مستقر المقام .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-26T08:05:00.037Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.30) and al-Ḥilū (1961, p.100). The two sources agree on the scale in both directions and on the ghammāz: al-Ḥilū enters the maqām \"from the degree chahārgāh, which is the ghammāz of the maqām\" (1961, p.100). His construction is disjunct (bi-l-jamʿ al-munfaṣil) over two full octaves, ʿajam ʿushayrān to jawāb ʿajam, every upper degree mirroring its lower counterpart, with the disjunctive tone at the bottom of each octave. The descent is like the ascent, with one incidental option: \"however it is permissible, incidentally, to make the jins ḥijāz of the fifth on the degree chahārgāh, by ascending from kurdān to chahārgāh, passing over the degrees kurdān, ʿajam and ḥusaynī, then ḥijāz instead of nawā, then chahārgāh\" (1961, p.100). On the maqām's character: \"it rests on bringing out the two degrees chahārgāh and ʿajam\" (1961, p.100).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص30) والحلو (1961، ص100). يتفق المصدران على السلّم في الاتجاهين وعلى الغماز: يدخل الحلو الى المقام «من درجة الجهاركاه التي هي غماز المقام» (1961، ص100). تكوينه عنده بالجمع المنفصل على ديوانين كاملين من عجم العشيران الى جواب العجم، كل درجة عليا مرآة نظيرتها السفلى، والفاصل الطنيني في اسفل كل ديوان. الهبوط كالصعود، مع خيار عرضي واحد: «غير انه يجوز بصفة عرضية عمل جنس الحجاز ذو الخمس على درجة الجهاركاه وذلك بالصعود من الكردان الى الجهاركاه ، مروراً على درجات . الكردان والعجم والحسيني ثم الحجاز بدلاً من النوا . ثم الجهاركاه» (1961، ص100). عن شخصية المقام: «تقوم على اظهار درجتي الجهاركاه والعجم» (1961، ص100).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "30"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "100"
       }
     ],
-    "version": "2026-07-20T13:01:34.466Z"
+    "version": "2026-07-26T08:05:00.037Z"
   },
   {
     "id": "18",
