@@ -445,17 +445,101 @@
           }
         ],
         "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayralhilu_1957_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1957_1961",
+        "page": "123",
+        "commentsEnglish": "Method of procedure: the work in maqām al-kurd begins with the jins kurd on dūgāh, starting from the degree dūgāh, ascending to nawā, then returning to dūgāh.\n\nThere follows: the ascent to the second ʿiqd, to work in its two forms, nahāwand on nawā and chahārgāh on chahārgāh; then the ascent to the third and fourth ʿiqds if possible. The descent is ʿiqd by ʿiqd down to the jins būselīk on nawā and chahārgāh on chahārgāh, then the repose on the degree dūgāh with the jins kurd.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الكرد بجنس الكرد على الدوكاه ابتداء من درجة الدوكاه صعوداً الى النوا ثم العودة الى الدوكاه .\n\nيلي ذلك : الصعود الى العقد الثاني للعمل بشكليه النهاوند على النوا والجهاركاه على الجهاركاه ، ثم الصعود الى العقد الثالث والرابع اذا امكن . والهبوط عقداً فعقداً حتى جنس البوسليك على النوا والجهاركاه على الجهاركاه ثم الاستقرار على درجة الدوكاه بجنس كرد .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:36:39.152Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.77) and al-Ḥilū (1961, p.123). The two sources agree on the scale, al-Ḥilū extending it over two identical octaves, dūgāh to jawāb muḥayyar, \"and the descent is like the ascent, except that in both ascent and descent one works incidentally with the jins chahārgāh on chahārgāh\" (1961, p.123). In his second ʿiqd he equates the names būselīk and nahāwand on nawā. On the maqām's character: \"it rests on presenting kurd on dūgāh and chahārgāh on chahārgāh\" (1961, p.123), consistent with this entry's ghammāz nawā as the second ʿiqd's seat. His footnote describes a close relative: \"there is a maqām called [ʿajam kurd] which closely resembles this maqām kurd, except that in ʿajam kurd the jins ʿajam on ʿajam stands out, in accordance with its name, and this ʿajam jins is joined by the jins chahārgāh on chahārgāh, the two working together, at times chahārgāh and at times ʿajam — the latter dominating in the descent more than the ascent and repeated more than the other ʿuqūd; the repose of the two maqāms and their melodic [lowest] jins are one, the degree dūgāh\" (1961, p.123; the square brackets are printed in the original; compare maqām ʿajam kurdī in this data).",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص77) والحلو (1961، ص123). يتفق المصدران على السلّم، ويمده الحلو على ديوانين متطابقين من الدوكاه الى جواب المحير: «والهبوط كالصعود غير انه يعمل في حالتي الصعود والهبوط بجنس جهاركاه على الجهاركاه بصفة عرضية» (1961، ص123). في عقده الثاني يطابق بين اسمي البوسليك والنهاوند على النوا. عن شخصية المقام: «تقوم على اظهار الكرد على الدوكاه والجهاركاه على الجهاركاه» (1961، ص123)، بما يتسق مع غماز هذه المدونة النوا مقعدَ العقد الثاني. تصف حاشيته قريباً لصيقاً: «يوجد مقام يسمى مقام [عجم كرد] يشبه الى حد بعيد مقام الكرد هذا ، غير ان مقام العجم كرد يبرز فيه جنس العجم على العجم وفقاً لاسمه ، ويشترك مع جنس العجم هذا جنس الجهاركاه على الجهاركاه فيعملان معاً تارةً جهاركاه وتارة عجم ، ولكن هذا الاخير يسيطر في الهبوط اكثر منه في الصعود ويكرر اكثر من باقي العقود . اما استقرار المقامين وجنسيهما اللحني [الادنى] فواحد هو درجة الدوكاه» (1961، ص123؛ الاقواس المربعة مطبوعة في الاصل؛ قارن مقام عجم كردي في هذه البيانات).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "77"
+      },
+      {
+        "sourceId": "alhilu_1957_1961",
+        "page": "123"
       }
     ],
-    "version": "2026-07-19T19:12:36.330Z"
+    "version": "2026-07-26T09:36:39.152Z"
   },
   {
     "id": "4",
