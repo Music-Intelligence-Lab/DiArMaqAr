@@ -318,11 +318,7 @@
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
-        "page": "126"
-      },
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "82"
+        "page": "82, 126"
       }
     ],
     "version": "2026-07-26T13:39:15.732Z"
@@ -779,11 +775,7 @@
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
-        "page": "98"
-      },
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "111"
+        "page": "98, 111"
       }
     ],
     "version": "2026-07-26T08:52:18.967Z"
@@ -803,11 +795,7 @@
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1957_1961",
-        "page": "102"
-      },
-      {
-        "sourceId": "alhilu_1957_1961",
-        "page": "69"
+        "page": "69, 102"
       }
     ],
     "version": "2026-07-26T08:17:32.275Z"
