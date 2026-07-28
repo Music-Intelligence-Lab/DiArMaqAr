@@ -284,8 +284,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       // Two different things used to collapse into one here. A stop that
       // names NO pitch (a jins with no starting note) legitimately inherits
       // the running height. A stop that names a pitch the note tables do not
-      // carry (data/maqamat.json has maqām shaṭ ʿarabān's "nīm kawasht/
-      // rahāwī") is a data fault: it still inherits, so the track stays
+      // carry is a data fault: it still inherits, so the track stays
       // continuous, but it is flagged rather than passed off as a real pitch.
       // Note also that `allNotes` is de-duplicated by a Set and exactly one
       // name — "jawāb saham/ramal tūtī" — is both the last of octave 3 and
