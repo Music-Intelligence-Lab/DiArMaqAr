@@ -47,7 +47,7 @@ The algorithm evaluates multiple cases for valid transitions:
 
 ### 1. Tonic Correspondence
 
-Modulation between maqāmāt sharing the same tonic (qarār), provided the tonic is classified as an "original" note (aṣlīya/ṭabīʿīya, represented as "n").
+Modulation between maqāmāt sharing the same tonic (qarār). Al-Shawwā opens his guidelines by requiring that every maqām rest its qarār "on one of the seven original «natural» notes, or on a niṣf of the seven anṣāf" — so the tonic must be classified as an "original" note ("n") or a half-note ("2p"). A quarter-note ("1p") tonic falls outside his framework.
 
 ### 2. Third-Degree Modulation
 
@@ -62,7 +62,7 @@ If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (h
 
 ### 4. Fourth and Fifth-Degree Modulation
 
-Transitions using the fourth or fifth maqām degrees of the source maqām as the tonic of the target.
+Transitions using the fourth or fifth maqām degrees of the source maqām as the tonic of the target. Al-Shawwā closes the section with "these rules apply their conditions to the fourth and fifth notes of the fundamental note", so both degrees must be "original" notes ("n") exactly as the third is.
 
 ### 5. Sixth-Degree Modulation (No Third)
 
@@ -72,7 +72,7 @@ When both the third degree and its alternative are invalid, modulation may occur
 
 ### 6. Sixth-Degree Modulation (Between Naturals)
 
-The sixth maqām degree may also be used when it lies between two "natural" maqām degrees within the source maqām.
+The sixth maqām degree may also be used when it is a half-note ("2p") lying between two "natural" maqām degrees — al-Shawwā's example is ʿajam over dūgāh in maqām al-bayyāt, "a niṣf confined between two natural notes, ḥusaynī and awj". Unlike rule 5 this is not a fallback: bayyāt's third degree is perfectly valid.
 
 ## Algorithmic Implementation
 
