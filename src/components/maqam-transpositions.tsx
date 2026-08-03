@@ -1408,10 +1408,8 @@ const MaqamTranspositions: React.FC = () => {
     const MaqamEntityNote = () =>
       selectedMaqamData ? (
         <EntitySourceNote
-          comments={language === "ar" ? selectedMaqamData.getCommentsArabic()?.trim() || selectedMaqamData.getCommentsEnglish() : selectedMaqamData.getCommentsEnglish()}
           sourcePageReferences={selectedMaqamData.getSourcePageReferences()}
           sources={sources}
-          commentsLabel={t("maqam.comments")}
           sourcesLabel={t("maqam.sources")}
         />
       ) : null;
@@ -1582,7 +1580,7 @@ const MaqamTranspositions: React.FC = () => {
                       )}
                     </tbody>
                   </table>
-                  {/* The commentary describes the MAQĀM, so it appears exactly
+                  {/* The source note describes the MAQĀM, so it appears exactly
                       once: under whichever transposition the reader has open,
                       following them as they move between transpositions. With
                       nothing open there is no table for it to belong to, so it
@@ -1610,7 +1608,7 @@ const MaqamTranspositions: React.FC = () => {
           </div>
         )}
         {/* Fallback placement: with every transposition collapsed there is no
-            open table for the commentary to sit under, so it closes the page. */}
+            open table for the source note to sit under, so it closes the page. */}
         {openTranspositions.length === 0 && <MaqamEntityNote />}
       </div>
     );

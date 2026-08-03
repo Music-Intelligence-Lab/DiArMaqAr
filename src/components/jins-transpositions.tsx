@@ -927,10 +927,8 @@ export default function JinsTranspositions() {
     const JinsEntityNote = () =>
       selectedJinsData ? (
         <EntitySourceNote
-          comments={language === "ar" ? selectedJinsData.getCommentsArabic()?.trim() || selectedJinsData.getCommentsEnglish() : selectedJinsData.getCommentsEnglish()}
           sourcePageReferences={selectedJinsData.getSourcePageReferences()}
           sources={sources}
-          commentsLabel={t("jins.comments")}
           sourcesLabel={t("jins.sources")}
         />
       ) : null;
@@ -1078,7 +1076,7 @@ export default function JinsTranspositions() {
                   </tbody>
                 </table>
                 {/* Under whichever transposition the reader has open — see the
-                    matching note in maqam-transpositions.tsx. The commentary
+                    matching note in maqam-transpositions.tsx. The source note
                     describes the JINS, so it appears exactly once. */}
                 {openTranspositions.includes(jins.name) && <JinsEntityNote />}
               </React.Fragment>
@@ -1099,7 +1097,7 @@ export default function JinsTranspositions() {
             </div>
           )}
           {/* Fallback placement: with every transposition collapsed there is no
-              open table for the commentary to sit under, so it closes the page. */}
+              open table for the source note to sit under, so it closes the page. */}
           {openTranspositions.length === 0 && <JinsEntityNote />}
         </div>
       </>

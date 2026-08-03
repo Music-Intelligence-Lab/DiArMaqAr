@@ -19,10 +19,11 @@ import React from "react";
  * prose plus these two marks, so the data stays legible as data and there is no
  * markup dialect to keep in sync between the archive and the app.
  *
- * Written once and shared because three pages display comments — maqām/jins via
- * EntitySourceNote, the suyūr list, and tuning systems — and every one of them
- * previously dropped the string into a single element, where HTML collapses the
- * newlines to spaces. That silently flattened 99 fields across three data files.
+ * Written once and shared because several pages display comments — the suyūr
+ * list and tuning systems today, and maqām/jins via EntitySourceNote until its
+ * commentary column was hidden — and every one of them previously dropped the
+ * string into a single element, where HTML collapses the newlines to spaces.
+ * That silently flattened 99 fields across three data files.
  */
 export default function CommentText({ text, className }: { text: string; className?: string }) {
   const paragraphs = text.split(/\n\s*\n/).filter((paragraph) => paragraph.trim() !== "");
