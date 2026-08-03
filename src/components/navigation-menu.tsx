@@ -90,12 +90,15 @@ const NavigationMenu = () => {
     setMounted(true);
   }, []);
 
-  // Define navigation links with proper RTL ordering
+  // Define navigation links with proper RTL ordering.
+  // Statistics is deliberately absent (Khyam's ruling): the page and its
+  // "nav.statistics" label in all three languages are still there, so restoring
+  // it is one line — { href: "/statistics", key: "nav.statistics" } — but it is
+  // no longer offered from the menu. /statistics still answers on a direct hit.
   const navigationLinks = [
     { href: "/app", key: "nav.home" },
     { href: "/docs/", key: "nav.documentation" },
     { href: "/bibliography", key: "nav.bibliography" },
-    { href: "/statistics", key: "nav.statistics" },
   ];
 
   const menuContent = (
