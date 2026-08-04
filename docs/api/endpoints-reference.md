@@ -3375,6 +3375,145 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
 ```
 
 
+### List ajnās available in a tuning system {#listTuningSystemAjnas}
+
+```
+GET /tuning-systems/{id}/{startingNote}/ajnas
+```
+
+Return all ajnās that can be realized in a given tuning system beginning on a specific starting note name.
+
+- Feasibility is determined by comparing jins pitch classes to the tuning system's note name sets (including adjacent octave context)
+- A jins is a single ascending set of note names, so unlike a maqām it has no descending counterpart, no sayr and no family classification. `jinsDegrees` is therefore one array rather than an ascending/descending pair
+- This is the ajnās counterpart of `/tuning-systems/{id}/{startingNote}/maqamat` and returns the same response shape
+
+
+**Path Parameters:**
+- `id`: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') (string) **(required)**
+  - Example: `ibnsina_1037`
+- `startingNote`: Tuning system starting note name (URL-safe, diacritics-insensitive). Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh (string) **(required)**
+  - Example: `yegah`
+
+**Query Parameters:**
+- `includeArabic` (optional): Return bilingual responses with Arabic script when true.
+  - All English/transliteration fields remain unchanged
+  - Arabic versions are added with "Ar" suffix (e.g., displayNameAr)
+  - Jins names and note names get Arabic versions in *Ar fields
+  - Tuning system display names get Arabic versions in displayNameAr if available
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `includeJinsDegrees` (optional): When true, each jins in data includes a `jinsDegrees` array of PAO note name idNames
+(URL-safe identifiers for the jins degrees), in ascending order from the tonic..
+  (URL-safe identifiers for the jins degrees), in ascending order from the tonic.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `includeDegreeDetails` (optional): When true (and when includeJinsDegrees=true), the endpoint returns `jinsDegrees` as an array of
+objects `{ noteName, englishName, solfege }` instead of note-name strings.
+  objects `{ noteName, englishName, solfege }` instead of note-name strings. The same transformation
+  applies to `transpositions[].jinsDegrees`.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `includeTranspositions` (optional): When true, each jins in data includes a `transpositions` array with the other transpositions
+(taṣwīr) available in this tuning system, excluding the base tonic.
+  (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has `tonic` and
+  `jinsDegrees` for that transposed position.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+  - Example: `true`
+- `sortBy` (optional): Sort order for results.
+  defaults to `alphabetical`) because the endpoint is intrinsically about a concrete pitch layout.
+  Invalid values return HTTP 400.
+ - Type: `string` - Valid values: `alphabetical`, `tonic` - Default: `tonic`
+  - Example: `tonic` - Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
+  - Example: `alphabetical` - Sort alphabetically by display name
+- `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
+  - Example: `5`
+
+**Example:**
+```bash
+curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeArabic=true"
+```
+
+**Response:** Ajnās list retrieved successfully
+
+**Example response:**
+
+```json
+{
+  "tuningSystem": {
+    "id": "ibnsina_1037",
+    "idName": "ibnsina_1037",
+    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+    "version": "2025-11-09T00:44:40.275Z",
+    "year": "1037",
+    "numberOfPitchClassesSingleOctave": 17
+  },
+  "startingNotes": {
+    "idNames": [
+      "ushayran",
+      "yegah"
+    ],
+    "displayNames": [
+      "ʿushayrān",
+      "yegāh"
+    ]
+  },
+  "selectedStartingNote": {
+    "idName": "yegah",
+    "displayName": "yegāh"
+  },
+  "stats": {
+    "totalAjnasForStartingNote": 36,
+    "totalAjnasInLibrary": 41,
+    "uniqueTonicCount": 11,
+    "referenceFrequency": 97.999
+  },
+  "data": [
+    {
+      "jins": {
+        "id": "39",
+        "idName": "jins_qaf",
+        "displayName": "jins qāf",
+        "version": "2026-07-20T09:57:37.540Z"
+      },
+      "tonic": {
+        "idName": "yegah",
+        "displayName": "yegāh"
+      },
+      "stats": {
+        "numberOfPitchClasses": 4
+      },
+      "links": {
+        "detail": "https://diarmaqar.net/api/ajnas/jins_qaf"
+      }
+    },
+    {
+      "jins": {
+        "id": "48",
+        "idName": "jins_shad_araban",
+        "displayName": "jins shad ʿarabān",
+        "version": "2026-07-20T18:09:15.658Z"
+      },
+      "tonic": {
+        "idName": "yegah",
+        "displayName": "yegāh"
+      },
+      "stats": {
+        "numberOfPitchClasses": 4
+      },
+      "links": {
+        "detail": "https://diarmaqar.net/api/ajnas/jins_shad_araban"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas",
+    "tuningSystem": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037",
+    "collection": "https://diarmaqar.net/api/ajnas"
+  }
+}
+```
+
+
 ---
 
 ## Modulations

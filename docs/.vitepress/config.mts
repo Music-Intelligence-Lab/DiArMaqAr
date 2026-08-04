@@ -194,6 +194,7 @@ export default defineConfig({
                 { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
                 { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
                 { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
+                  { text: 'List ajnās available in a tuning system', link: '/api/endpoints-reference#listTuningSystemAjnas' },
               ]
             },
             {
@@ -305,6 +306,7 @@ export default defineConfig({
                   { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
                   { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
                   { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
+                  { text: 'List ajnās available in a tuning system', link: '/api/endpoints-reference#listTuningSystemAjnas' },
                 ]
               },
               {
@@ -416,6 +418,7 @@ export default defineConfig({
                   { text: 'List all tuning systems', link: '/api/endpoints-reference#listTuningSystems' },
                   { text: 'Get tuning system details', link: '/api/endpoints-reference#getTuningSystemPitchClasses' },
                   { text: 'List maqāmāt available in a tuning system', link: '/api/endpoints-reference#listTuningSystemMaqamat' },
+                  { text: 'List ajnās available in a tuning system', link: '/api/endpoints-reference#listTuningSystemAjnas' },
                 ]
               },
               {

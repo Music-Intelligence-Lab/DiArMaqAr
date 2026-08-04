@@ -61,10 +61,11 @@ Documented tri/tetra/penta-chords with historical source attribution.
 ### Tuning Systems
 Historical tuning systems spanning from al-Kindī (874 CE) to contemporary approaches.
 
-**Endpoints (3):**
+**Endpoints (4):**
 - `GET /tuning-systems` - List all tuning systems → [Details](./endpoints-reference#listTuningSystems)
 - `GET /tuning-systems/{id}/{startingNote}/pitch-classes` - Get tuning system details (pitch classes) → [Details](./endpoints-reference#getTuningSystemPitchClasses)
 - `GET /tuning-systems/{id}/{startingNote}/maqamat` - List maqāmāt available in a tuning system → [Details](./endpoints-reference#listTuningSystemMaqamat)
+- `GET /tuning-systems/{id}/{startingNote}/ajnas` - List ajnās available in a tuning system → [Details](./endpoints-reference#listTuningSystemAjnas)
 
 ### Pitch Classes
 Note names and pitch class data across all tuning systems.

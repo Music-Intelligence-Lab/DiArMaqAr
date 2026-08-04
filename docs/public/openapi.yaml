@@ -4609,6 +4609,228 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /tuning-systems/{id}/{startingNote}/ajnas:
+    get:
+      tags:
+        - Tuning Systems
+      summary: List ajnās available in a tuning system
+      description: |
+        Return all ajnās that can be realized in a given tuning system beginning on a specific starting note name.
+
+        - Feasibility is determined by comparing jins pitch classes to the tuning system's note name sets (including adjacent octave context)
+        - A jins is a single ascending set of note names, so unlike a maqām it has no descending counterpart, no sayr and no family classification. `jinsDegrees` is therefore one array rather than an ascending/descending pair
+        - This is the ajnās counterpart of `/tuning-systems/{id}/{startingNote}/maqamat` and returns the same response shape
+      operationId: listTuningSystemAjnas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
+          schema:
+            type: string
+          example: "ibnsina_1037"
+        - name: startingNote
+          in: path
+          required: true
+          description: Tuning system starting note name (URL-safe, diacritics-insensitive). Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
+          schema:
+            type: string
+          example: "yegah"
+        - name: includeArabic
+          in: query
+          required: false
+          description: |
+            Return bilingual responses with Arabic script when true.
+
+            When true:
+            - All English/transliteration fields remain unchanged
+            - Arabic versions are added with "Ar" suffix (e.g., displayNameAr)
+            - Jins names and note names get Arabic versions in *Ar fields
+            - Tuning system display names get Arabic versions in displayNameAr if available
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: includeJinsDegrees
+          in: query
+          required: false
+          description: |
+            When true, each jins in data includes a `jinsDegrees` array of PAO note name idNames
+            (URL-safe identifiers for the jins degrees), in ascending order from the tonic.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: includeDegreeDetails
+          in: query
+          required: false
+          description: |
+            When true (and when includeJinsDegrees=true), the endpoint returns `jinsDegrees` as an array of
+            objects `{ noteName, englishName, solfege }` instead of note-name strings. The same transformation
+            applies to `transpositions[].jinsDegrees`.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: includeTranspositions
+          in: query
+          required: false
+          description: |
+            When true, each jins in data includes a `transpositions` array with the other transpositions
+            (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has `tonic` and
+            `jinsDegrees` for that transposed position.
+          schema:
+            type: string
+            enum: ["true", "false"]
+            default: "false"
+          example: "true"
+        - name: sortBy
+          in: query
+          required: false
+          description: |
+            Sort order for results. Defaults to `tonic` on this endpoint (different from `/ajnas`, which
+            defaults to `alphabetical`) because the endpoint is intrinsically about a concrete pitch layout.
+            Invalid values return HTTP 400.
+          schema:
+            type: string
+            enum: [alphabetical, tonic]
+            default: tonic
+          examples:
+            tonic:
+              value: tonic
+              summary: Sort by tonic note priority across the full NoteName.ts octave-stratified order, alphabetical tiebreak
+            alphabetical:
+              value: alphabetical
+              summary: Sort alphabetically by display name
+        - name: centsTolerance
+          in: query
+          description: "Tolerance in cents for pitch class comparison (default: 5)"
+          schema:
+            type: number
+            default: 5
+            minimum: 0
+          example: 5
+      responses:
+        '200':
+          description: Ajnās list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - tuningSystem
+                  - startingNotes
+                  - selectedStartingNote
+                  - stats
+                  - data
+                properties:
+                  tuningSystem:
+                    $ref: '#/components/schemas/EntityReference'
+                  startingNotes:
+                    type: object
+                    description: All starting note names this tuning system defines
+                  selectedStartingNote:
+                    $ref: '#/components/schemas/IdentifierReference'
+                  stats:
+                    type: object
+                    properties:
+                      totalAjnasForStartingNote:
+                        type: integer
+                        description: Number of ajnās realizable in this tuning system on this starting note
+                      totalAjnasInLibrary:
+                        type: integer
+                        description: Total number of ajnās in the archive
+                      uniqueTonicCount:
+                        type: integer
+                        description: Number of distinct tonics among the returned ajnās
+                      referenceFrequency:
+                        type: number
+                        description: Reference frequency in Hz for the selected starting note
+                  data:
+                    type: array
+                    description: The ajnās available, each with its tonic and optional degrees and transpositions
+                    items:
+                      type: object
+                  links:
+                    type: object
+              example:
+                {
+                  "tuningSystem": {
+                    "id": "ibnsina_1037",
+                    "idName": "ibnsina_1037",
+                    "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
+                    "version": "2025-11-09T00:44:40.275Z",
+                    "year": "1037",
+                    "numberOfPitchClassesSingleOctave": 17
+                  },
+                  "startingNotes": {
+                    "idNames": [
+                      "ushayran",
+                      "yegah"
+                    ],
+                    "displayNames": [
+                      "ʿushayrān",
+                      "yegāh"
+                    ]
+                  },
+                  "selectedStartingNote": {
+                    "idName": "yegah",
+                    "displayName": "yegāh"
+                  },
+                  "stats": {
+                    "totalAjnasForStartingNote": 36,
+                    "totalAjnasInLibrary": 41,
+                    "uniqueTonicCount": 11,
+                    "referenceFrequency": 97.999
+                  },
+                  "data": [
+                    {
+                      "jins": {
+                        "id": "39",
+                        "idName": "jins_qaf",
+                        "displayName": "jins qāf",
+                        "version": "2026-07-20T09:57:37.540Z"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4
+                      },
+                      "links": {
+                        "detail": "https://diarmaqar.net/api/ajnas/jins_qaf"
+                      }
+                    },
+                    {
+                      "jins": {
+                        "id": "48",
+                        "idName": "jins_shad_araban",
+                        "displayName": "jins shad ʿarabān",
+                        "version": "2026-07-20T18:09:15.658Z"
+                      },
+                      "tonic": {
+                        "idName": "yegah",
+                        "displayName": "yegāh"
+                      },
+                      "stats": {
+                        "numberOfPitchClasses": 4
+                      },
+                      "links": {
+                        "detail": "https://diarmaqar.net/api/ajnas/jins_shad_araban"
+                      }
+                    }
+                  ],
+                  "links": {
+                    "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas",
+                    "tuningSystem": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037",
+                    "collection": "https://diarmaqar.net/api/ajnas"
+                  }
+                }
+
   /modulation-routes:
     get:
       tags:
