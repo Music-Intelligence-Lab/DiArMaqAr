@@ -3406,24 +3406,28 @@ paths:
         - Use `maqamId` to find all sets containing a specific maqām
       operationId: classifyMaqamat12PitchClassSets
       parameters:
+        # Required like every other tuning-system-dependent endpoint. The server
+        # still falls back to cairocongresstuningcommittee_1929 + yegah if they are
+        # omitted, but relying on that silently hides which tuning system produced
+        # the result, so callers should always state both.
         - name: tuningSystem
           in: query
-          description: "Tuning system ID for maqāmāt (default: cairocongresstuningcommittee_1929)"
+          required: true
+          description: Tuning system ID for maqāmāt
           schema:
             type: string
-            default: "cairocongresstuningcommittee_1929"
           example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
+          required: true
           description: |
-            Starting note for both the maqām tuning system and alkindi_874 (default: yegah).
+            Starting note for both the maqām tuning system and alkindi_874.
             IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
             correctly and pitch classes can be properly selected from matching octaves.
 
             Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
-            default: "yegah"
           example: "yegah"
         - name: centsTolerance
           in: query
@@ -3922,22 +3926,26 @@ paths:
         - Use `maqamId` to find all sets containing a specific maqām
       operationId: classifyMaqamatByMaqamPitchClassSets
       parameters:
+        # Required like every other tuning-system-dependent endpoint. The server
+        # still falls back to cairocongresstuningcommittee_1929 + yegah if they are
+        # omitted, but relying on that silently hides which tuning system produced
+        # the result, so callers should always state both.
         - name: tuningSystem
           in: query
-          description: "Tuning system ID for all maqāmāt (default: cairocongresstuningcommittee_1929)"
+          required: true
+          description: Tuning system ID for all maqāmāt
           schema:
             type: string
-            default: "cairocongresstuningcommittee_1929"
           example: "cairocongresstuningcommittee_1929"
         - name: startingNote
           in: query
+          required: true
           description: |
-            Starting note for the tuning system (default: yegah).
+            Starting note for the tuning system.
 
             Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
-            default: "yegah"
           example: "yegah"
         - name: centsTolerance
           in: query

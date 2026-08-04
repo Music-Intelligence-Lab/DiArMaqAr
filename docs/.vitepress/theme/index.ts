@@ -23,6 +23,18 @@ export default {
         hideResponsePayload: false,
         // Optimize rendering of large schemas
         hideSchemaExamples: false,
+        markdown: {
+          // vitepress-openapi builds its markdown-it with `breaks: true`, which
+          // turns every newline into a <br>. Our openapi.yaml descriptions are
+          // `|` block scalars with hard-wrapped prose, so that rendered them with
+          // line breaks mid-sentence. CommonMark (and VitePress itself) treat a
+          // single newline as a space; this restores that, so paragraphs reflow
+          // and only blank lines and list markers start a new line.
+          config: (md) => {
+            md.set({ breaks: false })
+            return md
+          },
+        },
       },
     })
     

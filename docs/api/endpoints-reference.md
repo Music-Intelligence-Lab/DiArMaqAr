@@ -1286,14 +1286,14 @@ note names.
 
 
 **Query Parameters:**
-- `tuningSystem` (optional): Tuning system ID for maqāmāt (default: cairocongresstuningcommittee_1929) - Type: `string` - Default: `cairocongresstuningcommittee_1929`
+- `tuningSystem` **(required)**: Tuning system ID for maqāmāt - Type: `string`
   - Example: `cairocongresstuningcommittee_1929`
-- `startingNote` (optional): Starting note for both the maqām tuning system and alkindi_874 (default: yegah).
+- `startingNote` **(required)**: Starting note for both the maqām tuning system and alkindi_874.
 IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
 correctly and pitch classes can be properly selected from matching octaves.
   IMPORTANT: Both tuning systems must use the same starting note to ensure octaves align
   correctly and pitch classes can be properly selected from matching octaves. Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
- - Type: `string` - Default: `yegah`
+ - Type: `string`
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
@@ -1350,7 +1350,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Classification results with sets and compatible maqāmāt
@@ -1510,9 +1510,9 @@ bayyāt on dūgāh and maqām segāh on segāh.
 
 
 **Query Parameters:**
-- `tuningSystem` (optional): Tuning system ID for all maqāmāt (default: cairocongresstuningcommittee_1929) - Type: `string` - Default: `cairocongresstuningcommittee_1929`
+- `tuningSystem` **(required)**: Tuning system ID for all maqāmāt - Type: `string`
   - Example: `cairocongresstuningcommittee_1929`
-- `startingNote` (optional): Starting note for the tuning system (default: yegah). - Type: `string` - Default: `yegah`
+- `startingNote` **(required)**: Starting note for the tuning system. - Type: `string`
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
@@ -1535,7 +1535,7 @@ bayyāt on dūgāh and maqām segāh on segāh.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?tuningSystem=cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Classification results with maqam-based pitch class sets and compatible maqāmāt
