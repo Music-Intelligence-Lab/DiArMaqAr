@@ -113,8 +113,8 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  *   the ascending order requirement (ensures maqam characteristics are preserved)
  *
  * Query Parameters:
- * - tuningSystem: string (default: "cairocongresstuningcommittee_1929") - tuning system ID for maqamat
- * - startingNote: string (default: "yegah") - starting note for BOTH tuning systems (critical for octave alignment)
+ * - tuningSystem: string (required) - tuning system ID for maqamat
+ * - startingNote: string (required) - starting note for BOTH tuning systems (critical for octave alignment)
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
  * - startSetFromC: boolean (default: false) - start pitch class set from IPN "C" (for Scala .scl export)
@@ -153,9 +153,39 @@ export async function GET(request: Request) {
     const setIdParam = searchParams.get("setId");
     const maqamIdParam = searchParams.get("maqamId");
     
-    // Get tuning system and starting note parameters
-    const tuningSystemId = searchParams.get("tuningSystem") || "cairocongresstuningcommittee_1929";
-    const startingNoteParam = searchParams.get("startingNote") || "yegah";
+    // Tuning system and starting note are required. They used to default to
+    // cairocongresstuningcommittee_1929 + yegah, which silently hid which tuning
+    // system produced a result — every other tuning-system-dependent endpoint
+    // requires them, so these do too.
+    const tuningSystemId = searchParams.get("tuningSystem");
+    if (!tuningSystemId || tuningSystemId.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "tuningSystem parameter is required",
+            message: "A tuning system must be specified. This is mandatory for all pitch class calculations.",
+            hint: "Add ?tuningSystem=<id> to your request, e.g. ?tuningSystem=cairocongresstuningcommittee_1929",
+            availableTuningSystemsUrl: "/api/tuning-systems"
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const startingNoteParam = searchParams.get("startingNote");
+    if (!startingNoteParam || startingNoteParam.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "startingNote parameter is required",
+            message: "A tuning system starting note must be specified. Both the maqām tuning system and alkindi_874 use it, so octaves align.",
+            hint: "Add &startingNote=<note> to your request, e.g. &startingNote=yegah",
+            availableTuningSystemsUrl: "/api/tuning-systems"
+          },
+          { status: 400 }
+        )
+      );
+    }
     
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance

@@ -40,8 +40,8 @@ export const dynamic = "force-dynamic";
  * - Direct Values: All cent values come directly from tuning system without calculation
  *
  * Query Parameters:
- * - tuningSystem: string (default: "cairocongresstuningcommittee_1929") - tuning system ID
- * - startingNote: string (default: "yegah") - starting note for tuning system
+ * - tuningSystem: string (required) - tuning system ID
+ * - startingNote: string (required) - starting note for tuning system
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
  * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
@@ -63,8 +63,39 @@ export async function GET(request: Request) {
     const maqamIdParam = searchParams.get("maqamId");
 
     // Get tuning system and starting note parameters
-    const tuningSystemId = searchParams.get("tuningSystem") || "cairocongresstuningcommittee_1929";
-    const startingNoteParam = searchParams.get("startingNote") || "yegah";
+    // Tuning system and starting note are required. They used to default to
+    // cairocongresstuningcommittee_1929 + yegah, which silently hid which tuning
+    // system produced a result — every other tuning-system-dependent endpoint
+    // requires them, so these do too.
+    const tuningSystemId = searchParams.get("tuningSystem");
+    if (!tuningSystemId || tuningSystemId.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "tuningSystem parameter is required",
+            message: "A tuning system must be specified. This is mandatory for all pitch class calculations.",
+            hint: "Add ?tuningSystem=<id> to your request, e.g. ?tuningSystem=cairocongresstuningcommittee_1929",
+            availableTuningSystemsUrl: "/api/tuning-systems"
+          },
+          { status: 400 }
+        )
+      );
+    }
+
+    const startingNoteParam = searchParams.get("startingNote");
+    if (!startingNoteParam || startingNoteParam.trim() === "") {
+      return addCorsHeaders(
+        NextResponse.json(
+          {
+            error: "startingNote parameter is required",
+            message: "A tuning system starting note must be specified. This is mandatory for all pitch class calculations.",
+            hint: "Add &startingNote=<note> to your request, e.g. &startingNote=yegah",
+            availableTuningSystemsUrl: "/api/tuning-systems"
+          },
+          { status: 400 }
+        )
+      );
+    }
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance

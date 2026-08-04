@@ -3406,10 +3406,9 @@ paths:
         - Use `maqamId` to find all sets containing a specific maqām
       operationId: classifyMaqamat12PitchClassSets
       parameters:
-        # Required like every other tuning-system-dependent endpoint. The server
-        # still falls back to cairocongresstuningcommittee_1929 + yegah if they are
-        # omitted, but relying on that silently hides which tuning system produced
-        # the result, so callers should always state both.
+        # Required like every other tuning-system-dependent endpoint. These once
+        # defaulted to cairocongresstuningcommittee_1929 + yegah, which silently hid
+        # which tuning system produced a result; omitting either now returns 400.
         - name: tuningSystem
           in: query
           required: true
@@ -3926,10 +3925,9 @@ paths:
         - Use `maqamId` to find all sets containing a specific maqām
       operationId: classifyMaqamatByMaqamPitchClassSets
       parameters:
-        # Required like every other tuning-system-dependent endpoint. The server
-        # still falls back to cairocongresstuningcommittee_1929 + yegah if they are
-        # omitted, but relying on that silently hides which tuning system produced
-        # the result, so callers should always state both.
+        # Required like every other tuning-system-dependent endpoint. These once
+        # defaulted to cairocongresstuningcommittee_1929 + yegah, which silently hid
+        # which tuning system produced a result; omitting either now returns 400.
         - name: tuningSystem
           in: query
           required: true
