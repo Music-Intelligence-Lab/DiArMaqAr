@@ -312,21 +312,19 @@ Requirements:
  (string) **(required)**
   - Example: `maqam_rast` - Maqām Rāst (representative example)
   - Example: `maqam_bayyat` - Maqām Bayyāt (representative example)
-  - Example: `maqam_hijaz` - Maqām Ḥijāz (representative example)
+  - Example: `maqam_saba` - Maqām Ṣabā (representative example)
   - Example: `all` - All maqāmāt (requires tuningSystem and startingNote query parameters)
 
 **Query Parameters:**
 - `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
   - Example: `ibnsina_1037` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
   - Example: `alfarabi_950g` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-  - Example: `meshshaqa_1899` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
   - Different starting notes represent different theoretical frameworks within the same tuning system
   - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
   - Example: `yegah` - yegāh (for IbnSina, Meshshaqa)
   - Example: `ushayran` - ʿushayrān (for al-Farabi, al-Kindi)
-  - Example: `rast` - rāst (for CairoCongress, al-Sabbagh)
 - `options` (optional): When true, returns available parameter options instead of maqām data.
   - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
@@ -335,7 +333,6 @@ Requirements:
   - Only tonics where the maqām can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `true`
 - `pitchClassDataType` (optional): Specifies which pitch class data type to return for each pitch class.
   - When provided, returns the specified data type for all pitch classes in the maqām
   - In discovery mode (when options=true), this parameter is optional since the response returns parameter metadata instead of formatted data
@@ -346,7 +343,6 @@ Requirements:
 - `transposeTo` (optional): Transpose the maqām to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of maqām data
  - Type: `string`
-  - Example: `nawa`
 - `includeIntervals` (optional): Include interval data between maqām degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeModulations` (optional): Include modulation possibilities to other maqāmāt and ajnās - Type: `string` - Valid values: `true`, `false` - Default: `false`
@@ -788,13 +784,13 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 **Path Parameters:**
 - `idName`: URL-safe maqām identifier (string) **(required)**
-  - Example: `maqam_hijaz`
+  - Example: `maqam_rast`
 
 **Query Parameters:**
 - `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
-  - Example: `alsabbagh_1954`
+  - Example: `ibnsina_1037`
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive). - Type: `string`
-  - Example: `rast`
+  - Example: `yegah`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
   - Arabic versions are added with "Ar" suffix (e.g., displayNameAr, noteNameDisplayAr)
@@ -809,7 +805,7 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/maqamat/maqam_hijaz/transpositions?tuningSystem=alsabbagh_1954&startingNote=rast&includeArabic=true"
+curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah&includeArabic=true"
 ```
 
 **Response:** Transpositions retrieved successfully
@@ -2302,14 +2298,12 @@ Requirements:
 - `tuningSystem` **(required)**: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899') - Type: `string`
   - Example: `ibnsina_1037` - Ibn Sīnā (1037) - 7-Fret Oud 17-Tone (representative example)
   - Example: `alfarabi_950g` - al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-  - Example: `meshshaqa_1899` - Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
 - `startingNote` **(required)**: Tuning system starting note name (URL-safe, diacritics-insensitive).
   - Different starting notes represent different theoretical frameworks within the same tuning system
   - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
  - Type: `string`
   - Example: `yegah` - yegāh (for IbnSina, Meshshaqa)
   - Example: `ushayran` - ʿushayrān (for al-Farabi, al-Kindi)
-  - Example: `rast` - rāst (for CairoCongress, al-Sabbagh)
 - `options` (optional): When true, returns available parameter options instead of jins data.
   - Tuning system is required for all requests; a starting note is required for data retrieval and optional in discovery mode (options=true), where omitting it returns the tuning system's valid starting notes
   - These are fundamental to all pitch class calculations and calculate valid starting note options and transposition tonics
@@ -2318,7 +2312,6 @@ Requirements:
   - Only tonics where the jins can be validly transposed (preserving interval pattern) are included, not all possible pitch classes
   - If data-returning parameters are provided, returns 400 Bad Request error with details about conflicting parameters
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
-  - Example: `true`
 - `pitchClassDataType` **(required)**: Specifies which pitch class data type to return for each pitch class.
   - When set to `all`, returns the full set of pitch class fields (englishName, solfege, abjadName, fraction, cents, decimalRatio, stringLength, frequency, fretDivision, midiNoteDecimal, midiNotePlusCentsDeviation, centsDeviation, ipnReferenceNoteName) plus the always-included identifiers (pitchClassIndex, octave, scaleDegree, noteName, noteNameDisplay, and noteNameDisplayAr if includeArabic is enabled).
   - When set to a specific format, returns only that field plus the always-included identifiers.
@@ -2329,7 +2322,6 @@ Requirements:
 - `transposeTo` (optional): Transpose the jins to a new tonic by preserving the interval patterns (URL-safe, diacritics-insensitive).
   - To see all valid transposition options, request available parameter options instead of jins data
  - Type: `string`
-  - Example: `nawa`
 - `includeIntervals` (optional): Include interval data between jins degrees - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -3460,7 +3452,7 @@ Combine with `toTonic` to specify a particular transposition..
 If not specified, uses the canonical (taḥlīl) form..
   If not specified, uses the canonical (taḥlīl) form.
  - Type: `string`
-  - Example: `nawa`
+  - Example: `segah`
 - `maxHops` **(required)**: Maximum number of modulation steps allowed (required safeguard).
 Prevents combinatorial explosion in route calculation.
 Most musical modulation sequences are 2-4 hops.
@@ -4644,7 +4636,7 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
   "data": [
     {
       "id": "alkhulai_1904_2011",
-      "displayName": "alkhulai_1904_2011",
+      "displayName": "al-khulai-(1904/2011)",
       "sourceType": "Book",
       "title": "Kitāb al-Mūsiqā al-Sharqī",
       "titleAr": "كتاب الموسيقى الشرقي",
@@ -4673,8 +4665,8 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
       "ISBN": "9789776416543"
     },
     {
-      "id": "Farmer-(1937)",
-      "displayName": "Farmer-(1937)",
+      "id": "farmer_1937",
+      "displayName": "farmer-(1937)",
       "sourceType": "Article",
       "title": "The Lute Scale of Avicenna",
       "titleAr": "سلم العود لإبن سينا",
@@ -4705,8 +4697,8 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
       "DOI": ""
     },
     {
-      "id": "Allami-(2022)",
-      "displayName": "Allami-(2022)",
+      "id": "allami_2022",
+      "displayName": "allami-(2022)",
       "sourceType": "Thesis",
       "title": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
       "titleAr": "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً",
@@ -4773,7 +4765,7 @@ and are URL-safe with diacritics removed for compatibility.
 
 Use the `/api/sources` endpoint to retrieve all available source IDs.
  (string) **(required)**
-  - Example: `Farmer-(1937)`
+  - Example: `farmer_1937`
 
 **Query Parameters:**
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -4787,7 +4779,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/sources/Farmer-(1937)?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/farmer_1937?includeArabic=true"
 ```
 
 **Response:** Source retrieved successfully
@@ -4798,7 +4790,7 @@ curl "https://diarmaqar.net/api/sources/Farmer-(1937)?includeArabic=true"
 {
   "source": {
     "id": "alkhulai_1904_2011",
-    "displayName": "alkhulai_1904_2011",
+    "displayName": "al-khulai-(1904/2011)",
     "sourceType": "Book",
     "title": "Kitāb al-Mūsiqā al-Sharqī",
     "contributors": [
@@ -4839,7 +4831,7 @@ This endpoint provides an easy way to see which tuning systems have been derived
 
 Use the `/api/sources` endpoint to retrieve all available source IDs.
  (string) **(required)**
-  - Example: `Farmer-(1937)`
+  - Example: `farmer_1937`
 
 **Query Parameters:**
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -4854,7 +4846,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/sources/Farmer-(1937)/tuning-systems?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/farmer_1937/tuning-systems?includeArabic=true"
 ```
 
 **Response:** Tuning systems retrieved successfully
@@ -4915,7 +4907,7 @@ This endpoint provides an easy way to see which maqamat have been documented in 
 
 Use the `/api/sources` endpoint to retrieve all available source IDs.
  (string) **(required)**
-  - Example: `Farmer-(1937)`
+  - Example: `alshawwa_1946`
 
 **Query Parameters:**
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -4930,7 +4922,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/sources/Farmer-(1937)/maqamat?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true"
 ```
 
 **Response:** Maqamat retrieved successfully
@@ -5058,7 +5050,7 @@ This endpoint provides an easy way to see which ajnas have been documented in a 
 
 Use the `/api/sources` endpoint to retrieve all available source IDs.
  (string) **(required)**
-  - Example: `Farmer-(1937)`
+  - Example: `alshawwa_1946`
 
 **Query Parameters:**
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
@@ -5073,7 +5065,7 @@ Use the `/api/sources` endpoint to retrieve all available source IDs.
 
 **Example:**
 ```bash
-curl "https://diarmaqar.net/api/sources/Farmer-(1937)/ajnas?includeArabic=true"
+curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
 ```
 
 **Response:** Ajnas retrieved successfully

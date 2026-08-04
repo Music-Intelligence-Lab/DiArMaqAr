@@ -449,9 +449,12 @@ paths:
             bayyat:
               value: maqam_bayyat
               summary: Maqām Bayyāt (representative example)
-            hijaz:
-              value: maqam_hijaz
-              summary: Maqām Ḥijāz (representative example)
+            # ḥijāz was here, but it cannot be realized in ibnsina_1037 or meshshaqa_1899.
+            # Each example here must work with every tuningSystem example below, since all
+            # of them are published in the generated reference docs.
+            saba:
+              value: maqam_saba
+              summary: Maqām Ṣabā (representative example)
             all:
               value: "all"
               summary: All maqāmāt (requires tuningSystem and startingNote query parameters)
@@ -461,6 +464,9 @@ paths:
           description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
+          # Every example listed here is published in the generated reference docs, so each
+          # must work with every startingNote example. meshshaqa_1899 was dropped because it
+          # only supports yegah, which contradicts the ʿushayrān example below.
           examples:
             ibnsina:
               value: "ibnsina_1037"
@@ -468,20 +474,20 @@ paths:
             farabi:
               value: "alfarabi_950g"
               summary: al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-            meshshaqa:
-              value: "meshshaqa_1899"
-              summary: Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
         - name: startingNote
           in: query
           required: true
           description: |
             Tuning system starting note name (URL-safe, diacritics-insensitive).
-            
+
             - Mandatory for all pitch class calculations
             - Different starting notes represent different theoretical frameworks within the same tuning system
             - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
+          # rast is not listed here: neither tuning system example above supports it, so the
+          # pairing would always 400. It is valid with cairocongresstuningcommittee_1929 or
+          # alsabbagh_1954, as the description says.
           examples:
             yegah:
               value: "yegah"
@@ -489,9 +495,6 @@ paths:
             ushayran:
               value: "ushayran"
               summary: ʿushayrān (for al-Farabi, al-Kindi)
-            rast:
-              value: "rast"
-              summary: rāst (for CairoCongress, al-Sabbagh)
         - name: options
           in: query
           description: |
@@ -508,7 +511,9 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "true"
+          # No example: discovery mode is mutually exclusive with the data-returning
+          # parameters below, which do carry examples. Prefilling both would make the
+          # playground's default request a guaranteed 400.
         - name: pitchClassDataType
           in: query
           required: false
@@ -533,7 +538,10 @@ paths:
             - To see all valid transposition options, request available parameter options instead of maqām data
           schema:
             type: string
-          example: nawa
+          # No example: valid tonics are calculated per (maqām, tuningSystem, startingNote),
+          # so no static value holds across the idName and tuningSystem examples above.
+          # The playground prefills this field, so a wrong value makes its default request
+          # a guaranteed 400. Use options=true to discover the valid tonics.
         - name: includeIntervals
           in: query
           description: Include interval data between maqām degrees
@@ -1916,21 +1924,23 @@ paths:
           description: URL-safe maqām identifier
           schema:
             type: string
-          example: "maqam_hijaz"
+          # Matches the response example and self link below. ḥijāz, the previous
+          # example, has no distinct taswīr in most tuning systems.
+          example: "maqam_rast"
         - name: tuningSystem
           in: query
           required: true
           description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
-          example: "alsabbagh_1954"
+          example: "ibnsina_1037"
         - name: startingNote
           in: query
           required: true
           description: Tuning system starting note name (URL-safe, diacritics-insensitive). Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
-          example: "rast"
+          example: "yegah"
         - name: includeArabic
           in: query
           required: false
@@ -4688,7 +4698,9 @@ paths:
             If not specified, uses the canonical (taḥlīl) form.
           schema:
             type: string
-          example: "nawa"
+          # maqām sīgāh is only available on tonic sīgāh in the default combination
+          # above (alfarabi_950g + ushayran); nawa would make the example request a 400.
+          example: "segah"
         - name: maxHops
           in: query
           required: true
@@ -5776,6 +5788,9 @@ paths:
           description: Tuning system identifier (e.g., 'ibnsina_1037', 'alfarabi_950g', 'meshshaqa_1899')
           schema:
             type: string
+          # Every example listed here is published in the generated reference docs, so each
+          # must work with every startingNote example. meshshaqa_1899 was dropped because it
+          # only supports yegah, which contradicts the ʿushayrān example below.
           examples:
             ibnsina:
               value: "ibnsina_1037"
@@ -5783,20 +5798,20 @@ paths:
             farabi:
               value: "alfarabi_950g"
               summary: al-Fārābī (950g) - First Oud Tuning 27-Tone (representative example)
-            meshshaqa:
-              value: "meshshaqa_1899"
-              summary: Meshshāqa (1899) - Arabic Octave According to the Modernists (representative example)
         - name: startingNote
           in: query
           required: true
           description: |
             Tuning system starting note name (URL-safe, diacritics-insensitive).
-            
+
             - Mandatory for all pitch class calculations
             - Different starting notes represent different theoretical frameworks within the same tuning system
             - Use `yegah` for IbnSina/Meshshaqa, `ushayran` for al-Farabi/al-Kindi, `rast` for CairoCongress/al-Sabbagh
           schema:
             type: string
+          # rast is not listed here: neither tuning system example above supports it, so the
+          # pairing would always 400. It is valid with cairocongresstuningcommittee_1929 or
+          # alsabbagh_1954, as the description says.
           examples:
             yegah:
               value: "yegah"
@@ -5804,9 +5819,6 @@ paths:
             ushayran:
               value: "ushayran"
               summary: ʿushayrān (for al-Farabi, al-Kindi)
-            rast:
-              value: "rast"
-              summary: rāst (for CairoCongress, al-Sabbagh)
         - name: options
           in: query
           description: |
@@ -5823,7 +5835,9 @@ paths:
             type: string
             enum: ["true", "false"]
             default: "false"
-          example: "true"
+          # No example: discovery mode is mutually exclusive with the data-returning
+          # parameters below, which do carry examples. Prefilling both would make the
+          # playground's default request a guaranteed 400.
         - name: pitchClassDataType
           in: query
           required: true
@@ -5849,7 +5863,10 @@ paths:
             - To see all valid transposition options, request available parameter options instead of jins data
           schema:
             type: string
-          example: nawa
+          # No example: valid tonics are calculated per (jins, tuningSystem, startingNote),
+          # so no static value holds across the idName and tuningSystem examples above.
+          # The playground prefills this field, so a wrong value makes its default request
+          # a guaranteed 400. Use options=true to discover the valid tonics.
         - name: includeIntervals
           in: query
           description: Include interval data between jins degrees
@@ -9321,7 +9338,7 @@ paths:
                     count: 2
                     data:
                       - id: "alkhulai_1904_2011"
-                        displayName: "alkhulai_1904_2011"
+                        displayName: "al-khulai-(1904/2011)"
                         sourceType: "Book"
                         title: "Kitāb al-Mūsiqā al-Sharqī"
                         titleAr: "كتاب الموسيقى الشرقي"
@@ -9345,8 +9362,8 @@ paths:
                         place: "Cairo"
                         placeAr: "القاهرة"
                         ISBN: "9789776416543"
-                      - id: "Farmer-(1937)"
-                        displayName: "Farmer-(1937)"
+                      - id: "farmer_1937"
+                        displayName: "farmer-(1937)"
                         sourceType: "Article"
                         title: "The Lute Scale of Avicenna"
                         titleAr: "سلم العود لإبن سينا"
@@ -9372,8 +9389,8 @@ paths:
                         pageRange: "245–257"
                         pageRangeAr: "٢٤٥-٢٥٧"
                         DOI: ""
-                      - id: "Allami-(2022)"
-                        displayName: "Allami-(2022)"
+                      - id: "allami_2022"
+                        displayName: "allami-(2022)"
                         sourceType: "Thesis"
                         title: "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music"
                         titleAr: "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً"
@@ -9437,7 +9454,7 @@ paths:
             Use the `/api/sources` endpoint to retrieve all available source IDs.
           schema:
             type: string
-          example: "Farmer-(1937)"
+          example: "farmer_1937"
         - name: includeArabic
           in: query
           required: false
@@ -9471,7 +9488,7 @@ paths:
                   value:
                     source:
                       id: "alkhulai_1904_2011"
-                      displayName: "alkhulai_1904_2011"
+                      displayName: "al-khulai-(1904/2011)"
                       sourceType: "Book"
                       title: "Kitāb al-Mūsiqā al-Sharqī"
                       contributors:
@@ -9491,8 +9508,8 @@ paths:
                   summary: Article source example
                   value:
                     source:
-                      id: "Farmer-(1937)"
-                      displayName: "Farmer-(1937)"
+                      id: "farmer_1937"
+                      displayName: "farmer-(1937)"
                       sourceType: "Article"
                       title: "The Lute Scale of Avicenna"
                       contributors:
@@ -9513,8 +9530,8 @@ paths:
                   summary: Thesis source example
                   value:
                     source:
-                      id: "Allami-(2022)"
-                      displayName: "Allami-(2022)"
+                      id: "allami_2022"
+                      displayName: "allami-(2022)"
                       sourceType: "Thesis"
                       title: "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music"
                       contributors:
@@ -9547,7 +9564,7 @@ paths:
               example:
                 error: "No source ID provided"
                 hint: "Please specify a source ID"
-                example: "/api/sources/Farmer-(1937)"
+                example: "/api/sources/farmer_1937"
         '404':
           description: Source not found
           content:
@@ -9586,7 +9603,7 @@ paths:
             Use the `/api/sources` endpoint to retrieve all available source IDs.
           schema:
             type: string
-          example: "Farmer-(1937)"
+          example: "farmer_1937"
         - name: includeArabic
           in: query
           required: false
@@ -9705,11 +9722,13 @@ paths:
           required: true
           description: |
             The unique identifier for the bibliographic source.
-            
+
             Use the `/api/sources` endpoint to retrieve all available source IDs.
           schema:
             type: string
-          example: "Farmer-(1937)"
+          # al-Shawwā (1946) documents 101 maqāmāt; sources that document no maqāmāt
+          # (e.g. farmer_1937) return an empty list here.
+          example: "alshawwa_1946"
         - name: includeArabic
           in: query
           required: false
@@ -9891,11 +9910,13 @@ paths:
           required: true
           description: |
             The unique identifier for the bibliographic source.
-            
+
             Use the `/api/sources` endpoint to retrieve all available source IDs.
           schema:
             type: string
-          example: "Farmer-(1937)"
+          # al-Shawwā (1946) documents 5 ajnās; sources that document no ajnās
+          # (e.g. farmer_1937) return an empty list here.
+          example: "alshawwa_1946"
         - name: includeArabic
           in: query
           required: false

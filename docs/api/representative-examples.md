@@ -330,7 +330,7 @@ API responses are complex nested structures, not simple arrays. A typical respon
 
 **Description**: One of the oldest tuning systems documented in Arabic music theory. It is a 12-tone chromatic tuning system based on Greek theory and doesn't include the quintessential so-called Arabic "quarter tone" pitch classes ʿirāq, nīm zīrgūleh, segāh, nīm ḥijāz, or awj, also referred to as zalzalian intervals. It can only render ajnās and maqāmāt that don't use those notes such as kurd, nahāwand, nikrīz and ʿajam ʿushayrān.
 
-**Source**: [Farmer (1937:248)](../../bibliography?source=Farmer-(1937)), [Forster (2010:615)](../../bibliography?source=Forster-(2010))
+**Source**: [Farmer (1937:248)](../../bibliography?source=farmer_1937), [Forster (2010:615)](../../bibliography?source=forster_2010)
 
 **Required Parameters:**
 - `tuningSystem`: `alkindi_874`
@@ -354,7 +354,7 @@ GET https://diarmaqar.net/api/tuning-systems/alkindi_874/ushayran/pitch-classes?
 
 **Description**: The first documentation of the wuṣtā zalzal interval, the so-called Arabic "quarter tone" using a frequency ratio of 27/22. It is a comprehensive 27-tone tuning system that allows for many ajnās and maqāmāt and their transpositions, therefore also modulations.
 
-**Source**: [Farmer (1937:249)](../../bibliography?source=Farmer-(1937)), [Land (1885:134-137)](../../bibliography?source=Land-(1885)), [d'Erlanger (1930:165-185)](../../bibliography?source=d'Erlanger-(1930))
+**Source**: [Farmer (1937:249)](../../bibliography?source=farmer_1937), [Land (1885:134-137)](../../bibliography?source=land_1885), [d'Erlanger (1930:165-185)](../../bibliography?source=derlanger_1930)
 
 **Example**:
 ```
@@ -374,7 +374,7 @@ GET https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/pitch-classe
 
 **Description**: An excellent concise and precise 17-tone tuning that allows for a wide range of ajnās and maqāmāt and their transpositions. Includes the wuṣtā zalzal interval with the frequency ratio of 39/32.
 
-**Source**: [Farmer (1937:249)](../../bibliography?source=Farmer-(1937))
+**Source**: [Farmer (1937:249)](../../bibliography?source=farmer_1937)
 
 **Example**:
 ```
@@ -394,7 +394,7 @@ GET https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pi
 
 **Description**: The first documented tuning system that is based on literal quarter tones, 24 equal divisions of the octave. Defined by Meshshāqa as the "Arabic Octave According to the Modernists", meaning that it was already known before him but undocumented - though no one knows if it was really used. Because it is 24 equal divisions of the octave it allows for many ajnās and maqāmāt and their transpositions, therefore also modulations. Even though it allows the same number of maqāmāt as Ibn Sīnā's tuning system, it allows for more transpositions.
 
-**Source**: [Meshshāqa (1899:18)](../../bibliography?source=Meshshāqa-(1899))
+**Source**: [Meshshāqa (1899:18)](../../bibliography?source=meshshaqa_1899)
 
 **Example**:
 ```
@@ -415,7 +415,7 @@ GET https://diarmaqar.net/api/tuning-systems/meshshaqa_1899/yegah/pitch-classes?
 
 **Description**: The tuning system researched, measured and prepared in preparation for the 1932 Cairo Congress of Arabic Music. It is referred to as an "Egyptian Tuning" and is an unequal 24-tone system. Also comprehensive in its maqām availability and was rendered based on the measurement and expertise of Egyptian musicians at the time.
 
-**Source**: [Shawqi (1969:48-49)](../../bibliography?source=Shawqi-(1969)), [na. (1933:336)](../../bibliography?source=na.-(1933)), [Allāh-Wīrdī (1949:80)](../../bibliography?source=Allāh-Wīrdī-(1949))
+**Source**: [Shawqi (1969:48-49)](../../bibliography?source=shawqi_1969), [na. (1933:336)](../../bibliography?source=na_1933), [Allāh-Wīrdī (1949:80)](../../bibliography?source=allahwirdi_1949)
 
 **Example**:
 ```
@@ -435,7 +435,7 @@ GET https://diarmaqar.net/api/tuning-systems/cairocongresstuningcommittee_1929/r
 
 **Description**: The only documented theorisation of an Arabic tuning system that exclusively uses the "comma" (syntonic comma of 81/80) as a basis for its construction. It is an unequal 24-tone system and allows for many maqāmāt and ajnās but with limited transpositions.
 
-**Source**: [al-Ṣabbāgh (1954:47)](../../bibliography?source=al-Ṣabbāgh-(1954))
+**Source**: [al-Ṣabbāgh (1954:47)](../../bibliography?source=alsabbagh_1954)
 
 **Example**:
 ```
@@ -509,7 +509,7 @@ GET https://diarmaqar.net/api/ajnas/jins_segah?tuningSystem=alsabbagh_1954&start
 
 **Tuning System**: `ibnsina_1037` on `yegah`, `alfarabi_950g` on `ushayran`, `meshshaqa_1899` on `yegah`, or `cairocongresstuningcommittee_1929` on `rast`.
 
-**Source**: [al-Khulaʿī (2011:55)](../../bibliography?source=alkhulai_1904_2011), [al-Urmawī-al-Baghdādī (2017:23)](../../bibliography?source=al-Urmawī-al-Baghdādī-(2017))
+**Source**: [al-Khulaʿī (2011:55)](../../bibliography?source=alkhulai_1904_2011), [al-Urmawī-al-Baghdādī (2017:23)](../../bibliography?source=alurmawialbaghdadi_1986_2017)
 
 **Example**:
 ```
