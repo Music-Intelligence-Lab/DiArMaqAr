@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
@@ -512,18 +512,38 @@ export async function GET(
       const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
 
       // Process all maqamat
-      const allMaqamatData = maqamatData
+      const availableMaqamat = maqamatData
         .filter((maqam) => maqam.isMaqamPossible(pitchClasses.map((pc) => pc.noteName)))
-        .sort((a, b) => a.getName().localeCompare(b.getName()))
+        .sort((a, b) => a.getName().localeCompare(b.getName()));
+
+      // Compute each maqam's transpositions once and keep them keyed by maqam id.
+      // Every modulate() call below scans the same maqamat and would otherwise
+      // recompute their transpositions itself, making this route O(maqamat^2) —
+      // the same hotspot buildModulationGraph documents in findModulationRoutes.
+      // The call here is identical to the one modulate() makes internally (same
+      // pitch classes, ajnas, centsTolerance) and runs over the same
+      // isMaqamPossible set, so the cache is exact rather than an approximation.
+      const transpositionsCache = new Map(
+        availableMaqamat.map((maqam) => [maqam.getId(), calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance)])
+      );
+
+      // Same reasoning for the ajnas pass, which scans every jins on every call.
+      const jinsTranspositionsCache = new Map(
+        ajnas.map((jins) => [jins.getId(), calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance)])
+      );
+
+      const allMaqamatData = availableMaqamat
         .map((maqam) => {
-          const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
+          const transpositions = transpositionsCache.get(maqam.getId())!;
           const tahlil = transpositions[0];
           const familyClassification = classifyMaqamFamily(tahlil);
           const sources = maqam.getSourcePageReferences();
 
-          // Calculate modulations for counts
-          const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance) as MaqamatModulations;
-          const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance) as AjnasModulations;
+          // Calculate modulations for counts. Each pass consults only its own
+          // cache — modulate() iterates allMaqamat in maqamat mode and allAjnas
+          // in ajnas mode, so the other map is never reached.
+          const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance, transpositionsCache) as MaqamatModulations;
+          const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance, undefined, jinsTranspositionsCache) as AjnasModulations;
           
           const totalMaqamModulations = Object.values(maqamatModulations)
             .filter(val => Array.isArray(val))
