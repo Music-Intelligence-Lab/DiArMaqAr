@@ -49,7 +49,26 @@ export default function getTuningSystemPitchClasses(
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getOriginalPitchClassValues();
   const nPC = pitchArr.length;
   const allSets = tuningSystem.getNoteNameSets();
-  const noteNames = allSets.find((s) => s[0] === startingNote) ?? allSets[0] ?? [];
+  if (!allSets.length) return [];
+
+  // A tuning system's starting note selects which of its note-name sets to use.
+  // "none" or an empty string means nothing is selected yet (the UI's initial
+  // state), so there is simply nothing to compute.
+  if (!startingNote || startingNote === "none") return [];
+
+  // Anything else that fails to match is a caller error, and must never fall back
+  // to another set: doing so silently returns pitch classes for a tuning the
+  // caller did not ask for. That bug made /tuning-systems/{id}/{startingNote}/maqamat
+  // ignore its own path parameter, because it passed a maqām tonic here — a maqām
+  // or jins tonic is NOT a tuning system starting note.
+  const noteNames = allSets.find((s) => s[0] === startingNote);
+  if (!noteNames) {
+    throw new Error(
+      `getTuningSystemPitchClasses: "${startingNote}" is not a starting note of tuning system ` +
+      `"${tuningSystem.getId()}". Valid starting notes: ${allSets.map((s) => s[0]).join(", ")}. ` +
+      `Note that a tuning system's starting note is not the same thing as a maqām or jins tonic.`
+    );
+  }
 
   const O1 = octaveOneNoteNames.length;
   const selectedIndices = noteNames.slice(0, nPC).map((nm) => {

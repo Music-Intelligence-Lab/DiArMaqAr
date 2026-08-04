@@ -169,15 +169,18 @@ export async function GET(request: Request) {
         const referenceTuningSystem = tuningSystems.find(ts => ts.getId() === "alsabbagh_1954");
         
         if (referenceTuningSystem) {
-          // Use the maqām's canonical starting note (first note of ascending scale)
-          const ascNotes = maqam.getAscendingNoteNames();
-          const canonicalStartingNote = ascNotes[0];
-          
-          if (canonicalStartingNote) {
-            // Get pitch classes starting from the maqām's canonical position
+          // The reference system's own starting note — NOT the maqām's tonic. A
+          // tuning system's starting note selects one of its note-name sets, so
+          // only its own values are meaningful here. This used to pass the maqām
+          // tonic, which matched nothing and silently fell back to this same note
+          // (al-Ṣabbāgh 1954 defines only rāst), so the result is unchanged; the
+          // call now says what it means instead of relying on the fallback.
+          const referenceStartingNote = referenceTuningSystem.getNoteNameSets()[0]?.[0];
+
+          if (referenceStartingNote) {
             const pitchClasses = getTuningSystemPitchClasses(
-              referenceTuningSystem, 
-              canonicalStartingNote as any  // NoteName type
+              referenceTuningSystem,
+              referenceStartingNote as any  // NoteName type
             );
             
             // Calculate transpositions to get ajnas analysis

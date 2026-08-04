@@ -154,6 +154,18 @@ export async function GET(
     // Get all note name sets with adjacent octaves for proper maqam checking
     const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
 
+    // The starting note requested in the path, in its display form (with
+    // diacritics) — getTuningSystemPitchClasses matches note-name sets on the
+    // exact string. Every maqām below is analysed in THIS set: the starting note
+    // selects which note-name set the tuning system uses, so it is a property of
+    // the tuning system, not of the individual maqām.
+    const requestedStartingNoteDisplay = tuningSystem.getNoteNameSets()
+      .find((set: string[]) => standardizeText(set[0]) === normalizedParam)![0];
+
+    // Pitch classes depend only on (tuningSystem, startingNote), so compute them
+    // once for the whole request rather than per maqām.
+    const pitchClasses = getTuningSystemPitchClasses(tuningSystem, requestedStartingNoteDisplay);
+
     // Sequential spelling logic for degree detail objects (englishName + solfege).
     // We import lazily to keep the default list endpoint fast.
     const degreeSpellingsModule = shouldIncludeDegreeDetails
@@ -185,14 +197,12 @@ export async function GET(
       isPossible = availableStartingNotes.includes(normalizedParam);
 
       if (isPossible) {
-        // Get canonical starting note for classification
+        // The maqām's own tonic, used for the `tonic` namespace below. It must not
+        // be passed to getTuningSystemPitchClasses — a maqām tonic is rarely one of
+        // a tuning system's starting notes, and doing so previously selected the
+        // wrong note-name set, which made includeTranspositions return an empty
+        // array for every maqām in systems like ibnsina_1037.
         const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
-        
-        // Get pitch classes for this maqam in this tuning system
-        const pitchClasses = getTuningSystemPitchClasses(
-          tuningSystem,
-          canonicalStartingNote
-        );
 
         // Calculate transpositions and get tahlil
         const transpositions = calculateMaqamTranspositions(
