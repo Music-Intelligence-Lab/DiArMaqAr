@@ -322,12 +322,13 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       // A sayr belongs to the maqām the reader chose it under, so changing the
       // maqām clears it. This used to be a membership check — keep the id if
       // the incoming maqām also has a sayr by that id — which almost never
-      // fired: sayr ids are derived from the SOURCE alone (sayr-manager.tsx,
-      // `sayr${sourceId}`), so 101 of the archive's 102 suyūr share the id
-      // "sayralshawwa_1946" and the check passed for nearly every pair of
-      // maqāmāt. The reader saw a sayr pre-selected on maqāmāt they had never
-      // opened one for. Transpositions come through this same call with the
-      // same MaqamData, so comparing the maqām's id leaves those untouched.
+      // fired: a sayr id is derived from its SOURCE alone (sayr-manager.tsx,
+      // `sayr_${sourceId}`), so it is unique only within one maqām's suyur,
+      // and every maqām documented by the same source carries the same id.
+      // The check passed for most pairs of maqāmāt and the reader saw a sayr
+      // pre-selected on maqāmāt they had never opened one for. Transpositions
+      // come through this same call with the same MaqamData, so comparing the
+      // maqām's id leaves those untouched.
       if (maqamSayrId && maqamData.getId() !== selectedMaqamData?.getId()) setMaqamSayrId("");
 
       setSelectedMaqam(maqam);
