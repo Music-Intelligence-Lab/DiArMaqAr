@@ -471,9 +471,9 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
   },
   "links": {
     "self": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah",
-    "detail": "/api/maqamat/maqam_rast",
-    "availability": "/api/maqamat/maqam_rast/availability",
-    "compare": "/api/maqamat/maqam_rast/compare"
+    "detail": "https://diarmaqar.net/api/maqamat/maqam_rast",
+    "availability": "https://diarmaqar.net/api/maqamat/maqam_rast/availability",
+    "compare": "https://diarmaqar.net/api/maqamat/maqam_rast/compare"
   },
   "pitchData": {
     "ascending": [
@@ -878,7 +878,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           }
         ],
         "links": {
-          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_chahargah"
+          "detail": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_chahargah"
         }
       },
       {
@@ -919,7 +919,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           }
         ],
         "links": {
-          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
+          "detail": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=chahargah"
         }
       },
       {
@@ -960,15 +960,15 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           }
         ],
         "links": {
-          "detail": "/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=mahuran"
+          "detail": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=mahuran"
         }
       }
     ]
   },
   "links": {
     "self": "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
-    "availability": "/api/maqamat/maqam_rast/availability",
-    "detail": "/api/maqamat/maqam_rast"
+    "availability": "https://diarmaqar.net/api/maqamat/maqam_rast/availability",
+    "detail": "https://diarmaqar.net/api/maqamat/maqam_rast"
   }
 }
 ```
@@ -1193,8 +1193,8 @@ respective cell via `note` or `error` fields. The counters
           "transposeTo": null
         },
         "links": {
-          "detail": "/api/maqamat/maqam_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true",
-          "availability": "/api/maqamat/maqam_rast/availability"
+          "detail": "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true",
+          "availability": "https://diarmaqar.net/api/maqamat/maqam_rast/availability"
         }
       }
     ]
@@ -1222,8 +1222,8 @@ respective cell via `note` or `error` fields. The counters
   },
   "links": {
     "self": "https://diarmaqar.net/api/maqamat/maqam_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
-    "detail": "/api/maqamat/maqam_rast",
-    "availability": "/api/maqamat/maqam_rast/availability"
+    "detail": "https://diarmaqar.net/api/maqamat/maqam_rast",
+    "availability": "https://diarmaqar.net/api/maqamat/maqam_rast/availability"
   }
 }
 ```
@@ -1797,7 +1797,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
         ]
       },
       "links": {
-        "detail": "/api/ajnas/jins_ajam_ushayran"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_ajam_ushayran"
       },
       "sources": []
     },
@@ -1912,7 +1912,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
         ]
       },
       "links": {
-        "detail": "/api/ajnas/jins_athar_kurd"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_athar_kurd"
       },
       "sources": []
     },
@@ -2021,7 +2021,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
         ]
       },
       "links": {
-        "detail": "/api/ajnas/jins_awj_ara"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_awj_ara"
       },
       "sources": [
         {
@@ -2135,7 +2135,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
         ]
       },
       "links": {
-        "detail": "/api/ajnas/jins_bayyat"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat"
       },
       "sources": []
     },
@@ -2244,7 +2244,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
         ]
       },
       "links": {
-        "detail": "/api/ajnas/jins_bayyat_ushayran"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat_ushayran"
       },
       "sources": []
     },
@@ -2590,7 +2590,7 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
           "octave": 0
         },
         "links": {
-          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_yegah"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_yegah"
         }
       },
       {
@@ -2603,7 +2603,7 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
           "octave": 0
         },
         "links": {
-          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_ushayran"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_ushayran"
         }
       },
       {
@@ -2616,7 +2616,7 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
           "octave": 0
         },
         "links": {
-          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_rast"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=qarar_rast"
         }
       },
       {
@@ -2629,7 +2629,7 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
           "octave": 1
         },
         "links": {
-          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=yegah"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=yegah"
         }
       },
       {
@@ -2642,7 +2642,7 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
           "octave": 1
         },
         "links": {
-          "detail": "/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=ushayran"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat?tuningSystem=ibnsina_1037&startingNote=yegah&transposeTo=ushayran"
         }
       },
       {
@@ -2652,8 +2652,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
   },
   "links": {
     "self": "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah",
-    "availability": "/api/ajnas/jins_bayyat/availability",
-    "detail": "/api/ajnas/jins_bayyat"
+    "availability": "https://diarmaqar.net/api/ajnas/jins_bayyat/availability",
+    "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat"
   }
 }
 ```
@@ -2830,8 +2830,8 @@ respective cell via `note` or `error` fields. The counters
           "transposeTo": null
         },
         "links": {
-          "detail": "/api/ajnas/jins_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true",
-          "availability": "/api/ajnas/jins_rast/availability"
+          "detail": "https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=alsabbagh_1954&startingNote=r%C4%81st&pitchClassDataType=cents&includeIntervals=true",
+          "availability": "https://diarmaqar.net/api/ajnas/jins_rast/availability"
         },
         "intervals": [
           {
@@ -2870,8 +2870,8 @@ respective cell via `note` or `error` fields. The counters
   },
   "links": {
     "self": "https://diarmaqar.net/api/ajnas/jins_rast/compare?tuningSystems=alsabbagh_1954&startingNotes=rast&pitchClassDataType=cents",
-    "detail": "/api/ajnas/jins_rast",
-    "availability": "/api/ajnas/jins_rast/availability"
+    "detail": "https://diarmaqar.net/api/ajnas/jins_rast",
+    "availability": "https://diarmaqar.net/api/ajnas/jins_rast/availability"
   }
 }
 ```
@@ -3114,7 +3114,7 @@ curl "https://diarmaqar.net/api/tuning-systems/cairocongresstuningcommittee_1929
   },
   "links": {
     "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/pitch-classes",
-    "tuningSystem": "/api/tuning-systems/ibnsina_1037"
+    "tuningSystem": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037"
   },
   "sources": [
     {
@@ -3245,7 +3245,7 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "hasSuyur": true
       },
       "links": {
-        "detail": "/api/maqamat/maqam_dilkeshidah"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_dilkeshidah"
       }
     },
     {
@@ -3272,7 +3272,7 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "hasSuyur": true
       },
       "links": {
-        "detail": "/api/maqamat/maqam_farahfazza"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_farahfazza"
       }
     },
     {
@@ -3299,7 +3299,7 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "hasSuyur": false
       },
       "links": {
-        "detail": "/api/maqamat/maqam_rast_yegah"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_rast_yegah"
       }
     },
     {
@@ -3326,7 +3326,7 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "hasSuyur": true
       },
       "links": {
-        "detail": "/api/maqamat/maqam_sultani_yegah"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_sultani_yegah"
       }
     },
     {
@@ -3353,7 +3353,7 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "hasSuyur": false
       },
       "links": {
-        "detail": "/api/maqamat/maqam_zanjaran"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_zanjaran"
       }
     },
     {
@@ -3362,8 +3362,8 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
   ],
   "links": {
     "self": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/maqamat",
-    "tuningSystem": "/api/tuning-systems/ibnsina_1037",
-    "collection": "/api/maqamat"
+    "tuningSystem": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037",
+    "collection": "https://diarmaqar.net/api/maqamat"
   }
 }
 ```
@@ -3822,8 +3822,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
       "order": 0,
       "octave": 0,
       "links": {
-        "detail": "/api/pitch-classes/note-names/qarar_yegah",
-        "availability": "/api/pitch-classes/note-names/qarar_yegah/availability"
+        "detail": "https://diarmaqar.net/api/pitch-classes/note-names/qarar_yegah",
+        "availability": "https://diarmaqar.net/api/pitch-classes/note-names/qarar_yegah/availability"
       }
     },
     {
@@ -3835,8 +3835,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
       "order": 0,
       "octave": 1,
       "links": {
-        "detail": "/api/pitch-classes/note-names/yegah",
-        "availability": "/api/pitch-classes/note-names/yegah/availability"
+        "detail": "https://diarmaqar.net/api/pitch-classes/note-names/yegah",
+        "availability": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability"
       }
     },
     {
@@ -3848,8 +3848,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
       "order": 0,
       "octave": 2,
       "links": {
-        "detail": "/api/pitch-classes/note-names/nawa",
-        "availability": "/api/pitch-classes/note-names/nawa/availability"
+        "detail": "https://diarmaqar.net/api/pitch-classes/note-names/nawa",
+        "availability": "https://diarmaqar.net/api/pitch-classes/note-names/nawa/availability"
       }
     },
     {
@@ -3861,8 +3861,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
       "order": 0,
       "octave": 3,
       "links": {
-        "detail": "/api/pitch-classes/note-names/saham/ramal_tuti",
-        "availability": "/api/pitch-classes/note-names/saham/ramal_tuti/availability"
+        "detail": "https://diarmaqar.net/api/pitch-classes/note-names/saham/ramal_tuti",
+        "availability": "https://diarmaqar.net/api/pitch-classes/note-names/saham/ramal_tuti/availability"
       }
     },
     {
@@ -3874,8 +3874,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names?includeArabic=true"
       "order": 1,
       "octave": 0,
       "links": {
-        "detail": "/api/pitch-classes/note-names/qarar_qarar_nim_hisar",
-        "availability": "/api/pitch-classes/note-names/qarar_qarar_nim_hisar/availability"
+        "detail": "https://diarmaqar.net/api/pitch-classes/note-names/qarar_qarar_nim_hisar",
+        "availability": "https://diarmaqar.net/api/pitch-classes/note-names/qarar_qarar_nim_hisar/availability"
       }
     },
     {
@@ -3964,8 +3964,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names/rast?includeArabic=true
   },
   "links": {
     "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
-    "availability": "/api/pitch-classes/note-names/yegah/availability",
-    "compare": "/api/pitch-classes/note-names/yegah/compare"
+    "availability": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability",
+    "compare": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/compare"
   }
 }
 ```
@@ -4147,8 +4147,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names/rast/availability?inclu
   },
   "links": {
     "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability",
-    "detail": "/api/pitch-classes/note-names/yegah",
-    "compare": "/api/pitch-classes/note-names/yegah/compare"
+    "detail": "https://diarmaqar.net/api/pitch-classes/note-names/yegah",
+    "compare": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/compare"
   }
 }
 ```
@@ -4260,8 +4260,8 @@ curl "https://diarmaqar.net/api/pitch-classes/note-names/rast/compare?tuningSyst
   },
   "links": {
     "self": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&pitchClassDataType=cents&startingNote=yegah",
-    "detail": "/api/pitch-classes/note-names/yegah",
-    "availability": "/api/pitch-classes/note-names/yegah/availability"
+    "detail": "https://diarmaqar.net/api/pitch-classes/note-names/yegah",
+    "availability": "https://diarmaqar.net/api/pitch-classes/note-names/yegah/availability"
   }
 }
 ```
@@ -4404,7 +4404,7 @@ curl "https://diarmaqar.net/api/intervals?noteNames=rast,dugah,segah&includeArab
   ],
   "links": {
     "self": "https://diarmaqar.net/api/intervals?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
-    "compare": "/api/intervals/compare?noteNames=yegah,dugah,segah"
+    "compare": "https://diarmaqar.net/api/intervals/compare?noteNames=yegah,dugah,segah"
   }
 }
 ```
@@ -4587,7 +4587,7 @@ curl "https://diarmaqar.net/api/intervals/compare?noteNames=rast,dugah,segah&tun
   },
   "links": {
     "self": "https://diarmaqar.net/api/intervals/compare?tuningSystems=ibnsina_1037%2Calfarabi_950g&startingNote=yegah&pitchClassDataType=cents&noteNames=yegah%2Cdugah%2Csegah",
-    "intervals": "/api/intervals?noteNames=yegah,dugah,segah"
+    "intervals": "https://diarmaqar.net/api/intervals?noteNames=yegah,dugah,segah"
   }
 }
 ```
@@ -4714,9 +4714,9 @@ curl "https://diarmaqar.net/api/intervals/calculate?from=rast&to=dugah&tuningSys
     }
   },
   "links": {
-    "self": "/api/intervals/calculate?from=yegah&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents",
-    "tuningSystem": "/api/tuning-systems/ibnsina_1037",
-    "intervals": "/api/intervals?noteNames=yegah,dugah&tuningSystem=ibnsina_1037&startingNote=yegah"
+    "self": "https://diarmaqar.net/api/intervals/calculate?from=yegah&to=dugah&tuningSystem=ibnsina_1037&startingNote=yegah&unit=cents",
+    "tuningSystem": "https://diarmaqar.net/api/tuning-systems/ibnsina_1037",
+    "intervals": "https://diarmaqar.net/api/intervals?noteNames=yegah,dugah&tuningSystem=ibnsina_1037&startingNote=yegah"
   }
 }
 ```
@@ -5014,8 +5014,8 @@ curl "https://diarmaqar.net/api/sources/farmer_1937/tuning-systems?includeArabic
         "rast"
       ],
       "links": {
-        "detail": "/api/tuning-systems/alsabbagh_1954",
-        "source": "/api/sources/alsabbagh_1954"
+        "detail": "https://diarmaqar.net/api/tuning-systems/alsabbagh_1954",
+        "source": "https://diarmaqar.net/api/sources/alsabbagh_1954"
       }
     }
   ]
@@ -5086,8 +5086,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true
         }
       ],
       "links": {
-        "detail": "/api/maqamat/maqam_rast",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_rast",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5103,8 +5103,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true
         }
       ],
       "links": {
-        "detail": "/api/maqamat/maqam_nawa_athar",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_nawa_athar",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5120,8 +5120,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true
         }
       ],
       "links": {
-        "detail": "/api/maqamat/maqam_nahawand",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_nahawand",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5137,8 +5137,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true
         }
       ],
       "links": {
-        "detail": "/api/maqamat/maqam_nahawand_kabir",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_nahawand_kabir",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5154,8 +5154,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/maqamat?includeArabic=true
         }
       ],
       "links": {
-        "detail": "/api/maqamat/maqam_ajam_ushayran",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_ajam_ushayran",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5229,8 +5229,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
         }
       ],
       "links": {
-        "detail": "/api/ajnas/jins_buselik_(al-shawwa)",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_buselik_(al-shawwa)",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },
     {
@@ -5246,8 +5246,8 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
         }
       ],
       "links": {
-        "detail": "/api/ajnas/jins_awj_ara",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_awj_ara",
+        "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     }
   ]
