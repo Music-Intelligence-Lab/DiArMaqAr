@@ -132,7 +132,7 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
       "isOctaveRepeating": true,
       "hasAsymmetricDescending": true,
       "hasSuyur": true,
-      "availableInTuningSystems": 4,
+      "availableInTuningSystems": 3,
       "tuningSystemsAvailability": [
         {
           "tuningSystemId": "alfarabi_950g",
@@ -148,12 +148,6 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
         },
         {
           "tuningSystemId": "alsabbagh_1954",
-          "tuningSystemStartingNoteNames": [
-            "rāst"
-          ]
-        },
-        {
-          "tuningSystemId": "allami_2025",
           "tuningSystemStartingNoteNames": [
             "rāst"
           ]
@@ -4996,32 +4990,32 @@ curl "https://diarmaqar.net/api/sources/farmer_1937/tuning-systems?includeArabic
 {
   "context": {
     "source": {
-      "id": "alshawwa_1946",
-      "idName": "alshawwa_1946",
-      "displayName": "al-Qawaʿid al-Fannīya fī al-Mūsiqa al-Sharqīya wa al-Gharbīya"
+      "id": "alsabbagh_1954",
+      "idName": "alsabbagh_1954",
+      "displayName": "al-Anghām al-Sharqīya: al-Qism al-Thānī min kitāb al-Dalīl al-Mūsīqī al-ʿĀm fi Aṭrab al-Anghām"
     }
   },
   "count": 1,
   "data": [
     {
       "tuningSystem": {
-        "id": "allami_2025",
-        "idName": "allami_2025",
-        "displayName": "Allami (2025) al-Ṣabbāgh with al-Shawwā's 28-Tones",
-        "version": "2025-12-11T23:36:54.970Z",
-        "year": "2025"
+        "id": "alsabbagh_1954",
+        "idName": "alsabbagh_1954",
+        "displayName": "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone",
+        "version": "2026-08-05T14:14:27.676Z",
+        "year": "1954"
       },
       "sourceReferences": [
         {
-          "page": "13"
+          "page": "47"
         }
       ],
       "startingNotes": [
         "rast"
       ],
       "links": {
-        "detail": "/api/tuning-systems/allami_2025",
-        "source": "/api/sources/alshawwa_1946"
+        "detail": "/api/tuning-systems/alsabbagh_1954",
+        "source": "/api/sources/alsabbagh_1954"
       }
     }
   ]
