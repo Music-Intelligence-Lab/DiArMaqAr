@@ -269,6 +269,10 @@ const translations = {
     "tuningSystem.create": "Create New Tuning System",
     "tuningSystem.deleteTuningSystem": "Delete Tuning System",
     "tuningSystem.startingNoteName": "Starting Note Name and Reference Frequency:",
+    // {provided} is the starting note name the URL asked for, {available} the
+    // comma-separated list this tuning system actually defines.
+    "tuningSystem.startingNoteNotFound":
+      "The starting note name “{provided}” does not match any existing entry in the data. Please select one of the existing starting note names ({available}) from the buttons below.",
     "tuningSystem.tooltip.disabledForJins": "The selected jins is not available in this tuning system with this starting note name",
     "tuningSystem.tooltip.disabledForMaqam": "The selected maqām is not available in this tuning system with this starting note name",
     "tuningSystem.tooltip.itemDisabledForJins": "The selected jins is not available in this tuning system",
@@ -630,6 +634,8 @@ const translations = {
     "tuningSystem.create": "إنشاء نظام تنغيم جديد",
     "tuningSystem.deleteTuningSystem": "حذف نظام التنغيم",
     "tuningSystem.startingNoteName": "اسم اول نغمة في بنية التنغيم والتردد المرجعي:",
+    "tuningSystem.startingNoteNotFound":
+      "اسم أول نغمة «{provided}» لا يطابق أي مدخل موجود في البيانات. اختاروا أحد الأسماء المتوفرة ({available}) من الأزرار في الأسفل.",
     "tuningSystem.tooltip.disabledForJins": "الجنس المحدد غير متوفر في نظام التنغيم هذا انطلاقاً من هذه النغمة",
     "tuningSystem.tooltip.disabledForMaqam": "المقام المحدد غير متوفر في نظام التنغيم هذا انطلاقاً من هذه النغمة",
     "tuningSystem.tooltip.itemDisabledForJins": "الجنس المحدد غير متوفر في نظام التنغيم هذا",
@@ -989,6 +995,8 @@ const translations = {
     "tuningSystem.create": "Créer un nouveau système d'accord",
     "tuningSystem.deleteTuningSystem": "Supprimer le système d'accord",
     "tuningSystem.startingNoteName": "Nom de la note de départ et fréquence de référence :",
+    "tuningSystem.startingNoteNotFound":
+      "Le nom de la note de départ « {provided} » ne correspond à aucune entrée existante dans les données. Veuillez sélectionner l'un des noms de note de départ existants ({available}) parmi les boutons ci-dessous.",
     "tuningSystem.tooltip.disabledForJins": "Le jins sélectionné n'est pas disponible dans ce système d'accord avec cette note de départ",
     "tuningSystem.tooltip.disabledForMaqam": "Le maqām sélectionné n'est pas disponible dans ce système d'accord avec cette note de départ",
     "tuningSystem.tooltip.itemDisabledForJins": "Le jins sélectionné n'est pas disponible dans ce système d'accord",

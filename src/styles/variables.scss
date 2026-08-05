@@ -14,6 +14,11 @@ $space-block: 20px;
 // blocks do. Always derived, never redefined independently.
 $space-block-half: $space-block * 0.5;
 
+// The app page's inline padding, set once on .main-content. Named because a
+// full-bleed band inside the page has to cancel exactly this much on each side;
+// a literal in two files drifts the moment one of them changes.
+$app-inline-pad: 12px;
+
 $top-navbar-height: 110px;
 $bottom-navbar-height: 72px;
 // The navbar occupies its two bars plus a $space-block bottom padding; the

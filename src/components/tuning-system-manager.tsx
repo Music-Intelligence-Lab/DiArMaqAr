@@ -102,6 +102,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     mapIndices,
     clearSelections,
     handleStartNoteNameChange,
+    unresolvedStartingNote,
     sources,
     selectedAbjadNames,
     setSelectedAbjadNames,
@@ -1106,6 +1107,24 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </button>
         </div>
       )}
+
+      {unresolvedStartingNote && selectedTuningSystem && (
+        <div className="tuning-system-manager__starting-note-error" role="alert">
+          {t("tuningSystem.startingNoteNotFound")
+            // Quoted back exactly as the URL spelled it. Running it through the
+            // note-name display converter would dress an unrecognised token up
+            // as a real note name and hide what was actually asked for.
+            .replace("{provided}", unresolvedStartingNote)
+            .replace(
+              "{available}",
+              [...selectedTuningSystem.getNoteNameSets()]
+                .sort((a, b) => getNoteNameIndex(a[0] ?? 0) - getNoteNameIndex(b[0] ?? 0))
+                .map((notes) => getDisplayName(notes[0], "note"))
+                .join(language === "ar" ? "، " : ", ")
+            )}
+        </div>
+      )}
+
       <div className="tuning-system-manager__options-container">
         {/*         {!admin && (
           <div className="tuning-system-manager__sorting-options">

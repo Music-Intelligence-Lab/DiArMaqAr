@@ -37,6 +37,12 @@ interface AppContextInterface {
   selectedAbjadNames: string[];
   setSelectedAbjadNames: React.Dispatch<React.SetStateAction<string[]>>;
   handleStartNoteNameChange: (startingNoteName: string, givenNoteNames?: NoteName[][], givenNumberOfPitchClasses?: number) => void;
+  /**
+   * The starting note name a URL asked for that the selected tuning system does
+   * not define, kept so the UI can say so instead of silently showing a tuning
+   * system with nothing selected. Null whenever the request resolved.
+   */
+  unresolvedStartingNote: string | null;
   selectedPitchClasses: PitchClass[];
   setSelectedPitchClasses: React.Dispatch<React.SetStateAction<PitchClass[]>>;
   allPitchClasses: PitchClass[];
@@ -96,6 +102,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [selectedPitchClasses, setSelectedPitchClasses] = useState<PitchClass[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
   const [originalIndices, setOriginalIndices] = useState<number[]>([]);
+  const [unresolvedStartingNote, setUnresolvedStartingNote] = useState<string | null>(null);
 
   const [tuningSystemStringLength, setTuningSystemStringLength] = useState(0);
   const [referenceFrequencies, setReferenceFrequencies] = useState<{
@@ -207,6 +214,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     setSelectedMaqam(null);
     setSelectedTuningSystem(null);
     setModulationChain(null);
+    setUnresolvedStartingNote(null);
   }, []);
 
   const clearJinsSelections = useCallback(() => {
@@ -248,6 +256,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   const handleStartNoteNameChange = useCallback(
     (startingNoteName: string, givenNoteNames: NoteName[][] = [], givenNumberOfPitchClasses: number = 0) => {
+      // Every route into a starting note passes through here, so this is the one
+      // place a stale "that note does not exist" notice has to be dropped. The URL
+      // loader calls this first and raises the notice afterwards if it stands.
+      setUnresolvedStartingNote(null);
+
       const noteNamesToSearch = givenNoteNames.length ? givenNoteNames : selectedTuningSystem?.getNoteNameSets() || [[]];
       const numberOfPitchClasses = givenNumberOfPitchClasses || tuningSystemPitchClassesArray.length || selectedTuningSystem?.getOriginalPitchClassValues().length || 0;
 
@@ -421,6 +434,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             const mappedIndices = handleStartNoteNameChange(firstNote ?? "", found.getNoteNameSets(), found.getOriginalPitchClassValues().length);
             const actualNoteName = getFirstNoteName(mappedIndices);
 
+            // The URL named a note this tuning system does not start on. Nothing
+            // is selected, so say why rather than leaving the page looking blank.
+            if (firstNote && actualNoteName === "none") setUnresolvedStartingNote(firstNote);
+
             // Get the tuning system's default reference frequencies
             const defaultFreqs = found.getReferenceFrequencies();
 
@@ -482,6 +499,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       selectedAbjadNames,
       setSelectedAbjadNames,
       handleStartNoteNameChange,
+      unresolvedStartingNote,
       selectedPitchClasses,
       setSelectedPitchClasses,
       allPitchClasses,
@@ -533,6 +551,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       tuningSystemPitchClasses,
       selectedAbjadNames,
       handleStartNoteNameChange,
+      unresolvedStartingNote,
       selectedPitchClasses,
       allPitchClasses,
       selectedIndices,

@@ -140,6 +140,25 @@
     font-style: italic;
   }
 
+  // Full-bleed notice band under the carousel: a URL asked for a starting note
+  // this tuning system does not define, so nothing is selected. Runs edge to
+  // edge by cancelling .main-content's inline padding rather than using 100vw,
+  // which would overshoot by the width of the page's scrollbar.
+  &__starting-note-error {
+    @include type-tooltip;
+    // A block box auto-sizes to its containing block, so the two negative
+    // margins are the whole break-out; no width is needed, and none is set,
+    // so there is only one place the bleed can drift out of step.
+    margin: $space-block (-$app-inline-pad) 0;
+    // Aligns the text with the Starting Note Name label below, whose column
+    // sits 20px inside the page content edge.
+    padding: $space-block-half calc(#{$app-inline-pad} + 20px);
+    background-color: rgba($delete, 0.18);
+    border-top: 1px solid $delete;
+    border-bottom: 1px solid $delete;
+    color: $text;
+  }
+
   &__options-container {
     display: flex;
     justify-content: space-between;
