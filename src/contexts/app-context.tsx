@@ -143,7 +143,17 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
     const firstNote = getFirstNoteName(selectedIndices);
 
-    return getTuningSystemPitchClasses(selectedTuningSystem, firstNote, tuningSystemPitchClassesArray, tuningSystemStringLength, referenceFrequencies);
+    // selectedIndices is the live note-name selection, which in the admin can be
+    // a configuration the tuning system has not been saved with yet. Pass it in
+    // rather than letting the starting note be looked up against the saved sets.
+    return getTuningSystemPitchClasses(
+      selectedTuningSystem,
+      firstNote,
+      tuningSystemPitchClassesArray,
+      tuningSystemStringLength,
+      referenceFrequencies,
+      selectedIndices
+    );
   }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray, tuningSystemStringLength]);
 
   useEffect(() => {
@@ -156,7 +166,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (selectedTuningSystem) {
-      const allThePitchClasses = getTuningSystemPitchClasses(selectedTuningSystem, getFirstNoteName(selectedIndices));
+      // Same pitch classes the rest of the app sees: recomputing them here from the
+      // saved note-name sets alone would disagree with allPitchClasses whenever the
+      // admin is editing, and would throw on a not-yet-saved starting note.
+      const allThePitchClasses = allPitchClasses;
       const usedNoteNames = allThePitchClasses.map((pitchClass) => pitchClass.noteName);
       if (!selectedTuningSystem.isSaved()) return;
       if (selectedJinsData) {
@@ -397,19 +410,16 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
 
           if (found) {
             setSelectedTuningSystem(found);
-            handleStartNoteNameChange(firstNote ?? "", found.getNoteNameSets(), found.getOriginalPitchClassValues().length);
 
-            // Find the actual note name (with diacritics) from the tuning system that matches the URL parameter
-            let actualNoteName = firstNote;
-            if (firstNote) {
-              const allNoteNames = found.getNoteNameSets().flat();
-              const matchingNote = allNoteNames.find(name =>
-                standardizeText(name) === standardizeText(firstNote)
-              );
-              if (matchingNote) {
-                actualNoteName = matchingNote;
-              }
-            }
+            // handleStartNoteNameChange resolves the URL's spelling against the tuning
+            // system's starting notes and returns the selection it settled on, so the
+            // starting note is read back from that rather than matched a second time.
+            // The old second match searched every note of every set, flattened, so a
+            // URL naming a note from the middle of a set — a maqām tonic, say — resolved
+            // to something that is not a starting note at all, and threw.
+            // "none" here means the URL named nothing this tuning system starts on.
+            const mappedIndices = handleStartNoteNameChange(firstNote ?? "", found.getNoteNameSets(), found.getOriginalPitchClassValues().length);
+            const actualNoteName = getFirstNoteName(mappedIndices);
 
             // Get the tuning system's default reference frequencies
             const defaultFreqs = found.getReferenceFrequencies();
@@ -418,14 +428,14 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             setOriginalReferenceFrequencies(defaultFreqs);
 
             // Prepare reference frequencies with custom value from URL if provided
-            const refFreqs = referenceFrequency && actualNoteName
+            const refFreqs = referenceFrequency && actualNoteName !== "none"
               ? { ...defaultFreqs, [actualNoteName]: referenceFrequency }
               : defaultFreqs;
 
             // Apply reference frequencies (defaults + custom from URL)
             setReferenceFrequencies(refFreqs);
 
-            const allPitchClasses = getTuningSystemPitchClasses(found, actualNoteName || "", [], 0, refFreqs);
+            const allPitchClasses = getTuningSystemPitchClasses(found, actualNoteName, [], 0, refFreqs, mappedIndices);
 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);

@@ -37,6 +37,8 @@ import PitchClass from "@/models/PitchClass";
  * @param tuningSystemPitchClasses - Optional custom pitch classes (default: from tuning system)
  * @param inputStringLength - Optional length parameter for custom input
  * @param inputReferenceFrequencies - Optional custom reference frequencies
+ * @param inputNoteNameIndices - Optional custom note-name selection, as combined
+ *   octave-one/octave-two indices (the admin's live grid; see below)
  * @returns Complete array of PitchClass objects spanning multiple octaves
  */
 export default function getTuningSystemPitchClasses(
@@ -44,40 +46,56 @@ export default function getTuningSystemPitchClasses(
   startingNote: NoteName,
   tuningSystemPitchClasses: string[] = [],
   inputStringLength: number = 0,
-  inputReferenceFrequencies: { [noteName: string]: number } = {}
+  inputReferenceFrequencies: { [noteName: string]: number } = {},
+  inputNoteNameIndices: number[] = []
 ): PitchClass[] {
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getOriginalPitchClassValues();
   const nPC = pitchArr.length;
-  const allSets = tuningSystem.getNoteNameSets();
-  if (!allSets.length) return [];
+  const O1 = octaveOneNoteNames.length;
 
   // A tuning system's starting note selects which of its note-name sets to use.
   // "none" or an empty string means nothing is selected yet (the UI's initial
   // state), so there is simply nothing to compute.
   if (!startingNote || startingNote === "none") return [];
 
-  // Anything else that fails to match is a caller error, and must never fall back
-  // to another set: doing so silently returns pitch classes for a tuning the
-  // caller did not ask for. That bug made /tuning-systems/{id}/{startingNote}/maqamat
-  // ignore its own path parameter, because it passed a maqām tonic here — a maqām
-  // or jins tonic is NOT a tuning system starting note.
-  const noteNames = allSets.find((s) => s[0] === startingNote);
-  if (!noteNames) {
-    throw new Error(
-      `getTuningSystemPitchClasses: "${startingNote}" is not a starting note of tuning system ` +
-      `"${tuningSystem.getId()}". Valid starting notes: ${allSets.map((s) => s[0]).join(", ")}. ` +
-      `Note that a tuning system's starting note is not the same thing as a maqām or jins tonic.`
-    );
+  let selectedIndices: number[];
+
+  if (inputNoteNameIndices.length) {
+    // The admin edits note names live, one column at a time, and the set being
+    // built need not exist on the tuning system yet: creating a new starting-note
+    // configuration, or renaming the notes of an existing one, both produce a
+    // selection with no counterpart in the saved data. The grid is therefore the
+    // source of truth here, exactly as the pitch class values, string length and
+    // reference frequencies above are, and it is passed in rather than looked up.
+    selectedIndices = inputNoteNameIndices.slice(0, nPC);
+  } else {
+    const allSets = tuningSystem.getNoteNameSets();
+    if (!allSets.length) return [];
+
+    // Without a live selection the starting note must name one of the tuning
+    // system's own sets, and must never fall back to another set: doing so
+    // silently returns pitch classes for a tuning the caller did not ask for.
+    // That bug made /tuning-systems/{id}/{startingNote}/maqamat ignore its own
+    // path parameter, because it passed a maqām tonic here — a maqām or jins
+    // tonic is NOT a tuning system starting note.
+    const noteNames = allSets.find((s) => s[0] === startingNote);
+    if (!noteNames) {
+      throw new Error(
+        `getTuningSystemPitchClasses: "${startingNote}" is not a starting note of tuning system ` +
+        `"${tuningSystem.getId()}". Valid starting notes: ${allSets.map((s) => s[0]).join(", ")}. ` +
+        `Note that a tuning system's starting note is not the same thing as a maqām or jins tonic.`
+      );
+    }
+
+    selectedIndices = noteNames.slice(0, nPC).map((nm) => {
+      const i1 = octaveOneNoteNames.indexOf(nm as TransliteratedNoteNameOctaveOne);
+      if (i1 >= 0) return i1;
+      const i2 = octaveTwoNoteNames.indexOf(nm as TransliteratedNoteNameOctaveTwo);
+      if (i2 >= 0) return O1 + i2;
+      return -1;
+    });
   }
 
-  const O1 = octaveOneNoteNames.length;
-  const selectedIndices = noteNames.slice(0, nPC).map((nm) => {
-    const i1 = octaveOneNoteNames.indexOf(nm as TransliteratedNoteNameOctaveOne);
-    if (i1 >= 0) return i1;
-    const i2 = octaveTwoNoteNames.indexOf(nm as TransliteratedNoteNameOctaveTwo);
-    if (i2 >= 0) return O1 + i2;
-    return -1;
-  });
   while (selectedIndices.length < nPC) selectedIndices.push(-1);
   selectedIndices.length = nPC;
 
