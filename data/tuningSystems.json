@@ -1774,8 +1774,8 @@
   },
   {
     "id": "almawsili_850",
-    "titleEnglish": "10-Tone",
-    "titleArabic": "10-نغمات",
+    "titleEnglish": "9-Tone",
+    "titleArabic": "9-نغمات",
     "year": "850",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -1787,7 +1787,7 @@
     ],
     "creatorEnglish": "al-Mawṣilī",
     "creatorArabic": "الموصلي",
-    "commentsEnglish": "Iṣhāq al-Mawṣilī",
+    "commentsEnglish": "According to Farmer this is \"the scale of Isḥāq al-Mauṣilī (d. 850), as reported by his pupil Yaḥyā b. ʿAlī b. Yahya b. Abī Manṣūr (d. 912)\" as cited in the manuscript at the British Museum MS., Or. 2361, fol. 236v (Farmer 1937:247).\n\nFarmer provides it in cents only and doesn't give any note names for the values although he mentions that \"when the Arabs adopted the Persian system of tuning the strings a fourth (498 cents) apart, i.e. the lowest string was depressed to A, and the highest string was lifted to c\" (Farmer 1937:246) which would align with assigning his 0 cents value for the Bamm string with starting note name as ʿushayrān (A/La).  As these cents values align perfectly with well-known and often used ratios for tuning systems of the same historical period, they are provided here as fraction ratios instead of the cents provided by Farmer.\n\nAdditionally neither the yegāh or ʿushayrān as starting note names produce many suitable ajnās or maqāmāt in this tuning because we have not yet included the modes that were used during the 9th and 10th centuries in the database due to varying accuracy of scholarship on the subject. ",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1798,8 +1798,7 @@
       "3/2",
       "128/81",
       "27/16",
-      "16/9",
-      "243/128"
+      "16/9"
     ],
     "noteNames": [
       [
@@ -1811,8 +1810,7 @@
         "būselīk/ʿushshāq",
         "chahārgāh",
         "ḥijāz",
-        "nawā",
-        "ḥiṣār"
+        "nawā"
       ],
       [
         "yegāh",
@@ -1823,31 +1821,28 @@
         "dūgāh",
         "kurdī",
         "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz"
+        "chahārgāh"
       ]
     ],
     "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي"
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
@@ -1855,7 +1850,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T14:04:14.269Z"
+    "version": "2026-08-05T17:22:17.688Z"
   },
   {
     "id": "cairocongresstuningcommittee_1929",
