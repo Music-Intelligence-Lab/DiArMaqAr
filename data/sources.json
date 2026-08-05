@@ -524,5 +524,34 @@
     "pageRangeEnglish": "548–549",
     "pageRangeArabic": "",
     "DOI": ""
+  },
+  {
+    "id": "abbas_1986",
+    "titleEnglish": "Nadhariyyāt al-Mūsīqā al-ʿArabiyya",
+    "titleArabic": "نظريات الموسيقى العربية",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Ḥabīb Dhāhir",
+        "lastNameEnglish": "ʿAbbās",
+        "firstNameArabic": "حبيب ضاهر",
+        "lastNameArabic": "عبّاس"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1986",
+    "publicationDateArabic": "",
+    "url": "",
+    "dateAccessed": "",
+    "version": "2026-08-04T17:33:19.553Z",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Dār al-Ḥurrīya lil-Ṭibāʿa",
+    "publisherArabic": "دار الحرية للطباعة",
+    "placeEnglish": "Baghdad",
+    "placeArabic": "بغداد",
+    "ISBN": ""
   }
 ]

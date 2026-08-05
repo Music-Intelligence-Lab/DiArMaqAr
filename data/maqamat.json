@@ -182,9 +182,13 @@
       {
         "sourceId": "alhilu_1957_1961",
         "page": "107"
+      },
+      {
+        "sourceId": "alsabbagh_1950",
+        "page": "41"
       }
     ],
-    "version": "2026-07-26T08:29:30.593Z"
+    "version": "2026-08-04T18:14:49.276Z"
   },
   {
     "id": "2",
@@ -1169,47 +1173,9 @@
     "version": "2026-07-26T09:27:30.693Z"
   },
   {
-    "id": "8",
-    "idName": "maqam_bayyatayn",
-    "name": "maqām bayyātayn",
-    "ascendingNoteNames": [
-      "dūgāh",
-      "segāh",
-      "chahārgāh",
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam",
-      "kurdān"
-    ],
-    "descendingNoteNames": [
-      "kurdān",
-      "ʿajam",
-      "tīk ḥiṣār",
-      "nawā",
-      "chahārgāh",
-      "segāh",
-      "dūgāh"
-    ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
-  },
-  {
     "id": "9",
-    "idName": "maqam_lami",
-    "name": "maqām lāmī",
+    "idName": "maqam_al-lami",
+    "name": "maqām al-lāmī",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -1241,8 +1207,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "54"
+      }
+    ],
+    "version": "2026-08-04T17:34:56.058Z"
   },
   {
     "id": "10",
@@ -1531,43 +1502,44 @@
     "idName": "maqam_athar_kurd",
     "name": "maqām athar kurd",
     "ascendingNoteNames": [
-      "dūgāh",
+      "rāst",
+      "zīrgūleh",
       "kurdī",
-      "chahārgāh",
+      "ḥijāz",
+      "nawā",
       "ḥiṣār",
-      "ḥusaynī",
-      "ʿajam",
-      "shahnāz"
+      "māhūr",
+      "kurdān"
     ],
     "descendingNoteNames": [
-      "shahnāz",
+      "kurdān",
       "ʿajam",
-      "ḥusaynī",
       "ḥiṣār",
-      "chahārgāh",
+      "nawā",
+      "ḥijāz",
       "kurdī",
-      "dūgāh"
+      "zīrgūleh",
+      "rāst"
     ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "ḥusaynī"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "ḥusaynī"
-    ],
+    "ghammaz": null,
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T14:59:03.796Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "85"
+      }
+    ],
+    "version": "2026-08-04T17:30:21.632Z"
   },
   {
     "id": "13",
-    "idName": "maqam_bayyat_shuri",
-    "name": "maqām bayyāt shūrī",
+    "idName": "maqam_qarjighar",
+    "name": "maqām qārjighār",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -1599,46 +1571,13 @@
     "suyur": [],
     "commentsEnglish": "Also known as qārjagār",
     "commentsArabic": "ويعرف أيضاً بالقارجغار.",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
-  },
-  {
-    "id": "14",
-    "idName": "maqam_hijaz_(binsir)",
-    "name": "maqām ḥijāz (binṣir)",
-    "ascendingNoteNames": [
-      "rāst",
-      "tīk zīrgūleh",
-      "būselīk/ʿushshāq",
-      "chahārgāh",
-      "nawā",
-      "tīk ḥiṣār",
-      "ʿajam"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "67"
+      }
     ],
-    "descendingNoteNames": [
-      "ʿajam",
-      "ḥiṣār",
-      "nawā",
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "tīk zīrgūleh",
-      "rāst"
-    ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-08-04T17:39:40.270Z"
   },
   {
     "id": "15",
@@ -1834,8 +1773,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "50"
+      }
+    ],
+    "version": "2026-08-04T17:47:25.491Z"
   },
   {
     "id": "17",
@@ -2864,44 +2808,6 @@
       }
     ],
     "version": "2026-07-26T08:56:24.471Z"
-  },
-  {
-    "id": "24",
-    "idName": "maqam_bayyat_husayni",
-    "name": "maqām bayyāt ḥusaynī",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst",
-      "dūgāh",
-      "būselīk/ʿushshāq",
-      "nīm ḥijāz",
-      "nawā"
-    ],
-    "descendingNoteNames": [
-      "nawā",
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "ʿirāq",
-      "ʿushayrān"
-    ],
-    "primaryJinsDegree": [
-      "ʿushayrān"
-    ],
-    "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "dūgāh"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "25",
@@ -5905,8 +5811,8 @@
   },
   {
     "id": "49",
-    "idName": "maqam_chahargah_(al-shawwa)",
-    "name": "maqām chahārgāh (al-Shawwā)",
+    "idName": "maqam_chahargah",
+    "name": "maqām chahārgāh",
     "ascendingNoteNames": [
       "chahārgāh",
       "nawā",
@@ -6053,45 +5959,7 @@
         "page": "133"
       }
     ],
-    "version": "2026-07-26T09:59:40.039Z"
-  },
-  {
-    "id": "50",
-    "idName": "maqam_chahargah/girkah",
-    "name": "maqām chahārgāh/girkah",
-    "ascendingNoteNames": [
-      "chahārgāh",
-      "nawā",
-      "nīm ḥusaynī",
-      "ʿajam",
-      "kurdān",
-      "muḥayyar",
-      "buzurk"
-    ],
-    "descendingNoteNames": [
-      "buzurk",
-      "muḥayyar",
-      "kurdān",
-      "ʿajam",
-      "nīm ḥusaynī",
-      "nawā",
-      "chahārgāh"
-    ],
-    "primaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "secondaryJinsDegree": [
-      "kurdān"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "kurdān"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-08-04T18:03:03.763Z"
   },
   {
     "id": "51",
@@ -6286,44 +6154,6 @@
       }
     ],
     "version": "2026-07-20T12:15:11.065Z"
-  },
-  {
-    "id": "54",
-    "idName": "maqam_hijaz_kar_(mutlaq)",
-    "name": "maqām ḥijāz kār (muṭlaq)",
-    "ascendingNoteNames": [
-      "dūgāh",
-      "kurdī",
-      "ḥijāz",
-      "nawā",
-      "ḥusaynī",
-      "ʿajam",
-      "shahnāz"
-    ],
-    "descendingNoteNames": [
-      "shahnāz",
-      "ʿajam",
-      "ḥusaynī",
-      "nawā",
-      "ḥijāz",
-      "kurdī",
-      "dūgāh"
-    ],
-    "primaryJinsDegree": [
-      "dūgāh"
-    ],
-    "secondaryJinsDegree": [
-      "nawā"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "nawā"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
   },
   {
     "id": "55",
@@ -6692,88 +6522,6 @@
       }
     ],
     "version": "2025-10-18T19:41:17.132Z"
-  },
-  {
-    "id": "61",
-    "idName": "maqam_zanjaran",
-    "name": "maqām zanjarān",
-    "ascendingNoteNames": [
-      "yegāh",
-      "qarār nīm ḥiṣār",
-      "kawasht",
-      "rāst",
-      "dūgāh",
-      "būselīk/ʿushshāq",
-      "chahārgāh"
-    ],
-    "descendingNoteNames": [
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "kawasht",
-      "qarār nīm ḥiṣār",
-      "yegāh"
-    ],
-    "primaryJinsDegree": [
-      "yegāh"
-    ],
-    "secondaryJinsDegree": [
-      "rāst"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "rāst"
-    ],
-    "suyur": [],
-    "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
-    "commentsArabic": "من ابتكار سيد درويش (انظر دور في شرع مين: https://www.youtube.com/watch?v=DmEEUlWYJjo).",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
-  },
-  {
-    "id": "62",
-    "idName": "sullam_krumatiki",
-    "name": "sullam krūmātīkī",
-    "ascendingNoteNames": [
-      "yegāh",
-      "qarār ḥiṣār",
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
-      "kawasht",
-      "rāst",
-      "zīrgūleh",
-      "dūgāh",
-      "kurdī",
-      "būselīk/ʿushshāq",
-      "chahārgāh",
-      "ḥijāz"
-    ],
-    "descendingNoteNames": [
-      "ḥijāz",
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "kurdī",
-      "dūgāh",
-      "zīrgūleh",
-      "rāst",
-      "kawasht",
-      "ʿajam ʿushayrān",
-      "ʿushayrān",
-      "qarār ḥiṣār",
-      "yegāh"
-    ],
-    "primaryJinsDegree": [
-      "yegāh"
-    ],
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-11-18T11:51:14.617Z"
   },
   {
     "id": "63",
@@ -8545,7 +8293,7 @@
   },
   {
     "id": "80",
-    "idName": "maqam_maya",
+    "idName": "maqam_mayeh",
     "name": "maqām māyeh",
     "ascendingNoteNames": [
       "segāh",

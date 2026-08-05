@@ -139,23 +139,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
-    "id": "10",
-    "idName": "jins_chahargah",
-    "name": "jins chahārgāh",
-    "noteNames": [
-      "chahārgāh",
-      "nawā",
-      "nīm ḥusaynī",
-      "ʿajam"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "50"
+      }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
+    "version": "2026-08-04T18:17:46.026Z"
   },
   {
     "id": "11",
@@ -170,8 +160,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:01:34.466Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "85"
+      }
+    ],
+    "version": "2026-08-04T18:18:40.474Z"
   },
   {
     "id": "12",
@@ -212,36 +207,6 @@
       }
     ],
     "version": "2026-07-20T12:27:58.233Z"
-  },
-  {
-    "id": "14",
-    "idName": "jins_segah_baladi",
-    "name": "jins segāh baladī",
-    "noteNames": [
-      "nawā",
-      "tīk ḥiṣār",
-      "awj",
-      "kurdān"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
-  },
-  {
-    "id": "15",
-    "idName": "jins_hijaz_2",
-    "name": "jins ḥijāz 2",
-    "noteNames": [
-      "dūgāh",
-      "nīm kurdī/nahāwand",
-      "tīk ḥijāz/ṣabā",
-      "nawā"
-    ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
   },
   {
     "id": "17",
@@ -389,8 +354,8 @@
   },
   {
     "id": "31",
-    "idName": "jins_chahargah_(al-shawwa)",
-    "name": "jins chahārgāh (al-Shawwā)",
+    "idName": "jins_chahargah",
+    "name": "jins chahārgāh",
     "noteNames": [
       "chahārgāh",
       "nawā",
@@ -405,7 +370,7 @@
         "page": "82"
       }
     ],
-    "version": "2026-07-20T10:00:19.176Z"
+    "version": "2026-08-04T18:24:07.102Z"
   },
   {
     "id": "32",
