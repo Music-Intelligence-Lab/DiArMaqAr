@@ -117,84 +117,71 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
 
 ```json
 {
-  "count": 60,
+  "count": 105,
   "data": [
     {
-      "id": "29",
-      "idName": "maqam_yegah",
-      "displayName": "maqām yegāh",
-      "version": "2025-10-18T19:41:17.132Z",
-      "familyId": "no_jins",
-      "familyDisplay": "no jins",
-      "tonicId": "yegah",
-      "tonicDisplay": "yegāh",
-      "numberOfPitchClasses": 7,
-      "isOctaveRepeating": true,
-      "hasAsymmetricDescending": true,
-      "hasSuyur": true,
-      "availableInTuningSystems": 3,
-      "tuningSystemsAvailability": [
-        {
-          "tuningSystemId": "alfarabi_950g",
-          "tuningSystemStartingNoteNames": [
-            "ʿushayrān"
-          ]
-        },
-        {
-          "tuningSystemId": "cairocongresstuningcommittee_1929",
-          "tuningSystemStartingNoteNames": [
-            "yegāh"
-          ]
-        },
-        {
-          "tuningSystemId": "alsabbagh_1954",
-          "tuningSystemStartingNoteNames": [
-            "rāst"
-          ]
-        }
-      ],
-      "sources": [
-        {
-          "sourceId": "alshawwa_1946",
-          "page": "49"
-        }
-      ]
-    },
-    {
-      "id": "30",
-      "idName": "maqam_farahfazza",
-      "displayName": "maqām faraḥfazzā",
-      "version": "2025-10-18T19:41:17.132Z",
-      "familyId": "no_jins",
-      "familyDisplay": "no jins",
-      "tonicId": "yegah",
-      "tonicDisplay": "yegāh",
-      "numberOfPitchClasses": 7,
-      "isOctaveRepeating": true,
-      "hasAsymmetricDescending": true,
-      "hasSuyur": true,
-      "availableInTuningSystems": 35,
-      "tuningSystemsAvailability": [
-        {
-          "tuningSystemId": "ronzevalle_1904",
-          "tuningSystemStartingNoteNames": [
-            "ʿushayrān",
-            "yegāh"
-          ]
-        },
-        {
-          "tuningSystemId": "alfarabi_950g",
-          "tuningSystemStartingNoteNames": [
-            "ʿushayrān"
-          ]
-        }
-      ],
-      "sources": [
-        {
-          "sourceId": "alshawwa_1946",
-          "page": "50"
-        }
-      ]
+      "maqam": {
+        "id": "102",
+        "idName": "maqam_ajam_buselik",
+        "displayName": "maqām ʿajam būselīk",
+        "version": "2026-07-20T16:38:38.320Z"
+      },
+      "family": {
+        "idName": "bayyat",
+        "displayName": "bayyāt"
+      },
+      "tonic": {
+        "idName": "dugah",
+        "displayName": "dūgāh"
+      },
+      "stats": {
+        "numberOfPitchClasses": 7,
+        "availableInTuningSystems": 6
+      },
+      "characteristics": {
+        "isOctaveRepeating": true,
+        "hasAsymmetricDescending": true,
+        "hasSuyur": true
+      },
+      "availability": {
+        "tuningSystems": [
+          {
+            "tuningSystem": {
+              "id": "alfarabi_950i",
+              "idName": "alfarabi_950i",
+              "displayName": "al-Fārābī (950i) Second Oud Tuning 22-Tone",
+              "version": "2026-08-05T14:18:59.205Z"
+            },
+            "startingNotes": {
+              "idNames": [
+                "yegah"
+              ],
+              "displayNames": [
+                "yegāh"
+              ]
+            }
+          },
+          {
+            "tuningSystem": {
+              "id": "alfarabi_950g",
+              "idName": "alfarabi_950g",
+              "displayName": "al-Fārābī (950g) First Oud Tuning (Full First Octave) 27-Tone",
+              "version": "2026-08-05T14:18:59.205Z"
+            },
+            "startingNotes": {
+              "idNames": [
+                "ushayran"
+              ],
+              "displayNames": [
+                "ʿushayrān"
+              ]
+            }
+          }
+        ]
+      },
+      "links": {
+        "detail": "https://diarmaqar.net/api/maqamat/maqam_ajam_buselik"
+      }
     }
   ]
 }
@@ -1682,14 +1669,14 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
 
 ```json
 {
-  "count": 29,
+  "count": 38,
   "data": [
     {
       "jins": {
-        "id": "5",
-        "idName": "jins_ajam_ushayran",
-        "displayName": "jins ʿajam ʿushayrān",
-        "version": "2025-10-18T19:34:26.343Z"
+        "id": "42",
+        "idName": "jins_ajam_sultani",
+        "displayName": "jins ʿajam sulṭānī",
+        "version": "2026-07-20T09:57:37.540Z"
       },
       "tonic": {
         "idName": "ajam_ushayran",
@@ -1697,7 +1684,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
       },
       "stats": {
         "numberOfPitchClasses": 4,
-        "availableInTuningSystems": 35
+        "availableInTuningSystems": 26
       },
       "availability": {
         "tuningSystems": [
@@ -1706,7 +1693,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
               "id": "ronzevalle_1904",
               "idName": "ronzevalle_1904",
               "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
-              "version": "2025-11-26T10:19:38.569Z"
+              "version": "2026-08-05T13:44:18.170Z"
             },
             "startingNotes": {
               "idNames": [
@@ -1724,7 +1711,7 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
               "id": "alkindi_874",
               "idName": "alkindi_874",
               "displayName": "al-Kindī (874) 12-Tone",
-              "version": "2025-11-17T13:16:34.754Z"
+              "version": "2026-08-05T14:18:59.205Z"
             },
             "startingNotes": {
               "idNames": [
@@ -1738,516 +1725,12 @@ curl "https://diarmaqar.net/api/ajnas?includeSources=true&includeArabic=true"
                 "rāst"
               ]
             }
-          },
-          {
-            "tuningSystem": {
-              "id": "angloeuropean_1700",
-              "idName": "angloeuropean_1700",
-              "displayName": "Anglo-European (1700) 12-EDO",
-              "version": "2025-11-18T11:53:58.428Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926a",
-              "idName": "aldik_1926a",
-              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926b",
-              "idName": "aldik_1926b",
-              "displayName": "al-Dīk (1926b) Old Arabic Scale",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "…": "truncated — 30 more items"
           }
         ]
       },
       "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_ajam_ushayran"
-      },
-      "sources": []
-    },
-    {
-      "jins": {
-        "id": "11",
-        "idName": "jins_athar_kurd",
-        "displayName": "jins athar kurd",
-        "version": "2025-10-18T19:34:45.799Z"
-      },
-      "tonic": {
-        "idName": "dugah",
-        "displayName": "dūgāh"
-      },
-      "stats": {
-        "numberOfPitchClasses": 5,
-        "availableInTuningSystems": 33
-      },
-      "availability": {
-        "tuningSystems": [
-          {
-            "tuningSystem": {
-              "id": "ronzevalle_1904",
-              "idName": "ronzevalle_1904",
-              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
-              "version": "2025-11-26T10:19:38.569Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "alkindi_874",
-              "idName": "alkindi_874",
-              "displayName": "al-Kindī (874) 12-Tone",
-              "version": "2025-11-17T13:16:34.754Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah",
-                "rast"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh",
-                "rāst"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "angloeuropean_1700",
-              "idName": "angloeuropean_1700",
-              "displayName": "Anglo-European (1700) 12-EDO",
-              "version": "2025-11-18T11:53:58.428Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926a",
-              "idName": "aldik_1926a",
-              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926b",
-              "idName": "aldik_1926b",
-              "displayName": "al-Dīk (1926b) Old Arabic Scale",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "…": "truncated — 28 more items"
-          }
-        ]
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_athar_kurd"
-      },
-      "sources": []
-    },
-    {
-      "jins": {
-        "id": "24",
-        "idName": "jins_awj_ara",
-        "displayName": "jins awj ʾārāʾ",
-        "version": "2025-10-18T19:34:26.343Z"
-      },
-      "tonic": {
-        "idName": "iraq",
-        "displayName": "ʿirāq"
-      },
-      "stats": {
-        "numberOfPitchClasses": 4,
-        "availableInTuningSystems": 29
-      },
-      "availability": {
-        "tuningSystems": [
-          {
-            "tuningSystem": {
-              "id": "ronzevalle_1904",
-              "idName": "ronzevalle_1904",
-              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
-              "version": "2025-11-26T10:19:38.569Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926a",
-              "idName": "aldik_1926a",
-              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926b",
-              "idName": "aldik_1926b",
-              "displayName": "al-Dīk (1926b) Old Arabic Scale",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932a",
-              "idName": "cairocongresstuningcommittee_1932a",
-              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932b",
-              "idName": "cairocongresstuningcommittee_1932b",
-              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "…": "truncated — 24 more items"
-          }
-        ]
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_awj_ara"
-      },
-      "sources": [
-        {
-          "sourceId": "alshawwa_1946",
-          "page": "38"
-        }
-      ]
-    },
-    {
-      "jins": {
-        "id": "2",
-        "idName": "jins_bayyat",
-        "displayName": "jins bayyāt",
-        "version": "2025-10-18T19:35:30.479Z"
-      },
-      "tonic": {
-        "idName": "dugah",
-        "displayName": "dūgāh"
-      },
-      "stats": {
-        "numberOfPitchClasses": 4,
-        "availableInTuningSystems": 31
-      },
-      "availability": {
-        "tuningSystems": [
-          {
-            "tuningSystem": {
-              "id": "ronzevalle_1904",
-              "idName": "ronzevalle_1904",
-              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
-              "version": "2025-11-26T10:19:38.569Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926a",
-              "idName": "aldik_1926a",
-              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926b",
-              "idName": "aldik_1926b",
-              "displayName": "al-Dīk (1926b) Old Arabic Scale",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932a",
-              "idName": "cairocongresstuningcommittee_1932a",
-              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932b",
-              "idName": "cairocongresstuningcommittee_1932b",
-              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "…": "truncated — 26 more items"
-          }
-        ]
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat"
-      },
-      "sources": []
-    },
-    {
-      "jins": {
-        "id": "28",
-        "idName": "jins_bayyat_ushayran",
-        "displayName": "jins bayyāt ʿushayrān",
-        "version": "2025-10-18T19:34:26.343Z"
-      },
-      "tonic": {
-        "idName": "ushayran",
-        "displayName": "ʿushayrān"
-      },
-      "stats": {
-        "numberOfPitchClasses": 4,
-        "availableInTuningSystems": 30
-      },
-      "availability": {
-        "tuningSystems": [
-          {
-            "tuningSystem": {
-              "id": "ronzevalle_1904",
-              "idName": "ronzevalle_1904",
-              "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
-              "version": "2025-11-26T10:19:38.569Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "ushayran",
-                "yegah"
-              ],
-              "displayNames": [
-                "ʿushayrān",
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926a",
-              "idName": "aldik_1926a",
-              "displayName": "al-Dīk (1926a) al-Sullam al-Fārsī or al-'Arabī (!!!)",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "aldik_1926b",
-              "idName": "aldik_1926b",
-              "displayName": "al-Dīk (1926b) Old Arabic Scale",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932a",
-              "idName": "cairocongresstuningcommittee_1932a",
-              "displayName": "Cairo Congress Tuning Committee (1932a) Ancient Intervals",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "tuningSystem": {
-              "id": "cairocongresstuningcommittee_1932b",
-              "idName": "cairocongresstuningcommittee_1932b",
-              "displayName": "Cairo Congress Tuning Committee (1932b) Arab Intervals according to al-Dīk",
-              "version": "2025-10-18T19:42:23.643Z"
-            },
-            "startingNotes": {
-              "idNames": [
-                "yegah"
-              ],
-              "displayNames": [
-                "yegāh"
-              ]
-            }
-          },
-          {
-            "…": "truncated — 25 more items"
-          }
-        ]
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_bayyat_ushayran"
-      },
-      "sources": []
-    },
-    {
-      "…": "truncated — 24 more items"
+        "detail": "https://diarmaqar.net/api/ajnas/jins_ajam_sultani"
+      }
     }
   ]
 }
