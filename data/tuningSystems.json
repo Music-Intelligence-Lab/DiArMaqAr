@@ -999,7 +999,7 @@
   {
     "id": "alfarabi_950i",
     "titleEnglish": "Second Oud Tuning 22-Tone",
-    "titleArabic": "",
+    "titleArabic": "تنغيم العود الثاني 22-نغمة",
     "year": "950i",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -1139,7 +1139,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T13:39:08.855Z"
+    "version": "2026-08-05T14:05:11.096Z"
   },
   {
     "id": "allami_2022",
@@ -1453,7 +1453,7 @@
   {
     "id": "alfarabi_950g",
     "titleEnglish": "First Oud Tuning (Full First Octave) 27-Tone",
-    "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) ٢٧-نغمة",
+    "titleArabic": "تنغيم العود الأول (الديوان الأول الكامل) 27-نغمة",
     "year": "950g",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -1471,17 +1471,13 @@
         "page": "165-185"
       },
       {
-        "sourceId": "mofakham_2022",
-        "page": "14"
-      },
-      {
         "sourceId": "forster_2010",
         "page": "639"
       }
     ],
     "creatorEnglish": "al-Fārābī",
     "creatorArabic": "الفارابي",
-    "commentsEnglish": "This is al-Fārābī's first oud tuning system, created by placing frets to divide four oud strings. Although rendered in most musicological publications as a tuning system of 10-frets and 25-tones per octave (Farmer 1937:249 renders it as 9-frets and 21-tones), it doesn't include second octave equivalents for all the notes in the first octave - a fact explicitly stated by al-Fārābī himself (see original Arabic in Land 1855:139). For this reason al-Fārābī adds a theoretical fifth string (ḥādd) in order to rectify the problem and render his second oud tuning of 22-Tones which includes double octaves.\n\nAdditionally, for the first oud tuning, al-Fārābī explicitly states that his placement of the frets renders 10 unique notes per string using 9-frets (Land 1855:136), but ultimately gives 11-fret divisions including an alternative placement for the 27/22 wuṣta zalzal fret as 19683/16384 labelled lj (لج) whilst explicitly stating that not all the frets are used at any one time. Only one of the two frets labelled kd (كد) at 162/149 and kḥ (كح) at 54/49 are used, and only one of the two frets labelled th (ث) at 81/68 and ẓ (ظ) at 27/22 should be used (or its alternative lj (لج) at 19683/16384). The full list of divisions produced from the 11-frets gives us 27-tones in the first octave.\n\nWith this in mind, we deduce that there are 6 possible combinations for fretting an oud according to al-Fārābī's first oud tuning method, with each combination using 8 frets to produce 9-tones per string.  \n\nThe Abjad note naming is based on this author's re-reading of al-Farabi's original Arabic first printed in Land (1855:134-137), alongside d'Erlanger (1930:165-185), Forster, C. (2010:639) and Mofakham (2022:40). Mofakham gives a wrong Abjad naming to some frets as per d'Erlanger (1930:173). We can spot this perculior error by d'Erlanger because al-Fārābī states that b (ب) is given to the end of the bamm 1/1 string, whilst j (ج), d (د) and h (ه), are given to the remaining open strings (see original Arabic in Land 1855:134) even if d'Erlanger also includes it in his French translation (1930:167).\n\nThe second octave has missing abjad deliniations because al-Fārābī's first oud tuning system does not provide octave equivalents for all the notes in the first octave, as previously mentioned.\n\nAbū Naṣr al-Fārābī b. 870 d. 950 \nhttps://plato.stanford.edu/entries/al-farabi/",
+    "commentsEnglish": "This is al-Fārābī's first oud tuning system, created by placing frets to divide four oud strings. Although rendered in most musicological publications as a tuning system of 10-frets and 25-tones per octave (Farmer 1937:249 renders it as 9-frets and 21-tones), it doesn't include second octave equivalents for all the notes in the first octave - a fact explicitly stated by al-Fārābī himself (see original Arabic in Land 1855:139). For this reason al-Fārābī adds a theoretical fifth string (ḥādd) in order to rectify the problem and render his second oud tuning of 22-Tones which includes double octaves.\n\nAdditionally, for the first oud tuning, al-Fārābī explicitly states that his placement of the frets renders 10 unique notes per string using 9-frets (Land 1855:136), but ultimately gives 11-fret divisions including an alternative placement for the 27/22 wuṣta zalzal fret as 19683/16384 labelled lj (لج) whilst explicitly stating that not all the frets are used at any one time. Only one of the two frets labelled kd (كد) at 162/149 and kḥ (كح) at 54/49 are used, and only one of the two frets labelled th (ث) at 81/68 and ẓ (ظ) at 27/22 should be used (or its alternative lj (لج) at 19683/16384). The full list of divisions produced from the 11-frets gives us 27-tones in the first octave.\n\nFor this reason, some tuning system values do not have note names mapped to them because they would have to be doubled such as 54/49 which should also be named ʿirāq due to al-Fārābī giving the two values 162/149 and 54/49 as either/or.\n\nThey are all included because that is how they are published in the relevant sources.",
     "commentsArabic": "تجريب تجريب",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1634,7 +1630,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T13:39:08.855Z"
+    "version": "2026-08-05T14:14:27.676Z"
   },
   {
     "id": "ibnsina_1037",
@@ -1779,7 +1775,7 @@
   {
     "id": "almawsili_850",
     "titleEnglish": "10-Tone",
-    "titleArabic": "",
+    "titleArabic": "10-نغمات",
     "year": "850",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -1859,7 +1855,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T13:39:08.855Z"
+    "version": "2026-08-05T14:04:14.269Z"
   },
   {
     "id": "cairocongresstuningcommittee_1929",
@@ -2740,7 +2736,7 @@
   {
     "id": "alfarabi_950h",
     "titleEnglish": "First Oud Tuning (First and Second Octaves) 35-Tone",
-    "titleArabic": "",
+    "titleArabic": "تنغيم العود الأول (الديوان الأول والثاني) 35-نغمة",
     "year": "950h",
     "sourceEnglish": "",
     "sourceArabic": "",
@@ -2908,7 +2904,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T13:39:08.855Z"
+    "version": "2026-08-05T14:04:46.772Z"
   },
   {
     "id": "mukhtarandmushrrafa_1944",
@@ -3299,7 +3295,7 @@
   {
     "id": "alsabbagh_1954",
     "titleEnglish": "Contemporary Arabic Tuning 24-Tone",
-    "titleArabic": "السلم العربي الحالي ٢٤ نغمة",
+    "titleArabic": "السلم العربي الحالي 24 نغمة",
     "year": "1954",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
@@ -3422,12 +3418,12 @@
     "referenceFrequencies": {
       "rāst": 130.37
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T14:14:27.676Z"
   },
   {
     "id": "allami_2025",
     "titleEnglish": "al-Ṣabbāgh with al-Shawwā's 28-Tones",
-    "titleArabic": "الصبّاغ الشوا ٢٨ نغمة",
+    "titleArabic": "الصبّاغ الشوا 28 نغمة",
     "year": "2025",
     "sourceEnglish": "Unknown Source",
     "sourceArabic": "مصدر غير معروف",
@@ -3570,7 +3566,7 @@
     "referenceFrequencies": {
       "rāst": 130.37
     },
-    "version": "2026-08-04T18:10:37.593Z"
+    "version": "2026-08-05T14:14:27.676Z"
   },
   {
     "id": "alfarabi_950j",
