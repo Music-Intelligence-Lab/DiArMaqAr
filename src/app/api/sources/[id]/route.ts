@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getCanonicalApiUrl } from "@/app/api/response-shapes";
 import { getSources } from "@/functions/import";
 import { stringifySource } from "@/models/bibliography/Source";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
@@ -53,7 +54,7 @@ export async function GET(
           {
             error: "No source ID provided",
             hint: "Please specify a source ID",
-            example: `/api/sources/source_ibn_sina_1037`
+            example: getCanonicalApiUrl(`/api/sources/source_ibn_sina_1037`)
           },
           { status: 400 }
         )

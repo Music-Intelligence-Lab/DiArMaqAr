@@ -17,7 +17,8 @@ import {
   buildIdentifierNamespace,
   buildLinksNamespace,
   buildStringArrayNamespace,
-  getCanonicalSelfUrl
+  getCanonicalSelfUrl,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -654,7 +655,7 @@ export async function GET(
           { 
             error: "No maqām selected",
             hint: "Please specify a maqām ID or use 'all' to get all available maqāmāt",
-            example: `/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037` 
+            example: getCanonicalApiUrl(`/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037`) 
           },
           { status: 400 }
         )
@@ -752,7 +753,7 @@ export async function GET(
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
               hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
-              availabilityUrl: `/api/maqamat/${maqamId}/availability`
+              availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqamId}/availability`)
             },
             { status: 400 }
           )
@@ -911,9 +912,9 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`,
+            getCanonicalApiUrl(`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
             ...(transposeOptions !== null && transposeOptions.length > 1
-              ? [`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}&includeModulations=true`]
+              ? [getCanonicalApiUrl(`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}&includeModulations=true`)]
               : []),
             `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all&includeSuyur=true`
           ]
@@ -930,7 +931,7 @@ export async function GET(
           {
             error: "tuningSystem parameter is required",
             hint: `Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
-            availabilityUrl: `/api/maqamat/${maqamId}/availability`
+            availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqamId}/availability`)
           },
           { status: 400 }
         )

@@ -16,7 +16,8 @@ import {
   buildLinksNamespace,
   buildListResponse,
   buildStringArrayNamespace,
-  getCanonicalSelfUrl
+  getCanonicalSelfUrl,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -353,7 +354,7 @@ export async function GET(
             error: "tuningSystems parameter is required",
             message: "Provide comma-separated tuning system IDs",
             hint: 'Format: ?tuningSystems=ibnsina_1037,alfarabi_950g',
-            example: '/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents'
+            example: getCanonicalApiUrl('/api/ajnas/jins_kurd/compare?tuningSystems=ibnsina_1037,alfarabi_950g&startingNotes=yegah&pitchClassDataType=cents')
           },
           { status: 400 }
         )

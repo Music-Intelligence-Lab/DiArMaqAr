@@ -219,7 +219,6 @@ paths:
                             tuningSystemStartingNoteNames: ["yegāh"]
                           - tuningSystemId: "alsabbagh_1954"
                             tuningSystemStartingNoteNames: ["rāst"]
-                        maqamDetailsUrl: "/api/maqamat/maqam_yegah"
                         sources:
                           - sourceId: "alshawwa_1946"
                             page: "49"
@@ -241,7 +240,6 @@ paths:
                             tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
                           - tuningSystemId: "alfarabi_950g"
                             tuningSystemStartingNoteNames: ["ʿushayrān"]
-                        maqamDetailsUrl: "/api/maqamat/maqam_farahfazza"
                         sources:
                           - sourceId: "alshawwa_1946"
                             page: "50"
@@ -273,7 +271,6 @@ paths:
                           - tuningSystemId: "cairocongresstuningcommittee_1929"
                             tuningSystemStartingNoteNames: ["yegāh"]
                             tuningSystemStartingNoteNamesAr: ["يگاه"]
-                        maqamDetailsUrl: "/api/maqamat/maqam_yegah"
                         sources:
                           - sourceId: "alshawwa_1946"
                             page: "49"
@@ -10323,7 +10320,6 @@ components:
         - hasSuyur
         - availableInTuningSystems
         - tuningSystemsAvailability
-        - maqamDetailsUrl
       properties:
         id:
           type: string
@@ -10396,10 +10392,6 @@ components:
               tuningSystemStartingNoteNames: ["ʿushayrān"]
             - tuningSystemId: "ibnsina_1037"
               tuningSystemStartingNoteNames: ["ʿushayrān", "yegāh"]
-        maqamDetailsUrl:
-          type: string
-          description: Relative URL to maqām detail endpoint
-          example: "/api/maqamat/maqam_yegah"
         sources:
           type: array
           description: Bibliographic source references for this maqām

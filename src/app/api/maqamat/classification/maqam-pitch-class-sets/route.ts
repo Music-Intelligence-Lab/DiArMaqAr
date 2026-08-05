@@ -5,7 +5,7 @@ import {
   classifyMaqamatByMaqamPitchClassSets,
   ClassificationResult
 } from "@/functions/classifyMaqamatByMaqamPitchClassSets";
-import { buildEntityNamespace, buildIdentifierNamespace } from "@/app/api/response-shapes";
+import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
 import { parseInArabic, getNoteNameDisplayAr } from "@/app/api/arabic-helpers";
 import { standardizeText } from "@/functions/export";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
             error: "tuningSystem parameter is required",
             message: "A tuning system must be specified. This is mandatory for all pitch class calculations.",
             hint: "Add ?tuningSystem=<id> to your request, e.g. ?tuningSystem=cairocongresstuningcommittee_1929",
-            availableTuningSystemsUrl: "/api/tuning-systems"
+            availableTuningSystemsUrl: getCanonicalApiUrl("/api/tuning-systems")
           },
           { status: 400 }
         )
@@ -90,7 +90,7 @@ export async function GET(request: Request) {
             error: "startingNote parameter is required",
             message: "A tuning system starting note must be specified. This is mandatory for all pitch class calculations.",
             hint: "Add &startingNote=<note> to your request, e.g. &startingNote=yegah",
-            availableTuningSystemsUrl: "/api/tuning-systems"
+            availableTuningSystemsUrl: getCanonicalApiUrl("/api/tuning-systems")
           },
           { status: 400 }
         )

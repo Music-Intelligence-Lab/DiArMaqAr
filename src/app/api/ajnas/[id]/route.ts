@@ -13,7 +13,8 @@ import {
   buildIdentifierNamespace,
   buildLinksNamespace,
   buildStringArrayNamespace,
-  getCanonicalSelfUrl
+  getCanonicalSelfUrl,
+  getCanonicalApiUrl
 } from "@/app/api/response-shapes";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -364,7 +365,7 @@ export async function GET(
           { 
             error: "No jins selected",
             hint: "Please specify a jins ID",
-            example: `/api/ajnas/jins_kurd?tuningSystem=ibnsina_1037&startingNote=yegah` 
+            example: getCanonicalApiUrl(`/api/ajnas/jins_kurd?tuningSystem=ibnsina_1037&startingNote=yegah`) 
           },
           { status: 400 }
         )
@@ -458,7 +459,7 @@ export async function GET(
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
               hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
-              availabilityUrl: `/api/ajnas/${jinsId}/availability`
+              availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jinsId}/availability`)
             },
             { status: 400 }
           )
@@ -585,9 +586,9 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            `/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`,
+            getCanonicalApiUrl(`/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
             ...(transposeOptions !== null && transposeOptions.length > 1
-              ? [`/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}`]
+              ? [getCanonicalApiUrl(`/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}`)]
               : []),
             `/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all`
           ]
@@ -602,7 +603,7 @@ export async function GET(
           {
             error: "tuningSystem parameter is required",
             hint: `Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
-            availabilityUrl: `/api/ajnas/${jinsId}/availability`
+            availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jinsId}/availability`)
           },
           { status: 400 }
         )

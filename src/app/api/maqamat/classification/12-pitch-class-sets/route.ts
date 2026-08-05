@@ -5,7 +5,7 @@ import {
   classifyMaqamat,
   ClassificationResult
 } from "@/functions/classifyMaqamat12PitchClassSets";
-import { buildEntityNamespace, buildIdentifierNamespace } from "@/app/api/response-shapes";
+import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
 import { parseInArabic } from "@/app/api/arabic-helpers";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -165,7 +165,7 @@ export async function GET(request: Request) {
             error: "tuningSystem parameter is required",
             message: "A tuning system must be specified. This is mandatory for all pitch class calculations.",
             hint: "Add ?tuningSystem=<id> to your request, e.g. ?tuningSystem=cairocongresstuningcommittee_1929",
-            availableTuningSystemsUrl: "/api/tuning-systems"
+            availableTuningSystemsUrl: getCanonicalApiUrl("/api/tuning-systems")
           },
           { status: 400 }
         )
@@ -180,7 +180,7 @@ export async function GET(request: Request) {
             error: "startingNote parameter is required",
             message: "A tuning system starting note must be specified. Both the maqām tuning system and alkindi_874 use it, so octaves align.",
             hint: "Add &startingNote=<note> to your request, e.g. &startingNote=yegah",
-            availableTuningSystemsUrl: "/api/tuning-systems"
+            availableTuningSystemsUrl: getCanonicalApiUrl("/api/tuning-systems")
           },
           { status: 400 }
         )

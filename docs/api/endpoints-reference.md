@@ -153,7 +153,6 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
           ]
         }
       ],
-      "maqamDetailsUrl": "/api/maqamat/maqam_yegah",
       "sources": [
         {
           "sourceId": "alshawwa_1946",
@@ -190,7 +189,6 @@ curl "https://diarmaqar.net/api/maqamat?includeSources=true&includeArabic=true"
           ]
         }
       ],
-      "maqamDetailsUrl": "/api/maqamat/maqam_farahfazza",
       "sources": [
         {
           "sourceId": "alshawwa_1946",
