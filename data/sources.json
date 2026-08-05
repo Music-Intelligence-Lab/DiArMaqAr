@@ -280,7 +280,7 @@
     "volumeArabic": "٢",
     "issueEnglish": "",
     "issueArabic": "",
-    "pageRangeEnglish": "245–257",
+    "pageRangeEnglish": "245-257",
     "pageRangeArabic": "٢٤٥-٢٥٧",
     "DOI": ""
   },
@@ -521,7 +521,7 @@
     "volumeArabic": "",
     "issueEnglish": "3543",
     "issueArabic": "",
-    "pageRangeEnglish": "548–549",
+    "pageRangeEnglish": "548-549",
     "pageRangeArabic": "",
     "DOI": ""
   },
@@ -553,5 +553,36 @@
     "placeEnglish": "Baghdad",
     "placeArabic": "بغداد",
     "ISBN": ""
+  },
+  {
+    "id": "wright_1966",
+    "titleEnglish": "Ibn Al-Munajjim and the Early Arabian Modes",
+    "titleArabic": "ابن المنجّم والمقامات العربية المبكرة",
+    "sourceType": "Article",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "Owen",
+        "lastNameEnglish": "Wright",
+        "firstNameArabic": "أوين",
+        "lastNameArabic": "رايت"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "1966",
+    "publicationDateArabic": "",
+    "url": "https://www.jstor.org/stable/841911",
+    "dateAccessed": "",
+    "version": "2026-08-05T11:05:03.002Z",
+    "journalEnglish": "The Galpin Society Journal",
+    "journalArabic": "مجلة جمعية غالبين",
+    "volumeEnglish": "19",
+    "volumeArabic": "",
+    "issueEnglish": "",
+    "issueArabic": "",
+    "pageRangeEnglish": "27-48",
+    "pageRangeArabic": "",
+    "DOI": "https://doi.org/10.2307/841911"
   }
 ]

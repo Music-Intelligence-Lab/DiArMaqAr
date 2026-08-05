@@ -153,10 +153,10 @@
     "stringLength": 3600,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.99,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-07-26T14:10:40.802Z"
+    "version": "2026-08-05T13:44:18.170Z"
   },
   {
     "id": "alkindi_874",
@@ -266,11 +266,11 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
-      "ʿushayrān": 109.99999999999999,
-      "rāst": 130.813
+      "yegāh": 98,
+      "ʿushayrān": 110,
+      "rāst": 130.37
     },
-    "version": "2025-11-17T13:16:34.754Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "angloeuropean_1700",
@@ -358,9 +358,9 @@
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
       "ʿushayrān": 110,
-      "yegāh": 97.99885899543732
+      "yegāh": 98
     },
-    "version": "2025-11-18T11:53:58.428Z"
+    "version": "2026-08-05T13:44:18.170Z"
   },
   {
     "id": "aldik_1926a",
@@ -510,13 +510,13 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 108.75,
       "dūgāh": 110
     },
-    "version": "2026-08-05T10:16:50.261Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "aldik_1926b",
@@ -612,12 +612,12 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "cairocongresstuningcommittee_1932a",
@@ -741,12 +741,12 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "cairocongresstuningcommittee_1932b",
@@ -763,7 +763,7 @@
     ],
     "creatorEnglish": "Cairo Congress Tuning Committee",
     "creatorArabic": "لجنة التنغيم في مؤتمر القاهرة",
-    "commentsEnglish": "",
+    "commentsEnglish": "This tuning system provided by al-Dīk to the Cairo Congress Tuning Committee in 1932, and taken from the Congress proceedings, is a development of his 1926 tuning system \"The Persian or Arabic Scale\", al-Dīk (1926a).",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -870,11 +870,11 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999
+      "yegāh": 98
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alladhiqi_1495",
@@ -891,7 +891,7 @@
     ],
     "creatorEnglish": "al-Lādhiqī",
     "creatorArabic": "اللاذقي",
-    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis doesn't make sense to me because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Persian-Arab-Ottoman naming convention.",
+    "commentsEnglish": "Rejab (1986) gives the names for the pitch classes 12, 13, 14 as nīm ḥijāz (128/81), ḥijāz (32768/19683) and ḥijāz + (27/16) as opposed to chahārgāh (128/81), nīm ḥijāz (32768/19683) and ḥijāz (27/16).\n\nThis seems to be an error because the interval distance between 32/27 (rāst) and 128/81 is a 4/3 perfect forth, and both the ratios 32/27 and 128/81 are the main intervals derived from a sequence of successive fourths 4:3 + 4:3 (16/9) + 4:3 (32:27) + 4:3 (128:81). Therefore 128/81 should be labeled chahārgāh as in the modern Persian-Arab-Ottoman naming convention.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -991,10 +991,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950i",
@@ -1136,10 +1136,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "allami_2022",
@@ -1295,10 +1295,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-07-23T14:36:09.920Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "angloeuropean_1800",
@@ -1443,12 +1443,12 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.998,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-11-26T10:21:17.434Z"
+    "version": "2026-08-05T13:44:18.170Z"
   },
   {
     "id": "alfarabi_950g",
@@ -1631,10 +1631,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "ibnsina_1037",
@@ -1708,8 +1708,27 @@
         "segāh",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "nīm ḥijāz",
-        "ḥijāz"
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā"
+      ],
+      [
+        "rāst",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā",
+        "nawā",
+        "ḥiṣār",
+        "tīk ḥiṣār",
+        "ḥusaynī",
+        "ʿajam",
+        "māhūr",
+        "tīk māhūr"
       ]
     ],
     "abjadNames": [
@@ -1749,12 +1768,13 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
-      "ʿushayrān": 110
+      "yegāh": 98,
+      "ʿushayrān": 110,
+      "rāst": 130.37
     },
-    "version": "2025-11-09T00:44:40.275Z"
+    "version": "2026-08-05T13:32:07.631Z"
   },
   {
     "id": "almawsili_850",
@@ -1836,10 +1856,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-11-06T21:49:51.447Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "cairocongresstuningcommittee_1929",
@@ -1999,10 +2019,10 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 261.6256,
     "referenceFrequencies": {
-      "yegāh": 97.999,
-      "rāst": 130.665
+      "yegāh": 98,
+      "rāst": 130.37
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alkhulaiandragheb_1904",
@@ -2126,11 +2146,11 @@
       "خ"
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999
+      "yegāh": 98
     },
-    "version": "2026-07-26T16:55:52.740Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "ibnmunajjim_912",
@@ -2139,38 +2159,30 @@
     "year": "912",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "wright_1966",
+        "page": "28"
+      }
+    ],
     "creatorEnglish": "Ibn Munajjim",
     "creatorArabic": "إبن منجّم",
-    "commentsEnglish": "",
+    "commentsEnglish": "Although Wright states that Ibn Munajjim \"fails to supply any definition of tunings and intervals\", he goes on to say that \"there is a passage in which he explains that the notes on the two lower strings may be disregarded because the two upper strings produce the same notes at the octave\" (1966:27). Wright then goes on to schematize Ibn Munajjim's abjad based octave equivalences and deduces the tuning in cents rather than fraction ratios, based on the assumption that the four open strings are tuned in fourths as follows: 0, 90, 204, 294, 498, 588, 702, 792, 906, 996 (1966:28).\n\nAs these cents values align perfectly with well-known and often used ratios for tuning systems of the same historical period, they are provided here as fraction ratios instead of the cents provided by Wright.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
+      "256/243",
       "9/8",
       "32/27",
-      "81/64",
       "4/3",
+      "1024/729",
       "3/2",
       "128/81",
       "27/16",
-      "16/9",
-      "243/128"
+      "16/9"
     ],
     "noteNames": [
       [
-        "ʿushayrān",
-        "kawasht",
-        "rāst",
-        "zīrgūleh",
-        "dūgāh",
-        "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār"
-      ],
-      [
-        "yegāh",
         "ʿushayrān",
         "ʿajam ʿushayrān",
         "kawasht",
@@ -2179,38 +2191,51 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "ḥijāz"
+        "ḥijāz",
+        "nawā"
+      ],
+      [
+        "yegāh",
+        "qarār ḥiṣār",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh"
       ]
     ],
     "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي"
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 110,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alurmawi_1294a",
@@ -2331,10 +2356,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "allami_2024",
@@ -2579,10 +2604,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "meshshaqa_1899",
@@ -2706,11 +2731,11 @@
       ""
     ],
     "stringLength": 3600,
-    "defaultReferenceFrequency": 97.999,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999
+      "yegāh": 98
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950a",
@@ -2842,10 +2867,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950c",
@@ -2950,10 +2975,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-11-06T00:23:22.237Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950b",
@@ -3063,10 +3088,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950d",
@@ -3176,10 +3201,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950f",
@@ -3284,10 +3309,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950e",
@@ -3397,10 +3422,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alfarabi_950h",
@@ -3570,10 +3595,10 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 110,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "mukhtarandmushrrafa_1944",
@@ -3689,13 +3714,13 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 130.665,
+    "defaultReferenceFrequency": 130.37,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110,
-      "rāst": 130.7
+      "rāst": 130.37
     },
-    "version": "2025-10-23T21:23:15.543Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alsabbagh_1950",
@@ -3716,7 +3741,7 @@
     ],
     "creatorEnglish": "al-Ṣabbāgh",
     "creatorArabic": "الصبّاغ، توفيق",
-    "commentsEnglish": "This tuning system by Tawfīq al-Ṣabbāgh is built on a theoretical 53-comma per octave division, resulting in 19-tones that are used in the maqāmāt he recounts in his book. Ṣabbāgh gives the comma a value of 1/81th of a string length of 10,000 = 123.4567901235 (1950:38, defined in error by Shawqī as 0,012346 in 1969:147). This is a syntonic comma, also known as the Didymus' comma, the meantone comma or the Ptolemaic comma, with a frequency ratio of 81/80. al-Ṣabbāgh proceeds to calculate the notes of many maqāmāt based on the principle distances between the fundamental notes as follows:\n\nrāst (9 commas) dūgāh (7) segāh (6) chahārgāh (9) nawā (9) ḥusaynī (7) awj (6) kurdān\n\nThe final 19-tone system is then given as as string lengths and frequency in Hz starting from rāst at 10000 and 516 Hz plus the number of commas per interval between the 19-tones (which are either 5,4,3,2 or 1 commas).\n\nHere we have set the default frequency at 258 Hz for rast (an octave lower than Ṣabbāgh) but the frequency of rāst-10000-1/1 as 130.665 to match other tuning systems in the database for the sake of clarity and comparison.\n\nṢabbāgh also uses the note names kurdī wāṭī and kurdī ʿālī instead of nīm kurdī and kurdī, nīm būseḹīk instead of būselīk, ḥiṣār wāṭī and ḥiṣār ʿālī instead of nīm ḥiṣār and ḥiṣār, and nīm māhūr wāṭī and nīm māhūr ʿālī instead of nīm māhūr and tīk mahūr.",
+    "commentsEnglish": "This tuning system by Tawfīq al-Ṣabbāgh is built on a theoretical 53-comma per octave division, resulting in 19-tones that are used in the maqāmāt he recounts in his book. Ṣabbāgh gives the comma a value of 1/81th of a string length of 10,000 = 123.4567901235 (1950:38, defined in error by Shawqī as 0,012346 in 1969:147). This is a syntonic comma, also known as the Didymus' comma, the meantone comma or the Ptolemaic comma, with a frequency ratio of 81/80. al-Ṣabbāgh proceeds to calculate the notes of many maqāmāt based on the principle distances between the fundamental notes as follows:\n\nrāst (9 commas) dūgāh (7) segāh (6) chahārgāh (9) nawā (9) ḥusaynī (7) awj (6) kurdān\n\nThe final 19-tone system is then given as as string lengths and frequency in Hz starting from rāst at 10000 and 516 Hz plus the number of commas per interval between the 19-tones (which are either 5,4,3,2 or 1 commas).\n\nHere we have set the default frequency at 258 Hz for rast (an octave lower than Ṣabbāgh) but the frequency of rāst-10000-1/1 as 130.37 to match other tuning systems in the database for the sake of clarity and comparison.\n\nṢabbāgh also uses the note names kurdī wāṭī and kurdī ʿālī instead of nīm kurdī and kurdī, nīm būseḹīk instead of būselīk, ḥiṣār wāṭī and ḥiṣār ʿālī instead of nīm ḥiṣār and ḥiṣār, and nīm māhūr wāṭī and nīm māhūr ʿālī instead of nīm māhūr and tīk mahūr.",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -3841,11 +3866,11 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 258,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110,
-      "rāst": 130.665
+      "rāst": 130.37
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "allaythi_1965",
@@ -3953,13 +3978,13 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 130.665,
+    "defaultReferenceFrequency": 130.37,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110,
-      "rāst": 130.665
+      "rāst": 130.37
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "alsabbagh_1954",
@@ -4083,9 +4108,9 @@
       ""
     ],
     "stringLength": 10000,
-    "defaultReferenceFrequency": 130.665,
+    "defaultReferenceFrequency": 130.37,
     "referenceFrequencies": {
-      "rāst": 130.665
+      "rāst": 130.37
     },
     "version": "2025-10-18T19:42:23.643Z"
   },
@@ -4231,9 +4256,9 @@
       ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 130.665,
+    "defaultReferenceFrequency": 130.37,
     "referenceFrequencies": {
-      "rāst": 130.6653
+      "rāst": 130.37
     },
     "version": "2026-08-04T18:10:37.593Z"
   },
@@ -4277,28 +4302,6 @@
       "40/21"
     ],
     "noteNames": [
-      [
-        "ʿushayrān",
-        "nīm ʿajam ʿushayrān",
-        "ʿajam ʿushayrān",
-        "ʿirāq",
-        "kawasht",
-        "tīk kawasht",
-        "rāst",
-        "nīm zīrgūleh",
-        "zīrgūleh",
-        "tīk zīrgūleh",
-        "dūgāh",
-        "nīm kurdī/nahāwand",
-        "kurdī",
-        "būselīk/ʿushshāq",
-        "tīk būselīk",
-        "chahārgāh",
-        "ḥijāz",
-        "nawā",
-        "none",
-        "none"
-      ],
       [
         "yegāh",
         "qarār nīm ḥiṣār",
@@ -4386,14 +4389,14 @@
       "",
       ""
     ],
-    "stringLength": 0,
-    "defaultReferenceFrequency": 97.999,
+    "stringLength": 1000,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110,
-      "rāst": 130.665
+      "rāst": 130.37
     },
-    "version": "2026-07-19T10:36:01.383Z"
+    "version": "2026-08-05T13:39:08.855Z"
   },
   {
     "id": "mokhtarandmosharrafa_1937",
@@ -4479,7 +4482,7 @@
     "stringLength": 1000,
     "defaultReferenceFrequency": 440,
     "referenceFrequencies": {
-      "rāst": 130.7
+      "rāst": 130.37
     },
     "version": "2025-11-18T11:58:42.848Z"
   }

@@ -270,7 +270,7 @@
       "ʿushayrān": 109.99999999999999,
       "rāst": 130.813
     },
-    "version": "2025-11-17T13:16:34.754Z"
+    "version": "2026-08-05T11:59:09.618Z"
   },
   {
     "id": "angloeuropean_1700",
@@ -364,7 +364,7 @@
   },
   {
     "id": "aldik_1926a",
-    "titleEnglish": "al-Sullam al-Fārsī or al-'Arabī",
+    "titleEnglish": "The Persian or Arabic Scale",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
     "sourceEnglish": "",
@@ -377,7 +377,7 @@
     ],
     "creatorEnglish": "al-Dīk",
     "creatorArabic": "الديك، احمد امين",
-    "commentsEnglish": "In Shawqī (1969:41) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity. A typo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:41) and therefore presumably not in al-Dīk's original. Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz (Shawqī 1969:45). \n\nThis is a peculiar deviation from the modern Turkish transcription convention (post 1930's) where the note D5 (above A4) in Anglo-European staff notation is equated to frequency of 440 Hz but named as Neva/Nawa when using the PAO note names (Aydemir 2015:15). \n\nWith this in mind, the tuning system is provided with its mapping according to its starting note name as ʿUshayrān at 108.75 Hz which equates to La/A at 435 Hz, for consistency with other tuning systems mapped to the starting note name ʿUshayrān. \n",
+    "commentsEnglish": "This tuning system by al-Dīk is essentially a 24-EDO tuning system. \n\nIn Shawqī (1969:41) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity. A typo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:41) and therefore presumably not in al-Dīk's original. Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text from that publication, which refers to his calculations of frequencies for his tuning system, mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz (Shawqī 1969:45). \n\nThis is a peculiar deviation from the modern Turkish transcription convention (post 1930's) where the note D5 (above A4) in Anglo-European staff notation is equated to frequency of 440 Hz but named as Neva/Nawa when using the PAO note names system (Aydemir 2015:15). \n\nWith this in mind, the tuning system is provided with its mapping according to the starting note name ʿUshayrān at 108.75 Hz which equates to La/A at 435 Hz, for consistency with other tuning systems mapped to the starting note name ʿUshayrān regardless of their frequency value. \n",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -431,6 +431,32 @@
         "nīm ḥiṣār",
         "ḥiṣār",
         "tīk ḥiṣār"
+      ],
+      [
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "nīm ḥijāz",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā",
+        "nawā",
+        "nīm ḥiṣār",
+        "ḥiṣār",
+        "tīk ḥiṣār",
+        "ḥusaynī",
+        "nīm ʿajam",
+        "ʿajam",
+        "awj",
+        "nīm māhūr",
+        "māhūr",
+        "kurdān",
+        "nīm shahnāz",
+        "shahnāz",
+        "jawāb tīk zīrgūleh"
       ]
     ],
     "abjadNames": [
@@ -487,9 +513,10 @@
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
       "yegāh": 97.999,
-      "ʿushayrān": 108.75
+      "ʿushayrān": 108.75,
+      "dūgāh": 110
     },
-    "version": "2026-08-05T09:37:14.019Z"
+    "version": "2026-08-05T10:16:50.261Z"
   },
   {
     "id": "aldik_1926b",
@@ -736,7 +763,7 @@
     ],
     "creatorEnglish": "Cairo Congress Tuning Committee",
     "creatorArabic": "لجنة التنغيم في مؤتمر القاهرة",
-    "commentsEnglish": "",
+    "commentsEnglish": "This tuning system provided by al-Dīk to the Cairo Congress Tuning Committee in 1932, and taken from the Congress proceedings, is a development of his 1926 tuning system \"The Persian or Arabic Scale\", al-Dīk (1926a).",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -847,7 +874,7 @@
     "referenceFrequencies": {
       "yegāh": 97.999
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T10:59:10.659Z"
   },
   {
     "id": "alladhiqi_1495",
@@ -2112,38 +2139,30 @@
     "year": "912",
     "sourceEnglish": "",
     "sourceArabic": "",
-    "sourcePageReferences": [],
+    "sourcePageReferences": [
+      {
+        "sourceId": "wright_1996",
+        "page": "28"
+      }
+    ],
     "creatorEnglish": "Ibn Munajjim",
     "creatorArabic": "إبن منجّم",
-    "commentsEnglish": "",
+    "commentsEnglish": "Although Wright states that Ibn Munajjim \"fails to supply any definition of tunings and intervals\", he goes on to say that \"there is a passage in which he explains that the notes on the two lower strings may be disregarded because the two upper strings produce the same notes at the octave\" (1996:27). Wright then goes on to schematize Ibn Munnajim's abjad based octave equivalences and deduces the tuning in cents rather than fraction ratios, based on the assumption that the four open strings are tuned in fourths as follows: 0, 90, 204, 294, 498, 588, 702, 792, 906, 996 (1996:28). \n\nAs these cents values align perfectly with well-known and often used ratios for tuning systems of the same historical period, they are provided here as fraction ratios instead of the cents provided by Wright. ",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
+      "256/243",
       "9/8",
       "32/27",
-      "81/64",
       "4/3",
+      "1024/729",
       "3/2",
       "128/81",
       "27/16",
-      "16/9",
-      "243/128"
+      "16/9"
     ],
     "noteNames": [
       [
-        "ʿushayrān",
-        "kawasht",
-        "rāst",
-        "zīrgūleh",
-        "dūgāh",
-        "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz",
-        "nawā",
-        "ḥiṣār"
-      ],
-      [
-        "yegāh",
         "ʿushayrān",
         "ʿajam ʿushayrān",
         "kawasht",
@@ -2152,38 +2171,51 @@
         "kurdī",
         "būselīk/ʿushshāq",
         "chahārgāh",
-        "ḥijāz"
+        "ḥijāz",
+        "nawā"
+      ],
+      [
+        "yegāh",
+        "qarār ḥiṣār",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh"
       ]
     ],
     "abjadNames": [
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي",
-      "آ",
-      "ب",
-      "ج",
-      "د",
-      "ه",
-      "و",
-      "ز",
-      "ح",
-      "ط",
-      "ي"
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
     ],
     "stringLength": 1000,
-    "defaultReferenceFrequency": 110,
+    "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
-      "yegāh": 97.999,
+      "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T12:03:53.733Z"
   },
   {
     "id": "alurmawi_1294a",
