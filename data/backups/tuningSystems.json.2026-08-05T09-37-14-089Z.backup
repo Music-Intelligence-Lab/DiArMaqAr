@@ -372,12 +372,12 @@
     "sourcePageReferences": [
       {
         "sourceId": "shawqi_1969",
-        "page": "43"
+        "page": "41-46"
       }
     ],
     "creatorEnglish": "al-Dīk",
     "creatorArabic": "الديك، احمد امين",
-    "commentsEnglish": "In Shawqī (1969:43) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity.\n\nTypo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:43) and therefore presumably not in al-Dīk's original (NEED TO VERIFY). Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz. \n\nThis is in line with the Ottoman (and the modern Turkish convention) equates the fret (perde) dūgāh to the Anglo-European La/A at 110/440 Hz, and naming the oud string referred to by Arabs as nawā usually tuned to G at 196 Hz as dugāh because they tune up to A at 110 Hz. Therefore this tuning system is placed according to yegāh at 1/1.",
+    "commentsEnglish": "In Shawqī (1969:41) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity. A typo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:41) and therefore presumably not in al-Dīk's original. Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz (Shawqī 1969:45). \n\nThis is a peculiar deviation from the modern Turkish transcription convention (post 1930's) where the note D5 (above A4) in Anglo-European staff notation is equated to frequency of 440 Hz but named as Neva/Nawa when using the PAO note names (Aydemir 2015:15). \n\nWith this in mind, the tuning system is provided with its mapping according to its starting note name as ʿUshayrān at 108.75 Hz which equates to La/A at 435 Hz, for consistency with other tuning systems mapped to the starting note name ʿUshayrān. \n",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -407,16 +407,12 @@
     ],
     "noteNames": [
       [
-        "yegāh",
-        "qarār nīm ḥiṣār",
-        "qarār ḥiṣār",
-        "qarār tīk ḥiṣār/shūrī",
         "ʿushayrān",
         "nīm ʿajam ʿushayrān",
         "ʿajam ʿushayrān",
         "ʿirāq",
+        "nīm kawasht",
         "kawasht",
-        "tīk kawasht",
         "rāst",
         "nīm zīrgūleh",
         "zīrgūleh",
@@ -430,7 +426,11 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā"
+        "tīk ḥijāz/ṣabā",
+        "nawā",
+        "nīm ḥiṣār",
+        "ḥiṣār",
+        "tīk ḥiṣār"
       ]
     ],
     "abjadNames": [
@@ -486,9 +486,10 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 108.75
     },
-    "version": "2025-10-18T19:42:23.643Z"
+    "version": "2026-08-05T09:30:39.869Z"
   },
   {
     "id": "aldik_1926b",
@@ -4080,7 +4081,7 @@
     ],
     "creatorEnglish": "Allami",
     "creatorArabic": "اللامي",
-    "commentsEnglish": "Created by using Ṣabbāgh (1954) 24-tone tuning system and including Shawwā's extra note names (1946:13) with the applicable one comma higher or one comma lower using the Syntonic comma 81/80 as utilised by Ṣabbāgh. Although Shawwā provides 5 extra note names we only need 4 becuase one of them, nahāwand, which is supposed to be lower than kūrdī by one comma (6/5 x 80/81) gives 32/27 which is already assigned to nīm kurdī/nahāwand.",
+    "commentsEnglish": "Created by using al-Ṣabbāgh's 1954 24-tone tuning system utilising the Syntonic comma 81/80, which matches al-Shawwā's 24-note name system, and including Shawwā's additional note names (1946:13) by using al-Shawwā's one comma higher or one comma lower comments on each note name. \n\nAlthough Shawwā provides 5 extra note names we only need 4 because one of them, nahāwand, is given as lower than kūrdī by one comma (6/5 x 80/81), giving the ratio 32/27 which is already assigned to nīm kurdī/nahāwand.\n\n- Khyam Allami",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -4207,7 +4208,7 @@
     "referenceFrequencies": {
       "rāst": 130.6653
     },
-    "version": "2025-12-11T23:36:54.970Z"
+    "version": "2026-08-04T18:10:37.593Z"
   },
   {
     "id": "alfarabi_950j",

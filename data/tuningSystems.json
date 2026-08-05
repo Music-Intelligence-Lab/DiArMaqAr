@@ -364,7 +364,7 @@
   },
   {
     "id": "aldik_1926a",
-    "titleEnglish": "al-Sullam al-Fārsī or al-'Arabī (!!!)",
+    "titleEnglish": "The Persian or Arabic Scale",
     "titleArabic": "السلم الفارسي او العربي",
     "year": "1926a",
     "sourceEnglish": "",
@@ -377,7 +377,7 @@
     ],
     "creatorEnglish": "al-Dīk",
     "creatorArabic": "الديك، احمد امين",
-    "commentsEnglish": "In Shawqī (1969:41) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity. A typo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:41) and therefore presumably not in al-Dīk's original. Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text by al-Dīk which refers to his calculations of frequencies for his tuning system mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz (Shawqī 1969:45). This is in line with, but also departs from, the modern Turkish transcription convention where the note D5 (above A4) in Anglo-European staff notation is equated to frequency of 440 Hz but named as Neva/Nawa when using the PAO note names (Aydemir 2015:15). ",
+    "commentsEnglish": "This tuning system by al-Dīk is essentially a 24-EDO tuning system. \n\nIn Shawqī (1969:41) the numbers for string length are given as 1,0000, 0,9716, etc... They are presented here as 10000, 9716 etc... for clarity. A typo in Shawqī (1969:43) lists the second pitch class as 0.7916. Most likely it is supposed to be 0.9716 and that is what is used here.\n\nThe note names for the string length divisions aren't mentioned in Shawqī (1969:41) and therefore presumably not in al-Dīk's original. Though in Shawqī's reproduction of a table from another publication by al-Dīk (mulḥaq fī dhabdhabāt ṭabaqa sharqīya/ملحق في ذبذبات طبقة شيرقية), the text from that publication, which refers to his calculations of frequencies for his tuning system, mentions that he considered the Arabic note name dūgāh equivalent to A/La at 435 Hz (Shawqī 1969:45). \n\nThis is a peculiar deviation from the modern Turkish transcription convention (post 1930's) where the note D5 (above A4) in Anglo-European staff notation is equated to frequency of 440 Hz but named as Neva/Nawa when using the PAO note names system (Aydemir 2015:15). \n\nWith this in mind, the tuning system is provided with its mapping according to the starting note name ʿUshayrān at 108.75 Hz which equates to La/A at 435 Hz, for consistency with other tuning systems mapped to the starting note name ʿUshayrān regardless of their frequency value. \n",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "10000",
@@ -407,16 +407,12 @@
     ],
     "noteNames": [
       [
-        "yegāh",
-        "qarār nīm ḥiṣār",
-        "qarār ḥiṣār",
-        "qarār tīk ḥiṣār/shūrī",
         "ʿushayrān",
         "nīm ʿajam ʿushayrān",
         "ʿajam ʿushayrān",
         "ʿirāq",
+        "nīm kawasht",
         "kawasht",
-        "tīk kawasht",
         "rāst",
         "nīm zīrgūleh",
         "zīrgūleh",
@@ -430,7 +426,37 @@
         "chahārgāh",
         "nīm ḥijāz",
         "ḥijāz",
-        "tīk ḥijāz/ṣabā"
+        "tīk ḥijāz/ṣabā",
+        "nawā",
+        "nīm ḥiṣār",
+        "ḥiṣār",
+        "tīk ḥiṣār"
+      ],
+      [
+        "dūgāh",
+        "nīm kurdī/nahāwand",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "tīk būselīk",
+        "chahārgāh",
+        "nīm ḥijāz",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā",
+        "nawā",
+        "nīm ḥiṣār",
+        "ḥiṣār",
+        "tīk ḥiṣār",
+        "ḥusaynī",
+        "nīm ʿajam",
+        "ʿajam",
+        "awj",
+        "nīm māhūr",
+        "māhūr",
+        "kurdān",
+        "nīm shahnāz",
+        "shahnāz",
+        "jawāb tīk zīrgūleh"
       ]
     ],
     "abjadNames": [
@@ -486,9 +512,11 @@
     "stringLength": 10000,
     "defaultReferenceFrequency": 97.999,
     "referenceFrequencies": {
-      "yegāh": 97.999
+      "yegāh": 97.999,
+      "ʿushayrān": 108.75,
+      "dūgāh": 110
     },
-    "version": "2026-08-05T09:03:29.425Z"
+    "version": "2026-08-05T10:16:50.261Z"
   },
   {
     "id": "aldik_1926b",
