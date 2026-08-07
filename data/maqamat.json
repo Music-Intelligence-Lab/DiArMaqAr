@@ -11678,5 +11678,79 @@
       }
     ],
     "version": "2026-08-07T17:45:00.000Z"
+  },
+  {
+    "id": "122",
+    "idName": "maqam_naz",
+    "name": "maqām nāz",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "ḥijāz",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "95",
+        "commentsEnglish": "It begins by rendering nagham ṣabā on the degree dūgāh and ends on the degree rāst in the manner of maqām banjegāh.",
+        "commentsArabic": "يبدأ بعمل نغم صباه على صوت الدوكاه وينتهى على صوت الراست بطريقة مقام البنجكاه",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "15",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "120",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-08-07T18:40:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.95), which is the last entry of his chapter. His prose begins it by rendering nagham ṣabā on the degree dūgāh and ends it on the degree rāst in the manner of maqām banjegāh. The ascending degrees recorded here are those he prints for maqām ṣabā (1946, p.69), rotated onto rāst, and the descending degrees are those of his maqām banjegāh. The two directions part at one degree, ḥijāz ascending against nawā descending, which is the degree that distinguishes ṣabā from the maqāmāt around it. He gives banjegāh in two constructions under his number 99, and the first of them is taken here. He heads the second the other manner of constructing that maqām, so an unqualified reference to that maqām's manner is the first, and his second construction yields eight degrees against the seven of this ascent, which cannot stand beside it. He states no qarār formula and names only the degree the maqām ends on. He writes nagham rather than maqām for the ṣabā, as he does for units elsewhere, but the four degrees of jins ṣabā alone do not fill the ascent.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص95)، وهو آخر مواد فصله. تبدأه عبارته بعمل نغم صباه على صوت الدوكاه، وتنتهي به على صوت الراست بطريقة مقام البنجكاه. والدرجات الصاعدة المثبتة هنا هي التي يطبعها لمقام الصباه (1946، ص69)، مدارةً على الراست، والدرجات الهابطة هي درجات مقام البنجكاه عنده. ويفترق الاتجاهان في درجة واحدة، حجاز صعوداً في مقابل نوا هبوطاً، وهي الدرجة التي تميّز الصباه عمّا حوله من المقامات. ويعطي البنجكاه في تركيبين تحت رقمه 99، وأُخذ الأول منهما هنا. فهو يعنون الثاني الطريقة الأخرى لتركيب ذلك المقام، فالإشارة المطلقة إلى طريقة ذلك المقام هي الأولى، ثم إن تركيبه الثاني يعطي ثماني درجات في مقابل سبع في هذا الصعود، فلا يقوم إلى جانبه. ولا يذكر صيغة قرار، بل يسمّي الدرجة التي ينتهي عليها المقام فحسب. ويكتب نغم لا مقام للصباه، كما يفعل في الوحدات في غير هذا الموضع، غير أن درجات جنس الصباه الأربع وحدها لا تملأ الصعود.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "95"
+      }
+    ],
+    "version": "2026-08-07T18:40:00.000Z"
   }
 ]
