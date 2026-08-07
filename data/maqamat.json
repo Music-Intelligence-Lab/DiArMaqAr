@@ -1173,6 +1173,49 @@
     "version": "2026-07-26T09:27:30.693Z"
   },
   {
+    "id": "8",
+    "idName": "maqam_zingulah",
+    "name": "maqām zingulah",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam"
+    ],
+    "descendingNoteNames": [
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "34"
+      }
+    ],
+    "version": "2026-08-07T15:32:06.000Z"
+  },
+  {
     "id": "9",
     "idName": "maqam_al-lami",
     "name": "maqām al-lāmī",
