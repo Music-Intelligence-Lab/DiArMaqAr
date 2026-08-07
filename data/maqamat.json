@@ -11250,5 +11250,92 @@
       }
     ],
     "version": "2026-07-20T10:49:11.894Z"
+  },
+  {
+    "id": "117",
+    "idName": "maqam_anbar_afshan",
+    "name": "maqām ʿanbar afshān",
+    "ascendingNoteNames": [
+      "yegāh",
+      "ʿajam ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿajam ʿushayrān",
+      "yegāh"
+    ],
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "rāst"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "91",
+        "commentsEnglish": "This maqām begins by rendering maqām nahāwand, and from the degree rāst the descent proceeds to the ʿirāq position with the ʿajam ʿushayrān position touched. Then from ʿirāq it ends on the degree ʿirāq, then ʿajam ʿushayrān, then yegāh, and its qarār is the degree yegāh.",
+        "commentsArabic": "هذا المقام يبدأ بعمل مقام نهاوند ومن صوت الراست يصير الهبوط إلى بردة العراق مع لمس عربة العجم عشيران ثم من العراق ينتهى بصوت العراق ثم العجم عشيران ثم اليك كاه وقراره صوت اليك كاه .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-08-07T14:40:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.91). His prose opens it by rendering maqām nahāwand, then gives the descent as bare degrees, from rāst down to the ʿirāq position with the ʿajam ʿushayrān position touched, closing on ʿirāq, then ʿajam ʿushayrān, then yegāh. The note names recorded here are the two columns he prints for maqām nahāwand (1946, p.49), carried down to the qarār through the degrees his prose names. A single maqām supplies both directions here, so each of its columns supplies the direction of the same name, and the one degree at which they part is nīm māhūr ascending against ʿajam descending. He states the qarār as yegāh. It is not above chahārgāh, so it stands as the tonic in the register he gives it. This entry opens the run he heads some neglected maqāmāt (1946, p.91), and that run is not one of the qarār groups of his list of maqām names, so the qarār is taken from this entry's own prose.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص91). تستهله عبارته بعمل مقام نهاوند، ثم تعطي الهبوط درجات مجردة، من الراست نزولاً إلى بردة العراق مع لمس عربة العجم عشيران، وختاماً على العراق ثم العجم عشيران ثم اليكاه. وأسماء النغم المثبتة هنا هي العمودان اللذان يطبعهما لمقام نهاوند (1946، ص49)، ممتدةً نزولاً إلى القرار عبر الدرجات التي تسمّيها عبارته. ويحمل مقام واحد الاتجاهين هنا، فيعطي كل عمود من عموديه الاتجاه المسمّى باسمه، والدرجة الوحيدة التي يفترقان فيها نيم ماهور صعوداً في مقابل عجم هبوطاً. ويذكر القرار على اليكاه. وهي ليست فوق الجهاركاه، فتقوم قراراً في الديوان الذي يعطيها فيه. وتفتتح هذه المادة الباب المعنون بعض مقامات مهملة (1946، ص91)، وليس ذلك الباب من أبواب القرار في بيانه لأسماء المقامات، فأُخذ القرار من عبارة هذه المادة نفسها.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "91"
+      }
+    ],
+    "version": "2026-08-07T14:40:00.000Z"
   }
 ]
