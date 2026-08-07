@@ -9843,8 +9843,8 @@
   },
   {
     "id": "98",
-    "idName": "maqam_panchgah_zaid",
-    "name": "maqām panchgāh zāʾid",
+    "idName": "maqam_banjegah_zaid",
+    "name": "maqām banjegāh zāʾid",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -9929,7 +9929,7 @@
         "page": "93"
       }
     ],
-    "version": "2026-07-20T10:50:52.687Z"
+    "version": "2026-08-07T18:05:00.000Z"
   },
   {
     "id": "99",
