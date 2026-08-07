@@ -6324,15 +6324,23 @@
       "ʿirāq",
       "rāst",
       "dūgāh",
-      "kurdī",
+      "segāh",
       "chahārgāh",
       "nawā",
       "ḥusaynī",
-      "ʿajam"
+      "ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "sunbuleh/zawāl",
+      "māhūrān"
     ],
     "descendingNoteNames": [
-      "ʿajam",
-      "ḥusaynī",
+      "māhūrān",
+      "sunbuleh/zawāl",
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
       "nawā",
       "chahārgāh",
       "kurdī",
@@ -6401,15 +6409,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.41). His prose renders maqām ʿajam, which he names nagham ʿajam, from chahārgāh up to ʿajam and then repeatedly in the descent. The note names recorded here are the ascending and descending degrees he prints for that maqām (1946, p.80), carried down to the qarār. A single maqām supplies both directions here, so each of its columns supplies the direction of the same name. His fifth and sixth ascending degrees are printed ḥusaynī and ʿajam with ḥiṣār and nīm māhūr as their alternatives, and his descending column prints those alternatives alone. He states one substitution for rāḥatfazzā, the kurdī position in place of the degree segāh, and he places it within the descent, so kurdī stands in the descent and segāh in the ascent. He gives the qarār as ʿirāq, which lies below the compass of his maqām ʿajam, so the degrees run down to it through rāst.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص41). تؤدي عبارته مقام العجم، الذي يسمّيه نغم عجم، من الجهاركاه صعوداً إلى العجم ثم تكراراً في الهبوط. وأسماء النغم المثبتة هنا هي الدرجات التي يطبعها لذلك المقام صعوداً وهبوطاً (1946، ص80)، ممتدةً نزولاً إلى القرار. ويحمل مقام واحد الاتجاهين هنا، فيعطي كل عمود من عموديه الاتجاه المسمّى باسمه. ودرجتاه الخامسة والسادسة صعوداً مطبوعتان حسيني وعجم مع حصار ونيم ماهور بديلين لهما، ولا يطبع عموده الهابط إلا هذين البديلين. ويذكر للراحتفزا ابدالاً واحداً، وهو عربة الكوردي مكان صوت الثيه كاه، ويضعه في الهبوط، فيقوم الكوردي في الهبوط والثيه كاه في الصعود. ويعطي القرار على العراق، وهو دون مدى مقام العجم عنده، فتنزل الدرجات إليه عبر الراست.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "41"
       }
     ],
-    "version": "2025-12-10T16:32:53.399Z"
+    "version": "2026-08-07T11:05:00.000Z"
   },
   {
     "id": "58",
