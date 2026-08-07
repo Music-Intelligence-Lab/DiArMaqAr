@@ -11570,5 +11570,113 @@
       }
     ],
     "version": "2026-08-07T17:05:00.000Z"
+  },
+  {
+    "id": "121",
+    "idName": "maqam_banjegah_2",
+    "name": "maqām banjegāh 2",
+    "ascendingNoteNames": [
+      "rāst",
+      "kurdī",
+      "nīm būselīk",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "nīm būselīk",
+      "kurdī",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "93",
+        "commentsEnglish": "Note. Since most Turkish melodies composed in maqām banjegāh use in them the alteration of the construction of the said maqām as set out under number 99, it seemed right to me to set out the other manner of constructing this maqām, which is as follows.\nThis maqām begins from the nīm ḥijāz position, ascending to nawā, ḥusaynī and ʿajam as far as the degree muḥayyar. Then descending to the degree nawā, and from nawā the descent proceeds to the degrees of the nīm ḥijāz position, then the nīm būselīk position, followed by the kurdī position. Then this maqām comes to rest on the degree rāst.",
+        "commentsArabic": "( ملاحظه ) بما أن معظم الالحان التركيه الملحنه من مقام البنجكاه استعمل فيها التغيير ا تركيب المقام المذكور كما هو مبين فى نمرة ٩٩ فصح لى أن أبين الطريقة الاخرى لتركيب هذا المقام وهى .\nيبدأ هذا المقام من عربة النيم حجاز صعوداً إلى النواه والحسينى والعجم لغاية صوت المحير ثم هبوطاً لصوت النواه ومن النواه يصير الهبوط الى أصوات عربة النيم حجاز ثم عربة النيم بوسليك يليها عربة الكوردى ثم يستقر هذا المقام على صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm ḥijāz"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "nīm ḥijāz"
+          },
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-08-07T17:45:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.93). It is the second of two constructions he gives under his number 99. A mulāḥaẓa on that page states that most Turkish compositions in banjegāh use a construction other than the one he has just set out, so he prints this other manner of constructing the maqām under its own heading. He describes it entirely by note positions and names no jins. The note names recorded here are the degrees that description gives, which are the ascent from the nīm ḥijāz position through nawā, ḥusaynī and ʿajam as far as muḥayyar, and the descent from nawā through the nīm ḥijāz, nīm būselīk and kurdī positions to rāst, where the maqām comes to rest. Only kurdān is unnamed. It is the octave of the tonic and lies between his ʿajam and his muḥayyar. Since he names no unit that would part the two directions, the descent carries the same degrees as the ascent. nawā is assigned as the ghammāz, because his description turns on it twice, as the degree the ascent reaches and the degree the descent resumes from. The first construction is recorded separately.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص93). وهو ثاني تركيبين يعطيهما تحت رقمه 99. وتذكر ملاحظة في تلك الصفحة أن معظم المؤلفات التركية في البنجكاه تستعمل تركيباً غير الذي عرضه للتو، فيطبع هذه الطريقة الأخرى لتركيب المقام تحت عنوان مستقل. ويصفه بمواضع النغم كلها، ولا يسمّي جنساً. وأسماء النغم المثبتة هنا هي الدرجات التي يعطيها ذلك الوصف، وهي الصعود من عربة النيم حجاز عبر النوا والحسيني والعجم لغاية المحير، والهبوط من النوا عبر عربات النيم حجاز والنيم بوسليك والكوردي إلى الراست حيث يستقر المقام. ولم يُسمَّ من الدرجات إلا الكردان، وهو جواب القرار، ويقع بين العجم والمحير عنده. وإذ لا يسمّي وحدة تفرق بين الاتجاهين، يحمل الهبوط درجات الصعود نفسها. وأُسندت النوا غمازاً، لأن وصفه يدور عليها مرتين، درجةً يبلغها الصعود ودرجةً يستأنف منها الهبوط. والتركيب الأول مثبت على حدة.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "93"
+      }
+    ],
+    "version": "2026-08-07T17:45:00.000Z"
   }
 ]
