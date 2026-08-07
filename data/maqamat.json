@@ -6624,8 +6624,8 @@
   },
   {
     "id": "64",
-    "idName": "maqam_pesendidah",
-    "name": "maqām pesendīdah",
+    "idName": "maqam_besendidah",
+    "name": "maqām besendīdah",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -6706,7 +6706,7 @@
         "page": "54"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-08-07T10:34:55.244Z"
   },
   {
     "id": "65",
@@ -10330,14 +10330,12 @@
     "idName": "maqam_awj_buselik",
     "name": "maqām awj būselīk",
     "ascendingNoteNames": [
-      "ʿirāq",
-      "rāst",
       "dūgāh",
       "segāh",
       "chahārgāh",
       "nawā",
       "ḥusaynī",
-      "ʿajam",
+      "awj",
       "kurdān"
     ],
     "descendingNoteNames": [
@@ -10347,12 +10345,10 @@
       "nawā",
       "chahārgāh",
       "nīm būselīk",
-      "dūgāh",
-      "rāst",
-      "ʿirāq"
+      "dūgāh"
     ],
     "primaryJinsDegree": [
-      "ʿirāq"
+      "dūgāh"
     ],
     "secondaryJinsDegree": [
       "nawā"
@@ -10389,15 +10385,15 @@
         "version": "2026-07-19T19:29:39.178Z"
       }
     ],
-    "commentsEnglish": "Compound maqām; scale deduced as awj ascending / būselīk descending (shawq dil precedent). Note: awj is ʿirāq-based, so ascent and descent have different tonics (as with shawq dil). Descent extended below dūgāh to the shared ʿirāq tonic so both directions anchor together (app requirement).",
-    "commentsArabic": "مقام مركّب، استُنتج سلّمه على أنه أوج صعوداً وبوسليك هبوطاً، على قياس شوق دل. والأوج قراره العراق، فيختلف قرار الصعود عن قرار الهبوط كما في شوق دل. وقد امتدّ الهبوط دون الدوكاه إلى قرار العراق المشترك ليستقرّ الاتجاهان على قرار واحد، وهو ما يقتضيه التطبيق.",
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.71). His whole entry reads that the rendering begins with maqām al-awj and ends by rendering maqām al-būselīk, so the note names recorded here are the ascending degrees he prints for maqām awj (1946, p.34) against the ascending degrees he prints for maqām būselīk (1946, p.70), rotated to begin on the qarār. He states no qarār in this entry. It is dūgāh, since he places the maqām in the section of his list headed the maqāmāt whose qarār falls on the degree dūgāh (1946, p.15). The two directions part at two degrees. The second is segāh ascending against nīm būselīk descending, and the sixth is awj ascending against ʿajam descending. Those two exchanges are what carry the maqām from awj into būselīk, so the ascent gives a bayyāt tetrachord upon dūgāh and the descent a būselīk one.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص71). ونص مادته كلها أن العمل فيه يبدأ بمقام الاوج وينتهي بعمل مقام البوسليك، فأسماء النغم المثبتة هنا هي الدرجات التي يطبعها لمقام الاوج صعوداً (1946، ص34) في مقابل الدرجات التي يطبعها لمقام البوسليك صعوداً (1946، ص70)، مدارةً لتبدأ من القرار. ولا يذكر قراراً في هذه المادة. وهو الدوكاه، لأنه يضع المقام في باب بيانه المعنون المقامات التي ينتهي قرارها على صوت الدوكاه (1946، ص15). ويفترق الاتجاهان في درجتين. الثانية سيكاه صعوداً في مقابل نيم بوسليك هبوطاً، والسادسة اوج صعوداً في مقابل عجم هبوطاً. وهذان الابدالان هما اللذان ينقلان المقام من الاوج إلى البوسليك، فيعطي الصعود جنس بيات على الدوكاه ويعطي الهبوط جنس بوسليك.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "71"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-08-07T13:20:00.000Z"
   },
   {
     "id": "105",
