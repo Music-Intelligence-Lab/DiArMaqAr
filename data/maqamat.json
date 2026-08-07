@@ -11497,5 +11497,78 @@
       }
     ],
     "version": "2026-08-07T16:20:00.000Z"
+  },
+  {
+    "id": "120",
+    "idName": "maqam_banjegah",
+    "name": "maqām banjegāh",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "92",
+        "commentsEnglish": "This maqām begins from the degree rāst ascending, to render maqām ʿushshāq on the degree dūgāh. Then its qarār ends on the degree rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست صعوداً لعمل مقام عشاق على صوت الدوكاه ثم ينتهى قراره على صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "maqam",
+            "value": "66",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-08-07T17:05:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.92). His prose begins it from the degree rāst ascending, to render maqām ʿushshāq on the degree dūgāh, and gives the qarār as rāst. The note names recorded here are the degrees he prints for maqām ʿushshāq (1946, p.60), rotated onto that qarār. His two columns for that maqām are identical, so the ascent and the descent carry the same degrees here. He gives this number in two versions. A mulāḥaẓa on the following page states that most Turkish compositions in this maqām use a different construction, and he then prints that other construction under its own heading as a second version. This entry records the first version alone, and the second is recorded separately.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص92). تبدأه عبارته من صوت الراست صعوداً لعمل مقام عشاق على صوت الدوكاه، وتعطي القرار على الراست. وأسماء النغم المثبتة هنا هي الدرجات التي يطبعها لمقام العشاق (1946، ص60)، مدارةً على ذلك القرار. وعمودا ذلك المقام عنده متطابقان، فيحمل الصعود والهبوط الدرجات نفسها هنا. ويعطي هذا الرقم في روايتين. فملاحظة في الصفحة التالية تذكر أن معظم المؤلفات التركية في هذا المقام تستعمل تركيباً آخر، ثم يطبع ذلك التركيب تحت عنوان مستقل بوصفه رواية ثانية. وتثبت هذه المادة الرواية الأولى وحدها، وتُثبت الثانية على حدة.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "92"
+      }
+    ],
+    "version": "2026-08-07T17:05:00.000Z"
   }
 ]
