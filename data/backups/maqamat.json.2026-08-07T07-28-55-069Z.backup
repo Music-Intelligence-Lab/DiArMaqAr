@@ -182,9 +182,13 @@
       {
         "sourceId": "alhilu_1957_1961",
         "page": "107"
+      },
+      {
+        "sourceId": "alsabbagh_1950",
+        "page": "41"
       }
     ],
-    "version": "2026-07-26T08:29:30.593Z"
+    "version": "2026-08-04T18:14:49.276Z"
   },
   {
     "id": "2",
@@ -1769,8 +1773,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "50"
+      }
+    ],
+    "version": "2026-08-04T17:47:25.491Z"
   },
   {
     "id": "17",
@@ -2801,44 +2810,6 @@
     "version": "2026-07-26T08:56:24.471Z"
   },
   {
-    "id": "24",
-    "idName": "maqam_bayyat_husayni",
-    "name": "maqām bayyāt ḥusaynī",
-    "ascendingNoteNames": [
-      "ʿushayrān",
-      "ʿirāq",
-      "rāst",
-      "dūgāh",
-      "būselīk/ʿushshāq",
-      "nīm ḥijāz",
-      "nawā"
-    ],
-    "descendingNoteNames": [
-      "nawā",
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "ʿirāq",
-      "ʿushayrān"
-    ],
-    "primaryJinsDegree": [
-      "ʿushayrān"
-    ],
-    "secondaryJinsDegree": [
-      "dūgāh"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "dūgāh"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
-  },
-  {
     "id": "25",
     "idName": "maqam_mustaar",
     "name": "maqām mustaʿār",
@@ -3795,13 +3766,13 @@
     "idName": "maqam_majlis_afruz",
     "name": "maqām majlis afrūz",
     "ascendingNoteNames": [
+      "yegāh",
+      "ʿushayrān",
       "ʿirāq",
       "rāst",
       "dūgāh",
       "segāh",
-      "chahārgāh",
-      "nawā",
-      "ḥusaynī"
+      "chahārgāh"
     ],
     "descendingNoteNames": [
       "ḥusaynī",
@@ -3884,7 +3855,7 @@
         "page": "22"
       }
     ],
-    "version": "2026-07-15T18:27:54.406Z"
+    "version": "2026-08-07T07:28:15.283Z"
   },
   {
     "id": "34",
@@ -5840,8 +5811,8 @@
   },
   {
     "id": "49",
-    "idName": "maqam_chahargah_(al-shawwa)",
-    "name": "maqām chahārgāh (al-Shawwā)",
+    "idName": "maqam_chahargah",
+    "name": "maqām chahārgāh",
     "ascendingNoteNames": [
       "chahārgāh",
       "nawā",
@@ -5988,45 +5959,7 @@
         "page": "133"
       }
     ],
-    "version": "2026-07-26T09:59:40.039Z"
-  },
-  {
-    "id": "50",
-    "idName": "maqam_chahargah/girkah",
-    "name": "maqām chahārgāh/girkah",
-    "ascendingNoteNames": [
-      "chahārgāh",
-      "nawā",
-      "nīm ḥusaynī",
-      "ʿajam",
-      "kurdān",
-      "muḥayyar",
-      "buzurk"
-    ],
-    "descendingNoteNames": [
-      "buzurk",
-      "muḥayyar",
-      "kurdān",
-      "ʿajam",
-      "nīm ḥusaynī",
-      "nawā",
-      "chahārgāh"
-    ],
-    "primaryJinsDegree": [
-      "chahārgāh"
-    ],
-    "secondaryJinsDegree": [
-      "kurdān"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "kurdān"
-    ],
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-08-04T18:03:03.763Z"
   },
   {
     "id": "51",
@@ -6589,88 +6522,6 @@
       }
     ],
     "version": "2025-10-18T19:41:17.132Z"
-  },
-  {
-    "id": "61",
-    "idName": "maqam_zanjaran",
-    "name": "maqām zanjarān",
-    "ascendingNoteNames": [
-      "yegāh",
-      "qarār nīm ḥiṣār",
-      "kawasht",
-      "rāst",
-      "dūgāh",
-      "būselīk/ʿushshāq",
-      "chahārgāh"
-    ],
-    "descendingNoteNames": [
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "dūgāh",
-      "rāst",
-      "kawasht",
-      "qarār nīm ḥiṣār",
-      "yegāh"
-    ],
-    "primaryJinsDegree": [
-      "yegāh"
-    ],
-    "secondaryJinsDegree": [
-      "rāst"
-    ],
-    "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "rāst"
-    ],
-    "suyur": [],
-    "commentsEnglish": "Created by Sayyed Darwīsh (see Dawr Fī Sharʿi Mīn: https://www.youtube.com/watch?v=DmEEUlWYJjo)",
-    "commentsArabic": "من ابتكار سيد درويش (انظر دور في شرع مين: https://www.youtube.com/watch?v=DmEEUlWYJjo).",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:05:09.038Z"
-  },
-  {
-    "id": "62",
-    "idName": "sullam_krumatiki",
-    "name": "sullam krūmātīkī",
-    "ascendingNoteNames": [
-      "yegāh",
-      "qarār ḥiṣār",
-      "ʿushayrān",
-      "ʿajam ʿushayrān",
-      "kawasht",
-      "rāst",
-      "zīrgūleh",
-      "dūgāh",
-      "kurdī",
-      "būselīk/ʿushshāq",
-      "chahārgāh",
-      "ḥijāz"
-    ],
-    "descendingNoteNames": [
-      "ḥijāz",
-      "chahārgāh",
-      "būselīk/ʿushshāq",
-      "kurdī",
-      "dūgāh",
-      "zīrgūleh",
-      "rāst",
-      "kawasht",
-      "ʿajam ʿushayrān",
-      "ʿushayrān",
-      "qarār ḥiṣār",
-      "yegāh"
-    ],
-    "primaryJinsDegree": [
-      "yegāh"
-    ],
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
-    "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-11-18T11:51:14.617Z"
   },
   {
     "id": "63",

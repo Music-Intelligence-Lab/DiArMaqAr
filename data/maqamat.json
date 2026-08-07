@@ -3766,32 +3766,34 @@
     "idName": "maqam_majlis_afruz",
     "name": "maqām majlis afrūz",
     "ascendingNoteNames": [
+      "yegāh",
+      "ʿushayrān",
       "ʿirāq",
       "rāst",
       "dūgāh",
       "segāh",
-      "chahārgāh",
-      "nawā",
-      "ḥusaynī"
+      "chahārgāh"
     ],
     "descendingNoteNames": [
-      "ḥusaynī",
-      "nawā",
       "chahārgāh",
       "segāh",
       "dūgāh",
       "rāst",
-      "ʿirāq"
+      "ʿirāq",
+      "ʿushayrān",
+      "yegāh"
     ],
     "primaryJinsDegree": [
-      "ʿirāq"
+      "yegāh"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "ʿirāq"
     ],
-    "tertiaryJinsDegree": null,
+    "tertiaryJinsDegree": [
+      "dūgāh"
+    ],
     "ghammaz": [
-      "nawā"
+      "dūgāh"
     ],
     "suyur": [
       {
@@ -3855,7 +3857,7 @@
         "page": "22"
       }
     ],
-    "version": "2026-07-15T18:27:54.406Z"
+    "version": "2026-08-07T07:28:54.989Z"
   },
   {
     "id": "34",
@@ -8468,43 +8470,37 @@
     "idName": "maqam_shawq_dil",
     "name": "maqām shawq dil",
     "ascendingNoteNames": [
+      "yegāh",
+      "ʿushayrān",
+      "nīm kawasht",
       "rāst",
       "dūgāh",
       "segāh",
-      "chahārgāh",
-      "nawā",
-      "ḥusaynī",
-      "nīm māhūr",
-      "kurdān",
-      "muḥayyar",
-      "buzurk"
+      "chahārgāh"
     ],
     "descendingNoteNames": [
-      "buzurk",
-      "muḥayyar",
-      "kurdān",
-      "ʿajam",
-      "ḥusaynī",
-      "nawā",
       "chahārgāh",
       "segāh",
       "dūgāh",
-      "rāst"
+      "rāst",
+      "nīm kawasht",
+      "qarār ḥiṣār",
+      "yegāh"
     ],
     "primaryJinsDegree": [
-      "rāst"
+      "yegāh"
     ],
     "secondaryJinsDegree": [
-      "nawā"
+      "rāst"
     ],
     "tertiaryJinsDegree": null,
     "ghammaz": [
-      "nawā"
+      "rāst"
     ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
-        "creatorEnglish": "",
+        "creatorEnglish": "al-Shawwā, Sāmī",
         "creatorArabic": "",
         "sourceId": "alshawwa_1946",
         "page": "22",
@@ -8530,8 +8526,8 @@
             "value": "ascending"
           },
           {
-            "type": "jins",
-            "value": "12",
+            "type": "maqam",
+            "value": "2",
             "startingNote": "nawā"
           },
           {
@@ -8542,15 +8538,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives no scale table; the scale is entered as māhūr ascending and sūznāk descending. Its qarār is nawā.",
-    "commentsArabic": "لا يعطي الشوّا جدولاً لسلّمه، وقد أُدخل السلّم ماهور صعوداً وسوزناك هبوطاً. وقراره النوا.",
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.22). His prose opens with maqām māhūr and returns with maqām sūznāk, so the degrees he prints ascending for māhūr are recorded here as the ascent and the degrees he prints ascending for sūznāk are recorded as the descent (1946, pp.44 and 46), rotated to begin on the qarār. Only the ascending column of each maqām is taken, since his descending columns carry the substitutions each of those maqāmāt makes in its own melodic development. The ascent to ḥijāz on nawā that his prose reaches next adds no degrees of its own, because jins ḥijāz on nawā is the second unit of maqām sūznāk. Where his prose names a maqām rather than a jins in the course of the melodic development, only that maqām's own first jins is taken. Between the qarār and rāst the unit is therefore jins ḥijāz descending. Above rāst the unit is jins rāst in both directions. His māhūr gives awj as an alternative to nīm māhūr, and it is not carried. He states the qarār as nawā. It is recorded here as yegāh, its octave equivalent, because he places this maqām in the section headed the maqāmāt whose qarār ends on the degree yegāh (1946, p.17).",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص22). تستهل عبارته بمقام ماهور وتعود بمقام سوزناك، فالدرجات التي يطبعها للماهور صعوداً مثبتة هنا صعوداً، والدرجات التي يطبعها للسوزناك صعوداً مثبتة هنا هبوطاً (1946، ص44 وص46)، مدارةً لتبدأ من القرار. ولم يُؤخذ إلا العمود الصاعد من كل مقام، لأن أعمدته الهابطة تحمل الابدالات التي يجريها كل من هذين المقامين في تطويره اللحني. والصعود إلى الحجاز على النوا الذي تبلغه عبارته بعد ذلك لا يضيف درجات من عنده، لأن جنس الحجاز على النوا هو الوحدة الثانية من مقام سوزناك. وحيث تسمّي عبارته مقاماً لا جنساً في أثناء التطوير اللحني، لا يُؤخذ إلا الجنس الأول لذلك المقام. فالوحدة بين القرار والراست جنس حجاز هبوطاً. وفوق الراست الوحدة جنس راست في الاتجاهين. ويورد ماهوره اوج بديلاً عن نيم ماهور، ولم يُحمل. ويذكر القرار على النوا. وقد أُثبت هنا اليكاه، وهو مكافئه في الديوان الأدنى، لأنه يضع هذا المقام في الباب المعنون المقامات التي ينتهي قرارها على صوت اليك كاه (1946، ص17).",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "22"
       }
     ],
-    "version": "2026-07-20T10:49:11.894Z"
+    "version": "2026-08-07T09:15:00.000Z"
   },
   {
     "id": "83",
