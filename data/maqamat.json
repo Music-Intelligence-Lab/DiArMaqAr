@@ -11337,5 +11337,80 @@
       }
     ],
     "version": "2026-08-07T14:40:00.000Z"
+  },
+  {
+    "id": "118",
+    "idName": "maqam_nawruz_sultani",
+    "name": "maqām nawrūz sulṭānī",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": null,
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "94",
+        "commentsEnglish": "It begins from the muḥayyar position to render maqām ʿajam, then nahāwand on the degree nawā, and it ends by rendering maqām nahāwand on the degree rāst.",
+        "commentsArabic": "يبدأ من بردة المحير لعمل مقام عجم ثم نهاوند على صوت النواه وينتهى بعمل مقام نهاوند على صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "maqam",
+            "value": "78",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "rāst"
+          }
+        ],
+        "version": "2026-08-07T15:10:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.94). His prose enters it from the muḥayyar position to render maqām ʿajam, then nahāwand on the degree nawā, and ends by rendering maqām nahāwand on the degree rāst. The note names recorded here are the ascending degrees he prints for maqām ʿajam (1946, p.80) against the ascending degrees he prints for maqām nahāwand (1946, p.49), rotated to begin on rāst. He gives no qarār formula here and states only where the maqām ends, so rāst is taken as the tonic. This entry stands in the run he heads some neglected maqāmāt (1946, p.91), which is not one of the qarār groups of his list of maqām names. His maqām ʿajam runs past the octave, so its ninth degree sunbuleh falls at the position his maqām nahāwand gives to kurdī. The two are separated by direction, and segāh stands in the ascent against kurdī in the descent. The directions part at two further degrees, ḥusaynī against ḥiṣār and ʿajam against nīm māhūr. The nahāwand he seats on nawā adds no degree, since nawā, ḥusaynī, ʿajam and kurdān all stand in his maqām ʿajam already.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص94). تدخله عبارته من بردة المحير لعمل مقام عجم، ثم نهاوند على صوت النوا، وتنتهي بعمل مقام نهاوند على صوت الراست. وأسماء النغم المثبتة هنا هي الدرجات التي يطبعها لمقام العجم صعوداً (1946، ص80) في مقابل الدرجات التي يطبعها لمقام النهاوند صعوداً (1946، ص49)، مدارةً لتبدأ من الراست. ولا يعطي صيغة قرار هنا، بل يذكر منتهى المقام فحسب، فأُخذت الراست قراراً. وتقوم هذه المادة في الباب الذي يعنونه بعض مقامات مهملة (1946، ص91)، وليس من أبواب القرار في بيانه لأسماء المقامات. ويتجاوز مقام العجم عنده الديوان، فتقع درجته التاسعة السنبله في الموضع الذي يعطيه مقام النهاوند عنده للكوردي. وقد فُصلت الدرجتان بحسب الاتجاه، فتقوم السيكاه في الصعود في مقابل الكوردي في الهبوط. ويفترق الاتجاهان في درجتين أخريين، حسيني في مقابل حصار، وعجم في مقابل نيم ماهور. والنهاوند الذي يقيمه على النوا لا يضيف درجة، لأن النوا والحسيني والعجم والكردان قائمة في مقام العجم عنده أصلاً.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "94"
+      }
+    ],
+    "version": "2026-08-07T15:10:00.000Z"
   }
 ]
