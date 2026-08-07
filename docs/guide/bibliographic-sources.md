@@ -56,7 +56,7 @@ The `sources.json` corpus maintains a comprehensive bibliographic database suppo
 - Al-Shawwā (1946) — including the modulation guidelines formalised in DiArMaqAr
 - Allāh Wīrdī (1949)
 - Al-Ṣabbāgh (1950, 1954) — 19-tone and 24-tone comma-based systems
-- Al-Ḥilū (1957/1961)
+- Al-Ḥilū (1961)
 - Abbās (1986) — extended maqām transpositions
 
 **Secondary Compilations and Contemporary Sources:**
