@@ -11412,5 +11412,90 @@
       }
     ],
     "version": "2026-08-07T15:10:00.000Z"
+  },
+  {
+    "id": "119",
+    "idName": "maqam_shahr_naz",
+    "name": "maqām shahr nāz",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā"
+    ],
+    "descendingNoteNames": [
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ],
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "rāst"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "95",
+        "commentsEnglish": "This maqām begins from the degree kurdān, to render rāst or chahārgāh on the degree kurdān. Then descending, rāst on nawā. It ends by rendering nagham bayyātī on the degree ḥusaynī.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الكردان لعمل راست أو جهاركاه على صوت الكردان ثم هبوطاً راست على النواه وينتهى بعمل نغم بياتى على صوت الحسينى .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          }
+        ],
+        "version": "2026-08-07T16:20:00.000Z"
+      }
+    ],
+    "commentsEnglish": "al-Shawwā prints no degree table for this maqām (1946, p.95). His prose begins it from the degree kurdān to render rāst there, then descending gives rāst on nawā, and ends by rendering nagham bayyātī on the degree ḥusaynī. The note names recorded here are those three units combined and rotated to begin where his prose ends. He gives no qarār formula and states only that ending degree. It is ḥusaynī, which lies above chahārgāh, so the tonic is recorded as ʿushayrān, its octave equivalent. He prints chahārgāh as an alternative to rāst upon kurdān, and that alternative is not carried. His jins rāst upon kurdān is the octave of jins rāst upon rāst, and the two remaining units are jins rāst upon nawā and jins bayyāt upon ḥusaynī. Together the three give seven degrees. That bayyātī upon ḥusaynī is his own unit, seated the same way in the taḥlīl of his maqām māyeh (1946, p.88), and his maqām ḥusaynī prints ḥusaynī, awj, kurdān and muḥayyar as consecutive degrees (1946, p.63). The ascent and the descent carry the same degrees, since he names no maqām that would part them.",
+    "commentsArabic": "لا يطبع الشوّا جدول درجات لهذا المقام (1946، ص95). تبدأه عبارته من صوت الكردان لعمل راست عليه، ثم تعطي هبوطاً راست على النوا، وتنتهي بعمل نغم بياتى على صوت الحسيني. وأسماء النغم المثبتة هنا هي تلك الوحدات الثلاث مجموعةً، مدارةً لتبدأ حيث تنتهي عبارته. ولا يعطي صيغة قرار، بل يذكر تلك الدرجة الأخيرة فحسب. وهي الحسيني، وتقع فوق الجهاركاه، فأُثبت القرار العشيران، وهو مكافئها في الديوان الأدنى. ويطبع الجهاركاه بديلاً عن الراست على الكردان، ولم يُحمل ذلك البديل. وجنس الراست على الكردان عنده جواب جنس الراست على الراست، والوحدتان الباقيتان جنس راست على النوا وجنس بيات على الحسيني. وتعطي الوحدات الثلاث معاً سبع درجات. وذلك البياتى على الحسيني وحدة من عنده، يقيمها كذلك في تحليل مقام مايه (1946، ص88)، ويطبع مقام الحسيني عنده الحسيني والاوج والكردان والمحير درجات متتالية (1946، ص63). ويحمل الصعود والهبوط الدرجات نفسها، إذ لا يسمّي مقاماً يفرق بينهما.",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alshawwa_1946",
+        "page": "95"
+      }
+    ],
+    "version": "2026-08-07T16:20:00.000Z"
   }
 ]
