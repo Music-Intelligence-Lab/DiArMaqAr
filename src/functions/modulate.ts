@@ -227,7 +227,9 @@ export default function modulate(
   // ḥijāz, "because ʿajam here is a niṣf confined between two natural notes, ḥusaynī and
   // awj". Every "2p" is by construction the niṣf enclosed by a pair of naturals, so the
   // test is simply that the sixth degree itself is a niṣf. Checked separately in each
-  // direction because the qualifying ʿajam of bayyāt appears in its descending form
+  // direction because ḥijāz, the third of his examples, carries awj as its sixth degree
+  // ascending and ʿajam only descending: an ascending-only test would drop it. Bayyāt and
+  // ṣabā carry ʿajam at the sixth in both directions
   if (shawwaMapping(sourceAscendingNotes[5]) === "2p") {
     checkSixAscending = true;
   }
