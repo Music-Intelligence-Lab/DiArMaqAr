@@ -1,9 +1,11 @@
 "use client";
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useState, useContext, useCallback, ReactNode } from "react";
 import { useEffect } from "react";
 import { useRouter, usePathname, useParams } from "next/navigation";
 import { stripLocale } from "@/i18n/navigation";
+
+const ADMIN_TABS_STORAGE_KEY = "diarmaqar:showAdminTabs";
 
 interface MenuContextInterface {
   showAdminTabs: boolean;
@@ -46,7 +48,27 @@ interface MenuContextInterface {
 const MenuContext = createContext<MenuContextInterface | undefined>(undefined);
 
 export function MenuContextProvider({ children }: { children: ReactNode }) {
-  const [showAdminTabs, setShowAdminTabs] = useState(false);
+  // Admin mode survives a reload. localStorage cannot be read during render —
+  // the server render has no window, and a first client render that disagreed
+  // with the server HTML would fail hydration — so the stored value is read
+  // once on mount instead.
+  const [showAdminTabs, setShowAdminTabsState] = useState(false);
+
+  useEffect(() => {
+    setShowAdminTabsState(window.localStorage.getItem(ADMIN_TABS_STORAGE_KEY) === "true");
+  }, []);
+
+  // Persist from the setter, not from an effect on showAdminTabs: such an
+  // effect would fire with the initial `false` before the mount read lands and
+  // overwrite a stored `true`.
+  const setShowAdminTabs = useCallback<React.Dispatch<React.SetStateAction<boolean>>>((value) => {
+    setShowAdminTabsState((previous) => {
+      const next = typeof value === "function" ? value(previous) : value;
+      window.localStorage.setItem(ADMIN_TABS_STORAGE_KEY, String(next));
+      return next;
+    });
+  }, []);
+
   const [openNavigation, setOpenNavigation] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<
