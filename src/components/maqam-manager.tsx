@@ -35,7 +35,12 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const { clearHangingNotes } = useSoundContext();
   const { t, language, isRTL, getDisplayName } = useLanguageContext();
 
-  // Local state for comments
+  // Local state for the editable fields. The name belongs here for the same
+  // reason the comments do: writing each keystroke back to selectedMaqamData
+  // would construct a new MaqamData per character, which invalidates the
+  // transposition memo in transpositions-context and re-renders every consumer
+  // of the selected maqam. The name only reaches the app once it is saved.
+  const [nameLocal, setNameLocal] = useState<string>(selectedMaqamData?.getName() ?? "");
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamData?.getCommentsArabic() ?? "");
 
@@ -148,6 +153,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   // Sync local state when a different maqam is selected
   useEffect(() => {
     if (selectedMaqamData) {
+      setNameLocal(selectedMaqamData.getName());
       setCommentsEnglishLocal(selectedMaqamData.getCommentsEnglish());
       setCommentsArabicLocal(selectedMaqamData.getCommentsArabic());
     }
@@ -205,7 +211,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
     const updated = new MaqamData(
       selectedMaqamData.getId(),
-      selectedMaqamData.getName(),
+      nameLocal,
       selectedCellNoteNames,
       descendingNames,
       selectedMaqamData.getSuyur(),
@@ -226,7 +232,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     if (!selectedMaqamData) return;
     const updated = new MaqamData(
       selectedMaqamData.getId(),
-      selectedMaqamData.getName(),
+      nameLocal,
       selectedMaqamData.getAscendingNoteNames(),
       [...selectedCellNoteNames].reverse(),
       selectedMaqamData.getSuyur(),
@@ -389,26 +395,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
           <div className="maqam-manager__group">
             <input
               type="text"
-              value={selectedMaqamData.getName()}
-              onChange={(e) =>
-                setSelectedMaqamData(
-                  new MaqamData(
-                    selectedMaqamData.getId(),
-                    e.target.value,
-                    selectedMaqamData.getAscendingNoteNames(),
-                    selectedMaqamData.getDescendingNoteNames(),
-                    selectedMaqamData.getSuyur(),
-                    selectedMaqamData.getCommentsEnglish(), // comments unchanged
-                    selectedMaqamData.getCommentsArabic(),
-                    selectedMaqamData.getSourcePageReferences(),
-                    selectedMaqamData.getVersion(),
-                    selectedMaqamData.getPrimaryJinsDegree(),
-                    selectedMaqamData.getSecondaryJinsDegree(),
-                    selectedMaqamData.getTertiaryJinsDegree(),
-                    selectedMaqamData.getGhammaz()
-                  )
-                )
-              }
+              value={nameLocal}
+              onChange={(e) => setNameLocal(e.target.value)}
               placeholder={t('maqam.enterMaqamName')}
               className="maqam-manager__name-input"
             />
@@ -417,7 +405,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 if (!selectedMaqamData) return;
                 const updated = new MaqamData(
                   selectedMaqamData.getId(),
-                  selectedMaqamData.getName(),
+                  nameLocal,
                   selectedMaqamData.getAscendingNoteNames(),
                   selectedMaqamData.getDescendingNoteNames(),
                   selectedMaqamData.getSuyur(),

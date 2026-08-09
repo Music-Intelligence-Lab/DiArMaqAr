@@ -21,7 +21,12 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const { clearHangingNotes } = useSoundContext();
   const { t, language, isRTL, getDisplayName } = useLanguageContext();
 
-  // Local state for comments
+  // Local state for the editable fields. The name belongs here for the same
+  // reason the comments do: writing each keystroke back to selectedJinsData
+  // would construct a new JinsData per character, which invalidates the
+  // transposition memo in transpositions-context and re-renders every consumer
+  // of the selected jins. The name only reaches the app once it is saved.
+  const [nameLocal, setNameLocal] = useState<string>(selectedJinsData?.getName() ?? "");
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsData?.getCommentsArabic() ?? "");
 
@@ -39,6 +44,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   // Sync local state when a different jins is selected
   useEffect(() => {
     if (selectedJinsData) {
+      setNameLocal(selectedJinsData.getName());
       setCommentsEnglishLocal(selectedJinsData.getCommentsEnglish());
       setCommentsArabicLocal(selectedJinsData.getCommentsArabic());
     }
@@ -89,7 +95,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     const selectedNoteNames = selectedPitchClasses.map((pitchClass) => pitchClass.noteName);
     const newJins = new JinsData(
       selectedJinsData.getId(),
-      selectedJinsData.getName(),
+      nameLocal,
       selectedNoteNames,
       commentsEnglishLocal,
       commentsArabicLocal,
@@ -99,6 +105,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
     await updateAjnas([...newAjnas, newJins], [newJins.getId()]);
     setAjnas([...newAjnas, newJins]);
+    // Re-point the selection at the saved object, as handleSaveMaqam does. The
+    // name used to reach selectedJinsData keystroke by keystroke; now that it
+    // arrives only on save, leaving the stale object selected would break the
+    // list's selected-item match, which compares by name.
+    setSelectedJinsData(newJins);
   };
 
   const handleDeleteJins = async () => {
@@ -209,19 +220,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
           <div className="jins-manager__group">
             <input
               type="text"
-              value={selectedJinsData.getName()}
-              onChange={(e) =>
-                setSelectedJinsData(
-                  new JinsData(
-                    selectedJinsData.getId(),
-                    e.target.value,
-                    selectedJinsData.getNoteNames(),
-                    selectedJinsData.getCommentsEnglish(), // keep comments until save
-                    selectedJinsData.getCommentsArabic(),
-                    selectedJinsData.getSourcePageReferences()
-                  )
-                )
-              }
+              value={nameLocal}
+              onChange={(e) => setNameLocal(e.target.value)}
               placeholder={t('jins.enterNewJinsName')}
               className="jins-manager__name-input"
             />
