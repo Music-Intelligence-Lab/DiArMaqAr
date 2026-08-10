@@ -670,7 +670,7 @@ export interface MaqamatModulations {
   modulationsOnSixthDegreeIfNoThird: Maqam[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2pBelowThird: string;
+  noteNameNisfBelowThird: string;
 }
 
 /**

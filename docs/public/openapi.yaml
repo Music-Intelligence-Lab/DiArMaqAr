@@ -1013,7 +1013,7 @@ paths:
                     each keyed by modulation-degree slot (firstDegree,
                     thirdDegree, altThirdDegree, fourthDegree, fifthDegree,
                     sixthDegreeAsc, sixthDegreeDesc, sixthDegreeIfNoThird,
-                    plus the auxiliary `noteName2pBelowThird` note name).
+                    plus the auxiliary `noteNameNisfBelowThird` note name).
                     Values are arrays of candidate targets; each target is
                     a full entity reference with its own tonic. For maqāmāt,
                     `isTransposition: true` marks targets that are
@@ -1084,7 +1084,7 @@ paths:
                         sixthDegreeAsc: []
                         sixthDegreeDesc: []
                         sixthDegreeIfNoThird: []
-                        noteName2pBelowThird: "kurdī"
+                        noteNameNisfBelowThird: "kurdī"
                       ajnas:
                         firstDegree:
                           - id: "2"
@@ -1109,7 +1109,7 @@ paths:
                         sixthDegreeAsc: []
                         sixthDegreeDesc: []
                         sixthDegreeIfNoThird: []
-                        noteName2pBelowThird: "kurdī"
+                        noteNameNisfBelowThird: "kurdī"
                 withOptions:
                   summary: Options response (when options=true)
                   value:
@@ -10676,7 +10676,7 @@ components:
           description: Sixth-degree modulations that apply only when there is no third-degree modulation.
           items:
             $ref: '#/components/schemas/MaqamModulationEntity'
-        noteName2pBelowThird:
+        noteNameNisfBelowThird:
           type: string
           nullable: true
           description: |
@@ -10728,7 +10728,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/JinsModulationEntity'
-        noteName2pBelowThird:
+        noteNameNisfBelowThird:
           type: string
           nullable: true
 

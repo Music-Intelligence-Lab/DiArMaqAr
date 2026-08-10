@@ -1508,7 +1508,7 @@ export async function GET(
           sixthDegreeAsc: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeAsc, maqamIdToEntity, false),
           sixthDegreeDesc: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeDesc, maqamIdToEntity, false),
           sixthDegreeIfNoThird: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeIfNoThird, maqamIdToEntity, false),
-          noteName2pBelowThird: maqamatModulations.noteName2pBelowThird
+          noteNameNisfBelowThird: maqamatModulations.noteNameNisfBelowThird
         },
         ajnas: {
           firstDegree: serializeModulationArray(ajnasModulations.modulationsOnFirstDegree, jinsIdToEntity, true),
@@ -1519,7 +1519,7 @@ export async function GET(
           sixthDegreeAsc: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeAsc, jinsIdToEntity, true),
           sixthDegreeDesc: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeDesc, jinsIdToEntity, true),
           sixthDegreeIfNoThird: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeIfNoThird, jinsIdToEntity, true),
-          noteName2pBelowThird: ajnasModulations.noteName2pBelowThird
+          noteNameNisfBelowThird: ajnasModulations.noteNameNisfBelowThird
         }
       };
       

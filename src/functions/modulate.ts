@@ -192,7 +192,7 @@ export default function modulate(
   // them on the third being "corrupt" (fasada), not on the absence of a target maqām
   const thirdDegreeIsValid = shawwaMapping(thirdDegreeNoteName) === "n";
 
-  let noteName2pBelowThird = ""; // Store the alternative third-degree note (niṣf classification)
+  let noteNameNisfBelowThird = ""; // Store the alternative third-degree note (niṣf classification)
 
   // Search span for the alternative third: from the tonic up to and including the third
   // degree. The niṣf al-Shawwā is after sits six rubʿ above the tonic, so it can never lie
@@ -220,7 +220,7 @@ export default function modulate(
         firstNisfBeforeShawwaIndex - secondDegreeShawwaIndex === 2
       ) {
         checkNisfBelowThird = true;
-        noteName2pBelowThird = pitchClasses.noteName;
+        noteNameNisfBelowThird = pitchClasses.noteName;
       }
       break;
     }
@@ -353,7 +353,7 @@ export default function modulate(
         modulationsOnThirdDegree.push(transposition);
       }
       // RULE 3: ALTERNATIVE THIRD-DEGREE MODULATION - niṣf note becomes tonic
-      else if (checkNisfBelowThird && currentAscendingNotes[0] === noteName2pBelowThird) {
+      else if (checkNisfBelowThird && currentAscendingNotes[0] === noteNameNisfBelowThird) {
         modulationsOnAltThirdDegree.push(transposition);
       }
       // RULE 5: SIXTH-DEGREE NO-THIRD MODULATION - When third options are invalid
@@ -386,7 +386,7 @@ export default function modulate(
       modulationsOnFifthDegree: modulationsOnFifthDegree,
       modulationsOnSixthDegreeAsc: modulationsOnSixthDegreeAsc,
       modulationsOnSixthDegreeDesc: modulationsOnSixthDegreeDesc,
-      noteName2pBelowThird: noteName2pBelowThird,
+      noteNameNisfBelowThird: noteNameNisfBelowThird,
     } as AjnasModulations;
   } else {
     return {
@@ -398,7 +398,7 @@ export default function modulate(
       modulationsOnFifthDegree: modulationsOnFifthDegree,
       modulationsOnSixthDegreeAsc: modulationsOnSixthDegreeAsc,
       modulationsOnSixthDegreeDesc: modulationsOnSixthDegreeDesc,
-      noteName2pBelowThird: noteName2pBelowThird,
+      noteNameNisfBelowThird: noteNameNisfBelowThird,
     } as MaqamatModulations;
   }
 }

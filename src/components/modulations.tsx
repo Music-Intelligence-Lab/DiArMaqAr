@@ -414,12 +414,12 @@ export default function Modulations() {
 
         const isAjnasMode = modulationModes[stackIdx];
         const modulations = isAjnasMode ? modulationsStack[stackIdx].ajnas : modulationsStack[stackIdx].maqamat;
-        const { noteName2pBelowThird: noteName2p } = modulations;
+        const { noteNameNisfBelowThird: noteNameNisf } = modulations;
 
         // Display note names, shifted down an octave when octave-shift is on.
         let displayAscendingNoteNames = ascendingNoteNames;
         let displayDescendingNoteNames = descendingNoteNames;
-        let displayNoteName2p = noteName2p;
+        let displayNoteName2p = noteNameNisf;
 
         if (octaveShiftEnabled[stackIdx]) {
           const getShiftedNoteName = (pitchClass: any): string => {
@@ -428,9 +428,9 @@ export default function Modulations() {
           };
           displayAscendingNoteNames = sourceMaqam.ascendingPitchClasses.map(getShiftedNoteName);
           displayDescendingNoteNames = sourceMaqam.descendingPitchClasses.map(getShiftedNoteName).reverse();
-          const noteName2pPitchClass = allPitchClasses.find((pc) => pc.noteName === noteName2p);
-          if (noteName2pPitchClass) {
-            const shiftedNoteName2p = shiftPitchClassByOctave(allPitchClasses, noteName2pPitchClass, -1);
+          const noteNameNisfPitchClass = allPitchClasses.find((pc) => pc.noteName === noteNameNisf);
+          if (noteNameNisfPitchClass) {
+            const shiftedNoteName2p = shiftPitchClassByOctave(allPitchClasses, noteNameNisfPitchClass, -1);
             displayNoteName2p = shiftedNoteName2p.noteName === "" ? "Octave Shift is beyond tuning system range" : shiftedNoteName2p.noteName;
           }
         }

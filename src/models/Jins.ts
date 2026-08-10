@@ -347,7 +347,7 @@ export interface AjnasModulations {
   modulationsOnSixthDegreeIfNoThird: Jins[];
   
   /** The note name of the second degree (plus variations) */
-  noteName2pBelowThird: string;
+  noteNameNisfBelowThird: string;
 }
 
 /**
