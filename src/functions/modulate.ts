@@ -104,9 +104,14 @@ function shawwaListIndex(noteName: NoteName): number {
  *       within the source maqām
  *
  * 4. Fourth and Fifth-Degree Modulation: Transitions using the fourth or fifth scale
- *    degrees of the source maqām as the tonic of the target. Al-Shawwā closes the
- *    section with "these rules apply their conditions to the fourth and fifth notes of
- *    the fundamental note", so both must be "original" notes ("n") like the third
+ *    degrees of the source maqām as the tonic of the target. Al-Shawwā attaches no
+ *    condition of their own to these degrees; the only constraint is his opening
+ *    principle that every maqām "inevitably (ḥatman) rests its qarār on one of the
+ *    seven original notes or on a niṣf of the seven anṣāf". A pivot works by hosting
+ *    the target's qarār, so the fourth/fifth must be classified "n" or "2p" — a "1p"
+ *    (rubʿ) degree can host no qarār. (His closing sentence "وهذه القواعد تسرى شروطها
+ *    على الصوتين الرابع والخامس" belongs to the taṣwīr note — degrees transpose with
+ *    the tonic — and is not a classification condition; Khyam's ruling, 2026-08-10.)
  *
  * 5. Sixth-Degree Modulation (No Third): When both the third degree and its alternative
  *    are invalid, modulation may occur through the sixth scale degree, provided it is
@@ -324,13 +329,22 @@ export default function modulate(
         modulationsOnFirstDegree.push(transposition);
       }
 
-      // RULE 4: FOURTH-DEGREE MODULATION - Fourth degree becomes tonic
-      if (currentAscendingNotes[0] === sourceAscendingNotes[3] && shawwaMapping(sourceAscendingNotes[3]) === "n") {
+      // RULE 4: FOURTH-DEGREE MODULATION - Fourth degree becomes tonic. No condition of
+      // its own: it need only be able to host the target's qarār, i.e. "n" or "2p" —
+      // never "1p", since no maqām rests on a rubʿ (ḥatman principle, p. 96)
+      if (
+        currentAscendingNotes[0] === sourceAscendingNotes[3] &&
+        (shawwaMapping(sourceAscendingNotes[3]) === "n" || shawwaMapping(sourceAscendingNotes[3]) === "2p")
+      ) {
         modulationsOnFourthDegree.push(transposition);
       }
 
-      // RULE 4: FIFTH-DEGREE MODULATION - Fifth degree becomes tonic
-      if (currentAscendingNotes[0] === sourceAscendingNotes[4] && shawwaMapping(sourceAscendingNotes[4]) === "n") {
+      // RULE 4: FIFTH-DEGREE MODULATION - Fifth degree becomes tonic, same qarār-
+      // admissibility condition as the fourth
+      if (
+        currentAscendingNotes[0] === sourceAscendingNotes[4] &&
+        (shawwaMapping(sourceAscendingNotes[4]) === "n" || shawwaMapping(sourceAscendingNotes[4]) === "2p")
+      ) {
         modulationsOnFifthDegree.push(transposition);
       }
 
