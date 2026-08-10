@@ -22,21 +22,21 @@ const naturalIndices = [0, 6, 11, 16, 21, 26, 30];
 
 // "arbāʿ" (one-fourth notes) - quarter-tone alterations
 // Reflecting whole tone division into four unequal comma segments
-const onePartIndices = [1, 4, 7, 13, 18, 20, 22, 27, 32, 35];
+const rubIndices = [1, 4, 7, 13, 18, 20, 22, 27, 32, 35];
 
 // "anṣāf" (half-notes) - standard half-tone alterations
 // Index 9 is ʿajam ʿushayrān (B♭), not nayrūz (index 8, B♭−): PAO row 9 records nayrūz
 // as an extended note al-Shawwā adds one comma below ʿajam ʿushayrān (1946:13), so it
 // is not one of his twenty-four. Both of his worked examples confirm the slot — ʿajam
 // ʿushayrān is the sixth rubʿ from yegāh, and ʿajam is the niṣf between ḥusaynī and awj
-const twoPartIndices = [3, 9, 14, 19, 24, 28, 34];
+const nisfIndices = [3, 9, 14, 19, 24, 28, 34];
 
 // The twenty-four classified positions of one octave, in ascending order. Note names that
 // do not appear here are al-Shawwā's extended notes (shūrī, nayrūz, rahāwī, nahāwand and
 // ṣabā, each one comma off a classified neighbour) plus the tīk degrees he leaves unnamed
-const shawwaOctavePositions = [...naturalIndices, ...onePartIndices, ...twoPartIndices].sort((a, b) => a - b);
+const shawwaOctavePositions = [...naturalIndices, ...rubIndices, ...nisfIndices].sort((a, b) => a - b);
 
-function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" {
+function shawwaMapping(noteName: NoteName): "n" | "q" | "h" | "/" {
   // Handle the special "none" case - outside Al-Shawwā's framework
   if (noteName === "none") return "/";
 
@@ -46,10 +46,10 @@ function shawwaMapping(noteName: NoteName): "n" | "1p" | "2p" | "/" {
   // Apply Al-Shawwā's classification logic
   if (naturalIndices.includes(index)) {
     return "n";     // Natural (aṣlīya/ṭabīʿīya)
-  } else if (onePartIndices.includes(index)) {
-    return "1p";    // One-part (arbāʿ) - quarter-tone alteration
-  } else if (twoPartIndices.includes(index)) {
-    return "2p";    // Two-part (anṣāf) - half-tone alteration
+  } else if (rubIndices.includes(index)) {
+    return "q";    // rubʿ (arbāʿ) — quarter-tone alteration
+  } else if (nisfIndices.includes(index)) {
+    return "h";    // niṣf (anṣāf) — half-tone alteration
   } else {
     return "/";     // Outside Al-Shawwā's theoretical framework
   }
@@ -89,14 +89,14 @@ function shawwaListIndex(noteName: NoteName): number {
  * 1. Tonic Correspondence: Modulation between maqāmāt sharing the same tonic (qarār).
  *    Al-Shawwā opens by requiring that every maqām rest its qarār "on one of the seven
  *    original «natural» notes, or on a niṣf of the seven anṣāf" — so the tonic must be
- *    classified "n" or "2p". A "1p" (rubʿ) tonic is outside his framework.
+ *    classified "n" or "h". A "q" (rubʿ) tonic is outside his framework.
  *
  * 2. Third-Degree Modulation: Transition where the third degree of the source maqām
  *    becomes the tonic of the target, valid only when the third degree is classified
  *    as an "original" note ("n"), "whether large (kabīr) or small (ṣaghīr)"
  *
  * 3. Alternative Third-Degree Modulation: If the standard third degree is invalid,
- *    Al-Shawwā permits using a niṣf (half-note)/two-parts (2p) scale degree immediately
+ *    Al-Shawwā permits using a niṣf (half-note, "h") scale degree immediately
  *    below it, provided that:
  *    a) It is the sixth pitch class from the fundamental (qarār) scale degree of the
  *       source maqām according to the 24-tone list
@@ -108,7 +108,7 @@ function shawwaListIndex(noteName: NoteName): number {
  *    condition of their own to these degrees; the only constraint is his opening
  *    principle that every maqām "inevitably (ḥatman) rests its qarār on one of the
  *    seven original notes or on a niṣf of the seven anṣāf". A pivot works by hosting
- *    the target's qarār, so the fourth/fifth must be classified "n" or "2p" — a "1p"
+ *    the target's qarār, so the fourth/fifth must be classified "n" or "h" — a "q"
  *    (rubʿ) degree can host no qarār. (His closing sentence "وهذه القواعد تسرى شروطها
  *    على الصوتين الرابع والخامس" belongs to the taṣwīr note — degrees transpose with
  *    the tonic — and is not a classification condition; Khyam's ruling, 2026-08-10.)
@@ -119,7 +119,7 @@ function shawwaListIndex(noteName: NoteName): number {
  *    remains an "original" scale degree
  *
  * 6. Sixth-Degree Modulation (Between Naturals): The sixth scale degree may also be used
- *    when it is a niṣf ("2p") lying between two "natural" scale degrees. Unlike rule 5
+ *    when it is a niṣf ("h") lying between two "natural" scale degrees. Unlike rule 5
  *    this is not a fallback — al-Shawwā's example is ʿajam in maqām al-bayyāt, whose
  *    third degree (chahārgāh) is perfectly valid
  *
@@ -154,7 +154,7 @@ export default function modulate(
   // Initialize modulation arrays for each scale degree according to Al-Shawwā's categories
   const modulationsOnFirstDegree: ModulationType[] = []; // Tonic correspondence modulations
   const modulationsOnThirdDegree: ModulationType[] = []; // Standard third-degree modulations
-  const modulationsOnAltThirdDegree: ModulationType[] = []; // Alternative third-degree (2p) modulations
+  const modulationsOnAltThirdDegree: ModulationType[] = []; // Alternative third-degree (niṣf) modulations
   const modulationsOnFourthDegree: ModulationType[] = []; // Fourth-degree modulations
   const modulationsOnFifthDegree: ModulationType[] = []; // Fifth-degree modulations
   const modulationsOnSixthDegreeAsc: ModulationType[] = []; // Sixth-degree ascending modulations (between naturals)
@@ -166,7 +166,7 @@ export default function modulate(
   const sourceDescendingNotes = [...sourceMaqamTransposition.descendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName)].reverse();
 
   // Al-Shawwā rule validation flags
-  let check2pBelowThird = false; // Flag for alternative third-degree modulation validity
+  let checkNisfBelowThird = false; // Flag for alternative third-degree modulation validity
   let checkSixthNoThird = false; // Flag for sixth-degree modulation when third is invalid
   let checkSixAscending = false; // Flag for sixth-degree modulation between naturals (ascending)
   let checkSixDescending = false; // Flag for sixth-degree modulation between naturals (descending)
@@ -183,16 +183,16 @@ export default function modulate(
 
   // AL-SHAWWĀ'S PRECONDITION ON THE TONIC
   // "Every maqām must rest its qarār on one of the seven original «natural» notes, or on
-  // a niṣf of the seven anṣāf" — so an "n" or a "2p" tonic, never a "1p" (rubʿ)
+  // a niṣf of the seven anṣāf" — so an "n" or a "h" tonic, never a "q" (rubʿ)
   const tonicShawwaClass = shawwaMapping(firstDegreeNoteName);
-  const tonicIsValid = tonicShawwaClass === "n" || tonicShawwaClass === "2p";
+  const tonicIsValid = tonicShawwaClass === "n" || tonicShawwaClass === "h";
 
   // "The third note must be one of the seven original notes, whether large or small."
   // The fallbacks (rules 3 and 5) are only reachable once this fails — al-Shawwā gates
   // them on the third being "corrupt" (fasada), not on the absence of a target maqām
   const thirdDegreeIsValid = shawwaMapping(thirdDegreeNoteName) === "n";
 
-  let noteName2pBelowThird = ""; // Store the alternative third-degree note (2p classification)
+  let noteName2pBelowThird = ""; // Store the alternative third-degree note (niṣf classification)
 
   // Search span for the alternative third: from the tonic up to and including the third
   // degree. The niṣf al-Shawwā is after sits six rubʿ above the tonic, so it can never lie
@@ -201,10 +201,10 @@ export default function modulate(
   const slice = allPitchClasses.slice(Math.max(firstDegreeCellSIndex, 0), thirdDegreeCellSIndex + 1).reverse();
 
   // ALTERNATIVE THIRD-DEGREE VALIDATION (Al-Shawwā Rule 3)
-  // Search for a 2p (half-note) immediately below the third degree
+  // Search for a niṣf ("h") immediately below the third degree
   for (const pitchClasses of slice) {
-    if (shawwaMapping(pitchClasses.noteName) === "2p") {
-      const first2pBeforeShawwaIndex = shawwaListIndex(pitchClasses.noteName);
+    if (shawwaMapping(pitchClasses.noteName) === "h") {
+      const firstNisfBeforeShawwaIndex = shawwaListIndex(pitchClasses.noteName);
 
       // Validate Al-Shawwā's specific distance requirements:
       // a) Sixth pitch class from tonic (distance = 6)
@@ -216,10 +216,10 @@ export default function modulate(
         !thirdDegreeIsValid &&
         firstDegreeShawwaIndex >= 0 &&
         secondDegreeShawwaIndex >= 0 &&
-        first2pBeforeShawwaIndex - firstDegreeShawwaIndex === 6 &&
-        first2pBeforeShawwaIndex - secondDegreeShawwaIndex === 2
+        firstNisfBeforeShawwaIndex - firstDegreeShawwaIndex === 6 &&
+        firstNisfBeforeShawwaIndex - secondDegreeShawwaIndex === 2
       ) {
-        check2pBelowThird = true;
+        checkNisfBelowThird = true;
         noteName2pBelowThird = pitchClasses.noteName;
       }
       break;
@@ -230,15 +230,15 @@ export default function modulate(
   // "The sixth note may also be used if it is a niṣf maqām maḥṣūr, that is, falling
   // between two natural notes" — his example is ʿajam over dūgāh in bayyāt, ṣabā and
   // ḥijāz, "because ʿajam here is a niṣf confined between two natural notes, ḥusaynī and
-  // awj". Every "2p" is by construction the niṣf enclosed by a pair of naturals, so the
+  // awj". Every "h" (niṣf) is by construction enclosed by a pair of naturals, so the
   // test is simply that the sixth degree itself is a niṣf. Checked separately in each
   // direction because ḥijāz, the third of his examples, carries awj as its sixth degree
   // ascending and ʿajam only descending: an ascending-only test would drop it. Bayyāt and
   // ṣabā carry ʿajam at the sixth in both directions
-  if (shawwaMapping(sourceAscendingNotes[5]) === "2p") {
+  if (shawwaMapping(sourceAscendingNotes[5]) === "h") {
     checkSixAscending = true;
   }
-  if (shawwaMapping(sourceDescendingNotes[5]) === "2p") {
+  if (shawwaMapping(sourceDescendingNotes[5]) === "h") {
     checkSixDescending = true;
   }
 
@@ -253,7 +253,7 @@ export default function modulate(
   // - Must be an "original" (natural) scale degree
   if (
     !thirdDegreeIsValid &&
-    !check2pBelowThird &&
+    !checkNisfBelowThird &&
     firstDegreeShawwaIndex >= 0 &&
     (sixthDegreeCellSIndex - firstDegreeShawwaIndex === 16 || sixthDegreeCellSIndex - firstDegreeShawwaIndex === 17) &&
     shawwaMapping(sixthDegreeNoteName) === "n"
@@ -324,17 +324,17 @@ export default function modulate(
       }
 
       // RULE 1: TONIC CORRESPONDENCE - Same tonic modulations, provided the qarār is
-      // itself an aṣl ("n") or a niṣf ("2p")
+      // itself an aṣl ("n") or a niṣf ("h")
       if (currentAscendingNotes[0] === sourceAscendingNotes[0] && tonicIsValid) {
         modulationsOnFirstDegree.push(transposition);
       }
 
       // RULE 4: FOURTH-DEGREE MODULATION - Fourth degree becomes tonic. No condition of
-      // its own: it need only be able to host the target's qarār, i.e. "n" or "2p" —
-      // never "1p", since no maqām rests on a rubʿ (ḥatman principle, p. 96)
+      // its own: it need only be able to host the target's qarār, i.e. "n" or "h" —
+      // never "q", since no maqām rests on a rubʿ (ḥatman principle, p. 96)
       if (
         currentAscendingNotes[0] === sourceAscendingNotes[3] &&
-        (shawwaMapping(sourceAscendingNotes[3]) === "n" || shawwaMapping(sourceAscendingNotes[3]) === "2p")
+        (shawwaMapping(sourceAscendingNotes[3]) === "n" || shawwaMapping(sourceAscendingNotes[3]) === "h")
       ) {
         modulationsOnFourthDegree.push(transposition);
       }
@@ -343,7 +343,7 @@ export default function modulate(
       // admissibility condition as the fourth
       if (
         currentAscendingNotes[0] === sourceAscendingNotes[4] &&
-        (shawwaMapping(sourceAscendingNotes[4]) === "n" || shawwaMapping(sourceAscendingNotes[4]) === "2p")
+        (shawwaMapping(sourceAscendingNotes[4]) === "n" || shawwaMapping(sourceAscendingNotes[4]) === "h")
       ) {
         modulationsOnFifthDegree.push(transposition);
       }
@@ -352,8 +352,8 @@ export default function modulate(
       if (currentAscendingNotes[0] === sourceAscendingNotes[2] && thirdDegreeIsValid) {
         modulationsOnThirdDegree.push(transposition);
       }
-      // RULE 3: ALTERNATIVE THIRD-DEGREE MODULATION - 2p note becomes tonic
-      else if (check2pBelowThird && currentAscendingNotes[0] === noteName2pBelowThird) {
+      // RULE 3: ALTERNATIVE THIRD-DEGREE MODULATION - niṣf note becomes tonic
+      else if (checkNisfBelowThird && currentAscendingNotes[0] === noteName2pBelowThird) {
         modulationsOnAltThirdDegree.push(transposition);
       }
       // RULE 5: SIXTH-DEGREE NO-THIRD MODULATION - When third options are invalid
