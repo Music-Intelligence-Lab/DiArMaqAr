@@ -62,7 +62,7 @@ If the standard third degree is invalid, Al-Shawwā permits using an anṣāf (h
 
 ### 4. Fourth and Fifth-Degree Modulation
 
-Transitions using the fourth or fifth maqām degrees of the source maqām as the tonic of the target. Al-Shawwā closes the section with "these rules apply their conditions to the fourth and fifth notes of the fundamental note", so both degrees must be "original" notes ("n") exactly as the third is.
+Transitions using the fourth or fifth maqām degrees of the source maqām as the tonic of the target. Al-Shawwā attaches no condition of their own to these degrees. The only constraint is his opening principle that every maqām rests its qarār on an original note or on a niṣf, and a pivot works by hosting the target's qarār — so the fourth or fifth degree must be classified "n" or "2p". A "1p" (rubʿ) degree can host no qarār.
 
 ### 5. Sixth-Degree Modulation (No Third)
 
