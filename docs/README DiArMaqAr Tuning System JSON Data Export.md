@@ -201,7 +201,7 @@ tuning-system-export.json
     │   │   │   ├── maqamToMaqamModulationsOnSixthDegreeAsc []
     │   │   │   ├── maqamToMaqamModulationsOnSixthDegreeDesc []
     │   │   │   ├── maqamToMaqamModulationsOnSixthDegreeIfNoThird []
-    │   │   │   └── maqamToMaqamModulations2pBelowThirdNoteName
+    │   │   │   └── maqamToMaqamModulationsNisfBelowThirdNoteName
     │   │   └── maqamToMaqamModulationsLowerOctave {}
     │   │       ├── maqamToMaqamModulationsOnFirstDegree8vb []
     │   │       ├── maqamToMaqamModulationsOnThirdDegree8vb []
@@ -211,7 +211,7 @@ tuning-system-export.json
     │   │       ├── maqamToMaqamModulationsOnSixthDegreeAsc8vb []
     │   │       ├── maqamToMaqamModulationsOnSixthDegreeDesc8vb []
     │   │       ├── maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb []
-    │   │       └── maqamToMaqamModulations2pBelowThird8vb
+    │   │       └── maqamToMaqamModulationsNisfBelowThird8vb
     │   └── maqamToJinsModulations
     │       ├── maqamToJinsModulationDegreesNoteNames {}
     │       ├── maqamToJinsModulationsLowerOctaveDegreesNoteNames {}
@@ -224,7 +224,7 @@ tuning-system-export.json
     │       │   ├── maqamToJinsModulationsOnSixthDegreeAsc []
     │       │   ├── maqamToJinsModulationsOnSixthDegreeDesc []
     │       │   ├── maqamToJinsModulationsOnSixthDegreeIfNoThird []
-    │       │   └── maqamToJinsNoteName2pBelowThird
+    │       │   └── maqamToJinsNoteNameNisfBelowThird
     │       └── maqamToJinsModulationsLowerOctave {}
     │           ├── maqamToJinsModulationsOnFirstDegree8vb []
     │           ├── maqamToJinsModulationsOnThirdDegree8vb []
@@ -234,7 +234,7 @@ tuning-system-export.json
     │           ├── maqamToJinsModulationsOnSixthDegreeAsc8vb []
     │           ├── maqamToJinsModulationsOnSixthDegreeDesc8vb []
     │           ├── maqamToJinsModulationsOnSixthDegreeIfNoThird8vb []
-    │           └── maqamToJinsNoteName2pBelowThird8vb
+    │           └── maqamToJinsNoteNameNisfBelowThird8vb
     └── ... (additional maqāmāt following same structure)
 ```
 
