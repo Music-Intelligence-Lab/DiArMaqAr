@@ -3306,7 +3306,7 @@
     ],
     "creatorEnglish": "Allami",
     "creatorArabic": "اللامي",
-    "commentsEnglish": "Created by using al-Ṣabbāgh's 1954 24-tone tuning system utilising the Syntonic comma 81/80, which matches al-Shawwā's 24-note name system, and including Shawwā's additional note names (1946:13) by using al-Shawwā's one comma higher or one comma lower comments on each note name.\n\nAlthough Shawwā provides 5 extra note names we only need 4 because one of them, nahāwand, is given as lower than kūrdī by one comma (6/5 x 80/81), giving the ratio 32/27 which is already assigned to nīm kurdī/nahāwand.\n\n- Khyam Allami",
+    "commentsEnglish": "Created by using al-Ṣabbāgh's (1954) 24-tone tuning system which is based on the syntonic comma (81/80). al-Ṣabbāgh's note names match al-Shawwā's 24-note name system which makes them compatible and allows for the inclusion of al-Shawwā's additional note names (1946:13) by using al-Shawwā's one comma higher or one comma lower delineation for each of these additional note names. Although Shawwā provides 5 extra note names only four are needed because one of them, nahāwand, is given as lower than kūrdī by one comma (6/5 x 80/81), equalling the ratio 32/27, which is already assigned to nīm kurdī/nahāwand in al-Ṣabbāgh's system.\n\n- Khyam Allami",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -3433,7 +3433,7 @@
     "referenceFrequencies": {
       "rāst": 130.37
     },
-    "version": "2026-08-05T14:18:59.205Z"
+    "version": "2026-08-11T17:39:30.583Z"
   },
   {
     "id": "alfarabi_950j",
