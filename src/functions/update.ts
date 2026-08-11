@@ -1,7 +1,7 @@
 import JinsData from "@/models/Jins";
 import MaqamData, { Sayr } from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
-import { Source, stringifySource, SourcePageReference } from "@/models/bibliography/Source";
+import { Source, urlSafeSourceId, SourcePageReference } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
 import { getSources } from "@/functions/import";
 
@@ -37,8 +37,7 @@ function getUrlSafeSourceId(sourceId: string, sources: Source[]): string {
   // This handles cases where the sourceId might be in the old format
   if (!source) {
     source = sources.find((s) => {
-      const urlSafeId = stringifySource(s, true, null);
-      return urlSafeId === sourceId;
+      return urlSafeSourceId(s) === sourceId;
     });
   }
   

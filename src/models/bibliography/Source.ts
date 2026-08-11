@@ -48,11 +48,17 @@ export interface SourcePageReference {
  * @returns Formatted citation string
  *
  * Format examples:
- * - Without original date: "Author (2020:45)"
+ * - Without page: "Author (2020)"
+ * - With page: "Author (2020:45)"
  * - With original date: "Author (1950/2020:45)"
+ *
+ * The output is always human-readable. An absent page shortens the citation;
+ * it never switches the format. The URL-safe slug lives in
+ * {@link urlSafeSourceId} — the two used to share this function, and a source
+ * reference saved with an empty page rendered as "abbas-(1986)" in the
+ * attribution line.
  */
 export function stringifySource(source: Source, english: boolean, page: string | null): string {
-  //here if we don't have a page reference, I assume we are creating a url parameter and therefor replace spaces with dashes
   if (source.getContributors().length === 0) return "";
 
   let resultString = "";
@@ -65,8 +71,8 @@ export function stringifySource(source: Source, english: boolean, page: string |
   if (source.getSourceType() === "Book") {
     const book = source as Book;
     // Fall back to English if Arabic is empty
-    const originalDate = english 
-      ? book.getOriginalPublicationDateEnglish() 
+    const originalDate = english
+      ? book.getOriginalPublicationDateEnglish()
       : (book.getOriginalPublicationDateArabic() || book.getOriginalPublicationDateEnglish());
 
     if (originalDate) {
@@ -79,8 +85,8 @@ export function stringifySource(source: Source, english: boolean, page: string |
 
   // Add publication date
   // Fall back to English if Arabic is empty
-  const pubDate = english 
-    ? source.getPublicationDateEnglish() 
+  const pubDate = english
+    ? source.getPublicationDateEnglish()
     : (source.getPublicationDateArabic() || source.getPublicationDateEnglish());
   const yearMatch = pubDate.match(/^\d{4}/);
   const year = yearMatch ? yearMatch[0] : pubDate;
@@ -89,5 +95,28 @@ export function stringifySource(source: Source, english: boolean, page: string |
   if (page) resultString += ":" + page + ")";
   else resultString += ")";
 
-  return page ? resultString : standardizeText(resultString).replace(/_/g, "-");
+  return resultString;
+}
+
+/**
+ * The text a source is filed under in an alphabetical picker: the first
+ * contributor's last name, or the title when a source has no contributors.
+ * Pass it through `compareNormalized` so that "ʿAbbās" files under A.
+ */
+export function sourceSortKey(source: Source): string {
+  const contributors = source.getContributors();
+  return contributors.length > 0 ? contributors[0].lastNameEnglish : source.getTitleEnglish();
+}
+
+/**
+ * The legacy URL-safe form of a source's identity, e.g. "abbas-(1986)".
+ *
+ * Source ids are snake_case now ("abbas_1986"); this format survives only so
+ * that sourceIds written before that change can still be matched back to their
+ * source. It is an identifier, not a citation — never render it to a reader.
+ */
+export function urlSafeSourceId(source: Source, english: boolean = true): string {
+  const citation = stringifySource(source, english, null);
+  if (!citation) return "";
+  return standardizeText(citation).replace(/_/g, "-");
 }

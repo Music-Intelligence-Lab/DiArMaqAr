@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCanonicalApiUrl } from "@/app/api/response-shapes";
 import { getSources } from "@/functions/import";
-import { stringifySource } from "@/models/bibliography/Source";
+import { urlSafeSourceId } from "@/models/bibliography/Source";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
@@ -82,7 +82,7 @@ export async function GET(
     // Always return English/transliteration, add Arabic with "Ar" suffix when includeArabic=true
     const sourceData: any = {
       id: source.getId(),
-      displayName: stringifySource(source, true, null), // Always English
+      displayName: urlSafeSourceId(source), // legacy slug form; documented in the OpenAPI spec
       sourceType: source.getSourceType(),
       title: source.getTitleEnglish(),
       contributors: source.getContributors().map(c => ({
@@ -122,7 +122,7 @@ export async function GET(
 
     // Add Arabic versions when includeArabic=true
     if (inArabic) {
-      sourceData.displayNameAr = stringifySource(source, false, null);
+      sourceData.displayNameAr = urlSafeSourceId(source, false);
       sourceData.titleAr = source.getTitleArabic();
       sourceData.contributors = source.getContributors().map((c, idx) => ({
         ...sourceData.contributors[idx],

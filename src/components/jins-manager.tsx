@@ -10,9 +10,11 @@ import React, { useState, useEffect, useMemo } from "react";
 // Transpositions now provided via TranspositionsContext
 // import { calculateJinsTranspositions } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
-import { SourcePageReference } from "@/models/bibliography/Source";
+import { SourcePageReference, sourceSortKey } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
+import { compareNormalized } from "@/functions/normalizeForSort";
+import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnas, setAjnas, selectedTuningSystem, selectedJinsData, setSelectedJinsData, handleClickJins, selectedPitchClasses, clearJinsSelections, allPitchClasses, sources } = useAppContext();
@@ -20,6 +22,9 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const { ajnasFilter, setAjnasFilter } = useFilterContext();
   const { clearHangingNotes } = useSoundContext();
   const { t, language, isRTL, getDisplayName } = useLanguageContext();
+
+  // Carousel position survives switching tabs and reloading (see the hook).
+  const { listRef, onScroll } = useRememberedCarouselScroll("ajnas", isRTL);
 
   // Local state for the editable fields. The name belongs here for the same
   // reason the comments do: writing each keystroke back to selectedJinsData
@@ -29,6 +34,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
   const [nameLocal, setNameLocal] = useState<string>(selectedJinsData?.getName() ?? "");
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedJinsData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedJinsData?.getCommentsArabic() ?? "");
+  const [sourceRefsLocal, setSourceRefsLocal] = useState<SourcePageReference[]>(selectedJinsData?.getSourcePageReferences() ?? []);
 
   // Dynamic note names for tabs ordered by allPitchClasses.noteName
   const tabs = useMemo(() => {
@@ -47,37 +53,13 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       setNameLocal(selectedJinsData.getName());
       setCommentsEnglishLocal(selectedJinsData.getCommentsEnglish());
       setCommentsArabicLocal(selectedJinsData.getCommentsArabic());
+      setSourceRefsLocal(selectedJinsData.getSourcePageReferences());
     }
   }, [selectedJinsData]);
 
   const { allJinsTranspositionsMap } = useTranspositionsContext();
 
-  // Helper function to strip leading special characters for sorting
-  const stripLeadingSpecialChars = (str: string): string => {
-    return str.replace(/^[^\p{L}\p{N}]+/u, '');
-  };
-
-  // Helper function to normalize string for consistent sorting
-  const normalizeForSort = (str: string): string => {
-    return stripLeadingSpecialChars(str)
-      .toLowerCase()
-      .normalize('NFD') // Decompose characters (e.g., é -> e + ́)
-      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
-      .replace(/[\u02B0-\u02FF]/g, '') // Remove modifier letters (including ʿ U+02BF and other modifiers)
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-  };
-
-  const sortedAjnas = [...ajnas].sort((a, b) => {
-    const nameA = normalizeForSort(a.getName());
-    const nameB = normalizeForSort(b.getName());
-    // Use a more permissive comparison that handles mixed scripts better
-    return nameA.localeCompare(nameB, 'en', { 
-      sensitivity: 'base', 
-      numeric: true,
-      ignorePunctuation: true 
-    });
-  });
+  const sortedAjnas = [...ajnas].sort((a, b) => compareNormalized(a.getName(), b.getName()));
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
@@ -99,7 +81,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       selectedNoteNames,
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedJinsData.getSourcePageReferences(),
+      sourceRefsLocal,
       selectedJinsData.getVersion()
     );
     const newAjnas = ajnas.filter((jins) => jins.getId() !== newJins.getId());
@@ -119,25 +101,21 @@ export default function JinsManager({ admin }: { admin: boolean }) {
     setAjnas(newAjnas);
   };
 
-  const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
-    if (!selectedJinsData) return;
-    const list = [...refs];
-    list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedJinsData(selectedJinsData.createJinsWithNewSourcePageReferences(list));
+  // Source refs are drafted locally for the same reason as the name and the
+  // comments: writing each selection or page-number keystroke back to
+  // selectedJinsData would mint a new JinsData, invalidating the transposition
+  // memo in transpositions-context and scrolling the transposition list back
+  // to the top mid-entry. They reach the app on save.
+  const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
+    setSourceRefsLocal((refs) => refs.map((ref, i) => (i === index ? { ...ref, ...newRef } : ref)));
   };
 
   const removeSourceRef = (index: number) => {
-    if (!selectedJinsData) return;
-    const refs = selectedJinsData.getSourcePageReferences() || [];
-    const newList = refs.filter((_, i) => i !== index);
-    setSelectedJinsData(selectedJinsData.createJinsWithNewSourcePageReferences(newList));
+    setSourceRefsLocal((refs) => refs.filter((_, i) => i !== index));
   };
 
   const addSourceRef = () => {
-    if (!selectedJinsData) return;
-    const refs = selectedJinsData.getSourcePageReferences() || [];
-    const newRef: SourcePageReference = { sourceId: "", page: "" };
-    setSelectedJinsData(selectedJinsData.createJinsWithNewSourcePageReferences([...refs, newRef]));
+    setSourceRefsLocal((refs) => [...refs, { sourceId: "", page: "" }]);
   };
 
   // Filter ajnas by tab
@@ -160,11 +138,11 @@ export default function JinsManager({ admin }: { admin: boolean }) {
       <div className="jins-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
-          onClick={() => scrollCarouselByColumns(document.querySelector(".jins-manager__list"), -1, isRTL)}
+          onClick={() => scrollCarouselByColumns(listRef.current, -1, isRTL)}
         >
           ‹
         </button>
-        <div className="jins-manager__list">
+        <div className="jins-manager__list" ref={listRef} onScroll={onScroll}>
           <div className="jins-manager__item-grid">
           {filteredAjnas.length === 0 ? (
             <p>{t('jins.noAjnasAvailable')}</p>
@@ -203,7 +181,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
         </div>
         <button
           className="carousel-button carousel-button-next"
-          onClick={() => scrollCarouselByColumns(document.querySelector(".jins-manager__list"), 1, isRTL)}
+          onClick={() => scrollCarouselByColumns(listRef.current, 1, isRTL)}
         >
           ›
         </button>
@@ -242,24 +220,17 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                 {t('jins.addSource')}
               </button>
             )}
-            {selectedJinsData.getSourcePageReferences().map((ref, idx) => (
+            {sourceRefsLocal.map((ref, idx) => (
               <div key={idx} className="jins-manager__source-item">
                 <select
                   className="jins-manager__source-select"
                   value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedJinsData.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
                 >
                   <option value="">{t('jins.selectSource')}</option>
                   {sources
                     .slice()
-                    .sort((a, b) => {
-                      // Sort alphabetically by last name, or by title if no contributors
-                      const aContribs = a.getContributors();
-                      const bContribs = b.getContributors();
-                      const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
-                      const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
-                      return aKey.localeCompare(bKey);
-                    })
+                    .sort((a, b) => compareNormalized(sourceSortKey(a), sourceSortKey(b)))
                     .map((s) => {
                       const contribs = s.getContributors();
                       const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
@@ -276,7 +247,7 @@ export default function JinsManager({ admin }: { admin: boolean }) {
                   type="text"
                   value={ref.page}
                   placeholder={t('jins.page')}
-                  onChange={(e) => updateSourceRefs(selectedJinsData.getSourcePageReferences(), idx, { page: e.target.value })}
+                  onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
                 />
                 <button className="jins-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
                   {t('jins.delete')}

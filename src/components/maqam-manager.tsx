@@ -10,10 +10,12 @@ import MaqamData from "@/models/Maqam";
 // Transpositions now provided via TranspositionsContext
 // import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
-import { SourcePageReference } from "@/models/bibliography/Source";
+import { SourcePageReference, sourceSortKey } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import { getBaseJinsName, getFirstJinsNameForMaqamData } from "@/functions/classifyMaqamFamily";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
+import { compareNormalized } from "@/functions/normalizeForSort";
+import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
   const {
@@ -35,6 +37,9 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const { clearHangingNotes } = useSoundContext();
   const { t, language, isRTL, getDisplayName } = useLanguageContext();
 
+  // Carousel position survives switching tabs and reloading (see the hook).
+  const { listRef, onScroll } = useRememberedCarouselScroll("maqamat", isRTL);
+
   // Local state for the editable fields. The name belongs here for the same
   // reason the comments do: writing each keystroke back to selectedMaqamData
   // would construct a new MaqamData per character, which invalidates the
@@ -43,6 +48,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   const [nameLocal, setNameLocal] = useState<string>(selectedMaqamData?.getName() ?? "");
   const [commentsEnglishLocal, setCommentsEnglishLocal] = useState<string>(selectedMaqamData?.getCommentsEnglish() ?? "");
   const [commentsArabicLocal, setCommentsArabicLocal] = useState<string>(selectedMaqamData?.getCommentsArabic() ?? "");
+  const [sourceRefsLocal, setSourceRefsLocal] = useState<SourcePageReference[]>(selectedMaqamData?.getSourcePageReferences() ?? []);
 
   // Toggle state for filtering mode: 'note' or 'jins' - default to 'jins'
   const [filterMode, setFilterMode] = useState<'note' | 'jins'>('note');
@@ -156,37 +162,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       setNameLocal(selectedMaqamData.getName());
       setCommentsEnglishLocal(selectedMaqamData.getCommentsEnglish());
       setCommentsArabicLocal(selectedMaqamData.getCommentsArabic());
+      setSourceRefsLocal(selectedMaqamData.getSourcePageReferences());
     }
   }, [selectedMaqamData]);
 
   const numberOfPitchClasses = selectedTuningSystem ? selectedTuningSystem.getOriginalPitchClassValues().length : 0;
 
-  // Helper function to strip leading special characters for sorting
-  const stripLeadingSpecialChars = (str: string): string => {
-    return str.replace(/^[^\p{L}\p{N}]+/u, '');
-  };
-
-  // Helper function to normalize string for consistent sorting
-  const normalizeForSort = (str: string): string => {
-    return stripLeadingSpecialChars(str)
-      .toLowerCase()
-      .normalize('NFD') // Decompose characters (e.g., é -> e + ́)
-      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
-      .replace(/[\u02B0-\u02FF]/g, '') // Remove modifier letters (including ʿ U+02BF and other modifiers)
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .trim();
-  };
-
-  const sortedMaqamat = [...maqamat].sort((a, b) => {
-    const nameA = normalizeForSort(a.getName());
-    const nameB = normalizeForSort(b.getName());
-    // Use a more permissive comparison that handles mixed scripts better
-    return nameA.localeCompare(nameB, 'en', { 
-      sensitivity: 'base', 
-      numeric: true,
-      ignorePunctuation: true 
-    });
-  });
+  const sortedMaqamat = [...maqamat].sort((a, b) => compareNormalized(a.getName(), b.getName()));
 
   // Generate new unique ID
   const setOfMaqamat = new Set(maqamat.map((m) => m.getId()));
@@ -204,48 +186,47 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     setSelectedMaqamData(maqam);
   };
 
-  // Save ascending row
-  const handleSaveAscending = async () => {
-    if (!selectedMaqamData) return;
-    const descendingNames = selectedMaqamData.getDescendingNoteNames().length > 0 ? selectedMaqamData.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
-
-    const updated = new MaqamData(
+  // Every save button commits the same draft — name, comments and source page
+  // references — and differs only in which note-name rows it rewrites. Building
+  // them all here keeps that guarantee in one place: when the three buttons
+  // each constructed their own MaqamData, "save name" quietly dropped whatever
+  // source refs were drafted at the time.
+  const buildUpdatedMaqam = (ascendingNames: string[], descendingNames: string[]): MaqamData => {
+    if (!selectedMaqamData) throw new Error("buildUpdatedMaqam called with no selected maqam");
+    return new MaqamData(
       selectedMaqamData.getId(),
       nameLocal,
-      selectedCellNoteNames,
+      ascendingNames,
       descendingNames,
       selectedMaqamData.getSuyur(),
       commentsEnglishLocal,
       commentsArabicLocal,
-      selectedMaqamData.getSourcePageReferences(),
+      sourceRefsLocal,
       selectedMaqamData.getVersion(),
       selectedMaqamData.getPrimaryJinsDegree(),
       selectedMaqamData.getSecondaryJinsDegree(),
       selectedMaqamData.getTertiaryJinsDegree(),
       selectedMaqamData.getGhammaz()
     );
-    handleSaveMaqam(updated);
+  };
+
+  // Save the name, comments and source refs, leaving both note-name rows as they are
+  const handleSaveDetails = async () => {
+    if (!selectedMaqamData) return;
+    handleSaveMaqam(buildUpdatedMaqam(selectedMaqamData.getAscendingNoteNames(), selectedMaqamData.getDescendingNoteNames()));
+  };
+
+  // Save ascending row
+  const handleSaveAscending = async () => {
+    if (!selectedMaqamData) return;
+    const descendingNames = selectedMaqamData.getDescendingNoteNames().length > 0 ? selectedMaqamData.getDescendingNoteNames() : [...selectedCellNoteNames].reverse();
+    handleSaveMaqam(buildUpdatedMaqam(selectedCellNoteNames, descendingNames));
   };
 
   // Save descending row
   const handleSaveDescending = async () => {
     if (!selectedMaqamData) return;
-    const updated = new MaqamData(
-      selectedMaqamData.getId(),
-      nameLocal,
-      selectedMaqamData.getAscendingNoteNames(),
-      [...selectedCellNoteNames].reverse(),
-      selectedMaqamData.getSuyur(),
-      commentsEnglishLocal,
-      commentsArabicLocal,
-      selectedMaqamData.getSourcePageReferences(),
-      selectedMaqamData.getVersion(),
-      selectedMaqamData.getPrimaryJinsDegree(),
-      selectedMaqamData.getSecondaryJinsDegree(),
-      selectedMaqamData.getTertiaryJinsDegree(),
-      selectedMaqamData.getGhammaz()
-    );
-    handleSaveMaqam(updated);
+    handleSaveMaqam(buildUpdatedMaqam(selectedMaqamData.getAscendingNoteNames(), [...selectedCellNoteNames].reverse()));
   };
 
   // Delete maqam
@@ -258,24 +239,21 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
     setSelectedPitchClasses([]);
   };
 
-  // Source refs handlers omitted for brevity (same as before)
-  const updateSourceRefs = (refs: SourcePageReference[], index: number, newRef: Partial<SourcePageReference>) => {
-    if (!selectedMaqamData) return;
-    const list = [...refs];
-    list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSelectedMaqamData(selectedMaqamData.createMaqamWithNewSourcePageReferences(list));
+  // Source refs are drafted locally for the same reason as the name and the
+  // comments: writing each selection or page-number keystroke back to
+  // selectedMaqamData would mint a new MaqamData, invalidating the
+  // transposition memo in transpositions-context and scrolling the
+  // transposition list back to the top mid-entry. They reach the app on save.
+  const updateSourceRefs = (index: number, newRef: Partial<SourcePageReference>) => {
+    setSourceRefsLocal((refs) => refs.map((ref, i) => (i === index ? { ...ref, ...newRef } : ref)));
   };
 
   const removeSourceRef = (index: number) => {
-    if (!selectedMaqamData) return;
-    const refs = selectedMaqamData.getSourcePageReferences() || [];
-    setSelectedMaqamData(selectedMaqamData.createMaqamWithNewSourcePageReferences(refs.filter((_, i) => i !== index)));
+    setSourceRefsLocal((refs) => refs.filter((_, i) => i !== index));
   };
 
   const addSourceRef = () => {
-    if (!selectedMaqamData) return;
-    const refs = selectedMaqamData.getSourcePageReferences() || [];
-    setSelectedMaqamData(selectedMaqamData.createMaqamWithNewSourcePageReferences([...refs, { sourceId: "", page: "" }]));
+    setSourceRefsLocal((refs) => [...refs, { sourceId: "", page: "" }]);
   };
 
   const filteredMaqamat = useMemo(() => {
@@ -339,11 +317,11 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
       <div className="maqam-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"
-          onClick={() => scrollCarouselByColumns(document.querySelector(".maqam-manager__list"), -1, isRTL)}
+          onClick={() => scrollCarouselByColumns(listRef.current, -1, isRTL)}
         >
           ‹
         </button>
-        <div className="maqam-manager__list">
+        <div className="maqam-manager__list" ref={listRef} onScroll={onScroll}>
           <div className="maqam-manager__item-grid">
           {filteredMaqamat.map((maqamData, idx) => {
             const selectable = maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
@@ -378,7 +356,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </div>
         <button
           className="carousel-button carousel-button-next"
-          onClick={() => scrollCarouselByColumns(document.querySelector(".maqam-manager__list"), 1, isRTL)}
+          onClick={() => scrollCarouselByColumns(listRef.current, 1, isRTL)}
         >
           ›
         </button>
@@ -400,28 +378,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
               placeholder={t('maqam.enterMaqamName')}
               className="maqam-manager__name-input"
             />
-            <button
-              onClick={() => {
-                if (!selectedMaqamData) return;
-                const updated = new MaqamData(
-                  selectedMaqamData.getId(),
-                  nameLocal,
-                  selectedMaqamData.getAscendingNoteNames(),
-                  selectedMaqamData.getDescendingNoteNames(),
-                  selectedMaqamData.getSuyur(),
-                  commentsEnglishLocal,
-                  commentsArabicLocal,
-                  selectedMaqamData.getSourcePageReferences(),
-                  selectedMaqamData.getVersion(),
-                  selectedMaqamData.getPrimaryJinsDegree(),
-                  selectedMaqamData.getSecondaryJinsDegree(),
-                  selectedMaqamData.getTertiaryJinsDegree(),
-                  selectedMaqamData.getGhammaz()
-                );
-                handleSaveMaqam(updated);
-              }}
-              className="maqam-manager__save-button"
-            >
+            <button onClick={handleSaveDetails} className="maqam-manager__save-button">
               {t('maqam.saveName')}
             </button>
             <button onClick={handleSaveAscending} className="maqam-manager__save-button">
@@ -442,23 +399,16 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
             <button className="maqam-manager__source-add-button" onClick={addSourceRef}>
               {t('maqam.addSource')}
             </button>
-            {selectedMaqamData.getSourcePageReferences().map((ref, idx) => (
+            {sourceRefsLocal.map((ref, idx) => (
               <div key={idx} className="maqam-manager__source-item">
                 <select
                   className="maqam-manager__source-select"
                   value={ref.sourceId}
-                  onChange={(e) => updateSourceRefs(selectedMaqamData.getSourcePageReferences(), idx, { sourceId: e.target.value })}
+                  onChange={(e) => updateSourceRefs(idx, { sourceId: e.target.value })}
                 >
                   <option value="">{t('maqam.selectSource')}</option>
                   {[...sources]
-                    .sort((a, b) => {
-                      // Sort alphabetically by last name, or by title if no contributors
-                      const aContribs = a.getContributors();
-                      const bContribs = b.getContributors();
-                      const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
-                      const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
-                      return aKey.localeCompare(bKey);
-                    })
+                    .sort((a, b) => compareNormalized(sourceSortKey(a), sourceSortKey(b)))
                     .map((s) => {
                       const contribs = s.getContributors();
                       const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
@@ -475,7 +425,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                   type="text"
                   value={ref.page}
                   placeholder={t('maqam.page')}
-                  onChange={(e) => updateSourceRefs(selectedMaqamData.getSourcePageReferences(), idx, { page: e.target.value })}
+                  onChange={(e) => updateSourceRefs(idx, { page: e.target.value })}
                 />
                 <button className="maqam-manager__source-delete-button" onClick={() => removeSourceRef(idx)}>
                   {t('maqam.delete')}

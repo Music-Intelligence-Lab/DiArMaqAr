@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSources } from "@/functions/import";
-import { stringifySource } from "@/models/bibliography/Source";
+import { urlSafeSourceId } from "@/models/bibliography/Source";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       // Always return English/transliteration, add Arabic with "Ar" suffix when includeArabic=true
       const baseData: any = {
         id: source.getId(),
-        displayName: stringifySource(source, true, null), // Always English
+        displayName: urlSafeSourceId(source), // legacy slug form; documented in the OpenAPI spec
         sourceType: source.getSourceType(),
         title: source.getTitleEnglish(),
         contributors: source.getContributors().map(c => ({
@@ -90,7 +90,7 @@ export async function GET(request: Request) {
 
       // Add Arabic versions when includeArabic=true
       if (inArabic) {
-        baseData.displayNameAr = stringifySource(source, false, null);
+        baseData.displayNameAr = urlSafeSourceId(source, false);
         baseData.titleAr = source.getTitleArabic();
         baseData.contributors = source.getContributors().map((c, idx) => ({
           ...baseData.contributors[idx],

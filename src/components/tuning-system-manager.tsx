@@ -23,6 +23,8 @@ import {
   SourcePageReference,
   stringifySource,
 } from "@/models/bibliography/Source";
+import { compareNormalized } from "@/functions/normalizeForSort";
+import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsData from "@/models/Jins";
 import MaqamData, { Maqam } from "@/models/Maqam";
@@ -112,6 +114,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
+
+  // Carousel position survives switching tabs and reloading (see the hook).
+  const { listRef, onScroll } = useRememberedCarouselScroll("tuningSystems", language === "ar");
 
   const {
     clearHangingNotes,
@@ -799,11 +804,13 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                     }
                   >
                     <option value="">{t("tuningSystem.selectSource")}</option>
-                    {sources.map((s) => (
-                      <option key={s.getId()} value={s.getId()}>
-                        {s.getTitleEnglish()}
-                      </option>
-                    ))}
+                    {[...sources]
+                      .sort((a, b) => compareNormalized(a.getTitleEnglish(), b.getTitleEnglish()))
+                      .map((s) => (
+                        <option key={s.getId()} value={s.getId()}>
+                          {s.getTitleEnglish()}
+                        </option>
+                      ))}
                   </select>
                   <input
                     className="tuning-system-manager__source-input"
@@ -1014,11 +1021,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         <div className="tuning-system-manager__carousel">
           <button
             className="carousel-button carousel-button-prev"
-            onClick={() => scrollCarouselByColumns(document.querySelector(".tuning-system-manager__list"), -1, language === "ar")}
+            onClick={() => scrollCarouselByColumns(listRef.current, -1, language === "ar")}
           >
             ‹
           </button>
-          <div className="tuning-system-manager__list">
+          <div className="tuning-system-manager__list" ref={listRef} onScroll={onScroll}>
             <div className="tuning-system-manager__item-grid">
             {filteredTuningSystems.length === 0 ? (
               <p>{t("tuningSystem.noSystemsAvailable")}</p>
@@ -1101,7 +1108,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           </div>
           <button
             className="carousel-button carousel-button-next"
-            onClick={() => scrollCarouselByColumns(document.querySelector(".tuning-system-manager__list"), 1, language === "ar")}
+            onClick={() => scrollCarouselByColumns(listRef.current, 1, language === "ar")}
           >
             ›
           </button>

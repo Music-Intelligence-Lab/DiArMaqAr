@@ -21,7 +21,8 @@ import Link from "next/link";
 import CommentText from "./comment-text";
 import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
-import { stringifySource } from "@/models/bibliography/Source";
+import { stringifySource, sourceSortKey } from "@/models/bibliography/Source";
+import { compareNormalized } from "@/functions/normalizeForSort";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 
 /**
@@ -487,14 +488,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
               <select className="sayr-manager__select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
                 <option value="">{t("sayr.selectSource")}</option>
                 {[...sources]
-                  .sort((a, b) => {
-                    // Sort alphabetically by last name, or by title if no contributors
-                    const aContribs = a.getContributors();
-                    const bContribs = b.getContributors();
-                    const aKey = aContribs && aContribs.length > 0 ? aContribs[0].lastNameEnglish.toLowerCase() : a.getTitleEnglish().toLowerCase();
-                    const bKey = bContribs && bContribs.length > 0 ? bContribs[0].lastNameEnglish.toLowerCase() : b.getTitleEnglish().toLowerCase();
-                    return aKey.localeCompare(bKey);
-                  })
+                  .sort((a, b) => compareNormalized(sourceSortKey(a), sourceSortKey(b)))
                   .map((s) => {
                     const contribs = s.getContributors();
                     const firstContributor = contribs && contribs.length > 0 ? contribs[0] : null;
