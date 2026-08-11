@@ -189,10 +189,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "30/36"
+        "page": "30/36/91"
       }
     ],
-    "version": "2026-08-10T19:04:09.620Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "2",
@@ -552,10 +552,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/53"
+        "page": "34/53/104"
       }
     ],
-    "version": "2026-08-10T20:00:51.918Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "4",
@@ -713,10 +713,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/56"
+        "page": "34/56/107"
       }
     ],
-    "version": "2026-08-10T20:03:49.870Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "5",
@@ -869,10 +869,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "35/58"
+        "page": "35/58/109"
       }
     ],
-    "version": "2026-08-10T20:04:58.406Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "6",
@@ -1187,10 +1187,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "30/39"
+        "page": "30/39/94"
       }
     ],
-    "version": "2026-08-10T19:04:55.422Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "8",
@@ -1267,10 +1267,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "34/54"
+        "page": "34/54/105"
       }
     ],
-    "version": "2026-08-10T20:00:19.991Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "10",
@@ -1629,10 +1629,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "67"
+        "page": "62/67/95"
       }
     ],
-    "version": "2026-08-10T20:43:31.423Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "14",
@@ -1829,10 +1829,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/49"
+        "page": "33/49/101"
       }
     ],
-    "version": "2026-08-10T19:47:18.522Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "16",
@@ -1872,10 +1872,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "50"
+        "page": "50/76"
       }
     ],
-    "version": "2026-08-10T19:52:19.590Z"
+    "version": "2026-08-11T16:19:28.811Z"
   },
   {
     "id": "17",
@@ -2016,10 +2016,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/52"
+        "page": "31/52/103"
       }
     ],
-    "version": "2026-08-10T19:20:35.124Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "18",
@@ -2280,10 +2280,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/42"
+        "page": "31/42/97"
       }
     ],
-    "version": "2026-08-10T19:22:29.866Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "20",
@@ -3194,10 +3194,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/44"
+        "page": "33/44/99"
       }
     ],
-    "version": "2026-08-10T19:41:44.006Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "27",
@@ -3356,13 +3356,9 @@
       {
         "sourceId": "alhilu_1961",
         "page": "108"
-      },
-      {
-        "sourceId": "abbas_1986",
-        "page": "30/37"
       }
     ],
-    "version": "2026-08-10T19:03:32.197Z"
+    "version": "2026-08-11T16:45:58.397Z"
   },
   {
     "id": "28",
@@ -3396,14 +3392,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/59"
+        "page": "35/59/110"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "29"
       }
     ],
-    "version": "2026-08-10T20:12:09.869Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "29",
@@ -4520,10 +4516,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/41"
+        "page": "31/41/96"
       }
     ],
-    "version": "2026-08-10T19:19:25.285Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "38",
@@ -6160,10 +6156,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "32/51"
+        "page": "32/51/102"
       }
     ],
-    "version": "2026-08-10T19:40:45.357Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "50",
@@ -6435,8 +6431,8 @@
   },
   {
     "id": "54",
-    "idName": "maqam_hijaz_(al-sabbagh)",
-    "name": "maqām ḥijāz (al-Ṣabbāgh)",
+    "idName": "maqam_hijaz_(al-sabbagh/abbas)",
+    "name": "maqām ḥijāz (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -6448,7 +6444,7 @@
     ],
     "descendingNoteNames": [
       "kurdān",
-      "awj",
+      "ʿajam",
       "ḥusaynī",
       "nawā",
       "ḥijāz",
@@ -6460,15 +6456,19 @@
     "tertiaryJinsDegree": null,
     "ghammaz": null,
     "suyur": [],
-    "commentsEnglish": "",
+    "commentsEnglish": "al-Ṣabbāgh gives only the ascending form whilst ʿAbbās gives both ascending and descending",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
         "page": "32"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "34/38/93"
       }
     ],
-    "version": "2026-08-10T20:09:39.724Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "55",
@@ -6878,14 +6878,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/57"
+        "page": "35/57/108"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "33"
       }
     ],
-    "version": "2026-08-10T20:09:12.550Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "60",
@@ -6923,10 +6923,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "60"
+        "page": "60/111"
       }
     ],
-    "version": "2026-08-10T20:57:21.444Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "61",
@@ -12482,10 +12482,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "30"
+        "page": "30/37/92"
       }
     ],
-    "version": "2026-08-10T18:56:05.607Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "129",
@@ -12519,10 +12519,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "31/43"
+        "page": "31/43/98"
       }
     ],
-    "version": "2026-08-10T19:25:26.322Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "130",
@@ -12556,10 +12556,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "32/45"
+        "page": "32/45/112"
       }
     ],
-    "version": "2026-08-10T19:29:09.873Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "131",
@@ -12593,10 +12593,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "33/48"
+        "page": "33/48/100"
       }
     ],
-    "version": "2026-08-10T19:50:36.993Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "132",
@@ -12630,10 +12630,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/55"
+        "page": "35/55/106"
       }
     ],
-    "version": "2026-08-10T19:58:34.143Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "133",

@@ -189,10 +189,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "30/36"
+        "page": "30/36/91"
       }
     ],
-    "version": "2026-08-10T19:04:09.620Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "2",
@@ -552,10 +552,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/53"
+        "page": "34/53/104"
       }
     ],
-    "version": "2026-08-10T20:00:51.918Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "4",
@@ -713,10 +713,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/56"
+        "page": "34/56/107"
       }
     ],
-    "version": "2026-08-10T20:03:49.870Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "5",
@@ -869,10 +869,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "35/58"
+        "page": "35/58/109"
       }
     ],
-    "version": "2026-08-10T20:04:58.406Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "6",
@@ -1187,10 +1187,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "30/39"
+        "page": "30/39/94"
       }
     ],
-    "version": "2026-08-10T19:04:55.422Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "8",
@@ -1231,8 +1231,8 @@
   },
   {
     "id": "9",
-    "idName": "maqam_al-lami",
-    "name": "maqām al-lāmī",
+    "idName": "maqam_lami",
+    "name": "maqām lāmī",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -1267,10 +1267,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "34/54"
+        "page": "34/54/105"
       }
     ],
-    "version": "2026-08-10T20:00:19.991Z"
+    "version": "2026-08-11T18:13:49.797Z"
   },
   {
     "id": "10",
@@ -1629,10 +1629,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "67"
+        "page": "62/67/95"
       }
     ],
-    "version": "2026-08-10T20:43:31.423Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "14",
@@ -1660,7 +1660,147 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "42",
+        "commentsEnglish": "Begins from the note rāst or yegāh and repeats the sayr from the qarār, then it ascends to nawā and above. In the end it descends to the qarār which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست أو صوت اليك كاه ويكرر فى سير العمل من القرار ثم الصعود إلى درجة صوت النواه فما فوق وفى النهايه يعود العمل بالهبوط إلى القرار وقراره هو صوت الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alsabbagh_1950",
+        "creatorEnglish": "Ṣabbāgh",
+        "creatorArabic": "صبّاغ",
+        "sourceId": "alsabbagh_1950",
+        "page": "41",
+        "commentsEnglish": "Known in Tunis as Ṭabe' al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayyāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          }
+        ],
+        "version": "2025-12-10T17:03:21.299Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "107",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām rāst to begin by touching the degree rāst and descending from it to the degree yegāh, passing over the notes ʿirāq and ʿushayrān, so as to work with the jins rāst transposed onto this yegāh; then it returns to working in the circle of the first ʿiqd, and moves from it to the second ʿiqd to make the jins rāst on nawā, then to the third ʿiqd, then to the fourth if possible.\n\nIn the descent to the resting place, awj is substituted by ʿajam to make būselīk on nawā, or for passing and returning directly to the degree rāst, the resting place of the maqām. Some find it commendable to descend once more to yegāh before the repose on the degree rāst.",
+        "commentsArabic": "اجراء العمل ــ جرت العادة بأن يبدأ العمل من مقام الراست بلمس درجة الراست ويهبط منها الى درجة اليكاه بالمرور على اصوات العراق والعشيران للعمل بجنس الراست مصوراً على هــذا اليكاه ، ثم يعود الى العمل بدائرة العقد الاول ، وينتقل منه الى العقد الثاني لعمل جنس الراست على النوا ثم الى العقد الثالث ثم الى الرابع اذا امكن .\n\nوفي الهبوط الى المستقر يستبدل الاوج بالعجم لعمل البوسليك على النوا او للمرور والعودة رأساً الى درجة الراست مستقر المقام . والبعض يستحسن الهبوط مرة اخرى الى اليكاه قبل الاستقرار على درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:29:30.593Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -1669,7 +1809,7 @@
         "page": "26"
       }
     ],
-    "version": "2026-08-10T20:13:27.776Z"
+    "version": "2026-08-11T19:05:27.695Z"
   },
   {
     "id": "15",
@@ -1829,10 +1969,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/49"
+        "page": "33/49/101"
       }
     ],
-    "version": "2026-08-10T19:47:18.522Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "16",
@@ -1872,10 +2012,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "50"
+        "page": "50/76"
       }
     ],
-    "version": "2026-08-10T19:52:19.590Z"
+    "version": "2026-08-11T16:19:28.811Z"
   },
   {
     "id": "17",
@@ -2016,10 +2156,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/52"
+        "page": "31/52/103"
       }
     ],
-    "version": "2026-08-10T19:20:35.124Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "18",
@@ -2280,10 +2420,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/42"
+        "page": "31/42/97"
       }
     ],
-    "version": "2026-08-10T19:22:29.866Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "20",
@@ -3194,10 +3334,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/44"
+        "page": "33/44/99"
       }
     ],
-    "version": "2026-08-10T19:41:44.006Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "27",
@@ -3356,13 +3496,9 @@
       {
         "sourceId": "alhilu_1961",
         "page": "108"
-      },
-      {
-        "sourceId": "abbas_1986",
-        "page": "30/37"
       }
     ],
-    "version": "2026-08-10T19:03:32.197Z"
+    "version": "2026-08-11T16:45:58.397Z"
   },
   {
     "id": "28",
@@ -3396,14 +3532,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/59"
+        "page": "35/59/110"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "29"
       }
     ],
-    "version": "2026-08-10T20:12:09.869Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "29",
@@ -4520,10 +4656,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/41"
+        "page": "31/41/96"
       }
     ],
-    "version": "2026-08-10T19:19:25.285Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "38",
@@ -6160,10 +6296,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "32/51"
+        "page": "32/51/102"
       }
     ],
-    "version": "2026-08-10T19:40:45.357Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "50",
@@ -6435,8 +6571,8 @@
   },
   {
     "id": "54",
-    "idName": "maqam_hijaz_(al-sabbagh)",
-    "name": "maqām ḥijāz (al-Ṣabbāgh)",
+    "idName": "maqam_hijaz_(al-sabbagh/abbas)",
+    "name": "maqām ḥijāz (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -6448,7 +6584,7 @@
     ],
     "descendingNoteNames": [
       "kurdān",
-      "awj",
+      "ʿajam",
       "ḥusaynī",
       "nawā",
       "ḥijāz",
@@ -6460,15 +6596,19 @@
     "tertiaryJinsDegree": null,
     "ghammaz": null,
     "suyur": [],
-    "commentsEnglish": "",
+    "commentsEnglish": "al-Ṣabbāgh gives only the ascending form whilst ʿAbbās gives both ascending and descending",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
         "page": "32"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "34/38/93"
       }
     ],
-    "version": "2026-08-10T20:09:39.724Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "55",
@@ -6878,14 +7018,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/57"
+        "page": "35/57/108"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "33"
       }
     ],
-    "version": "2026-08-10T20:09:12.550Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "60",
@@ -6923,10 +7063,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "60"
+        "page": "60/111"
       }
     ],
-    "version": "2026-08-10T20:57:21.444Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "61",
@@ -6957,13 +7097,18 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:17:40.039Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "35"
+      }
+    ],
+    "version": "2026-08-11T18:47:19.080Z"
   },
   {
     "id": "62",
-    "idName": "maqam_bayyat_shuri/qarjaghar_(al-sabbagh)",
-    "name": "maqām bayyāt shūrī/qarjaghār (al-Ṣabbāgh)",
+    "idName": "maqam_qarjaghar/bayyat_shuri_(al-sabbagh)",
+    "name": "maqām qarjaghār/bayyāt shūrī (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -6989,8 +7134,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:19:44.485Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "36"
+      }
+    ],
+    "version": "2026-08-11T18:48:24.705Z"
   },
   {
     "id": "63",
@@ -12341,8 +12491,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:34:22.262Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-11T18:46:05.075Z"
   },
   {
     "id": "125",
@@ -12373,8 +12528,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:38:46.831Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "43"
+      }
+    ],
+    "version": "2026-08-11T18:49:44.849Z"
   },
   {
     "id": "126",
@@ -12482,10 +12642,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "30"
+        "page": "30/37/92"
       }
     ],
-    "version": "2026-08-10T18:56:05.607Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "129",
@@ -12519,10 +12679,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "31/43"
+        "page": "31/43/98"
       }
     ],
-    "version": "2026-08-10T19:25:26.322Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "130",
@@ -12556,10 +12716,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "32/45"
+        "page": "32/45/112"
       }
     ],
-    "version": "2026-08-10T19:29:09.873Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "131",
@@ -12593,10 +12753,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "33/48"
+        "page": "33/48/100"
       }
     ],
-    "version": "2026-08-10T19:50:36.993Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "132",
@@ -12630,10 +12790,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/55"
+        "page": "35/55/106"
       }
     ],
-    "version": "2026-08-10T19:58:34.143Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "133",
@@ -13021,11 +13181,48 @@
       "ʿajam"
     ],
     "descendingNoteNames": [
-      "ʿajam",
-      "ḥusaynī",
-      "tīk ḥijāz/ṣabā",
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
       "chahārgāh",
       "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "66/74"
+      }
+    ],
+    "version": "2026-08-11T16:14:16.601Z"
+  },
+  {
+    "id": "144",
+    "idName": "maqam_suzdalara_(abbas)",
+    "name": "maqām sūzdalārā (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
       "dūgāh",
       "rāst"
     ],
@@ -13042,6 +13239,6 @@
         "page": "66"
       }
     ],
-    "version": "2026-08-11T16:12:07.377Z"
+    "version": "2026-08-11T16:17:11.488Z"
   }
 ]
