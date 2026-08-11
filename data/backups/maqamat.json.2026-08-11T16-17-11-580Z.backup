@@ -184,11 +184,15 @@
         "page": "107"
       },
       {
-        "sourceId": "alsabbagh_1950",
-        "page": "41"
+        "sourceId": "alsabbagh_1954",
+        "page": "26"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "30/36"
       }
     ],
-    "version": "2026-08-04T18:14:49.276Z"
+    "version": "2026-08-10T19:04:09.620Z"
   },
   {
     "id": "2",
@@ -545,9 +549,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "123"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "34/53"
       }
     ],
-    "version": "2026-07-26T09:36:39.152Z"
+    "version": "2026-08-10T20:00:51.918Z"
   },
   {
     "id": "4",
@@ -702,9 +710,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "117"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "34/56"
       }
     ],
-    "version": "2026-07-26T09:20:11.576Z"
+    "version": "2026-08-10T20:03:49.870Z"
   },
   {
     "id": "5",
@@ -854,9 +866,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "111"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "35/58"
       }
     ],
-    "version": "2026-07-26T08:52:18.967Z"
+    "version": "2026-08-10T20:04:58.406Z"
   },
   {
     "id": "6",
@@ -1168,52 +1184,50 @@
       {
         "sourceId": "alhilu_1961",
         "page": "118-119"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "30/39"
       }
     ],
-    "version": "2026-07-26T09:27:30.693Z"
+    "version": "2026-08-10T19:04:55.422Z"
   },
   {
     "id": "8",
-    "idName": "maqam_zingulah",
-    "name": "maqām zingulah",
+    "idName": "maqam_yegah_(abbas)",
+    "name": "maqām yegāh (ʿAbbās)",
     "ascendingNoteNames": [
+      "yegāh",
+      "ʿushayrān",
+      "ʿirāq",
       "rāst",
-      "zīrgūleh",
+      "dūgāh",
       "būselīk/ʿushshāq",
-      "chahārgāh",
-      "nawā",
-      "ḥusaynī",
-      "nīm ʿajam"
+      "nīm ḥijāz"
     ],
     "descendingNoteNames": [
-      "nīm ʿajam",
-      "ḥusaynī",
-      "nawā",
       "chahārgāh",
-      "būselīk/ʿushshāq",
-      "zīrgūleh",
-      "rāst"
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān",
+      "yegāh"
     ],
-    "primaryJinsDegree": [
-      "rāst"
-    ],
-    "secondaryJinsDegree": [
-      "chahārgāh"
-    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": [
-      "chahārgāh"
-    ],
+    "ghammaz": null,
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alsabbagh_1954",
-        "page": "34"
+        "sourceId": "abbas_1986",
+        "page": "62/70"
       }
     ],
-    "version": "2026-08-07T15:32:06.000Z"
+    "version": "2026-08-10T20:22:44.350Z"
   },
   {
     "id": "9",
@@ -1253,10 +1267,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "54"
+        "page": "34/54"
       }
     ],
-    "version": "2026-08-04T17:34:56.058Z"
+    "version": "2026-08-10T20:00:19.991Z"
   },
   {
     "id": "10",
@@ -1579,8 +1593,8 @@
   },
   {
     "id": "13",
-    "idName": "maqam_qarjighar",
-    "name": "maqām qārjighār",
+    "idName": "maqam_qarjaghar",
+    "name": "maqām qārjaghār",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -1610,7 +1624,7 @@
       "nawā"
     ],
     "suyur": [],
-    "commentsEnglish": "Also known as qārjagār",
+    "commentsEnglish": "Also known as bayyāt shūrī",
     "commentsArabic": "ويعرف أيضاً بالقارجغار.",
     "sourcePageReferences": [
       {
@@ -1618,7 +1632,44 @@
         "page": "67"
       }
     ],
-    "version": "2026-08-04T17:39:40.270Z"
+    "version": "2026-08-10T20:43:31.423Z"
+  },
+  {
+    "id": "14",
+    "idName": "maqam_rast_(al-sabbagh)",
+    "name": "maqām rāst (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "26"
+      }
+    ],
+    "version": "2026-08-10T20:13:27.776Z"
   },
   {
     "id": "15",
@@ -1775,9 +1826,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "122"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "33/49"
       }
     ],
-    "version": "2026-07-26T09:32:50.270Z"
+    "version": "2026-08-10T19:47:18.522Z"
   },
   {
     "id": "16",
@@ -1787,7 +1842,7 @@
       "dūgāh",
       "kurdī",
       "chahārgāh",
-      "ḥijāz",
+      "tīk ḥijāz/ṣabā",
       "ḥusaynī",
       "ʿajam",
       "kurdān"
@@ -1796,7 +1851,7 @@
       "kurdān",
       "ʿajam",
       "ḥusaynī",
-      "ḥijāz",
+      "tīk ḥijāz/ṣabā",
       "chahārgāh",
       "kurdī",
       "dūgāh"
@@ -1820,7 +1875,7 @@
         "page": "50"
       }
     ],
-    "version": "2026-08-04T17:47:25.491Z"
+    "version": "2026-08-10T19:52:19.590Z"
   },
   {
     "id": "17",
@@ -1958,9 +2013,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "100"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "31/52"
       }
     ],
-    "version": "2026-07-26T08:05:00.037Z"
+    "version": "2026-08-10T19:20:35.124Z"
   },
   {
     "id": "18",
@@ -2218,9 +2277,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "131"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "31/42"
       }
     ],
-    "version": "2026-07-26T09:53:57.214Z"
+    "version": "2026-08-10T19:22:29.866Z"
   },
   {
     "id": "20",
@@ -2519,9 +2582,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "103"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "64/73"
       }
     ],
-    "version": "2026-07-26T08:19:23.440Z"
+    "version": "2026-08-10T22:07:31.959Z"
   },
   {
     "id": "22",
@@ -2851,6 +2918,43 @@
     "version": "2026-07-26T08:56:24.471Z"
   },
   {
+    "id": "24",
+    "idName": "maqam_nahawand_(al-sabbagh)",
+    "name": "maqām nahāwand (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "nīm kurdī/nahāwand",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "28"
+      }
+    ],
+    "version": "2026-08-10T19:55:30.318Z"
+  },
+  {
     "id": "25",
     "idName": "maqam_mustaar",
     "name": "maqām mustaʿār",
@@ -2926,15 +3030,19 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
+    "commentsEnglish": "ʿAbbās gives this as the same ascending and descending (1986:32/46)",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "86"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "32/46"
       }
     ],
-    "version": "2026-07-19T19:12:36.330Z"
+    "version": "2026-08-10T19:37:54.779Z"
   },
   {
     "id": "26",
@@ -3083,9 +3191,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "102"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "33/44"
       }
     ],
-    "version": "2026-07-26T08:17:32.275Z"
+    "version": "2026-08-10T19:41:44.006Z"
   },
   {
     "id": "27",
@@ -3244,9 +3356,54 @@
       {
         "sourceId": "alhilu_1961",
         "page": "108"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "30/37"
       }
     ],
-    "version": "2026-07-26T08:32:24.654Z"
+    "version": "2026-08-10T19:03:32.197Z"
+  },
+  {
+    "id": "28",
+    "idName": "maqam_nawa_athar_(abbas/al-sabbagh)",
+    "name": "maqām nawā athar (ʿAbbās/al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "tīk ḥijāz/ṣabā",
+      "nawā",
+      "ḥiṣār",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "tīk ḥijāz/ṣabā",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "35/59"
+      },
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "29"
+      }
+    ],
+    "version": "2026-08-10T20:12:09.869Z"
   },
   {
     "id": "29",
@@ -3782,9 +3939,13 @@
       {
         "sourceId": "alshawwa_1946",
         "page": "21"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "65/72"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-08-10T22:17:10.899Z"
   },
   {
     "id": "33",
@@ -4346,7 +4507,7 @@
         "version": "2026-07-25T15:43:38.170Z"
       }
     ],
-    "commentsEnglish": "al-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).\n\nThis maqām's data is compiled from al-Shawwā (1946, p.26) and al-Ḥilū (1961, p.98). The two sources agree on the scale in both directions, al-Ḥilū's descent working \"with the jins nikrīz of the fifth on the degree rāst, and bayyāt of the fifth on the degree dūgāh\" (1961, p.98) where the ascent has segāh and chahārgāh. al-Ḥilū titles the analysis with a double name, maqām ḥusaynī al-ʿushayrān or ʿushayrān al-ḥusaynī, and prints the qarār degree itself as ʿushayrān al-ḥusaynī (1961, p.98). On the maqām's character, where the ghammāz assigned here is nawā, al-Ḥilū emphasises ḥusaynī: \"the prominence of the degree ḥusaynī because it is the centre of the melody\" (1961, p.98).",
+    "commentsEnglish": "ʿAbbas gives this as the same sequence ascending and descending (1986:31/41).\n\nal-Shawwā gives the qarār as ḥusaynī in the older practice, adding that \"nowadays they have made its qarār the note ʿushayrān\" (1946, p.26).\n\nThis maqām's data is compiled from al-Shawwā (1946, p.26) and al-Ḥilū (1961, p.98). The two sources agree on the scale in both directions, al-Ḥilū's descent working \"with the jins nikrīz of the fifth on the degree rāst, and bayyāt of the fifth on the degree dūgāh\" (1961, p.98) where the ascent has segāh and chahārgāh. al-Ḥilū titles the analysis with a double name, maqām ḥusaynī al-ʿushayrān or ʿushayrān al-ḥusaynī, and prints the qarār degree itself as ʿushayrān al-ḥusaynī (1961, p.98). On the maqām's character, where the ghammāz assigned here is nawā, al-Ḥilū emphasises ḥusaynī: \"the prominence of the degree ḥusaynī because it is the centre of the melody\" (1961, p.98).",
     "commentsArabic": "يجعل الشوّا القرار على الحسيني في الممارسة القديمة، ثم يضيف: «وأما الآن فجعلوا قراره على صوت العشيران» (١٩٤٦، ص٢٦).\n\nجُمعت بيانات هذا المقام من الشوا (1946، ص26) والحلو (1961، ص98). يتفق المصدران على السلّم في الاتجاهين، ويعمل هبوط الحلو «بجنس نكريز ذي الخمس على درجة الراست ؛ وبياتي ذي الخمس على درجة الدوكاه» (1961، ص98) حيث يكون الصعود بالسيكاه والجهاركاه. يعنون الحلو التحليل باسم مزدوج «مقام حسيني العشيران أو عشيران الحسيني» ويطبع درجة القرار نفسها باسم عشيران الحسيني (1961، ص98). اما شخصية المقام، والغماز المعتمد هنا نوا، فيبرز الحلو الحسيني: «البروز بدرجة الحسيني لانها مركز النغمة» (1961، ص98).",
     "sourcePageReferences": [
       {
@@ -4356,14 +4517,18 @@
       {
         "sourceId": "alhilu_1961",
         "page": "98"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "31/41"
       }
     ],
-    "version": "2026-07-25T15:43:38.170Z"
+    "version": "2026-08-10T19:19:25.285Z"
   },
   {
     "id": "38",
     "idName": "maqam_suzdal",
-    "name": "maqām sūzdāl",
+    "name": "maqām sūzdal",
     "ascendingNoteNames": [
       "ʿushayrān",
       "ʿajam ʿushayrān",
@@ -4503,9 +4668,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "99"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "65/83"
       }
     ],
-    "version": "2026-07-26T08:03:23.791Z"
+    "version": "2026-08-10T22:18:27.254Z"
   },
   {
     "id": "39",
@@ -5078,15 +5247,19 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
+    "commentsEnglish": "ʿAbbās gives this maqam an octave higher starting on the note name awj (1986: 32/47)",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "34"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "32/47"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-08-10T19:36:22.697Z"
   },
   {
     "id": "44",
@@ -5850,7 +6023,7 @@
       "buzurk"
     ],
     "descendingNoteNames": [
-      "buzurk",
+      "sunbuleh/zawāl",
       "muḥayyar",
       "kurdān",
       "ʿajam",
@@ -5974,7 +6147,7 @@
         "version": "2026-07-26T09:59:40.039Z"
       }
     ],
-    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.90) and al-Ḥilū (1961, p.133). The sources agree on the scale in both directions — al-Ḥilū states outright \"the descent is like the ascent, with no difference between them\" (1961, p.133) — and their suyūr run parallel: both enter from around ʿajam (al-Shawwā from ḥusaynī or ʿajam, al-Ḥilū from ʿajam or chahārgāh), both work rāst on kurdān, and both repose on chahārgāh. al-Ḥilū counts the maqām at two dīwāns by disjunct assembly, \"of the family of chahārgāh and ʿajam\" (1961, p.133), the two dīwāns fully octave-parallel; his seventh degree is printed \"al-būselīk — and it is replaced by jawāb al-segāh\" (1961, p.133), both printed names designating al-Shawwā's buzurk. He names the maqām's tetrachord \"chahārgāh, that is ʿajam\" throughout — one jins under either name. The ghammāz assigned here is chahārgāh; al-Ḥilū names no ghammāz, but seats his second ʿiqd on kurdān, the secondary jins degree assigned here, and gives the character as \"it rests on presenting the jins al-ʿajam suspended on the degree ʿajam\" (1961, p.133). His footnote explains the maqām's identity in full: \"The maqām al-chahārgāh is in truth maqām al-ʿajam ʿushayrān itself, but pictured on the degree chahārgāh, that is, it has become founded on the degree chahārgāh and is called by its name; and by this picturing it has acquired a colour of its own. There is a Turkish chahārgāh maqām called (shāh war) which resembles this Arab chahārgāh, but the Turks sometimes exchange, in their maqām, the degree nawā for the degree ṣabā, so that a jins ṣabā is formed on the degree dūgāh — yet suspended on the degree chahārgāh, so it becomes like maqām al-ḥijāzkār pictured on the degree chahārgāh\" (1961, p.133).",
+    "commentsEnglish": "ʿAbbās gives a different descending sequence (1986:32/51)\n\nThis maqām's data is compiled from al-Shawwā (1946, p.90) and al-Ḥilū (1961, p.133). The sources agree on the scale in both directions — al-Ḥilū states outright \"the descent is like the ascent, with no difference between them\" (1961, p.133) — and their suyūr run parallel: both enter from around ʿajam (al-Shawwā from ḥusaynī or ʿajam, al-Ḥilū from ʿajam or chahārgāh), both work rāst on kurdān, and both repose on chahārgāh. al-Ḥilū counts the maqām at two dīwāns by disjunct assembly, \"of the family of chahārgāh and ʿajam\" (1961, p.133), the two dīwāns fully octave-parallel; his seventh degree is printed \"al-būselīk — and it is replaced by jawāb al-segāh\" (1961, p.133), both printed names designating al-Shawwā's buzurk. He names the maqām's tetrachord \"chahārgāh, that is ʿajam\" throughout — one jins under either name. The ghammāz assigned here is chahārgāh; al-Ḥilū names no ghammāz, but seats his second ʿiqd on kurdān, the secondary jins degree assigned here, and gives the character as \"it rests on presenting the jins al-ʿajam suspended on the degree ʿajam\" (1961, p.133). His footnote explains the maqām's identity in full: \"The maqām al-chahārgāh is in truth maqām al-ʿajam ʿushayrān itself, but pictured on the degree chahārgāh, that is, it has become founded on the degree chahārgāh and is called by its name; and by this picturing it has acquired a colour of its own. There is a Turkish chahārgāh maqām called (shāh war) which resembles this Arab chahārgāh, but the Turks sometimes exchange, in their maqām, the degree nawā for the degree ṣabā, so that a jins ṣabā is formed on the degree dūgāh — yet suspended on the degree chahārgāh, so it becomes like maqām al-ḥijāzkār pictured on the degree chahārgāh\" (1961, p.133).",
     "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص90) والحلو (1961، ص133). يتفق المصدران على السلّم في الاتجاهين، ويصرح الحلو: «والهبوط كالصعود ولا فرق بينهما» (1961، ص133)، ويتوازى السيران: فكلاهما يدخل من جوار العجم (الشوا من الحسيني او العجم، والحلو من العجم او الجهاركاه)، وكلاهما يعمل الراست على الكردان ويستقر على الجهاركاه. يعد الحلو المقام ديوانين بالجمع المنفصل «من فصيلة الجهاركاه والعجم» (1961، ص133) والديوانان متوازيان جواباً تاماً؛ ودرجته السابعة مطبوعة «البوسليك ـ ويستبدل بجواب السيكاه» (1961، ص133)، وكلا الاسمين يعني بزرك الشوا. ويسمي رباعي المقام «جهاركاه أي عجم» في كل مواضعه، جنساً واحداً باسمين. الغماز المعتمد هنا هو الجهاركاه؛ ولا يسمي الحلو غمازاً، لكنه يجلس عقده الثاني على الكردان، وهي درجة الجنس الثاني المعتمدة هنا، ويقول في شخصية المقام: «تقوم على اظهار جنس العجم المعلَّق على درجة العجم» (1961، ص133). وتشرح حاشيته هوية المقام كاملة: «ان مقام الجهاركاه هو في الحقيقة مقام العجم عشيران بذاته ، ولكنه مصوراً على درجة الجهاركاه أي انه اصبح مؤسساً على درجــة الجهاركاه ويسمى باسمها . وقد اكتسب بهذا التصوير لوناً خاصاً به . ويوجد مقام جهاركاه تركي يسمى ( شاه ور ) هو شبيه بالجهاركاه العربي هذا ، ولكن الاتراك يبدلون احياناً في مقامهم درجة النوا بدرجة الصبا ليتكوّن جنس صبا على درجة الدوكاه . ولكنه يكون معلقاً على درجة الجهاركاه ، فيصبح كمقام الحجازكار مصوراً على درجة الجهاركاه» (1961، ص133).",
     "sourcePageReferences": [
       {
@@ -5984,9 +6157,50 @@
       {
         "sourceId": "alhilu_1961",
         "page": "133"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "32/51"
       }
     ],
-    "version": "2026-08-04T18:03:03.763Z"
+    "version": "2026-08-10T19:40:45.357Z"
+  },
+  {
+    "id": "50",
+    "idName": "maqam_nikriz_(al-sabbagh)",
+    "name": "maqām nikrīz (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "tīk ḥijāz/ṣabā",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam"
+    ],
+    "descendingNoteNames": [
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "tīk ḥijāz/ṣabā",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "29"
+      }
+    ],
+    "version": "2026-08-10T20:13:02.600Z"
   },
   {
     "id": "51",
@@ -6181,6 +6395,80 @@
       }
     ],
     "version": "2026-07-20T12:15:11.065Z"
+  },
+  {
+    "id": "53",
+    "idName": "maqam_hijaz_kar_kurd_(al-sabbagh)",
+    "name": "maqām ḥijāz kār kurd (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "nīm kurdī/nahāwand",
+      "chahārgāh",
+      "nawā",
+      "nīm ḥiṣār",
+      "nīm ʿajam"
+    ],
+    "descendingNoteNames": [
+      "nīm ʿajam",
+      "nīm ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "nīm kurdī/nahāwand",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "31"
+      }
+    ],
+    "version": "2026-08-10T20:10:13.923Z"
+  },
+  {
+    "id": "54",
+    "idName": "maqam_hijaz_(al-sabbagh)",
+    "name": "maqām ḥijāz (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "32"
+      }
+    ],
+    "version": "2026-08-10T20:09:39.724Z"
   },
   {
     "id": "55",
@@ -6557,6 +6845,152 @@
       }
     ],
     "version": "2025-10-18T19:41:17.132Z"
+  },
+  {
+    "id": "59",
+    "idName": "maqam_hijaz_kar_(abbas/al-sabbagh)",
+    "name": "maqām ḥijāz kār (ʿAbbās/al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "35/57"
+      },
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "33"
+      }
+    ],
+    "version": "2026-08-10T20:09:12.550Z"
+  },
+  {
+    "id": "60",
+    "idName": "maqam_zangulah/zanjaran_(al-sabbagh)",
+    "name": "maqām zangulāh/zanjarān (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam"
+    ],
+    "descendingNoteNames": [
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "34"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "60"
+      }
+    ],
+    "version": "2026-08-10T20:57:21.444Z"
+  },
+  {
+    "id": "61",
+    "idName": "maqam_bayyat_(al-sabbagh)",
+    "name": "maqām bayyāt (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:17:40.039Z"
+  },
+  {
+    "id": "62",
+    "idName": "maqam_bayyat_shuri/qarjaghar_(al-sabbagh)",
+    "name": "maqām bayyāt shūrī/qarjaghār (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:19:44.485Z"
   },
   {
     "id": "63",
@@ -7155,9 +7589,13 @@
       {
         "sourceId": "alhilu_1961",
         "page": "126-127"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "63/"
       }
     ],
-    "version": "2026-07-26T09:41:33.114Z"
+    "version": "2026-08-10T20:59:05.428Z"
   },
   {
     "id": "68",
@@ -7348,9 +7786,13 @@
       {
         "sourceId": "alshawwa_1946",
         "page": "63"
+      },
+      {
+        "sourceId": "abbas_1986",
+        "page": "30/40"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-08-10T19:07:22.858Z"
   },
   {
     "id": "70",
@@ -8580,6 +9022,43 @@
       }
     ],
     "version": "2026-08-07T09:15:00.000Z"
+  },
+  {
+    "id": "83",
+    "idName": "maqam_saba_(al-sabbagh)",
+    "name": "maqām ṣabā (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "ḥusaynī",
+      "nīm ʿajam",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "nīm ʿajam",
+      "ḥusaynī",
+      "tīk ḥijāz/ṣabā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "37"
+      }
+    ],
+    "version": "2026-08-10T20:13:56.372Z"
   },
   {
     "id": "84",
@@ -11795,5 +12274,811 @@
       }
     ],
     "version": "2026-08-07T18:40:00.000Z"
+  },
+  {
+    "id": "123",
+    "idName": "maqam_huzam_(al-sabbagh)",
+    "name": "maqām huzām (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "nīm māhūr",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "nīm māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "39"
+      }
+    ],
+    "version": "2026-08-10T20:11:33.307Z"
+  },
+  {
+    "id": "124",
+    "idName": "maqam_chahargah_(al-sabbagh)",
+    "name": "maqām chahārgāh (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam",
+      "kurdān",
+      "muḥayyar",
+      "buzurk"
+    ],
+    "descendingNoteNames": [
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "nīm ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:34:22.262Z"
+  },
+  {
+    "id": "125",
+    "idName": "maqam_ajam_ushayran_(al-sabbagh)",
+    "name": "maqām ʿajam ʿushayrān (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "nīm ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "nīm kurdī/nahāwand",
+      "dūgāh",
+      "rāst",
+      "nīm ʿajam ʿushayrān"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:38:46.831Z"
+  },
+  {
+    "id": "126",
+    "idName": "maqam_iraq_(al-sabbagh)",
+    "name": "maqām ʿirāq (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "44"
+      }
+    ],
+    "version": "2026-08-10T20:10:59.291Z"
+  },
+  {
+    "id": "127",
+    "idName": "maqam_segah_(al-sabbagh)",
+    "name": "maqām segāh (al-Ṣabbāgh)",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "41"
+      }
+    ],
+    "version": "2026-08-10T20:15:09.972Z"
+  },
+  {
+    "id": "128",
+    "idName": "maqam_suznak_(abbas)",
+    "name": "maqām sūznāk (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "30"
+      }
+    ],
+    "version": "2026-08-10T18:56:05.607Z"
+  },
+  {
+    "id": "129",
+    "idName": "maqam_huzam_(abbas)",
+    "name": "maqām huzām (ʿAbbās)",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "31/43"
+      }
+    ],
+    "version": "2026-08-10T19:25:26.322Z"
+  },
+  {
+    "id": "130",
+    "idName": "maqam_awshar",
+    "name": "maqām awshār",
+    "ascendingNoteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "kurdān",
+      "muḥayyar"
+    ],
+    "descendingNoteNames": [
+      "muḥayyar",
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "32/45"
+      }
+    ],
+    "version": "2026-08-10T19:29:09.873Z"
+  },
+  {
+    "id": "131",
+    "idName": "maqam_bestenegar_(abbas)",
+    "name": "maqām bestenegār (ʿAbbās)",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "ḥijāz",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "33/48"
+      }
+    ],
+    "version": "2026-08-10T19:50:36.993Z"
+  },
+  {
+    "id": "132",
+    "idName": "maqam_nahawand_(abbas)",
+    "name": "maqām nahāwand (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "nawā",
+      "ḥiṣār",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "35/55"
+      }
+    ],
+    "version": "2026-08-10T19:58:34.143Z"
+  },
+  {
+    "id": "133",
+    "idName": "maqam_shat_araban_(abbas)",
+    "name": "maqām shat ʿarabān (ʿAbbās)",
+    "ascendingNoteNames": [
+      "yegāh",
+      "qarār ḥiṣār",
+      "kawasht",
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "ḥijāz"
+    ],
+    "descendingNoteNames": [
+      "ḥijāz",
+      "kurdī",
+      "dūgāh",
+      "rāst",
+      "kawasht",
+      "qarār ḥiṣār",
+      "yegāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "62/68"
+      }
+    ],
+    "version": "2026-08-10T20:40:24.141Z"
+  },
+  {
+    "id": "134",
+    "idName": "maqam_mahur_(abbas)",
+    "name": "maqām māhūr (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "māhūr"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "62/75"
+      }
+    ],
+    "version": "2026-08-10T20:53:35.599Z"
+  },
+  {
+    "id": "135",
+    "idName": "maqam_tarznwin_(abbas)",
+    "name": "maqām ṭarznwīn (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "zīrgūleh",
+      "kurdī",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "ʿajam",
+      "ḥusaynī",
+      "tīk ḥijāz/ṣabā",
+      "chahārgāh",
+      "kurdī",
+      "zīrgūleh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "63/77"
+      }
+    ],
+    "version": "2026-08-10T20:56:22.915Z"
+  },
+  {
+    "id": "136",
+    "idName": "maqam_buselik_(abbas)",
+    "name": "maqām būselīk (ʿAbbās)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "63/80"
+      }
+    ],
+    "version": "2026-08-10T21:01:22.418Z"
+  },
+  {
+    "id": "137",
+    "idName": "maqam_shawq_afza_(abbas)",
+    "name": "maqām shawq afzā (ʿAbbās)",
+    "ascendingNoteNames": [
+      "ʿajam ʿushayrān",
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "tīk ḥijāz/ṣabā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst",
+      "ʿajam ʿushayrān"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "63/78"
+      }
+    ],
+    "version": "2026-08-10T21:04:49.090Z"
+  },
+  {
+    "id": "138",
+    "idName": "maqam_nishaburek_(abbas)",
+    "name": "maqām nīshaburek (ʿAbbās)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "nīm ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān"
+    ],
+    "descendingNoteNames": [
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "būselīk/ʿushshāq",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "64/71"
+      }
+    ],
+    "version": "2026-08-10T21:11:54.386Z"
+  },
+  {
+    "id": "139",
+    "idName": "maqam_farahnak_(abbas)",
+    "name": "maqām faraḥnāk (ʿAbbās)",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "būselīk/ʿushshāq",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "64/79"
+      }
+    ],
+    "version": "2026-08-10T22:05:47.467Z"
+  },
+  {
+    "id": "140",
+    "idName": "maqam_hisar_(abbas)",
+    "name": "maqām ḥiṣār (ʿAbbās)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "ḥiṣār",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "ḥiṣār",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "65/84"
+      }
+    ],
+    "version": "2026-08-10T22:10:37.620Z"
+  },
+  {
+    "id": "141",
+    "idName": "maqam_shahnaz_(abbas)",
+    "name": "maqām shahnāz (ʿAbbās)",
+    "ascendingNoteNames": [
+      "dūgāh",
+      "kurdī",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "ʿajam",
+      "shahnāz"
+    ],
+    "descendingNoteNames": [
+      "shahnāz",
+      "ʿajam",
+      "ḥusaynī",
+      "nawā",
+      "ḥijāz",
+      "kurdī",
+      "dūgāh"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "65/82"
+      }
+    ],
+    "version": "2026-08-10T22:12:55.220Z"
+  },
+  {
+    "id": "142",
+    "idName": "maqam_nuhuft_(abbas)",
+    "name": "maqām nuhuft (ʿAbbās)",
+    "ascendingNoteNames": [
+      "ʿushayrān",
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "segāh",
+      "dūgāh",
+      "rāst",
+      "ʿirāq",
+      "ʿushayrān"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "66/81"
+      }
+    ],
+    "version": "2026-08-11T16:10:29.934Z"
+  },
+  {
+    "id": "143",
+    "idName": "maqam_nahawand_murassa_(abbas)",
+    "name": "maqām nahāwand muraṣṣaʿ (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "ḥusaynī",
+      "ʿajam"
+    ],
+    "descendingNoteNames": [
+      "māhūr",
+      "ḥiṣār",
+      "nawā",
+      "chahārgāh",
+      "kurdī",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "66/74"
+      }
+    ],
+    "version": "2026-08-11T16:14:16.601Z"
+  },
+  {
+    "id": "144",
+    "idName": "maqam_suzdalara_(abbas)",
+    "name": "maqām sūzdalārā (ʿAbbās)",
+    "ascendingNoteNames": [
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "awj"
+    ],
+    "descendingNoteNames": [
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "chahārgāh",
+      "būselīk/ʿushshāq",
+      "dūgāh",
+      "rāst"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "66"
+      }
+    ],
+    "version": "2026-08-11T16:16:37.259Z"
   }
 ]
