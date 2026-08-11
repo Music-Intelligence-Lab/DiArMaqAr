@@ -15,6 +15,7 @@ import useTranspositionsContext from "@/contexts/transpositions-context";
 import { getBaseJinsName, getFirstJinsNameForMaqamData } from "@/functions/classifyMaqamFamily";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 import { compareNormalized } from "@/functions/normalizeForSort";
+import { matchesSearchQuery } from "@/functions/searchMatch";
 import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 
 export default function MaqamManager({ admin }: { admin: boolean }) {
@@ -39,6 +40,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
 
   // Carousel position survives switching tabs and reloading (see the hook).
   const { listRef, onScroll } = useRememberedCarouselScroll("maqamat", isRTL);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Local state for the editable fields. The name belongs here for the same
   // reason the comments do: writing each keystroke back to selectedMaqamData
@@ -257,6 +260,13 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   };
 
   const filteredMaqamat = useMemo(() => {
+    // A query runs across the whole collection, not within the active group:
+    // the groups are hidden while searching, so narrowing by one the user
+    // cannot see would hide matches with no visible reason.
+    if (searchQuery.trim()) {
+      return sortedMaqamat.filter((maqam) => matchesSearchQuery(searchQuery, maqam.getName(), getDisplayName(maqam.getName(), "maqam")));
+    }
+
     if (maqamatFilter === "all") return sortedMaqamat;
 
     if (filterMode === 'note') {
@@ -273,7 +283,7 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         return baseJinsName.toLowerCase() === maqamatFilter.toLowerCase();
       });
     }
-  }, [sortedMaqamat, maqamatFilter, filterMode, language, allMaqamTranspositionsMap]);
+  }, [sortedMaqamat, maqamatFilter, filterMode, language, allMaqamTranspositionsMap, searchQuery, getDisplayName]);
 
   // Filter-rail items: label + count per tab, in tab order (built above the
   // sorted list's declaration, evaluated here where it exists).
@@ -282,7 +292,14 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
   return (
     <div className="maqam-manager" key={language}>
       {/* Shared filter band, with the maqam group-by control as trailing content */}
-      <CarouselFilterRail items={filterItems} activeKey={maqamatFilter} onSelect={setMaqamatFilter}>
+      <CarouselFilterRail
+        items={filterItems}
+        activeKey={maqamatFilter}
+        onSelect={setMaqamatFilter}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder={t("maqam.searchPlaceholder")}
+      >
 
         {/* Group-by segmented control: shows the current grouping as state */}
         <div className="maqam-manager__groupby">
@@ -323,7 +340,10 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
         </button>
         <div className="maqam-manager__list" ref={listRef} onScroll={onScroll}>
           <div className="maqam-manager__item-grid">
-          {filteredMaqamat.map((maqamData, idx) => {
+          {filteredMaqamat.length === 0 ? (
+            <p>{t('maqam.noMaqamatAvailable')}</p>
+          ) : (
+          filteredMaqamat.map((maqamData, idx) => {
             const selectable = maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName));
             const numberOfTranspositions = allMaqamTranspositionsMap.get(maqamData.getId())?.filter((transposition: any) => transposition.ascendingPitchClasses[0]?.octave === 1).length || 0;
             return (
@@ -351,7 +371,8 @@ export default function MaqamManager({ admin }: { admin: boolean }) {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
           </div>
         </div>
         <button

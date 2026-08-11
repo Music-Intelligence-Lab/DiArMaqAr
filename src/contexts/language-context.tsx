@@ -156,6 +156,7 @@ const translations = {
     "jins.sources": "Sources",
     "jins.transpositionsTitle": "Taṣāwīr (transpositions)",
     "jins.all": "All Ajnās",
+    "jins.searchPlaceholder": "Search ajnās by name",
 
     // Value types
     "valueType.fraction": "Fraction",
@@ -234,6 +235,10 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "All Maqāmāt",
+    "maqam.noMaqamatAvailable": "No maqāmāt available.",
+    "maqam.searchPlaceholder": "Search maqāmāt by name",
+    "filter.search": "Search",
+    "filter.closeSearch": "Close search",
     "maqam.groupBy": "Group by",
     "maqam.byTonic": "Tonic",
     "maqam.byJins": "Jins",
@@ -241,6 +246,7 @@ const translations = {
 
     // Tuning System Manager
     "tuningSystem.all": "All Tuning Systems",
+    "tuningSystem.searchPlaceholder": "Search tuning systems by creator",
     "tuningSystem.8th10thCentury": "8th–10th c. CE",
     "tuningSystem.11th15thCentury": "11th–15th c. CE",
     "tuningSystem.16th19thCentury": "16th–19th c. CE",
@@ -522,6 +528,7 @@ const translations = {
     "jins.sources": "مصادر",
     "jins.transpositionsTitle": "تصوير",
     "jins.all": "جميع الأجناس",
+    "jins.searchPlaceholder": "ابحث عن جنس بالاسم",
 
     // Value types (Arabic translations)
     "valueType.fraction": "النسبة",
@@ -599,6 +606,10 @@ const translations = {
     "maqam.sources": "مصادر",
     "maqam.transpositionsTitle": "تصوير",
     "maqam.all": "جميع المقامات",
+    "maqam.noMaqamatAvailable": "لا توجد مقامات متاحة",
+    "maqam.searchPlaceholder": "ابحث عن مقام بالاسم",
+    "filter.search": "بحث",
+    "filter.closeSearch": "إغلاق البحث",
     "maqam.groupBy": "تجميع حسب",
     "maqam.byTonic": "القرار",
     "maqam.byJins": "الجنس",
@@ -606,6 +617,7 @@ const translations = {
 
     // Tuning System Manager (Arabic translations)
     "tuningSystem.all": "جميع التناغيم",
+    "tuningSystem.searchPlaceholder": "ابحث عن تنغيم باسم واضعه",
     "tuningSystem.8th10thCentury": "القرن 8-10 م.",
     "tuningSystem.11th15thCentury": "القرن 11-15 م.",
     "tuningSystem.16th19thCentury": "القرن 16-19 م.",
@@ -883,6 +895,7 @@ const translations = {
     "jins.sources": "Sources",
     "jins.transpositionsTitle": "Taṣāwīr (transpositions)",
     "jins.all": "Tous les ajnās",
+    "jins.searchPlaceholder": "Rechercher un jins par nom",
 
     // Value types
     "valueType.fraction": "Fraction",
@@ -960,6 +973,10 @@ const translations = {
     "maqam.sources": "Sources",
     "maqam.transpositionsTitle": "Taṣāwīr (transpositions)",
     "maqam.all": "Tous les maqāmāt",
+    "maqam.noMaqamatAvailable": "Aucun maqām disponible.",
+    "maqam.searchPlaceholder": "Rechercher un maqām par nom",
+    "filter.search": "Rechercher",
+    "filter.closeSearch": "Fermer la recherche",
     "maqam.groupBy": "Grouper par",
     "maqam.byTonic": "Tonique",
     "maqam.byJins": "Jins",
@@ -967,6 +984,7 @@ const translations = {
 
     // Tuning System Manager
     "tuningSystem.all": "Tous les systèmes d'accord",
+    "tuningSystem.searchPlaceholder": "Rechercher un système d'accord par auteur",
     "tuningSystem.8th10thCentury": "8e–10e s. EC",
     "tuningSystem.11th15thCentury": "11e–15e s. EC",
     "tuningSystem.16th19thCentury": "16e–19e s. EC",

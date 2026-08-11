@@ -14,6 +14,7 @@ import { SourcePageReference, sourceSortKey } from "@/models/bibliography/Source
 import useTranspositionsContext from "@/contexts/transpositions-context";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 import { compareNormalized } from "@/functions/normalizeForSort";
+import { matchesSearchQuery } from "@/functions/searchMatch";
 import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 
 export default function JinsManager({ admin }: { admin: boolean }) {
@@ -25,6 +26,8 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   // Carousel position survives switching tabs and reloading (see the hook).
   const { listRef, onScroll } = useRememberedCarouselScroll("ajnas", isRTL);
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Local state for the editable fields. The name belongs here for the same
   // reason the comments do: writing each keystroke back to selectedJinsData
@@ -120,9 +123,15 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   // Filter ajnas by tab
   const filteredAjnas = useMemo(() => {
+    // A query runs across the whole collection, not within the active group:
+    // the groups are hidden while searching, so narrowing by one the user
+    // cannot see would hide matches with no visible reason.
+    if (searchQuery.trim()) {
+      return sortedAjnas.filter((jins) => matchesSearchQuery(searchQuery, jins.getName(), getDisplayName(jins.getName(), "jins")));
+    }
     if (ajnasFilter === "all") return sortedAjnas;
     return sortedAjnas.filter((jins) => jins.getNoteNames()[0]?.toLowerCase() === ajnasFilter.toLowerCase());
-  }, [sortedAjnas, ajnasFilter, language]);
+  }, [sortedAjnas, ajnasFilter, language, searchQuery, getDisplayName]);
 
 
   // Filter-rail items: label + count per starting note, in tab order.
@@ -134,7 +143,14 @@ export default function JinsManager({ admin }: { admin: boolean }) {
 
   return (
     <div className="jins-manager" key={language}>
-      <CarouselFilterRail items={filterItems} activeKey={ajnasFilter} onSelect={setAjnasFilter} />
+      <CarouselFilterRail
+        items={filterItems}
+        activeKey={ajnasFilter}
+        onSelect={setAjnasFilter}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder={t("jins.searchPlaceholder")}
+      />
       <div className="jins-manager__carousel">
         <button
           className="carousel-button carousel-button-prev"

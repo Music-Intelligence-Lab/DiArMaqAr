@@ -59,4 +59,16 @@
   &__tab-count {
     @include manager-filter-count;
   }
+
+  &__search-toggle {
+    @include manager-filter-search-toggle;
+  }
+
+  &__search-toggle_active {
+    @include manager-filter-search-toggle-active;
+  }
+
+  &__search-input {
+    @include manager-filter-search-input;
+  }
 }

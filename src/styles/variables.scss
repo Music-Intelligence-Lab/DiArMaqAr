@@ -1308,6 +1308,98 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     inset-inline-end: -25px;
 }
 
+// Search toggle — the band's one action, sitting between the rail and any
+// trailing control. Same 25px box as the chevrons so the three read as one
+// row of controls; the icon carries the affordance, so there is no fill or
+// border at rest. Hover and open state are both gold: unlike the chevrons,
+// which only nudge the rail, this toggle changes what the band IS, so it
+// answers to the gold the band already uses to mark the active filter rather
+// than to the tertiary hover of the scroll controls.
+@mixin manager-filter-search-toggle {
+    flex: 0 0 auto;
+    width: 25px;
+    height: 47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border: none;
+    // A glyph standing alone, so it takes the solo step of the icon scale
+    // rather than a type step — MUI SVGs are sized through font-size but are
+    // not text. This lands it level with the ‹ › glyphs beside it.
+    font-size: $icon-size-solo;
+    line-height: 1;
+    color: $text;
+    cursor: pointer;
+
+    &:hover {
+        color: $gold;
+    }
+
+    &:focus-visible {
+        outline: none;
+        color: $gold;
+    }
+}
+
+// While open the button holds a close ✕ rather than the magnifier. It is a
+// dismissal, not the band's headline action, so it drops to the inline step of
+// the icon scale — the magnifier has to carry the affordance when nothing is
+// happening, the ✕ only has to be findable once the field is already there.
+@mixin manager-filter-search-toggle-active {
+    color: $gold;
+    font-size: $icon-size-inline;
+
+    &:hover {
+        color: $gold;
+    }
+}
+
+// The query field, which takes the rail's place while searching. It borrows
+// the rail's height and text inset so the band does not shift when the tabs
+// give way to it, and stays underlined-on-focus rather than boxed, matching
+// the tabs' gold-underline vocabulary instead of introducing an input chrome
+// this band has nowhere else.
+@mixin manager-filter-search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    // Sized by its own line box and centered on the band's axis, NOT stretched
+    // to the band's 47px height: a full-height input pushes its bottom border
+    // to the band's floor, leaving the gold rule floating far below the text
+    // it belongs to. At this height the rule lands about as far under the
+    // text as the tabs' underline (text-underline-offset: 9px), so search
+    // reads as the same band in a different mode.
+    align-self: center;
+    padding-inline: 10px;
+    padding-block: 0 4px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid transparent;
+    font-family: inherit;
+    font-size: $font-size-base;
+    font-weight: $font-weight-regular;
+    // Arabic needs a taller line box than Latin at the same size: the ascenders
+    // of ب ص ط plus any ḥarakāt sitting above them overflow a Latin-height box
+    // and get clipped by the input's own overflow.
+    line-height: 2;
+    color: $text;
+
+    &::placeholder {
+        color: rgba($text, 0.45);
+    }
+
+    &:focus {
+        outline: none;
+        border-bottom-color: $gold;
+    }
+
+    // The type="search" clear affordance is the toggle button's job here.
+    &::-webkit-search-cancel-button {
+        display: none;
+    }
+}
+
 // Group-by segmented control — shows the current grouping as state (both
 // modes visible, active segment filled) instead of an action-shaped pill
 // labelled with the mode you're not in.

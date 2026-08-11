@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import useLanguageContext from "@/contexts/language-context";
 
 export interface CarouselFilterItem {
@@ -21,14 +23,39 @@ export default function CarouselFilterRail({
   items,
   activeKey,
   onSelect,
+  searchQuery,
+  onSearchChange,
+  searchPlaceholder,
   children,
 }: {
   items: CarouselFilterItem[];
   activeKey: string;
   onSelect: (key: string) => void;
+  /** Current search text. Owned by the manager, which does the filtering. */
+  searchQuery?: string;
+  /** Providing this enables search; omitting it leaves the band as it was. */
+  onSearchChange?: (query: string) => void;
+  searchPlaceholder?: string;
   children?: React.ReactNode;
 }) {
-  const { isRTL } = useLanguageContext();
+  const { isRTL, t } = useLanguageContext();
+
+  // Search replaces the groups rather than sitting beside them: the two are
+  // alternative ways to narrow the same carousel, and a query runs across the
+  // whole collection, so leaving a group tab visible-and-active while search
+  // ignores it would misreport what is on screen.
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchEnabled = typeof onSearchChange === "function";
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+    onSearchChange?.("");
+  }, [onSearchChange]);
 
   // Scroll position drives the edge fades (data-fade uses physical sides —
   // RTL is mapped here, where scrollLeft is read). The chevron buttons
@@ -94,29 +121,55 @@ export default function CarouselFilterRail({
   return (
     <div className="carousel-filter">
       <div className="carousel-filter__rail-wrap">
-        {railOverflows && (
-          <button className="carousel-filter__chevron carousel-filter__chevron_start" onClick={() => scrollRail(-1)}>
-            ‹
-          </button>
-        )}
-        <nav className="carousel-filter__rail" ref={railRef} data-fade={railFade === "none" ? undefined : railFade} onScroll={updateRailState}>
-          {items.map((item) => (
-            <button
-              key={item.key}
-              className={"carousel-filter__tab" + (activeKey === item.key ? " carousel-filter__tab_active" : "")}
-              onClick={() => onSelect(item.key)}
-            >
-              {item.label}
-              <span className="carousel-filter__tab-count">{item.count}</span>
-            </button>
-          ))}
-        </nav>
-        {railOverflows && (
-          <button className="carousel-filter__chevron carousel-filter__chevron_end" onClick={() => scrollRail(1)}>
-            ›
-          </button>
+        {searchOpen ? (
+          <input
+            ref={searchInputRef}
+            type="search"
+            className="carousel-filter__search-input"
+            value={searchQuery ?? ""}
+            placeholder={searchPlaceholder}
+            onChange={(event) => onSearchChange?.(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") closeSearch();
+            }}
+          />
+        ) : (
+          <>
+            {railOverflows && (
+              <button className="carousel-filter__chevron carousel-filter__chevron_start" onClick={() => scrollRail(-1)}>
+                ‹
+              </button>
+            )}
+            <nav className="carousel-filter__rail" ref={railRef} data-fade={railFade === "none" ? undefined : railFade} onScroll={updateRailState}>
+              {items.map((item) => (
+                <button
+                  key={item.key}
+                  className={"carousel-filter__tab" + (activeKey === item.key ? " carousel-filter__tab_active" : "")}
+                  onClick={() => onSelect(item.key)}
+                >
+                  {item.label}
+                  <span className="carousel-filter__tab-count">{item.count}</span>
+                </button>
+              ))}
+            </nav>
+            {railOverflows && (
+              <button className="carousel-filter__chevron carousel-filter__chevron_end" onClick={() => scrollRail(1)}>
+                ›
+              </button>
+            )}
+          </>
         )}
       </div>
+      {searchEnabled && (
+        <button
+          className={"carousel-filter__search-toggle" + (searchOpen ? " carousel-filter__search-toggle_active" : "")}
+          onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+          aria-label={searchOpen ? t("filter.closeSearch") : t("filter.search")}
+          aria-expanded={searchOpen}
+        >
+          {searchOpen ? <CloseIcon fontSize="inherit" /> : <SearchIcon fontSize="inherit" />}
+        </button>
+      )}
       {children}
     </div>
   );

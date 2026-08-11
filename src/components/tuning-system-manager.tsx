@@ -24,6 +24,7 @@ import {
   stringifySource,
 } from "@/models/bibliography/Source";
 import { compareNormalized } from "@/functions/normalizeForSort";
+import { matchesSearchQuery } from "@/functions/searchMatch";
 import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
 import JinsData from "@/models/Jins";
@@ -117,6 +118,8 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Carousel position survives switching tabs and reloading (see the hook).
   const { listRef, onScroll } = useRememberedCarouselScroll("tuningSystems", language === "ar");
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const {
     clearHangingNotes,
@@ -307,13 +310,21 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
   // Filter tuning systems by period tab
   const filteredTuningSystems = useMemo(() => {
+    // Creator only, per the carousel's own reading order: the bold first line
+    // is the creator, and it is what a reader is looking for when they reach
+    // for search. A query runs across the whole collection, not within the
+    // active century band, which is hidden while searching.
+    if (searchQuery.trim()) {
+      return sortedTuningSystems.filter((ts) => matchesSearchQuery(searchQuery, ts.getCreatorEnglish(), ts.getCreatorArabic()));
+    }
+
     const tab = tabs.find((t) => t.label === tuningSystemsFilter);
     if (!tab || tab.label === "all") return sortedTuningSystems;
     return sortedTuningSystems.filter((ts) => {
       const y = getYearNum(ts);
       return y >= tab.min && y <= tab.max;
     });
-  }, [sortedTuningSystems, tuningSystemsFilter]);
+  }, [sortedTuningSystems, tuningSystemsFilter, searchQuery]);
 
   // MARK: Tuning System Function Handlers
 
@@ -1014,6 +1025,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
           })}
           activeKey={tuningSystemsFilter}
           onSelect={setTuningSystemsFilter}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchPlaceholder={t("tuningSystem.searchPlaceholder")}
         />
       )}
 
