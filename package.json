@@ -22,7 +22,7 @@
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
     "@vercel/analytics": "^1.5.0",
-    "next": "15.5.9",
+    "next": "15.5.23",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sonic-weave": "^0.11.0",
@@ -50,5 +50,9 @@
     "vitepress": "^1.6.4",
     "vitepress-openapi": "^0.1.10",
     "vitepress-plugin-llms": "^1.9.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.26",
+    "sharp": "^0.35.3"
   }
 }
