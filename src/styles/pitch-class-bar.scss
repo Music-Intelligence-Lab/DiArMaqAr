@@ -1,9 +1,35 @@
 @use "./variables" as *;
 
+// The bar's height, fixed rather than content-driven. It used to size itself
+// to the tallest label, which meant it changed height whenever the selection
+// changed which names had to wrap — and once the unselected cells collapse to
+// a rail, that made the bar jump between roughly 72px and 83px on every
+// selection. 83px is the tallest it ever settled at (three wrapped lines of
+// the longest note names), so fixing it there costs no room and holds the
+// rail's rotated names to one predictable length.
+$pitch-class-bar-height: 83px;
+
+// Cell widths and gutters, named because the collapsed rail's hover
+// expansion has to lay its text out at the OPEN measurements while the cell
+// is still narrow (see the label rule below).
+// 84px, not 80px. At 80px the longest names in the gamut — the four-word
+// ones like "jawāb jawāb jawāb nīm būselīk" — need four lines, and the bar
+// has room for three, so their last line was cut off. 84px (72px of text)
+// is the narrowest width at which every note name in NoteName.ts fits inside
+// three lines, measured rather than estimated. Fitting them all on TWO lines
+// would take 116px, which is a 45% wider cell for a bar that is not
+// line-limited.
+$pitch-class-cell-width: 84px;
+$pitch-class-cell-padding: 6px;
+$pitch-class-cell-collapsed-width: 40px;
+$pitch-class-cell-collapsed-padding: 4px;
+$pitch-class-cell-open-text-width: $pitch-class-cell-width - 2 * $pitch-class-cell-padding;
+
 .pitch-class-bar {
   flex: none;
   user-select: none;
   width: 100%;
+  height: $pitch-class-bar-height;
   overflow-x: scroll;
   overflow-y: hidden;
   display: flex;
@@ -41,12 +67,13 @@
     border-right: 1px solid $grey;
     border-bottom: 3px solid $grey;
     border-left: 0px;
-    width: 80px;
-    // No fixed height: the bar's default stretch alignment sizes every cell
-    // to the tallest label (the longest note names run three lines), so the
-    // bar is always exactly as short as its content allows.
+    width: $pitch-class-cell-width;
+    // Height comes from the bar's fixed height via stretch alignment (see
+    // $pitch-class-bar-height). A label longer than three lines is clipped
+    // rather than allowed to push the sticky bar over the page.
+    overflow: hidden;
     gap: 8px;
-    padding: 5px 6px;
+    padding: 5px $pitch-class-cell-padding;
 
     &_selected {
       background-color: rgb($primary, 0.8) !important;
@@ -161,10 +188,125 @@
     font-weight: $font-weight-regular;
     line-height: $line-height-snug;
     font-variant-numeric: tabular-nums;
+    // The spelling is the rail's anchor — it has to stay on one line at the
+    // collapsed width, where there is no room for it to wrap.
+    white-space: nowrap;
     // opacity, not rgba($text, …): MIDI white keys invert the cell to dark
     // text on a light ground, and a dimmed inherited color survives both
     // polarities where a baked-in light-text tint would vanish.
     opacity: 0.55;
+  }
+
+  // ---------------------------------------------------------------------
+  // Collapsed rail — only while something is selected (see pitch-class-bar.tsx).
+  //
+  // The selected cells keep their full width and the rest narrow to a rail,
+  // still clickable and still carrying their state colours, so the scale
+  // reads as the subject and the tuning system as its surround. Hovering a
+  // collapsed cell restores it in place: it grows from its leading edge, so
+  // the cell under the pointer does not move out from under it.
+  // ---------------------------------------------------------------------
+  &_has-selection &__cell:not(&__cell_selected) {
+    // Sized to the widest spelling in the archive rather than by eye: the
+    // quarter-tone systems reach five glyphs ("Ab--4", 30px at this size),
+    // and the rail is only scannable if the spelling is never clipped.
+    // 40px leaves 32px between the gutters.
+    width: $pitch-class-cell-collapsed-width;
+    // The rotated name is clipped by the cell, never by the page.
+    overflow: hidden;
+    // Narrower gutters than the open cell, to spend the width on the spelling.
+    padding-inline: $pitch-class-cell-collapsed-padding;
+    transition: width 150ms ease, padding-inline 150ms ease;
+
+    &:hover {
+      width: $pitch-class-cell-width;
+      padding-inline: $pitch-class-cell-padding;
+    }
+
+    // Bottom-to-top, matching the transposition tables' rotated value cells
+    // (useRotateOverflowingCells) — the app turns text one way only.
+    .pitch-class-bar__cell-label {
+      writing-mode: sideways-lr;
+      white-space: nowrap;
+      // In sideways-lr the inline axis is vertical, so the ellipsis is
+      // measured against the cell's height.
+      //
+      // flex-basis MUST be 0, not auto. On auto the label contributes its
+      // full rotated length as intrinsic height and the longest note name
+      // drags the whole bar taller (83px -> 174px). At 0 it contributes
+      // nothing and grows into the height the open cells already set via the
+      // bar's stretch alignment — so the rail costs no vertical space and
+      // long names ellipsise instead.
+      flex: 1 1 0;
+      min-height: 0;
+      width: auto;
+      align-self: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      // Held back a step so the spelling below reads first — in the rail the
+      // spelling is what identifies the pitch, and the name is the hint.
+      // opacity rather than a colour, for the same reason __cell-english
+      // gives: MIDI white keys invert the cell and a baked-in tint would
+      // vanish against the light ground.
+      opacity: 0.75;
+    }
+
+    // With the mapping gone the spelling is the cell's only horizontal
+    // content, so it sits on the cell's axis rather than against its edge —
+    // which is also what lines the rail up as one column of spellings.
+    .pitch-class-bar__cell-english {
+      text-align: center;
+    }
+
+    // The key mapping is a prompt for playing this note now; in the rail it
+    // would crowd out the spelling that makes the rail scannable.
+    .pitch-class-bar__cell-mapping {
+      display: none;
+    }
+
+    &:hover .pitch-class-bar__cell-label {
+      writing-mode: horizontal-tb;
+      white-space: normal;
+      // Back to sizing on content, as an open cell's label always has.
+      flex: 0 0 auto;
+      // The OPEN text width, not 100%. Most of these names are several words
+      // and wrap to two or three lines, and a percentage width is recomputed
+      // against the cell's animating width on every frame of the expansion —
+      // so the break points kept moving and the name visibly reshuffled until
+      // the cell settled. Fixed here, the wrap is solved once at the width the
+      // cell is heading for, and the growing cell simply uncovers it.
+      width: $pitch-class-cell-open-text-width;
+      align-self: flex-start;
+      text-overflow: clip;
+      // Opened, it is a cell like any other and reads at full strength.
+      opacity: 1;
+    }
+
+    &:hover .pitch-class-bar__cell-mapping {
+      display: inline-flex;
+    }
+
+    // Opened, the spelling sits where every other open cell puts it — against
+    // the leading edge, not centred as it is in the rail. `start`, not `left`,
+    // so it mirrors with the rest of the bar under RTL.
+    &:hover .pitch-class-bar__cell-english {
+      text-align: start;
+    }
+  }
+
+  // Applied for one frame while the selection changes (see pitch-class-bar.tsx),
+  // so the new widths land instantly and the centring scroll measures settled
+  // geometry. Two container classes outrank the rule above without !important.
+  &_no-transition#{&}_has-selection &__cell:not(&__cell_selected) {
+    transition: none;
+  }
+
+  // Honour the system setting: the rail still collapses, it just arrives
+  // there without the width animation.
+  @media (prefers-reduced-motion: reduce) {
+    &_has-selection &__cell:not(&__cell_selected) {
+      transition: none;
+    }
   }
 
   &__cell-mapping {

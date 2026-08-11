@@ -8,6 +8,12 @@ import useTranspositionsContext from "@/contexts/transpositions-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 
+/**
+ * Suppresses the cells' width animation for one frame. Paired with the styles
+ * in pitch-class-bar.scss, which override the transition off this class.
+ */
+const NO_TRANSITION_CLASS = "pitch-class-bar_no-transition";
+
 interface WheelCellProps {
   pitchClass: PitchClass;
   englishName?: string;
@@ -139,34 +145,50 @@ export default function PitchClassBar() {
   // Glide the bar to the selection on the browser's native smooth scroll —
   // fast and immediate (per ruling: the slow shared-clock version read as
   // sluggish; native also cancels automatically when the user drags).
+  //
+  // The selection is centred in the bar rather than pinned to the leading
+  // edge, so the scale is read with its surrounding pitches on both sides
+  // instead of hard against one end.
+  //
+  // Measured in viewport coordinates and applied as a scrollBy DELTA, which
+  // is what lets one code path serve both directions: scrollLeft runs
+  // negative in RTL and offsetLeft's origin differs between the two, but a
+  // delta in visual pixels means the same thing either way.
   useEffect(() => {
     if (!rowRef.current) return;
     const container = rowRef.current;
-    const selectedEls = container.querySelectorAll<HTMLElement>(".pitch-class-bar__cell_selected");
+    const selectedEls = Array.from(container.querySelectorAll<HTMLElement>(".pitch-class-bar__cell_selected"));
     if (selectedEls.length === 0) return;
 
-    const isRTL = language === "ar";
+    // Take the width animation off the table for this update. The cells only
+    // animate for hover, which is an interaction; a selection change is a
+    // state change, and animating it here actively broke the scroll — while
+    // the old widths were still easing out, the content was wider than it
+    // would end up, so the target computed from it fell outside the final
+    // scroll range and the bar slammed against its end instead of centring.
+    // Reading a rect below forces the suppressed layout, so the geometry
+    // measured is the settled geometry.
+    container.classList.add(NO_TRANSITION_CLASS);
 
-    if (isRTL) {
-      // In RTL, find rightmost selected element and position at right edge
-      let maxRight = -Infinity;
-      selectedEls.forEach((el) => {
-        const elRight = el.offsetLeft + el.offsetWidth;
-        if (elRight > maxRight) maxRight = elRight;
-      });
-
-      const containerWidth = container.offsetWidth;
-      container.scrollTo({ left: maxRight - containerWidth + 30, behavior: "smooth" });
-    } else {
-      // In LTR, find leftmost selected element and position at left edge
-      let minLeft = Infinity;
-      selectedEls.forEach((el) => {
-        const elLeft = el.offsetLeft;
-        if (elLeft < minLeft) minLeft = elLeft;
-      });
-
-      container.scrollTo({ left: minLeft - 30, behavior: "smooth" });
+    const containerRect = container.getBoundingClientRect();
+    let left = Infinity;
+    let right = -Infinity;
+    for (const el of selectedEls) {
+      const rect = el.getBoundingClientRect();
+      if (rect.left < left) left = rect.left;
+      if (rect.right > right) right = rect.right;
     }
+    const selectionCentre = (left + right) / 2;
+    const barCentre = containerRect.left + containerRect.width / 2;
+    container.scrollBy({ left: selectionCentre - barCentre, behavior: "smooth" });
+
+    // Hand the animation back once the new widths are painted, so the next
+    // hover eases as it should.
+    const frame = requestAnimationFrame(() => container.classList.remove(NO_TRANSITION_CLASS));
+    return () => {
+      cancelAnimationFrame(frame);
+      container.classList.remove(NO_TRANSITION_CLASS);
+    };
   }, [selectedPitchClasses, language]);
 
   const { jinsTranspositions: filteredJinsTranspositions, maqamTranspositions: filteredMaqamTranspositions } = useTranspositionsContext();
@@ -304,7 +326,13 @@ export default function PitchClassBar() {
   return (
     <div
       ref={rowRef}
-      className="pitch-class-bar"
+      // With a selection the bar stops being a list of every pitch in the
+      // tuning system and becomes the selected scale in context, so the
+      // unselected cells collapse to a rail and open on hover. With nothing
+      // selected there is no context to subordinate them to, and they all
+      // stay open. The whole behaviour is CSS off this one class — no cell
+      // needs to know, so the memoised cells never re-render for it.
+      className={"pitch-class-bar" + (selectedPitchClasses.length > 0 ? " pitch-class-bar_has-selection" : "")}
       dir={language === "ar" ? "rtl" : "ltr"}
       style={{ cursor: grabbing ? "grabbing" : "grab" }}
       onMouseDown={(e) => {
