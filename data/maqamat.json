@@ -1231,8 +1231,8 @@
   },
   {
     "id": "9",
-    "idName": "maqam_al-lami",
-    "name": "maqām al-lāmī",
+    "idName": "maqam_lami",
+    "name": "maqām lāmī",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -1270,7 +1270,7 @@
         "page": "34/54/105"
       }
     ],
-    "version": "2026-08-11T16:51:32.170Z"
+    "version": "2026-08-11T18:13:49.797Z"
   },
   {
     "id": "10",
@@ -6957,13 +6957,18 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:17:40.039Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "35"
+      }
+    ],
+    "version": "2026-08-11T18:47:19.080Z"
   },
   {
     "id": "62",
-    "idName": "maqam_bayyat_shuri/qarjaghar_(al-sabbagh)",
-    "name": "maqām bayyāt shūrī/qarjaghār (al-Ṣabbāgh)",
+    "idName": "maqam_qarjaghar/bayyat_shuri_(al-sabbagh)",
+    "name": "maqām qarjaghār/bayyāt shūrī (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -6989,8 +6994,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:19:44.485Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "36"
+      }
+    ],
+    "version": "2026-08-11T18:48:24.705Z"
   },
   {
     "id": "63",
@@ -12341,8 +12351,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:34:22.262Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-11T18:46:05.075Z"
   },
   {
     "id": "125",
@@ -12373,8 +12388,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:38:46.831Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "43"
+      }
+    ],
+    "version": "2026-08-11T18:49:44.849Z"
   },
   {
     "id": "126",

@@ -12,8 +12,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:25:52.058Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "29"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
   },
   {
     "id": "2",
@@ -155,8 +160,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:28:48.981Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "37"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
   },
   {
     "id": "9",
@@ -190,8 +200,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:35:00.795Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-11T18:50:52.009Z"
   },
   {
     "id": "11",
@@ -266,8 +281,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T17:00:01.734Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "28"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
   },
   {
     "id": "15",
