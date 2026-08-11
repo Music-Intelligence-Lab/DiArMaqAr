@@ -1,5 +1,21 @@
 [
   {
+    "id": "1",
+    "idName": "jins_nikriz_(al-sabbagh)",
+    "name": "jins nikrīz (al-Ṣabbāgh)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "tīk ḥijāz/ṣabā",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:25:52.058Z"
+  },
+  {
     "id": "2",
     "idName": "jins_bayyat",
     "name": "jins bayyāt",
@@ -128,6 +144,21 @@
     "version": "2026-07-26T13:39:15.732Z"
   },
   {
+    "id": "8",
+    "idName": "jins_saba_(al-sabbagh)",
+    "name": "jins ṣabā (al-Ṣabbāgh)",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:28:48.981Z"
+  },
+  {
     "id": "9",
     "idName": "jins_saba_zamzam",
     "name": "jins ṣabā zamzam",
@@ -146,6 +177,21 @@
       }
     ],
     "version": "2026-08-04T18:17:46.026Z"
+  },
+  {
+    "id": "10",
+    "idName": "jins_chahargah_(al-sabbagh)",
+    "name": "jins chahārgāh (al-Ṣabbāgh)",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T14:35:00.795Z"
   },
   {
     "id": "11",
@@ -207,6 +253,42 @@
       }
     ],
     "version": "2026-07-20T12:27:58.233Z"
+  },
+  {
+    "id": "14",
+    "idName": "jins_nahawand_(al-sabbagh)",
+    "name": "jins nahāwand (al-Ṣabbāgh)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "chahārgāh"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [],
+    "version": "2026-08-09T17:00:01.734Z"
+  },
+  {
+    "id": "15",
+    "idName": "jins_mkhalef",
+    "name": "jins mkhālef",
+    "noteNames": [
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "tīk ḥiṣār",
+      "ḥusaynī"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "33"
+      }
+    ],
+    "version": "2026-08-10T19:50:13.796Z"
   },
   {
     "id": "17",
