@@ -305,7 +305,9 @@ export interface Jins {
    * Distinct from `transposition`, which stays false for octave/register
    * siblings of the tahlil (e.g. jins bayyāt al-muḥayyar) because a register
    * shift is not taṣwīr. Exactly one entry per jinsId has isBaseForm = true:
-   * the one on the jins's canonical first note.
+   * the one on the jins's canonical first note. A jins the tuning system cannot
+   * build yields no transpositions at all, so the guarantee reads: at most one
+   * per jinsId, and exactly one whenever the list is non-empty.
    *
    * - transposition false + isBaseForm true  = tahlil (base form)
    * - transposition false + isBaseForm false = octave/register sibling

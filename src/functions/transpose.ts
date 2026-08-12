@@ -200,8 +200,8 @@ function mergeSequences(ascendingSequences: PitchClass[][], descendingSequences:
  * @param maqamData - Source maqām to find transpositions for
  * @param withTahlil - Include analytical (original) position in results
  * @param centsTolerance - Tolerance for fuzzy matching (default: ±5 cents JND)
- * @param onlyOctaveOne - Restrict search to first octave only
- * @returns Array of all possible maqām transpositions with embedded jins analysis
+ * @returns Array of all possible maqām transpositions with embedded jins analysis,
+ *   or an empty array if the tuning system cannot build the maqām at all
  */
 
 /**
@@ -240,8 +240,7 @@ export function calculateMaqamTranspositions(
   allAjnas: JinsData[],
   maqamData: MaqamData | null,
   withTahlil: boolean,
-  centsTolerance: number = 5,
-  onlyOctaveOne: boolean = false
+  centsTolerance: number = 5
 ): Maqam[] {
   if (allPitchClasses.length === 0 || !maqamData) return [];
 
@@ -250,18 +249,20 @@ export function calculateMaqamTranspositions(
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
 
+  // A maqām the tuning system cannot build has no transpositions. Without this
+  // the filters below would silently drop the missing notes and derive an
+  // interval pattern from the surviving ones — transpositions of a maqām that
+  // does not exist here. Mirrors the embedded-ajnās check further down.
+  if (!maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) return [];
+
   const ascendingMaqamCells = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
   const descendingMaqamCells = [...allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName))].reverse();
-
-  if (ascendingMaqamCells.length === 0 || descendingMaqamCells.length === 0) return [];
 
   const ascendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(ascendingMaqamCells);
 
   const descendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(descendingMaqamCells);
 
-  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, centsTolerance).filter(
-    (sequence) => !onlyOctaveOne || sequence[0].octave === 1
-  );
+  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, centsTolerance);
 
   const descendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, centsTolerance);
 
@@ -451,17 +452,15 @@ export function calculateMaqamTranspositions(
     };
   });
 
-  // Prefer an EXACT first-note match so the tahlil is the canonical register
-  // (e.g. rāst → rāst/C3), not an octave sibling (qarār rāst/C2, kirdān/C4).
-  // Fall back to modal-degree slot match only if no exact match exists.
+  // The tahlil is the transposition on the EXACT canonical first note (rāst →
+  // rāst/C3), never an octave sibling (qarār rāst/C2, kirdān/C4). The guard at
+  // the top of this function guarantees that note is in the tuning system, and
+  // a sequence starting there matches the maqām's own interval pattern at zero
+  // deviation, so the match always exists.
   const canonicalFirstNote = ascendingNoteNames[0];
-  const tahlilTransposition =
-    maqamTranspositions.find(
-      (transposition) => transposition.ascendingPitchClasses[0].noteName === canonicalFirstNote
-    ) ??
-    maqamTranspositions.find((transposition) =>
-      sameModalDegreeSlot(transposition.ascendingPitchClasses[0].noteName, canonicalFirstNote)
-    );
+  const tahlilTransposition = maqamTranspositions.find(
+    (transposition) => transposition.ascendingPitchClasses[0].noteName === canonicalFirstNote
+  );
   // Octave-register siblings of the tahlil (same modal degree slot, different
   // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
   // by design (register shift is not taṣwīr), but give them a distinguishing
@@ -481,9 +480,16 @@ export function calculateMaqamTranspositions(
       return transposition;
     });
 
-  if (withTahlil && tahlilTransposition) {
-    return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false, isBaseForm: true }, ...maqamTranspositionsWithoutTahlil];
-  } else return maqamTranspositionsWithoutTahlil;
+  if (!withTahlil) return maqamTranspositionsWithoutTahlil;
+
+  if (!tahlilTransposition) {
+    throw new Error(
+      `Could not resolve the tahlil of maqām ${maqamData.getName()}: no transposition starts on its canonical first note '${canonicalFirstNote}', ` +
+        `even though the tuning system contains every note of the maqām. This means the transposition search failed to return the maqām's own position.`
+    );
+  }
+
+  return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false, isBaseForm: true }, ...maqamTranspositionsWithoutTahlil];
 }
 
 /**
@@ -511,24 +517,28 @@ export function calculateMaqamTranspositions(
  * @param jinsData - Source jins data to find transpositions for
  * @param withTahlil - Include original analytical position in results
  * @param centsTolerance - Tolerance for interval matching (default: ±5 cents JND)
- * @param onlyOctaveOne - Restrict search to first octave only
- * @returns Array of all possible jins transpositions following traditional naming
+ * @returns Array of all possible jins transpositions following traditional naming,
+ *   or an empty array if the tuning system cannot build the jins at all
  */
-export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5, onlyOctaveOne: boolean = false): Jins[] {
+export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5): Jins[] {
   if (allPitchClasses.length === 0 || !jinsData) return [];
 
   const jinsNoteNames = jinsData.getNoteNames();
 
   if (jinsNoteNames.length < 2) return [];
 
-  const jinsCells = allPitchClasses.filter((pitchClass) => jinsNoteNames.includes(pitchClass.noteName));
+  // A jins the tuning system cannot build has no transpositions. Without this
+  // the filter below would silently drop the missing notes and derive an
+  // interval pattern from the surviving ones — transpositions of a jins that
+  // does not exist here. Mirrors the embedded-ajnās check in
+  // calculateMaqamTranspositions.
+  if (!jinsData.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) return [];
 
-  if (jinsCells.length === 0) return [];
+  const jinsCells = allPitchClasses.filter((pitchClass) => jinsNoteNames.includes(pitchClass.noteName));
 
   const intervalPattern: PitchClassInterval[] = getPitchClassIntervals(jinsCells);
 
   const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, centsTolerance)
-    .filter((sequence) => !onlyOctaveOne || sequence[0].octave === 1)
     .map((sequence) => {
       const tonic = sequence[0].noteName;
       const isTransposed = !sameModalDegreeSlot(jinsNoteNames[0], tonic);
@@ -543,17 +553,15 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
       };
     });
 
-  // The tahlil must be the transposition on the exact canonical first note
-  // (e.g. rāst → rāst/C3), not an octave sibling (qarār rāst/C2, kirdān/C4).
-  // Fall back to modal-degree slot match only if no exact match exists.
+  // The tahlil is the transposition on the EXACT canonical first note (rāst →
+  // rāst/C3), never an octave sibling (qarār rāst/C2, kirdān/C4). The guard at
+  // the top of this function guarantees that note is in the tuning system, and
+  // a sequence starting there matches the jins's own interval pattern at zero
+  // deviation, so the match always exists.
   const canonicalFirstNote = jinsNoteNames[0];
-  const tahlilTransposition =
-    jinsTranspositions.find(
-      (transposition) => transposition.jinsPitchClasses[0].noteName === canonicalFirstNote
-    ) ??
-    jinsTranspositions.find((transposition) =>
-      sameModalDegreeSlot(transposition.jinsPitchClasses[0].noteName, canonicalFirstNote)
-    );
+  const tahlilTransposition = jinsTranspositions.find(
+    (transposition) => transposition.jinsPitchClasses[0].noteName === canonicalFirstNote
+  );
   // Octave-register siblings of the tahlil (same modal degree slot, different
   // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
   // by design (register shift is not taṣwīr), but give them a distinguishing
@@ -574,8 +582,16 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
       return transposition;
     });
 
-  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false, isBaseForm: true }, ...jinsTranspositionsWithoutTahlil];
-  else return jinsTranspositionsWithoutTahlil;
+  if (!withTahlil) return jinsTranspositionsWithoutTahlil;
+
+  if (!tahlilTransposition) {
+    throw new Error(
+      `Could not resolve the tahlil of jins ${jinsData.getName()}: no transposition starts on its canonical first note '${canonicalFirstNote}', ` +
+        `even though the tuning system contains every note of the jins. This means the transposition search failed to return the jins's own position.`
+    );
+  }
+
+  return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false, isBaseForm: true }, ...jinsTranspositionsWithoutTahlil];
 }
 
 /**

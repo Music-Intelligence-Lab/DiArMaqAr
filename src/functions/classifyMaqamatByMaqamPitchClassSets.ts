@@ -70,7 +70,7 @@ export function getMaqamTranspositions(
   ajnas: any[]
 ): Maqam[] {
   const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
-  return calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, 5, false);
+  return calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, 5);
 }
 
 /**
