@@ -557,15 +557,16 @@ export interface Maqam {
   transposition: boolean;
 
   /**
-   * Whether this is the base form (tahlil) that every other entry sharing this
-   * maqamId is derived from.
+   * Whether this is the base form (tahlil): the canonical form of this maqām,
+   * from which its transpositions are derived. Every transposition of one
+   * maqām repeats that maqām's maqamId, and exactly one entry is the base form.
    *
    * Distinct from `transposition`, which stays false for octave/register
    * siblings of the tahlil (e.g. maqām rāst al-kurdān) because a register
-   * shift is not taṣwīr. Exactly one entry per maqamId has isBaseForm = true:
-   * the one on the maqām's canonical first note. A maqām the tuning system
-   * cannot build yields no transpositions at all, so the guarantee reads: at
-   * most one per maqamId, and exactly one whenever the list is non-empty.
+   * shift is not taṣwīr. The base form is the one on the maqām's canonical
+   * first note. A maqām the tuning system cannot build yields nothing at all,
+   * so the guarantee reads: exactly one base form whenever the list is
+   * non-empty.
    *
    * - transposition false + isBaseForm true  = tahlil (base form)
    * - transposition false + isBaseForm false = octave/register sibling
