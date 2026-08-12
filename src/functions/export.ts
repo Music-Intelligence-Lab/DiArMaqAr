@@ -71,6 +71,7 @@ export interface MergedJins {
   jinsPitchClasses: string[];
   jinsPitchClassIntervals: PitchClassInterval[];
   transposition: boolean;
+  isBaseForm: boolean;
   commentsEnglish: string;
   commentsArabic: string;
   SourcePageReferences: any[];
@@ -90,6 +91,7 @@ export interface MergedMaqam {
   maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
   suyur?: Sayr[];
   transposition: boolean;
+  isBaseForm: boolean;
   commentsEnglish: string;
   commentsArabic: string;
   SourcePageReferences: any[];
@@ -1042,6 +1044,7 @@ export async function exportTuningSystem(
           jinsPitchClasses: possibleJins.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: possibleJins.jinsPitchClassIntervals,
           transposition: possibleJins.transposition,
+          isBaseForm: possibleJins.isBaseForm,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
           commentsArabic: jinsOverview.getCommentsArabic(),
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
@@ -1274,6 +1277,7 @@ export async function exportTuningSystem(
             version: sayr.version || maqamOverview.getVersion()
           })),
           transposition: possibleMaqam.transposition,
+          isBaseForm: possibleMaqam.isBaseForm,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
@@ -1508,6 +1512,7 @@ export async function exportJins(
       jinsPitchClasses: jinsToExport.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
       jinsPitchClassIntervals: jinsToExport.jinsPitchClassIntervals,
       transposition: jinsToExport.transposition,
+      isBaseForm: jinsToExport.isBaseForm,
       commentsEnglish: jinsData.getCommentsEnglish(),
       commentsArabic: jinsData.getCommentsArabic(),
       SourcePageReferences: jinsData.getSourcePageReferences(),
@@ -1545,6 +1550,7 @@ export async function exportJins(
           jinsPitchClasses: jinsTransposition.jinsPitchClasses.map((pc) => standardizeText(pc.noteName)),
           jinsPitchClassIntervals: jinsTransposition.jinsPitchClassIntervals,
           transposition: jinsTransposition.transposition,
+          isBaseForm: jinsTransposition.isBaseForm,
           commentsEnglish: jinsOverview.getCommentsEnglish(),
           commentsArabic: jinsOverview.getCommentsArabic(),
           SourcePageReferences: jinsOverview.getSourcePageReferences(),
@@ -1837,6 +1843,7 @@ export async function exportMaqam(
         version: sayr.version || maqamData.getVersion()
       })),
       transposition: maqamToExport.transposition,
+      isBaseForm: maqamToExport.isBaseForm,
       commentsEnglish: maqamData.getCommentsEnglish(),
       commentsArabic: maqamData.getCommentsArabic(),
       SourcePageReferences: maqamData.getSourcePageReferences(),
@@ -2047,6 +2054,7 @@ export async function exportMaqam(
               )
             : undefined,
           transposition: maqamTransposition.transposition,
+          isBaseForm: maqamTransposition.isBaseForm,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),

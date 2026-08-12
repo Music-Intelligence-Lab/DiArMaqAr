@@ -237,6 +237,7 @@ export default class JinsData {
         jinsId: this.id,
         name: this.name,
         transposition: false,
+        isBaseForm: true,
         jinsPitchClasses: pitchClasses,
         jinsPitchClassIntervals: pitchClassIntervals,
       };
@@ -291,12 +292,27 @@ export interface Jins {
    */
   name: string;
   
-  /** 
+  /**
    * Whether this is a transposition (taswir) or original form (tahlil).
    * false = tahlil (original), true = taswir (transposition)
    */
   transposition: boolean;
-  
+
+  /**
+   * Whether this is the base form (tahlil) that every other entry sharing this
+   * jinsId is derived from.
+   *
+   * Distinct from `transposition`, which stays false for octave/register
+   * siblings of the tahlil (e.g. jins bayyāt al-muḥayyar) because a register
+   * shift is not taṣwīr. Exactly one entry per jinsId has isBaseForm = true:
+   * the one on the jins's canonical first note.
+   *
+   * - transposition false + isBaseForm true  = tahlil (base form)
+   * - transposition false + isBaseForm false = octave/register sibling
+   * - transposition true  + isBaseForm false = taswir (transposition)
+   */
+  isBaseForm: boolean;
+
   /** 
    * Array of actual pitch classes with frequencies and note names.
    * These are the concrete, playable pitches within the tuning system.
@@ -397,6 +413,9 @@ export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, oc
     jinsId: jins.jinsId,
     name: newName,
     transposition: jins.transposition,
+    // Shifting registers moves off the canonical first note, so the result is
+    // never the base form — even when the source jins was.
+    isBaseForm: false,
     jinsPitchClasses: shiftedPitchClasses,
     jinsPitchClassIntervals: shiftedPitchClassIntervals,
   };}

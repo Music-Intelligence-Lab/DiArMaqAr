@@ -320,6 +320,10 @@ export function calculateMaqamTranspositions(
               jinsId: jins.getId(),
               name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
               transposition: isTransposed,
+              // Same exact canonical-note test calculateJinsTranspositions uses
+              // to pick the tahlil, so an embedded jins agrees with its
+              // standalone entry.
+              isBaseForm: firstJinsNote === firstCell.noteName,
               jinsPitchClasses: extendedAscendingPitchClasses.slice(i, i + lengthOfInterval + 1),
               jinsPitchClassIntervals: extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval),
             };
@@ -351,6 +355,10 @@ export function calculateMaqamTranspositions(
               jinsId: jins.getId(),
               name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
               transposition: isTransposed,
+              // Same exact canonical-note test calculateJinsTranspositions uses
+              // to pick the tahlil, so an embedded jins agrees with its
+              // standalone entry.
+              isBaseForm: firstJinsNote === firstCell.noteName,
               jinsPitchClasses: extendedDescendingPitchClasses.slice(i, i + lengthOfInterval + 1),
               jinsPitchClassIntervals: extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
             };
@@ -425,6 +433,8 @@ export function calculateMaqamTranspositions(
       maqamId: maqamData.getId(),
       name: isTransposed ? `${maqamData.getName()} al-${firstTransposedNote}` : maqamData.getName(),
       transposition: isTransposed,
+      // Provisional: the tahlil is picked out below and re-stamped true.
+      isBaseForm: false,
       ascendingPitchClasses,
       ascendingPitchClassIntervals,
       ascendingMaqamAjnas,
@@ -472,7 +482,7 @@ export function calculateMaqamTranspositions(
     });
 
   if (withTahlil && tahlilTransposition) {
-    return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false }, ...maqamTranspositionsWithoutTahlil];
+    return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false, isBaseForm: true }, ...maqamTranspositionsWithoutTahlil];
   } else return maqamTranspositionsWithoutTahlil;
 }
 
@@ -526,6 +536,8 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
         jinsId: jinsData.getId(),
         name: isTransposed ? `${jinsData.getName()} al-${tonic}` : jinsData.getName(),
         transposition: isTransposed,
+        // Provisional: the tahlil is picked out below and re-stamped true.
+        isBaseForm: false,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),
       };
@@ -562,7 +574,7 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
       return transposition;
     });
 
-  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false }, ...jinsTranspositionsWithoutTahlil];
+  if (withTahlil && tahlilTransposition) return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false, isBaseForm: true }, ...jinsTranspositionsWithoutTahlil];
   else return jinsTranspositionsWithoutTahlil;
 }
 

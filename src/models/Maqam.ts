@@ -372,6 +372,7 @@ export default class MaqamData {
       maqamId: this.id,
       name: this.name,
       transposition: false,
+      isBaseForm: true,
       ascendingPitchClasses: ascendingPitchClasses,
       ascendingPitchClassIntervals: ascendingPitchClassIntervals,
       descendingPitchClasses: descendingPitchClasses,
@@ -549,12 +550,27 @@ export interface Maqam {
    */
   name: string;
   
-  /** 
+  /**
    * Whether this is a transposition (taswir) or original form (tahlil).
    * false = tahlil (original), true = taswir (transposition)
    */
   transposition: boolean;
-  
+
+  /**
+   * Whether this is the base form (tahlil) that every other entry sharing this
+   * maqamId is derived from.
+   *
+   * Distinct from `transposition`, which stays false for octave/register
+   * siblings of the tahlil (e.g. maqām rāst al-kurdān) because a register
+   * shift is not taṣwīr. Exactly one entry per maqamId has isBaseForm = true:
+   * the one on the maqām's canonical first note.
+   *
+   * - transposition false + isBaseForm true  = tahlil (base form)
+   * - transposition false + isBaseForm false = octave/register sibling
+   * - transposition true  + isBaseForm false = taswir (transposition)
+   */
+  isBaseForm: boolean;
+
   /** 
    * Array of actual pitch classes for the ascending sequence (ṣuʿūd).
    * These are the concrete, playable pitches within the tuning system.
@@ -724,6 +740,9 @@ export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam,
     maqamId: maqam.maqamId,
     name: newName,
     transposition: maqam.transposition,
+    // Shifting registers moves off the canonical first note, so the result is
+    // never the base form — even when the source maqam was.
+    isBaseForm: false,
     ascendingPitchClasses: shiftedAscendingPitchClasses,
     ascendingPitchClassIntervals: shiftedAscendingIntervals,
     descendingPitchClasses: shiftedDescendingPitchClasses,

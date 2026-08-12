@@ -56,7 +56,7 @@ Each export file contains:
 
 ```
 Look at: summaryStats.maqamatAvailableInTuning
-Then: Iterate through allMaqamatData keys where transposition: false for base forms
+Then: Iterate through allMaqamatData keys where isBaseForm: true for base forms
 ```
 
 ### See which ajnās make up a maqām
@@ -156,6 +156,7 @@ tuning-system-export.json
 │   │   ├── jinsPitchClasses []
 │   │   ├── jinsPitchClassIntervals []
 │   │   ├── transposition
+│   │   ├── isBaseForm
 │   │   ├── commentsEnglish
 │   │   ├── commentsArabic
 │   │   ├── SourcePageReferences []
@@ -182,6 +183,7 @@ tuning-system-export.json
     │   │   ├── stops []
     │   │   └── version
     │   ├── transposition
+    │   ├── isBaseForm
     │   ├── commentsEnglish
     │   ├── commentsArabic
     │   ├── SourcePageReferences []
@@ -492,6 +494,7 @@ The `allAjnasData` section contains all melodic genera available in the tuning s
         }
       ],
       "transposition": false,
+      "isBaseForm": true,
       "commentsEnglish": "",
       "commentsArabic": "",
       "SourcePageReferences": [
@@ -513,7 +516,8 @@ The `allAjnasData` section contains all melodic genera available in the tuning s
 | **`name`** | Display name with diacritics and spaces. Used for UI and documentation | Example: "jins bayyāt" |
 | **`jinsPitchClasses[]`** | Array of pitch class keys in ascending order. Use these keys to look up `pitchClassReference` for fractions, cents, and string lengths | `["dugah", "segah", "chahargah", "nawa"]` |
 | **`jinsPitchClassIntervals[]`** | Array of interval objects between consecutive pitches (see Interval Properties table below) | Computed from pitch frequency ratios |
-| `transposition` | Boolean: `false` for base form (canonical), `true` for transposed instances | Distinguishes original vs derived structures |
+| `transposition` | Boolean: `true` for taṣwīr (transposed to a different modal degree), `false` for the base form **and** for its octave/register siblings, since a register shift is not taṣwīr | Distinguishes original vs transposed structures |
+| `isBaseForm` | Boolean: `true` only for the taḥlīl — the single canonical entry every other entry sharing this `jinsId` is derived from. Exactly one per `jinsId`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave siblings |
 | `commentsEnglish` | Additional context, performance notes, or musicological context in English | May reference historical sources or performance practice |
 | `commentsArabic` | Same as above in Arabic | For preservation of original terminology |
 | `SourcePageReferences[]` | Array of academic citations (sourceId + page number) supporting this jins | Links to bibliographic sources |
@@ -593,6 +597,7 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
         // ... additional suyur
       ],
       "transposition": false,
+      "isBaseForm": true,
       "commentsEnglish": "",
       "commentsArabic": "",
       "SourcePageReferences": [],
@@ -649,7 +654,8 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
 | **`ascendingMaqamAjnas{}`** | Object mapping each ascending pitch degree to its associated jins reference. Value is `null` if no jins assigned | Example: `"rast": "jins_rast"` |
 | **`descendingMaqamAjnas{}`** | Object mapping each descending pitch degree to its associated jins reference | Same structure as ascending |
 | `suyur[]` | Array of sayr (plural: suyur) objects. Each contains documentation from a specific source about how a maqām is performed, including stops and structural notes | Links to documented performance practice |
-| `transposition` | Boolean: `false` for base form (canonical), `true` for transposed starting note | Distinguishes original vs derived forms |
+| `transposition` | Boolean: `true` for taṣwīr (transposed to a different modal degree), `false` for the base form **and** for its octave/register siblings, since a register shift is not taṣwīr | Distinguishes original vs transposed forms |
+| `isBaseForm` | Boolean: `true` only for the taḥlīl — the single canonical entry every other entry sharing this `maqamId` is derived from. Exactly one per `maqamId`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave siblings |
 | `commentsEnglish` | Structural description and performance details from the source, including melodic context and usage information in English | From original bibliographic source |
 | `commentsArabic` | Same as above in Arabic | Preserves original terminology |
 | `SourcePageReferences[]` | Array of academic citations (sourceId + page) supporting this maqām | Links to bibliographic sources |
@@ -760,12 +766,22 @@ Ordered lists of elements:
 
 ### Working with Transpositions
 
-* All structures marked with "transposition": true are transposed forms derived from a base (untransposed) structure. These represent the same modal pattern starting on different notes.
+* All structures marked with "transposition": true are taṣwīr — transposed forms derived from a base structure. These represent the same modal pattern starting on a different modal degree.
 
-* Base forms have "transposition": false and serve as the canonical version of each jins or maqām.
+* Base forms have "isBaseForm": true and serve as the canonical version of each jins or maqām. Exactly one entry per `jinsId` / `maqamId` carries it.
+
+* **"transposition": false does not by itself mean base form.** A register shift is not taṣwīr, so the octave siblings of the base form (e.g. `jins_bayyat_al-muhayyar` beside `jins_bayyat`) also carry "transposition": false. Filtering on that alone returns the base form *and* its octave siblings. Filter on "isBaseForm": true instead.
+
+* The two flags together give the full taxonomy:
+
+| `transposition` | `isBaseForm` | Meaning |
+|---|---|---|
+| `false` | `true` | taḥlīl — the base form |
+| `false` | `false` | octave/register sibling of the base form |
+| `true` | `false` | taṣwīr — a transposition to another modal degree |
 
 * Modulation arrays within maqāmāt and ajnās may include both base forms and transpositions, reflecting all possible modulation relationships in the system.
 
-* To analyze all possible realizations of a jins or maqām, enumerate both the base form and all its transpositions as listed in the export.
+* To analyze all possible realizations of a jins or maqām, enumerate every entry sharing its `jinsId` / `maqamId`.
 
-* When comparing structures across tuning systems, always check the transposition property to distinguish between original and derived forms.
+* When comparing structures across tuning systems, check `isBaseForm` to identify the canonical form and `transposition` to tell taṣwīr from register shifts.
