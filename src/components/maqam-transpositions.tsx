@@ -57,7 +57,7 @@ const MaqamTranspositions: React.FC = () => {
   const PREFETCH_OFFSET = 5; // how many before end to prefetch more
   const DISPATCH_EVENT_DELAY_MS = 10; // delay before emitting custom event
 
-  const { selectedMaqamData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, selectedMaqam, sources } = useAppContext();
+  const { selectedMaqamData, selectedTuningSystem, setSelectedPitchClasses, selectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, ajnas, setSelectedMaqam, selectedMaqam, sources } = useAppContext();
 
   const { noteOn, noteOff, playSequence, clearHangingNotes, activePitchClasses } = useSoundContext();
 
@@ -165,11 +165,11 @@ const MaqamTranspositions: React.FC = () => {
   // Title buttons: text is selectable, so only clicks on the text spans toggle
   // (the button's empty area shows a default cursor), and a click that finishes
   // a text selection must not toggle the row
-  const handleTitleClick = (maqamName: string, e: React.MouseEvent) => {
+  const handleTitleClick = (e: React.MouseEvent, action: () => void) => {
     if (e.target === e.currentTarget) return;
     const selection = typeof window !== "undefined" ? window.getSelection() : null;
     if (selection && !selection.isCollapsed) return;
-    toggleShowDetails(maqamName, e);
+    action();
   };
 
   useEffect(() => {
@@ -869,6 +869,17 @@ const MaqamTranspositions: React.FC = () => {
       const spacerAfter = (i: number, className: string, asHeader = false) =>
         i === pitchClasses.length - 1 ? trailingSpacer(className, asHeader) : spacerCell(className, asHeader);
 
+      // Loading this row onto the keyboard. Shared by the title and the
+      // select-and-load button so clicking the name does the same thing as
+      // the button, rather than the two reading as different affordances.
+      const selectAndLoad = () => {
+        // Prevent auto-open/scroll effect from triggering
+        skipAutoOpenRef.current = true;
+        setSelectedPitchClasses([]);
+        setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
+        setSelectedMaqam(transposition ? maqam : null);
+      };
+
       const rowSpan = open ? openRowSpan : 1;
 
       return (
@@ -902,11 +913,11 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-jins-transpositions-shared__transposition-title"
                     role="button"
                     tabIndex={0}
-                    onClick={(e) => handleTitleClick(maqam.name, e)}
+                    onClick={(e) => handleTitleClick(e, selectAndLoad)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        toggleShowDetails(maqam.name);
+                        selectAndLoad();
                       }
                     }}
                   >
@@ -924,11 +935,11 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-jins-transpositions-shared__transposition-title"
                     role="button"
                     tabIndex={0}
-                    onClick={(e) => handleTitleClick(maqam.name, e)}
+                    onClick={(e) => handleTitleClick(e, selectAndLoad)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        toggleShowDetails(maqam.name);
+                        selectAndLoad();
                       }
                     }}
                   >
@@ -947,11 +958,7 @@ const MaqamTranspositions: React.FC = () => {
                     className="maqam-jins-transpositions-shared__button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Prevent auto-open/scroll effect from triggering
-                      skipAutoOpenRef.current = true;
-                      setSelectedPitchClasses([]);
-                      setSelectedPitchClasses(noOctaveMaqam ? pitchClasses.slice(0, -1) : pitchClasses);
-                      setSelectedMaqam(transposition ? maqam : null);
+                      selectAndLoad();
                     }}
                   >
                     {t("maqam.selectLoadToKeyboard")}
@@ -1533,11 +1540,31 @@ const MaqamTranspositions: React.FC = () => {
             {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {
               const { maqam, isAnalysis, firstNoteName } = tableInfo;
               const isLastNeededForPrefetch = displayIndex === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < sortedTables.length;
+              // Held back so the one transposition being read carries the page.
+              // Details are single-open, so normally the open row IS the loaded
+              // one; opening a different row to compare it against the loaded
+              // one is the case this covers, keeping the loaded row at full
+              // strength even while it is closed.
+              //
+              // Identified by the pitch classes actually loaded, not by
+              // selectedMaqam and not by isAnalysis. Both are proxies that fail
+              // on the octave registers of the tonic: they carry
+              // transposition=false, so loading one sets selectedMaqam to null
+              // (see the select-and-load handler) AND satisfies isAnalysis —
+              // which lit the taḥlīl instead of the register the reader chose.
+              // The tonic and its octave differ in octave alone, so both parts
+              // of the key are needed.
+              const loadedTonic = selectedPitchClasses[0];
+              const rowTonic = maqam.ascendingPitchClasses[0];
+              const isLoaded = Boolean(
+                loadedTonic && rowTonic && loadedTonic.noteName === rowTonic.noteName && loadedTonic.octave === rowTonic.octave
+              );
+              const isDimmed = !openTranspositions.includes(maqam.name) && !isLoaded;
               
               return (
                 <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${maqam.name}-${firstNoteName}`}>
                   <table
-                    className={`maqam-jins-transpositions-shared__table ${isAnalysis ? 'maqam-jins-transpositions-shared__table--analysis' : 'maqam-jins-transpositions-shared__table--transposition'}`}
+                    className={`maqam-jins-transpositions-shared__table ${isAnalysis ? 'maqam-jins-transpositions-shared__table--analysis' : 'maqam-jins-transpositions-shared__table--transposition'}${isDimmed ? ' maqam-jins-transpositions-shared__table--dimmed' : ''}`}
                     data-table-type={isAnalysis ? "analysis" : "transposition"}
                     data-maqam-name={maqam.name}
                     data-first-note={firstNoteName}
@@ -1615,6 +1642,7 @@ const MaqamTranspositions: React.FC = () => {
   }, [
     maqamConfig,
     openTranspositions,
+    selectedPitchClasses,
     isToggling,
     maqamTranspositions,
     sortedTables,

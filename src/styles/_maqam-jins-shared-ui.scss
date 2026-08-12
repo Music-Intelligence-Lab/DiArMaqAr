@@ -207,6 +207,34 @@
     cursor: pointer;
   }
 
+  // A transposition that is neither open nor the loaded one is held back, so
+  // the page reads as one transposition with the rest of the set listed around
+  // it rather than as an undifferentiated stack. Pointing at a row brings it
+  // up to full strength, so scanning the list costs nothing.
+  //
+  // opacity on the table, not a colour on its text: the row carries state
+  // colours of its own (tonic, ghammāz, active notes) that a flat text tint
+  // would either miss or fight with.
+  [class*="__table--dimmed"] {
+    opacity: 0.6;
+    transition: opacity 200ms ease;
+
+    // Only the things you can act on bring the row up — its title (a
+    // span[role=button], so the text stays selectable) and its buttons. A row
+    // spans the full width, so hovering the table itself would light it up
+    // from dead space the pointer merely crosses on its way elsewhere, and the
+    // list would flicker as the pointer travelled down the page.
+    &:has(button:hover, [role="button"]:hover) {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [class*="__table--dimmed"] {
+      transition: none;
+    }
+  }
+
   // -------------------------
   // Table structure (shared across maqam and jins)
   // -------------------------

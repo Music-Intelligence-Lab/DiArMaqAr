@@ -33,7 +33,7 @@ export default function JinsTranspositions() {
   const INTERSECTION_ROOT_MARGIN = "200px 0px 0px 0px"; // observer root margin
   const BATCH_SIZE = 10; // batch size for lazy loading
   const PREFETCH_OFFSET = 5; // offset to trigger prefetch
-  const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins, selectedJins } = useAppContext();
+  const { selectedJinsData, selectedTuningSystem, setSelectedPitchClasses, selectedPitchClasses, allPitchClasses, centsTolerance, setCentsTolerance, sources, setSelectedJins, selectedJins } = useAppContext();
   const { jinsTranspositions } = useTranspositionsContext();
 
   const { noteOn, noteOff, playSequence, activePitchClasses } = useSoundContext();
@@ -149,11 +149,11 @@ export default function JinsTranspositions() {
   // Title buttons: text is selectable, so only clicks on the text spans toggle
   // (the button's empty area shows a default cursor), and a click that finishes
   // a text selection must not toggle the row
-  const handleTitleClick = (jinsName: string, e: React.MouseEvent) => {
+  const handleTitleClick = (e: React.MouseEvent, action: () => void) => {
     if (e.target === e.currentTarget) return;
     const selection = typeof window !== "undefined" ? window.getSelection() : null;
     if (selection && !selection.isCollapsed) return;
-    toggleShowDetails(jinsName, e);
+    action();
   };
 
   // Copy jins table to clipboard
@@ -574,6 +574,15 @@ export default function JinsTranspositions() {
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
       const intervals = jins.jinsPitchClassIntervals;
       const open = openTranspositions.includes(jins.name);
+
+      // Loading this row onto the keyboard. Shared by the title and the
+      // select-and-load button so clicking the name does the same thing as
+      // the button. See the maqam table for the same pairing.
+      const selectAndLoad = () => {
+        setSelectedPitchClasses([]);
+        setSelectedPitchClasses(pitchClasses);
+        setSelectedJins(transposition ? jins : null);
+      };
       const rowSpan = open ? 4 + numberOfFilterRows : 1;
 
       return (
@@ -596,11 +605,11 @@ export default function JinsTranspositions() {
                   className="jins-transpositions__transposition-title"
                   role="button"
                   tabIndex={0}
-                  onClick={(e) => handleTitleClick(jins.name, e)}
+                  onClick={(e) => handleTitleClick(e, selectAndLoad)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      toggleShowDetails(jins.name);
+                      selectAndLoad();
                     }
                   }}
                 >
@@ -618,11 +627,11 @@ export default function JinsTranspositions() {
                   className="jins-transpositions__transposition-title"
                   role="button"
                   tabIndex={0}
-                  onClick={(e) => handleTitleClick(jins.name, e)}
+                  onClick={(e) => handleTitleClick(e, selectAndLoad)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
-                      toggleShowDetails(jins.name);
+                      selectAndLoad();
                     }
                   }}
                 >
@@ -642,9 +651,7 @@ export default function JinsTranspositions() {
                   className="jins-transpositions__button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedPitchClasses([]);
-                    setSelectedPitchClasses(pitchClasses);
-                    setSelectedJins(transposition ? jins : null);
+                    selectAndLoad();
                   }}
                 >
                   {t("jins.selectLoadToKeyboard")}
@@ -1041,12 +1048,21 @@ export default function JinsTranspositions() {
           {/* Render all tables (analysis + transpositions) in sorted order */}
           {sortedTables.slice(0, visibleCount).map((tableInfo, displayIndex) => {
             const { jins, isAnalysis, firstNoteName } = tableInfo;
+            // See the maqam table: identified by the pitch classes actually
+            // loaded, because selectedJins and isAnalysis both fail on the
+            // octave registers of the tonic.
+            const loadedTonic = selectedPitchClasses[0];
+            const rowTonic = jins.jinsPitchClasses[0];
+            const isLoaded = Boolean(
+              loadedTonic && rowTonic && loadedTonic.noteName === rowTonic.noteName && loadedTonic.octave === rowTonic.octave
+            );
+            const isDimmed = !openTranspositions.includes(jins.name) && !isLoaded;
             const isLastNeededForPrefetch = displayIndex === visibleCount - PREFETCH_OFFSET - 1 && visibleCount < sortedTables.length;
             
             return (
               <React.Fragment key={`${isAnalysis ? 'analysis' : 'transposition'}-${jins.name}`}>
                 <table
-                  className={`jins-transpositions__table ${isAnalysis ? 'jins-transpositions__table--analysis' : 'jins-transpositions__table--transposition'}`}
+                  className={`jins-transpositions__table ${isAnalysis ? 'jins-transpositions__table--analysis' : 'jins-transpositions__table--transposition'}${isDimmed ? ' jins-transpositions__table--dimmed' : ''}`}
                   data-table-type={isAnalysis ? "analysis" : "transposition"}
                   data-jins-name={jins.name}
                   data-first-note={firstNoteName}
@@ -1105,6 +1121,7 @@ export default function JinsTranspositions() {
   }, [
     selectedTuningSystem,
     openTranspositions,
+    selectedPitchClasses,
     isToggling,
     sortedTables,
     visibleCount,
