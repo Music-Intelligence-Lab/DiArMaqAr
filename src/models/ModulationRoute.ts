@@ -27,6 +27,12 @@ export interface MaqamNode {
   tonicDisplay: string;
   /** Whether this is a transposition (taswir) or original form (tahlil) */
   isTransposition: boolean;
+  /**
+   * Whether this node is the base form (tahlil). Not the inverse of
+   * isTransposition: an octave-register sibling of the base form is not a
+   * taswir, so both flags are false for it.
+   */
+  isBaseForm: boolean;
 }
 
 /**
@@ -272,5 +278,6 @@ export function createMaqamNode(
     tonicId: standardizeTextFn(tonicNoteName),
     tonicDisplay: tonicNoteName,
     isTransposition: maqam.transposition,
+    isBaseForm: maqam.isBaseForm,
   };
 }

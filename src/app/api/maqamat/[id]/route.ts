@@ -300,9 +300,13 @@ function formatIntervalData(intervals: any[], format: string) {
  * - options: true returns available parameters instead of data
  * 
  * Response includes:
- * - maqam.tonicId / tonicDisplay: URL-safe tonic identifier and display name
- * - maqam.transposition: true/false indicating if this is a transposition
- * - maqam.familyId / familyDisplay: Family classification based on first jins
+ * - tonic: {idName, displayName} namespace for the resolved tonic
+ * - maqam.isBaseForm: true only for the tahlil. An octave-register sibling of
+ *   the base form is not a taswir, so it is false here while no top-level
+ *   `transposition` namespace is emitted either
+ * - transposition: {original, resolved} tonic namespaces, present only when
+ *   the maqam was transposed to a different modal degree (taswir)
+ * - family: Family classification based on first jins
  * - maqam.commentsEnglish / commentsArabic: Commentary strings (null if none)
  * - maqam.sources: Array of {sourceId, page} references
  * - context.tuningSystem.startingNoteName: URL-safe starting note name
@@ -536,7 +540,9 @@ export async function GET(
       const allMaqamatData = availableMaqamat
         .map((maqam) => {
           const transpositions = transpositionsCache.get(maqam.getId())!;
-          const tahlil = transpositions[0];
+          // The tahlil, by flag rather than by position — transpose.ts happens
+          // to return it first, but nothing states that as a contract.
+          const tahlil = transpositions.find((t) => t.isBaseForm)!;
           const familyClassification = classifyMaqamFamily(tahlil);
           const sources = maqam.getSourcePageReferences();
 
@@ -566,7 +572,8 @@ export async function GET(
             version: maqam.getVersion(),
             tonicId: standardizeText(tahlil.ascendingPitchClasses[0].noteName),
             tonicDisplay: tahlil.ascendingPitchClasses[0].noteName,
-            transposition: false,
+            transposition: tahlil.transposition,
+            isBaseForm: tahlil.isBaseForm,
             familyId: optionFamilyId,
             familyDisplay: optionFamilyDisplay,
             numberOfTranspositions: transpositions.length,
@@ -1044,8 +1051,10 @@ export async function GET(
       selectedTransposition = found;
     }
 
-    // Get maqam family classification from tahlil (first transposition)
-    const tahlil = transpositions[0];
+    // Get maqam family classification from the tahlil, by flag rather than by
+    // position — transpose.ts happens to return it first, but nothing states
+    // that as a contract.
+    const tahlil = transpositions.find((t) => t.isBaseForm)!;
     const familyClassification = classifyMaqamFamily(tahlil);
 
     // Calculate modulations for the tahlil
@@ -1092,6 +1101,9 @@ export async function GET(
       },
       {
         version: maqam.getVersion(),
+        // Distinct from isTransposed above: an octave-register sibling of the
+        // base form is not a taswir, so both are false for it.
+        extras: { isBaseForm: selectedTransposition.isBaseForm },
         inArabic,
         displayNameAr: inArabic ? getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName()) : undefined,
       }
@@ -1252,6 +1264,7 @@ export async function GET(
           entry.jinsId = jinsAtNote.jinsId;
           entry.jinsIdName = standardizeText(jinsAtNote.name || '');
           entry.jinsDisplayName = jinsAtNote.name || '';
+          entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
           if (inArabic) {
             entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
           }
@@ -1259,6 +1272,7 @@ export async function GET(
           entry.jinsId = null;
           entry.jinsIdName = null;
           entry.jinsDisplayName = null;
+          entry.jinsIsBaseForm = null;
           if (inArabic) entry.jinsDisplayNameAr = null;
         }
         return entry;
@@ -1376,7 +1390,8 @@ export async function GET(
           const jinsObj: any = {
             id: jinsAtThisNote.jinsId,
             idName: standardizeText(jinsAtThisNote.name || ''),
-            displayName: jinsAtThisNote.name || ''
+            displayName: jinsAtThisNote.name || '',
+            isBaseForm: jinsAtThisNote.isBaseForm
           };
           if (inArabic) {
             jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
@@ -1398,7 +1413,8 @@ export async function GET(
           const jinsObj: any = {
             id: jinsAtThisNote.jinsId,
             idName: standardizeText(jinsAtThisNote.name || ''),
-            displayName: jinsAtThisNote.name || ''
+            displayName: jinsAtThisNote.name || '',
+            isBaseForm: jinsAtThisNote.isBaseForm
           };
           if (inArabic) {
             jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
@@ -1485,6 +1501,10 @@ export async function GET(
           if (!isAjnas) {
             modObj.isTransposition = m.transposition || false;
           }
+
+          // Both branches: an octave-register sibling of the base form is not a
+          // taswir, so isTransposition alone cannot identify the base form.
+          modObj.isBaseForm = m.isBaseForm || false;
 
           if (inArabic) {
             modObj.displayNameAr = isAjnas

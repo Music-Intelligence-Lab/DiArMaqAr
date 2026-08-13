@@ -361,7 +361,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     "id": "1",
     "idName": "maqam_rast",
     "displayName": "maqām rāst",
-    "version": "2025-12-10T17:03:34.565Z"
+    "version": "2025-12-10T17:03:34.565Z",
+    "isBaseForm": true
   },
   "family": {
     "idName": "rast",
@@ -1346,7 +1347,8 @@ curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tunin
         {
           "maqamIdName": "maqam_rast",
           "maqamDisplayName": "maqām rāst",
-          "isTransposed": false
+          "isTransposed": false,
+          "isBaseForm": true
         }
       ]
     }
@@ -1376,7 +1378,8 @@ curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tunin
       "sourceTransposition": {
         "idName": "maqam_rast",
         "displayName": "maqām rāst",
-        "isTransposed": false
+        "isTransposed": false,
+        "isBaseForm": true
       },
       "pitchClassSet": [
         {
@@ -1393,7 +1396,8 @@ curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tunin
         {
           "maqamIdName": "maqam_rast",
           "maqamDisplayName": "maqām rāst",
-          "isTransposed": false
+          "isTransposed": false,
+          "isBaseForm": true
         }
       ],
       "compatibleMaqamatCount": 1
@@ -1574,6 +1578,7 @@ curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?tu
           "maqamIdName": "maqam_rast",
           "maqamDisplayName": "maqām rāst",
           "isTransposed": false,
+          "isBaseForm": true,
           "tonic": {
             "ipnReferenceNoteName": "C",
             "noteNameIdName": "rast",
@@ -1584,6 +1589,7 @@ curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?tu
           "maqamIdName": "maqam_bayyat_dugah",
           "maqamDisplayName": "maqām bayyāt (dūgāh)",
           "isTransposed": true,
+          "isBaseForm": false,
           "tonic": {
             "ipnReferenceNoteName": "D",
             "noteNameIdName": "dugah",
@@ -1594,6 +1600,7 @@ curl "https://diarmaqar.net/api/maqamat/classification/maqam-pitch-class-sets?tu
           "maqamIdName": "maqam_segah_segah",
           "maqamDisplayName": "maqām segāh (segāh)",
           "isTransposed": true,
+          "isBaseForm": false,
           "tonic": {
             "ipnReferenceNoteName": "E",
             "noteNameIdName": "segah",
@@ -1829,18 +1836,27 @@ curl "https://diarmaqar.net/api/ajnas/jins_rast?tuningSystem=ibnsina_1037&starti
   "jins": {
     "id": "5",
     "idName": "jins_kurd",
-    "displayName": "Jins Kurd",
+    "displayName": "jins kurd",
     "version": "2025-10-18T19:41:17.132Z",
-    "tonicId": "rast",
-    "tonicName": "rāst",
-    "transposition": false,
+    "isBaseForm": true
+  },
+  "tonic": {
+    "idName": "rast",
+    "displayName": "rāst"
+  },
+  "stats": {
     "numberOfTranspositions": 17,
-    "numberOfPitchClasses": 4,
-    "commentsEnglish": null,
-    "commentsArabic": null,
-    "sources": [],
+    "numberOfPitchClasses": 4
+  },
+  "comments": {
+    "english": null,
+    "arabic": null
+  },
+  "sources": [],
+  "parameters": {
     "pitchClassDataType": "all",
-    "includeIntervals": false
+    "includeIntervals": false,
+    "centsTolerance": 5
   },
   "context": {
     "tuningSystem": {

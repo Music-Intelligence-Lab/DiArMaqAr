@@ -251,6 +251,8 @@ export async function GET(
       return {
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
+        // This list is filtered to taswir, so never the base form.
+        isBaseForm: t.isBaseForm,
         links: buildLinksNamespace({
           detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
@@ -268,6 +270,9 @@ export async function GET(
       },
       {
         version: jins.getVersion(),
+        // The header entity is the jins itself, i.e. the tahlil — the taswir
+        // are the list below. Taken from the resolved tahlil, not hard-coded.
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
         inArabic,
         displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,
       }

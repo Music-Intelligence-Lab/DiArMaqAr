@@ -271,6 +271,9 @@ export async function GET(request: Request) {
           maqamDisplayName: transpositionNamespace.displayName,
           baseMaqamIdName: baseMaqamIdName, // Used for filtering, removed before response
           isTransposed: info.maqam.transposition,
+          // Not the inverse of isTransposed: an octave-register sibling of the
+          // base form is not a taswir, so both are false for it.
+          isBaseForm: info.maqam.isBaseForm,
           tonic: tonicNamespace ? {
             ipnReferenceNoteName: tonicIpnRef,
             noteNameIdName: tonicNamespace.idName,
@@ -376,7 +379,8 @@ export async function GET(request: Request) {
                 maqamDisplayName: maqamEntry.maqamDisplayName,
                 tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
                 tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
-                isTransposed: maqamEntry.isTransposed
+                isTransposed: maqamEntry.isTransposed,
+                isBaseForm: maqamEntry.isBaseForm
               } : null;
             })()
           }));
@@ -513,7 +517,8 @@ export async function GET(request: Request) {
           transposition: transpositionNamespace && incompatible.transposition
             ? {
                 ...transpositionNamespace,
-                isTransposed: incompatible.transposition.transposition
+                isTransposed: incompatible.transposition.transposition,
+                isBaseForm: incompatible.transposition.isBaseForm
               }
             : null,
           reason: incompatible.reason

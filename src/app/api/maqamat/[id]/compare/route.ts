@@ -342,6 +342,7 @@ export async function GET(
           id: jinsAtThisNote.jinsId,
           idName: standardizeText(jinsAtThisNote.name || ""),
           displayName: jinsAtThisNote.name || "",
+          isBaseForm: jinsAtThisNote.isBaseForm,
         };
         if (inArabic) {
           jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || "");
@@ -575,15 +576,10 @@ export async function GET(
       // Calculate transpositions
       const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
 
-      // Prefer the tahlil whose tonic exactly matches the canonical tonic note
-      // name (same note, same octave). `calculateMaqamTranspositions` picks its
-      // tahlil by modal slot, which can land on `qarār dūgāh` when `dūgāh` also
-      // exists in the tuning system — but the caller asked for the canonical
-      // maqām, so we surface the canonical-octave form when it's available.
-      const canonicalTonic = maqam.getAscendingNoteNames()[0];
-      const canonicalTahlil = transpositions.find(
-        (t) => t.ascendingPitchClasses[0].noteName === canonicalTonic
-      );
+      // The base form, i.e. the canonical-octave tahlil. `isBaseForm` is set on
+      // exactly the entry whose tonic is the canonical note name, so it already
+      // excludes octave-register siblings such as `qarār dūgāh` beside `dūgāh`.
+      const canonicalTahlil = transpositions.find((t) => t.isBaseForm);
 
       // Find specific transposition if requested
       let selectedTransposition = canonicalTahlil ?? transpositions[0];
@@ -646,6 +642,9 @@ export async function GET(
             ? getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName())
             : undefined,
           extras: {
+            // Distinct from isTransposed: an octave-register sibling of the
+            // base form is not a taswir, so both are false for it.
+            isBaseForm: selectedTransposition.isBaseForm,
             maqamFamilyId: standardizeText(familyClassification.familyName),
             maqamFamilyDisplayName: familyClassification.familyName,
             ...(inArabic && {

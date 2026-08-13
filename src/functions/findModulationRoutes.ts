@@ -430,9 +430,11 @@ function findNodeKey(
     return null;
   }
 
-  // Otherwise, find the canonical (non-transposition) form by baseMaqamIdName
+  // Otherwise, find the base form by baseMaqamIdName. Not `!isTransposition` —
+  // that is also false for octave-register siblings, so the winner would depend
+  // on graph insertion order.
   for (const [key, node] of graph.nodes) {
-    if (node.baseMaqamIdName === normalizedMaqamIdName && !node.isTransposition) {
+    if (node.baseMaqamIdName === normalizedMaqamIdName && node.isBaseForm) {
       return key;
     }
   }

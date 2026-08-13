@@ -641,6 +641,7 @@ paths:
                       idName: "maqam_rast"
                       displayName: "maqām rāst"
                       version: "2025-12-10T17:03:34.565Z"
+                      isBaseForm: true
                     family:
                       idName: "rast"
                       displayName: "rāst"
@@ -1031,6 +1032,7 @@ paths:
                       idName: "maqam_rast"
                       displayName: "maqām rāst"
                       version: "2025-12-10T17:03:34.565Z"
+                      isBaseForm: true
                     family:
                       idName: "rast"
                       displayName: "rāst"
@@ -1996,7 +1998,16 @@ paths:
                 type: object
                 properties:
                   maqam:
-                    $ref: '#/components/schemas/EntityReference'
+                    allOf:
+                      - $ref: '#/components/schemas/EntityReference'
+                      - type: object
+                        properties:
+                          isBaseForm:
+                            type: boolean
+                            description: >-
+                              True only for the base form (tahlīl). Always true
+                              here: this header entity is the maqām itself, while
+                              the list below contains taṣwīr only.
                   tuningSystem:
                     $ref: '#/components/schemas/EntityReference'
                   startingNote:
@@ -2511,6 +2522,14 @@ paths:
                                   type: string
                                 version:
                                   type: string
+                                isBaseForm:
+                                  type: boolean
+                                  description: >-
+                                    True only for the base form (tahlīl). An
+                                    octave-register sibling of the base form is
+                                    not a taṣwīr, so no `transposition` object
+                                    is emitted for it either — this is the only
+                                    field that distinguishes the two.
                                 displayNameAr:
                                   type: string
                                 maqamFamilyId:
@@ -3596,6 +3615,10 @@ paths:
                                 type: string
                               isTransposed:
                                 type: boolean
+                              isBaseForm:
+                                type: boolean
+                                description: >-
+                                  Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                   statistics:
                     type: object
                     description: Statistics about the classification
@@ -3644,6 +3667,10 @@ paths:
                             isTransposed:
                               type: boolean
                               example: false
+                            isBaseForm:
+                              type: boolean
+                              description: >-
+                                Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                         pitchClassSet:
                           type: array
                           description: The 12 pitch classes in this set
@@ -3712,6 +3739,10 @@ paths:
                               isTransposed:
                                 type: boolean
                                 description: Whether this is a transposition of the base maqām
+                              isBaseForm:
+                                type: boolean
+                                description: >-
+                                  Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                         compatibleMaqamatCount:
                           type: number
                           description: Number of compatible maqāmāt in this set
@@ -3737,6 +3768,10 @@ paths:
                               type: string
                             isTransposed:
                               type: boolean
+                            isBaseForm:
+                              type: boolean
+                              description: >-
+                                Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                         reason:
                           type: string
                           example: "duplicate_ipn_reference"
@@ -3806,6 +3841,7 @@ paths:
                           - maqamIdName: "maqam_rast"
                             maqamDisplayName: "maqām rāst"
                             isTransposed: false
+                            isBaseForm: true
                     statistics:
                       totalSets: 1
                       sets:
@@ -3826,6 +3862,7 @@ paths:
                           idName: "maqam_rast"
                           displayName: "maqām rāst"
                           isTransposed: false
+                          isBaseForm: true
                         pitchClassSet:
                           - ipnReferenceNoteName: "C"
                             noteName: "rāst"
@@ -3838,6 +3875,7 @@ paths:
                           - maqamIdName: "maqam_rast"
                             maqamDisplayName: "maqām rāst"
                             isTransposed: false
+                            isBaseForm: true
                         compatibleMaqamatCount: 1
                     totalSets: 1
                     totalCompatibleMaqamat: 1
@@ -4131,6 +4169,10 @@ paths:
                               isTransposed:
                                 type: boolean
                                 description: Whether this is a transposition of the base maqām
+                              isBaseForm:
+                                type: boolean
+                                description: >-
+                                  Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                               tonic:
                                 type: object
                                 nullable: true
@@ -4172,6 +4214,10 @@ paths:
                               type: boolean
                               description: Whether this is a transposition
                               example: false
+                            isBaseForm:
+                              type: boolean
+                              description: >-
+                                Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
                         reason:
                           type: string
                           description: Reason why this maqām is incompatible
@@ -4255,6 +4301,7 @@ paths:
                           - maqamIdName: "maqam_rast"
                             maqamDisplayName: "maqām rāst"
                             isTransposed: false
+                            isBaseForm: true
                             tonic:
                               ipnReferenceNoteName: "C"
                               noteNameIdName: "rast"
@@ -4262,6 +4309,7 @@ paths:
                           - maqamIdName: "maqam_bayyat_dugah"
                             maqamDisplayName: "maqām bayyāt (dūgāh)"
                             isTransposed: true
+                            isBaseForm: false
                             tonic:
                               ipnReferenceNoteName: "D"
                               noteNameIdName: "dugah"
@@ -4269,6 +4317,7 @@ paths:
                           - maqamIdName: "maqam_segah_segah"
                             maqamDisplayName: "maqām segāh (segāh)"
                             isTransposed: true
+                            isBaseForm: false
                             tonic:
                               ipnReferenceNoteName: "E"
                               noteNameIdName: "segah"
@@ -5641,18 +5690,23 @@ paths:
                     jins:
                       id: "5"
                       idName: "jins_kurd"
-                      displayName: "Jins Kurd"
+                      displayName: "jins kurd"
                       version: "2025-10-18T19:41:17.132Z"
-                      tonicId: "rast"
-                      tonicName: "rāst"
-                      transposition: false
+                      isBaseForm: true
+                    tonic:
+                      idName: "rast"
+                      displayName: "rāst"
+                    stats:
                       numberOfTranspositions: 17
                       numberOfPitchClasses: 4
-                      commentsEnglish: null
-                      commentsArabic: null
-                      sources: []
+                    comments:
+                      english: null
+                      arabic: null
+                    sources: []
+                    parameters:
                       pitchClassDataType: "all"
                       includeIntervals: false
+                      centsTolerance: 5
                     context:
                       tuningSystem:
                         id: "ibnsina_1037"
@@ -5695,23 +5749,31 @@ paths:
                   value:
                     jins:
                       id: "5"
-                      idName: "jins_kurd"
-                      displayName: "Jins Kurd al-Nawā"
+                      idName: "jins_kurd_al-nawa"
+                      displayName: "jins kurd al-nawā"
                       version: "2025-10-18T19:41:17.132Z"
-                      tonicId: "nawa"
-                      tonicName: "nawā"
-                      transposition: true
-                      originalTonicId: "rast"
-                      originalTonicName: "rāst"
-                      transposedTonicId: "nawa"
-                      transposedTonicName: "nawā"
+                      isBaseForm: false
+                    tonic:
+                      idName: "nawa"
+                      displayName: "nawā"
+                    transposition:
+                      original:
+                        idName: "rast"
+                        displayName: "rāst"
+                      resolved:
+                        idName: "nawa"
+                        displayName: "nawā"
+                    stats:
                       numberOfTranspositions: 17
                       numberOfPitchClasses: 4
-                      commentsEnglish: null
-                      commentsArabic: null
-                      sources: []
+                    comments:
+                      english: null
+                      arabic: null
+                    sources: []
+                    parameters:
                       pitchClassDataType: "all"
                       includeIntervals: false
+                      centsTolerance: 5
                     context:
                       tuningSystem:
                         id: "ibnsina_1037"
@@ -5737,10 +5799,12 @@ paths:
                     jins:
                       id: "5"
                       idName: "jins_kurd"
-                      displayName: "Jins Kurd"
-                      tonicId: "rast"
-                      tonicName: "rāst"
-                      transposition: false
+                      displayName: "jins kurd"
+                      isBaseForm: true
+                    tonic:
+                      idName: "rast"
+                      displayName: "rāst"
+                    parameters:
                       pitchClassDataType: "cents"
                       includeIntervals: false
                     context:
@@ -6107,7 +6171,16 @@ paths:
                 type: object
                 properties:
                   jins:
-                    $ref: '#/components/schemas/EntityReference'
+                    allOf:
+                      - $ref: '#/components/schemas/EntityReference'
+                      - type: object
+                        properties:
+                          isBaseForm:
+                            type: boolean
+                            description: >-
+                              True only for the base form (tahlīl). Always true
+                              here: this header entity is the jins itself, while
+                              the list below contains taṣwīr only.
                   tuningSystem:
                     $ref: '#/components/schemas/EntityReference'
                   startingNote:
@@ -6596,6 +6669,14 @@ paths:
                                   type: string
                                 version:
                                   type: string
+                                isBaseForm:
+                                  type: boolean
+                                  description: >-
+                                    True only for the base form (tahlīl). An
+                                    octave-register sibling of the base form is
+                                    not a taṣwīr, so no `transposition` object
+                                    is emitted for it either — this is the only
+                                    field that distinguishes the two.
                                 displayNameAr:
                                   type: string
                             tonic:
@@ -9918,7 +9999,59 @@ components:
         - ajnas
       properties:
         maqam:
-          $ref: '#/components/schemas/MaqamMetadata'
+          type: object
+          description: >-
+            Entity namespace for the maqām. When the maqām is transposed to a
+            different modal degree (taswīr), idName and displayName carry the
+            transposed name (e.g. maqam_rast_al-nawa). Note this is the entity
+            triplet, not the MaqamMetadata wrapper used by the list endpoint.
+          required:
+            - id
+            - idName
+            - displayName
+            - version
+            - isBaseForm
+          properties:
+            id:
+              type: string
+              description: Numeric identifier for the maqām
+            idName:
+              type: string
+              description: URL-safe identifier for the maqām
+            displayName:
+              type: string
+              description: Display name with diacritics
+            version:
+              type: string
+              description: ISO 8601 timestamp of last modification
+            isBaseForm:
+              type: boolean
+              description: >-
+                True when this is the base form (tahlīl). Distinct from taswīr:
+                an octave-register sibling of the base form is not a
+                transposition, so this is false for it while no `transposition`
+                object is emitted either.
+            displayNameAr:
+              type: string
+              description: Arabic-script display name (present only when includeArabic=true)
+        tonic:
+          allOf:
+            - $ref: '#/components/schemas/IdentifierRef'
+            - description: The tonic this maqām resolves on.
+        transposition:
+          type: object
+          description: >-
+            Present only when the maqām was transposed to a different modal
+            degree (taswīr). Absent for the base form and for its
+            octave-register siblings — use maqam.isBaseForm to tell those apart.
+          required:
+            - original
+            - resolved
+          properties:
+            original:
+              $ref: '#/components/schemas/IdentifierRef'
+            resolved:
+              $ref: '#/components/schemas/IdentifierRef'
         context:
           $ref: '#/components/schemas/MaqamContext'
         pitchData:
@@ -10026,6 +10159,14 @@ components:
               type: string
               nullable: true
               description: Display name of the jins with diacritics (e.g. `jins rāst al-nawā`). `null` if no matching jins is found.
+            jinsIsBaseForm:
+              type: boolean
+              nullable: true
+              description: >-
+                True when the jins on this degree is its own base form (tahlīl).
+                An octave-register sibling of the base form is not a taṣwīr, so
+                this is the only field that distinguishes them. `null` if no
+                matching jins is found.
             jinsDisplayNameAr:
               type: string
               nullable: true
@@ -10033,9 +10174,9 @@ components:
       description: |
         A single jins position on a maqām degree. Combines a GhammazEntry
         (noteName, noteNameDisplay, maqamDegree) with the resolved jins
-        identity (jinsId, jinsIdName, jinsDisplayName). The jins fields are
-        nullable together — when the transposed note doesn't match any
-        embedded jins in the ascending or descending ajnas analysis, all four
+        identity (jinsId, jinsIdName, jinsDisplayName, jinsIsBaseForm). The jins
+        fields are nullable together — when the transposed note doesn't match any
+        embedded jins in the ascending or descending ajnas analysis, all
         jins-prefixed fields are `null` while the note and degree fields
         remain populated.
 
@@ -10082,18 +10223,16 @@ components:
       properties:
         jins:
           type: object
+          description: >-
+            Entity namespace for the jins. When the jins is transposed to a
+            different modal degree (taswīr), idName and displayName carry the
+            transposed name (e.g. jins_bayyat_al-nawa).
           required:
             - id
             - idName
             - displayName
             - version
-            - tonicId
-            - tonicName
-            - transposition
-            - numberOfTranspositions
-            - numberOfPitchClasses
-            - pitchClassDataType
-            - includeIntervals
+            - isBaseForm
           properties:
             id:
               type: string
@@ -10107,61 +10246,84 @@ components:
             version:
               type: string
               description: ISO 8601 timestamp of last modification
-            tonicId:
-              type: string
-              description: URL-safe tonic note identifier
-            tonicName:
-              type: string
-              description: Tonic note name with diacritics
-            transposition:
+            isBaseForm:
               type: boolean
-              description: Whether this is a transposition from the original tonic
-            originalTonicId:
+              description: >-
+                True when this is the base form (tahlīl). Distinct from taswīr:
+                an octave-register sibling of the base form is not a
+                transposition, so this is false for it while no `transposition`
+                object is emitted either.
+            displayNameAr:
               type: string
-              description: Original tonic identifier (present only if transposed)
-            originalTonicName:
-              type: string
-              description: Original tonic name (present only if transposed)
-            transposedTonicId:
-              type: string
-              description: Transposed tonic identifier (present only if transposed)
-            transposedTonicName:
-              type: string
-              description: Transposed tonic name (present only if transposed)
+              description: Arabic-script display name (present only when includeArabic=true)
+        tonic:
+          allOf:
+            - $ref: '#/components/schemas/IdentifierRef'
+            - description: The tonic this jins resolves on.
+        transposition:
+          type: object
+          description: >-
+            Present only when the jins was transposed to a different modal
+            degree (taswīr). Absent for the base form and for its
+            octave-register siblings — use jins.isBaseForm to tell those apart.
+          required:
+            - original
+            - resolved
+          properties:
+            original:
+              $ref: '#/components/schemas/IdentifierRef'
+            resolved:
+              $ref: '#/components/schemas/IdentifierRef'
+        stats:
+          type: object
+          required:
+            - numberOfTranspositions
+            - numberOfPitchClasses
+          properties:
             numberOfTranspositions:
               type: integer
               description: Count of distinct transpositions (taswīr) only; excludes tahlīl and register/octave variants
             numberOfPitchClasses:
               type: integer
               description: Number of pitch classes in this jins
-            commentsEnglish:
+        comments:
+          type: object
+          properties:
+            english:
               type: string
               nullable: true
               description: English commentary
-            commentsArabic:
+            arabic:
               type: string
               nullable: true
               description: Arabic commentary
-            sources:
-              type: array
-              description: Bibliographic source references
-              items:
-                type: object
-                properties:
-                  sourceId:
-                    type: string
-                    description: >-
-                      URL-safe identifier, lowercase creator_year (e.g.
-                      alshawwa_1946). Do not construct this value — obtain
-                      it from a list or availability endpoint.
-                  page:
-                    type: string
+        sources:
+          type: array
+          description: Bibliographic source references
+          items:
+            type: object
+            properties:
+              sourceId:
+                type: string
+                description: >-
+                  URL-safe identifier, lowercase creator_year (e.g.
+                  alshawwa_1946). Do not construct this value — obtain
+                  it from a list or availability endpoint.
+              page:
+                type: string
+        parameters:
+          type: object
+          description: Echo of the request parameters that shaped this response.
+          properties:
             pitchClassDataType:
               type: string
               description: Format used for pitch class data
             includeIntervals:
               type: boolean
               description: Whether intervals are included
+            centsTolerance:
+              type: number
+              description: Tolerance in cents used for interval matching
         context:
           $ref: '#/components/schemas/MaqamContext'
         pitchData:
@@ -10759,7 +10921,15 @@ components:
           description: Tonic display name with diacritics.
         isTransposition:
           type: boolean
-          description: True when the target is a transposition (taṣwīr) of its base maqām, false when it is the tahlīl.
+          description: >-
+            True when the target is a transposition (taṣwīr) of its base maqām.
+            False does not by itself mean the tahlīl — it is also false for the
+            base form's octave-register siblings, since a register shift is not
+            taṣwīr. Use isBaseForm to identify the tahlīl.
+        isBaseForm:
+          type: boolean
+          description: >-
+            True only for the tahlīl (base form) of the target maqām.
 
     JinsModulationEntity:
       type: object
@@ -10782,6 +10952,12 @@ components:
           description: URL-safe tonic identifier on which this jins modulation resolves.
         tonicDisplayName:
           type: string
+        isBaseForm:
+          type: boolean
+          description: >-
+            True only for the tahlīl (base form) of the target jins. An
+            octave-register sibling of the base form is not a taṣwīr, so this is
+            the only field that identifies the base form.
 
     Sayr:
       type: object
@@ -10847,8 +11023,15 @@ components:
           example: "راست"
         isTransposition:
           type: boolean
-          description: Whether this is a transposition (taṣwīr) or original form (taḥlīl)
+          description: >-
+            Whether this is a transposition (taṣwīr). False does not by itself
+            mean the taḥlīl — it is also false for the base form's
+            octave-register siblings. Use isBaseForm to identify the taḥlīl.
           example: false
+        isBaseForm:
+          type: boolean
+          description: Whether this node is the base form (taḥlīl)
+          example: true
 
     ModulationStep:
       type: object

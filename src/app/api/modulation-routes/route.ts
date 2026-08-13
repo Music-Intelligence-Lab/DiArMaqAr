@@ -440,6 +440,9 @@ function formatNode(node: MaqamNode, inArabic: boolean): any {
     tonicId: node.tonicId,
     tonicDisplay: node.tonicDisplay,
     isTransposition: node.isTransposition,
+    // Not the inverse of isTransposition: an octave-register sibling of the
+    // base form is not a taswir, so both are false for it.
+    isBaseForm: node.isBaseForm,
   };
 
   if (inArabic) {

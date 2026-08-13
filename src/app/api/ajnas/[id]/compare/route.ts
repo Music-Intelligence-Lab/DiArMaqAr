@@ -543,15 +543,10 @@ export async function GET(
       // Calculate transpositions
       const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
 
-      // Prefer the tahlil whose tonic exactly matches the canonical tonic note
-      // name (same note, same octave). `calculateJinsTranspositions` picks its
-      // tahlil by modal slot, which can land on `qarār dūgāh` when `dūgāh` also
-      // exists in the tuning system — but the caller asked for the canonical
-      // jins, so we surface the canonical-octave form when it's available.
-      const canonicalTonic = jins.getNoteNames()[0];
-      const canonicalTahlil = transpositions.find(
-        (t) => t.jinsPitchClasses[0].noteName === canonicalTonic
-      );
+      // The base form, i.e. the canonical-octave tahlil. `isBaseForm` is set on
+      // exactly the entry whose tonic is the canonical note name, so it already
+      // excludes octave-register siblings such as `qarār dūgāh` beside `dūgāh`.
+      const canonicalTahlil = transpositions.find((t) => t.isBaseForm);
 
       // Find specific transposition if requested
       let selectedTransposition = canonicalTahlil ?? transpositions[0];
@@ -592,6 +587,9 @@ export async function GET(
         },
         {
           version: jins.getVersion(),
+          // Distinct from isTransposed: an octave-register sibling of the base
+          // form is not a taswir, so both are false for it.
+          extras: { isBaseForm: selectedTransposition.isBaseForm },
           inArabic,
           displayNameAr: inArabic
             ? getJinsNameDisplayAr(isTransposed ? selectedTransposition.name : jins.getName())

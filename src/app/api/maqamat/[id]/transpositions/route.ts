@@ -269,6 +269,7 @@ export async function GET(
           entry.jinsId = jinsAtNote.jinsId;
           entry.jinsIdName = standardizeText(jinsAtNote.name || '');
           entry.jinsDisplayName = jinsAtNote.name || '';
+          entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
           if (inArabic) {
             entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
           }
@@ -276,6 +277,7 @@ export async function GET(
           entry.jinsId = null;
           entry.jinsIdName = null;
           entry.jinsDisplayName = null;
+          entry.jinsIsBaseForm = null;
           if (inArabic) entry.jinsDisplayNameAr = null;
         }
         return entry;
@@ -304,6 +306,8 @@ export async function GET(
       return {
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
+        // This list is filtered to taswir, so never the base form.
+        isBaseForm: t.isBaseForm,
         primaryJins: buildJinsDegreeEntries(t, t.primaryJinsNoteName, { resolveJins: true }),
         secondaryJins: buildJinsDegreeEntries(t, t.secondaryJinsNoteName, { resolveJins: true }),
         tertiaryJins: buildJinsDegreeEntries(t, t.tertiaryJinsNoteName, { resolveJins: true }),
@@ -325,6 +329,9 @@ export async function GET(
       },
       {
         version: maqam.getVersion(),
+        // The header entity is the maqam itself, i.e. the tahlil — the taswir
+        // are the list below. Derived, not hard-coded.
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
         inArabic,
         displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
       }

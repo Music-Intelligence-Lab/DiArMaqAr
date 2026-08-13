@@ -192,8 +192,9 @@ export async function GET(request: Request) {
               centsTolerance
             );
             
-            // Get the tahlil (original form, not transposed)
-            const tahlil = transpositions.find(t => !t.transposition);
+            // Get the tahlil (base form). Not `!t.transposition` — that is also
+            // false for the tahlil's octave-register siblings.
+            const tahlil = transpositions.find(t => t.isBaseForm);
             
             if (tahlil) {
               // Use proper classification function

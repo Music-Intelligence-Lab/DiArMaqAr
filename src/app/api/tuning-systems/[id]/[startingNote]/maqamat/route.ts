@@ -212,7 +212,9 @@ export async function GET(
           true,
           centsTolerance
         );
-        const tahlil = transpositions.find((t: any) => !t.transposition);
+        // The tahlil (base form). Not `!t.transposition` — that is also false
+        // for the tahlil's octave-register siblings.
+        const tahlil = transpositions.find((t: any) => t.isBaseForm);
 
         // Skip if no tahlil found (shouldn't happen but TypeScript safety)
         if (!tahlil) {
@@ -240,6 +242,10 @@ export async function GET(
           },
           {
             version: maqam.getVersion(),
+            // Every item on this listing is the tahlil; the taswir are listed
+            // separately under `transpositions`. Taken from the resolved tahlil
+            // rather than hard-coded true.
+            extras: { isBaseForm: tahlil.isBaseForm },
             inArabic,
             displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
           }
@@ -361,6 +367,8 @@ export async function GET(
                     displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
                   }
                 ),
+                // This array is filtered to taswir, so never the base form.
+                isBaseForm: t.isBaseForm,
                 maqamDegrees: {
                   ascending: renderedAscending.map((pc: any) => ({
                     noteName: standardizeText(pc.noteName),

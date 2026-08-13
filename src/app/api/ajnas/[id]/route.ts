@@ -246,8 +246,12 @@ function formatIntervalData(intervals: any[], format: string) {
  * - options: true returns available parameters instead of data
  * 
  * Response includes:
- * - jins.tonic: URL-friendly tonic note name
- * - jins.transposition: true/false indicating if this is a transposition
+ * - tonic: {idName, displayName} namespace for the resolved tonic
+ * - jins.isBaseForm: true only for the tahlil. An octave-register sibling of
+ *   the base form is not a taswir, so it is false here while no top-level
+ *   `transposition` namespace is emitted either
+ * - transposition: {original, resolved} tonic namespaces, present only when
+ *   the jins was transposed to a different modal degree (taswir)
  * - jins.commentsEnglish: English commentary (null if none)
  * - jins.commentsArabic: Arabic commentary (null if none)
  * - jins.sources: Array of {sourceId, page} references
@@ -744,6 +748,9 @@ export async function GET(
       },
       {
         version: jins.getVersion(),
+        // Distinct from isTransposed above: an octave-register sibling of the
+        // base form is not a taswir, so both are false for it.
+        extras: { isBaseForm: selectedTransposition.isBaseForm },
         inArabic,
         displayNameAr: inArabic
           ? getJinsNameDisplayAr(isTransposed ? selectedTransposition.name : jins.getName())
