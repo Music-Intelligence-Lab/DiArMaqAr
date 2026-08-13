@@ -6,7 +6,7 @@ import useSoundContext, { defaultNoteVelocity } from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
@@ -693,7 +693,7 @@ export default function JinsTranspositions() {
           {open && (
             <>
               <tr data-row-type="noteNames">
-                <th scope="col" id={`jins-${standardizeText(jins.name)}-noteNames-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.noteNames")}</th>
+                <th scope="col" id={`jins-${entityToken(jins)}-noteNames-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.noteNames")}</th>
                 {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <th scope="col" className="jins-transpositions__table-cell" data-column-type="empty"></th>}
@@ -703,7 +703,7 @@ export default function JinsTranspositions() {
               </tr>
               {filters["pitchClass"] && (
                 <tr data-row-type="pitchClass">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-pitchClass-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.pitchClass")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-pitchClass-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.pitchClass")}</th>
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
                       {i !== 0 && <td className="jins-transpositions__table-cell" data-column-type="empty"></td>}
@@ -714,7 +714,7 @@ export default function JinsTranspositions() {
               )}
               {filters["abjadName"] && (
                 <tr data-row-type="abjadName">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-abjadName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.abjadName")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-abjadName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.abjadName")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].abjadName || "--"}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -726,7 +726,7 @@ export default function JinsTranspositions() {
               )}
               {filters["englishName"] && (
                 <tr data-row-type="englishName">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-englishName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.englishName")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-englishName-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.englishName")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="note-name">{pitchClasses[0].englishName}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -738,7 +738,7 @@ export default function JinsTranspositions() {
               )}
               {filters["solfege"] && (
                 <tr data-row-type="solfege">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-solfege-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.solfege")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-solfege-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.solfege")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="solfege">{pitchClasses[0].solfege || '--'}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -750,7 +750,7 @@ export default function JinsTranspositions() {
               )}
               {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
-                <th scope="row" id={`jins-${standardizeText(jins.name)}-primaryValue-header`} className="jins-transpositions__row-header jins-transpositions__row-header--primary-value" data-column-type="row-header">{t(`jins.${valueType}`)}</th>
+                <th scope="row" id={`jins-${entityToken(jins)}-primaryValue-header`} className="jins-transpositions__row-header jins-transpositions__row-header--primary-value" data-column-type="row-header">{t(`jins.${valueType}`)}</th>
                 <td className="jins-transpositions__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
                 {intervals.map((interval, i) => (
                   <React.Fragment key={i}>
@@ -762,7 +762,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "fraction" && filters["fraction"] && (
                 <tr data-row-type="fraction">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-fraction-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.fraction")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-fraction-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.fraction")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[0].fraction}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -774,7 +774,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "cents" && filters["cents"] && (
                 <tr data-row-type="cents">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-cents-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.cents")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-cents-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.cents")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[0].cents).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -786,7 +786,7 @@ export default function JinsTranspositions() {
               )}
               {filters["centsFromZero"] && (
                 <tr data-row-type="centsFromZero">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-centsFromZero-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsFromZero")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-centsFromZero-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsFromZero")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-from-zero">0.000</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -798,7 +798,7 @@ export default function JinsTranspositions() {
               )}
               {filters["centsDeviation"] && (
                 <tr data-row-type="centsDeviation">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-centsDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsDeviation")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-centsDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.centsDeviation")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="cents-deviation">
                     <span>{getIpnReferenceNoteNameWithOctave(pitchClasses[0])}</span>
                     {pitchClasses[0].centsDeviation > 0 ? " +" : " "}
@@ -818,7 +818,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (
                 <tr data-row-type="decimalRatio">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-decimalRatio-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.decimalRatio")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-decimalRatio-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.decimalRatio")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -830,7 +830,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "stringLength" && filters["stringLength"] && (
                 <tr data-row-type="stringLength">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-stringLength-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.stringLength")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-stringLength-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.stringLength")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -842,7 +842,7 @@ export default function JinsTranspositions() {
               )}
               {valueType !== "fretDivision" && filters["fretDivision"] && (
                 <tr data-row-type="fretDivision">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-fretDivision-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.fretDivision")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-fretDivision-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.fretDivision")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -854,7 +854,7 @@ export default function JinsTranspositions() {
               )}
               {filters["midiNote"] && (
                 <tr data-row-type="midiNote">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNote-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNote")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-midiNote-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNote")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note">{pitchClasses[0].midiNoteDecimal.toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -866,7 +866,7 @@ export default function JinsTranspositions() {
               )}
               {filters["midiNoteDeviation"] && (
                 <tr data-row-type="midiNoteDeviation">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-midiNoteDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNoteDeviation")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-midiNoteDeviation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.midiNoteDeviation")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="midi-note-deviation">
                     {calculateIpnReferenceMidiNote(pitchClasses[0])} {pitchClasses[0].centsDeviation > 0 ? "+" : ""}{pitchClasses[0].centsDeviation.toFixed(1)}
                   </td>
@@ -882,7 +882,7 @@ export default function JinsTranspositions() {
               )}
               {filters["frequency"] && (
                 <tr data-row-type="frequency">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-frequency-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.frequency")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-frequency-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.frequency")}</th>
                   <td className="jins-transpositions__table-cell--pitch-class" data-column-type="frequency">{parseFloat(pitchClasses[0].frequency).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
                     <React.Fragment key={i}>
@@ -893,7 +893,7 @@ export default function JinsTranspositions() {
                 </tr>
               )}
               <tr data-row-type="play">
-                <th scope="row" id={`jins-${standardizeText(jins.name)}-play-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.play")}</th>
+                <th scope="row" id={`jins-${entityToken(jins)}-play-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.play")}</th>
                 {pitchClasses.map((pitchClass, i) => (
                   <React.Fragment key={i}>
                     {i !== 0 && <td className="jins-transpositions__table-cell" data-column-type="empty"></td>}
@@ -916,7 +916,7 @@ export default function JinsTranspositions() {
               </tr>
               {filters.staffNotation && (
                 <tr data-row-type="staffNotation">
-                  <th scope="row" id={`jins-${standardizeText(jins.name)}-staffNotation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.staffNotation")}</th>
+                  <th scope="row" id={`jins-${entityToken(jins)}-staffNotation-header`} className="jins-transpositions__row-header" data-column-type="row-header">{t("jins.staffNotation")}</th>
                   <td className="staff-notation-cell" colSpan={pitchClasses.length * 2 - 1}>
                     {/* Only render staff notation when actually open to improve performance */}
                     {open && <StaffNotation pitchClasses={pitchClasses} />}

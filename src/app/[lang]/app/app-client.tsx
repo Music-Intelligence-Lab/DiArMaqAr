@@ -17,175 +17,56 @@ import JinsManager from "@/components/jins-manager";
 import MaqamManager from "@/components/maqam-manager";
 import PitchClassBar from "@/components/pitch-class-bar";
 import Modulations from "@/components/modulations";
-import { getSources } from "@/functions/import";
 import { Sayr } from "@/models/Maqam";
 import Footer from "@/components/footer";
-import { standardizeText } from "@/functions/export";
+import { createEntityToken, standardizeText, TONIC_SEPARATOR } from "@/functions/export";
 
 // URL parameter helper functions
+//
+// Every identifier in the query string is a standardizeText() output — lowercase
+// [a-z0-9_], one double-clickable word — so nothing here percent-encodes and
+// nothing here needs to. The only structural characters are the ones this file
+// introduces: "__" between an entity and its tonic, "," between modulation hops
+// and "." before a hop flag.
+
 /**
- * Formats a name for URL by removing diacritics and special characters, replacing spaces with hyphens
+ * Resolves an entity token back to the maqām or jins it names, and to the tonic
+ * it was transposed to (absent for the taḥlīl).
+ *
+ * Returns null when the token names nothing — an unrecognized entity is left
+ * unselected rather than resolved to something near it.
  */
-export function formatNameForUrl(name: string): string {
-  return standardizeText(name).replace(/_/g, "-");
+function parseEntityToken<T extends { getIdName(): string }>(token: string, entities: T[]): { entity: T; tonicIdName?: string } | null {
+  const separatorIndex = token.indexOf(TONIC_SEPARATOR);
+  const idName = separatorIndex === -1 ? token : token.slice(0, separatorIndex);
+  const tonicIdName = separatorIndex === -1 ? "" : token.slice(separatorIndex + TONIC_SEPARATOR.length);
+
+  const entity = entities.find((candidate) => candidate.getIdName() === idName);
+  if (!entity) return null;
+
+  return { entity, tonicIdName: tonicIdName || undefined };
 }
 
 /**
- * Normalizes a string for comparison purposes (case-insensitive)
+ * Builds the URL token for a sayr: the id of the source it is transcribed from
+ * — "alhilu_1961".
+ *
+ * It comes straight off the sayr, so there is nothing to look up and nothing
+ * that can fail to resolve. Where one source contributes more than one sayr to
+ * the same maqām, the two are separated at the source level by a letter on the
+ * year ("alhilu_1961a", "alhilu_1961b"), not by anything added here.
  */
-function normalizeForComparison(name: string): string {
-  return name.toLowerCase();
-}
-
-/**
- * Creates a URL parameter for maqām or jins with optional transposition note
- */
-function createUrlParameter(name: string, firstNote?: string): string {
-  const formattedName = formatNameForUrl(name);
-
-  if (firstNote) {
-    // Hyphenate the first note for URL readability
-    return `${formattedName}-al-${formatNameForUrl(firstNote)}`;
-  }
-
-  return formattedName;
-}
-
-/**
- * Parses a URL parameter to extract name and optional first note
- */
-function parseUrlParameter(param: string): { name: string; firstNote?: string } {
-  // Decode the parameter if it's URI encoded
-  const decodedParam = decodeURIComponent(param);
-
-  if (decodedParam.includes("-al-")) {
-    const [name, hyphenatedFirstNote] = decodedParam.split("-al-");
-
-    // Convert the hyphenated first note back to space-separated format
-    const firstNote = hyphenatedFirstNote.replace(/-/g, " ");
-
-    return { name, firstNote };
-  }
-
-  return { name: decodedParam };
-}
-
-/**
- * Encodes a URL parameter value safely
- */
-function encodeUrlParameter(value: string): string {
-  return encodeURIComponent(value);
-}
-
-/**
- * Creates a descriptive sayr parameter showing author and page information
- */
-function createSayrParameter(sayrId: string, selectedMaqamData: any): string {
-  try {
-    const sources = getSources();
-
-    // Find the sayr in the maqam's suyur array
-    const suyur = selectedMaqamData.getSuyur();
-    if (!suyur || !Array.isArray(suyur)) return sayrId;
-
-    const sayr = suyur.find((s: Sayr) => s.id === sayrId);
-
-    if (!sayr) return sayrId; // Fall back to ID if not found
-
-    // Find the source
-    const source = sources.find((s) => s.getId() === sayr.sourceId);
-
-    if (!source) return sayrId; // Fall back to ID if source not found
-
-    // Get author name (using English as default)
-    const contributors = source.getContributors();
-    if (!contributors || contributors.length === 0) return sayrId;
-
-    const authorName = contributors[0]?.lastNameEnglish || "";
-    if (!authorName) return sayrId;
-
-    // Get publication date
-    const publicationDate = source.getPublicationDateEnglish() || "";
-    if (!publicationDate) return sayrId;
-
-    // Create descriptive parameter in format "Author-Year-Page" with hyphens instead of spaces and special chars
-    return `${formatNameForUrl(authorName)}-${publicationDate}-${sayr.page}`;
-  } catch (error) {
-    console.error("Error creating sayr parameter:", error);
-    return sayrId; // Return original on error
-  }
-}
-
-/**
- * Parses a sayr parameter to find the matching sayr ID
- */
-function parseSayrParameter(param: string, maqamData: any): string | undefined {
-  // If the parameter is already an ID, return it as is
-  if (!param.includes("-") || param.split("-").length < 3) {
-    return param;
-  }
-
-  try {
-    // Parse descriptive parameter in format "Author-Year-Page"
-    const sources = getSources();
-    const parts = param.split("-");
-
-    // The last part is the page
-    const sayrPage = parts.pop() || "";
-
-    // The second-to-last part is the year
-    const sayrYear = parts.pop() || "";
-
-    // The rest is the author name (might have internal hyphens)
-    const sayrAuthorHyphenated = parts.join("-");
-
-    // Unhyphenate the author name for comparison
-    const sayrAuthor = sayrAuthorHyphenated.replace(/-/g, " ");
-
-    if (!sayrAuthor || !sayrYear || !sayrPage) return param; // Return original if parts are missing
-
-    // Find all suyur for this maqam
-    const suyur = maqamData.getSuyur();
-
-    if (!suyur || !Array.isArray(suyur)) return param; // Return original if suyur not found
-
-    // Try to find the matching sayr
-    for (const sayr of suyur) {
-      if (!sayr || !sayr.sourceId) continue;
-
-      const source = sources.find((s) => s.getId() === sayr.sourceId);
-      if (!source) continue;
-
-      // Check if author last name matches
-      const contributors = source.getContributors();
-      const authorMatches = contributors && contributors.length > 0 && normalizeForComparison(contributors[0]?.lastNameEnglish) === normalizeForComparison(sayrAuthor);
-
-      // Check if publication date matches
-      const dateMatches = source.getPublicationDateEnglish() === sayrYear;
-
-      // Check if page matches
-      const pageMatches = sayr.page === sayrPage;
-
-      // If all match, return this sayr's ID
-      if (authorMatches && dateMatches && pageMatches) {
-        return sayr.id;
-      }
-    }
-
-    return param; // Return original if no match found
-  } catch (error) {
-    console.error("Error parsing sayr parameter:", error);
-    return param; // Return original parameter on error
-  }
+function createSayrToken(sayr: Sayr): string {
+  return sayr.sourceId;
 }
 /**
  * Serializes the modulations (intiqālāt) chain as a URL parameter value.
  *
- * Convention: comma-separated hops, each hop being the canonical URL-safe maqam
- * idName with its tonic idName appended ("maqam_hijaz_al-nawa"), plus optional
- * dot-flags ".8vb" (octave-shifted options) and ".ajnas" (ajnas view):
+ * Convention: comma-separated hops, each hop being the entity token of the
+ * maqām with its tonic, plus optional dot-flags ".8vb" (octave-shifted options)
+ * and ".ajnas" (ajnas view):
  *
- *   modulations=maqam_rast_al-nawa,maqam_hijaz_al-nawa.8vb,maqam_bayyati_al-dugah
+ *   modulations=maqam_rast__nawa,maqam_hijaz__nawa.8vb,maqam_bayyati__dugah
  */
 function createModulationsParameter(chain: ModulationChainHop[], maqamat: MaqamData[]): string | null {
   const hops: string[] = [];
@@ -194,8 +75,7 @@ function createModulationsParameter(chain: ModulationChainHop[], maqamat: MaqamD
     const maqamData = maqamat.find((m) => m.getId() === hop.maqamId);
     if (!maqamData) return null;
 
-    let token = maqamData.getIdName();
-    if (hop.tonicIdName) token += `_al-${hop.tonicIdName}`;
+    let token = createEntityToken(maqamData.getIdName(), hop.tonicIdName);
     if (hop.octaveShift) token += ".8vb";
     if (hop.ajnasMode) token += ".ajnas";
     hops.push(token);
@@ -207,40 +87,25 @@ function createModulationsParameter(chain: ModulationChainHop[], maqamat: MaqamD
 /**
  * Parses a modulations chain parameter back into hop descriptors.
  *
- * Hops are matched against the longest maqam idName prefix so that maqam names
- * containing "al-" themselves parse correctly. An unrecognized hop truncates the
- * chain there (the valid prefix is still restored).
+ * An unrecognized hop truncates the chain there; the valid prefix is still
+ * restored.
  */
 function parseModulationsParameter(param: string, maqamat: MaqamData[]): ModulationChainHop[] {
   const chain: ModulationChainHop[] = [];
 
-  for (const rawToken of decodeURIComponent(param).split(",")) {
+  for (const rawToken of param.split(",")) {
     const [base, ...flags] = rawToken.trim().split(".");
 
-    let matchedMaqam: MaqamData | null = null;
-    let matchedTonic = "";
-    let matchedIdNameLength = -1;
+    const matched = parseEntityToken(base, maqamat);
+    if (!matched) break;
 
-    for (const maqamData of maqamat) {
-      const idName = maqamData.getIdName();
-      if (idName.length <= matchedIdNameLength) continue;
-
-      if (base === idName) {
-        matchedMaqam = maqamData;
-        matchedTonic = standardizeText(maqamData.getAscendingNoteNames()[0] ?? "");
-        matchedIdNameLength = idName.length;
-      } else if (base.startsWith(`${idName}_al-`)) {
-        matchedMaqam = maqamData;
-        matchedTonic = base.slice(idName.length + "_al-".length);
-        matchedIdNameLength = idName.length;
-      }
-    }
-
-    if (!matchedMaqam || !matchedTonic) break;
+    // A hop always names a tonic; a bare idName means the taḥlīl of that maqām.
+    const tonicIdName = matched.tonicIdName ?? standardizeText(matched.entity.getAscendingNoteNames()[0] ?? "");
+    if (!tonicIdName) break;
 
     chain.push({
-      maqamId: matchedMaqam.getId(),
-      tonicIdName: matchedTonic,
+      maqamId: matched.entity.getId(),
+      tonicIdName,
       octaveShift: flags.includes("8vb"),
       ajnasMode: flags.includes("ajnas"),
     });
@@ -317,39 +182,23 @@ export default function AppClient() {
       if (!isNaN(parsed) && parsed >= 0) urlCentsTolerance = parsed;
     }
 
-    // Parse descriptive maqam parameter if present
+    // Parse the maqam parameter if present
     const maqamParam = searchParams.get("maqam");
     if (maqamParam) {
-      const parsed = parseUrlParameter(maqamParam);
-
-      // Find the maqam by normalized name
-      if (maqamat.length > 0) {
-        const foundMaqam = maqamat.find((m) => normalizeForComparison(formatNameForUrl(m.getName())) === normalizeForComparison(parsed.name));
-
-        if (foundMaqam) {
-          maqamId = foundMaqam.getId();
-          if (parsed.firstNote) {
-            maqamFirstNote = parsed.firstNote;
-          }
-        }
+      const matched = parseEntityToken(maqamParam, maqamat);
+      if (matched) {
+        maqamId = matched.entity.getId();
+        maqamFirstNote = matched.tonicIdName;
       }
     }
 
-    // Parse descriptive jins parameter if present
+    // Parse the jins parameter if present
     const jinsParam = searchParams.get("jins");
     if (jinsParam) {
-      const parsed = parseUrlParameter(jinsParam);
-
-      // Find the jins by normalized name
-      if (ajnas.length > 0) {
-        const foundJins = ajnas.find((j) => normalizeForComparison(formatNameForUrl(j.getName())) === normalizeForComparison(parsed.name));
-
-        if (foundJins) {
-          jinsId = foundJins.getId();
-          if (parsed.firstNote) {
-            jinsFirstNote = parsed.firstNote;
-          }
-        }
+      const matched = parseEntityToken(jinsParam, ajnas);
+      if (matched) {
+        jinsId = matched.entity.getId();
+        jinsFirstNote = matched.tonicIdName;
       }
     }
 
@@ -370,28 +219,15 @@ export default function AppClient() {
       }
     }
 
-    // Get sayrId from the URL parameter
+    // Parse the sayr parameter if present. A sayr belongs to a maqām, so it can
+    // only be resolved once the maqām is known — and only against that maqām's
+    // own suyur, never carried through as an unresolved id.
     let sayrId: string | undefined = undefined;
 
-    // Parse descriptive sayr parameter if present
     const sayrParam = searchParams.get("sayr");
     if (sayrParam && maqamId) {
-      // Find the maqam data for sayr parsing
-      const maqamData =
-        maqamParam && maqamat.length > 0 ? maqamat.find((m) => normalizeForComparison(formatNameForUrl(m.getName())) === normalizeForComparison(parseUrlParameter(maqamParam).name)) : undefined;
-
-      if (maqamData) {
-        const parsedSayrParameter = parseSayrParameter(sayrParam, maqamData);
-
-        for (const sayr of maqamData.getSuyur()) {
-          if (createSayrParameter(sayr.id, maqamData) === parsedSayrParameter) {
-            sayrId = sayr.id;
-            break;
-          }
-        }
-      } else {
-        sayrId = sayrParam;
-      }
+      const maqamData = maqamat.find((m) => m.getId() === maqamId);
+      sayrId = maqamData?.getSuyur().find((sayr) => createSayrToken(sayr) === sayrParam)?.id;
     }
 
   // Pass the parsed parameters to the app context
@@ -445,38 +281,18 @@ export default function AppClient() {
       params.push(`centsTolerance=${centsTolerance}`);
     }
 
-    // Use descriptive parameters for jins and maqam with transposition note included in parameter
+    // A selected transposition contributes its tonic to the token; the taḥlīl is
+    // the bare idName.
     if (selectedJinsData) {
-      const jinsName = selectedJinsData.getName();
-      let jinsParam: string;
-
-      if (selectedJins) {
-        // Include the first note in the parameter using the "-al-" format
-        const firstNote = selectedJins.jinsPitchClasses[0].noteName;
-        jinsParam = createUrlParameter(jinsName, firstNote);
-      } else {
-        jinsParam = createUrlParameter(jinsName);
-      }
-      params.push(`jins=${encodeUrlParameter(jinsParam)}`);
+      params.push(`jins=${createEntityToken(selectedJinsData.getIdName(), selectedJins?.jinsPitchClasses[0].noteName)}`);
     }
 
     if (selectedMaqamData) {
-      const maqamName = selectedMaqamData.getName();
-      let maqamParam: string;
-
-      if (selectedMaqam) {
-        // Include the first note in the parameter using the "-al-" format
-        const firstNote = selectedMaqam.ascendingPitchClasses[0].noteName;
-        maqamParam = createUrlParameter(maqamName, firstNote);
-      } else {
-        maqamParam = createUrlParameter(maqamName);
-      }
-      params.push(`maqam=${encodeUrlParameter(maqamParam)}`);
+      params.push(`maqam=${createEntityToken(selectedMaqamData.getIdName(), selectedMaqam?.ascendingPitchClasses[0].noteName)}`);
 
       if (maqamSayrId) {
-        // Use descriptive sayr parameter with author and page information
-        const sayrParam = createSayrParameter(maqamSayrId, selectedMaqamData);
-        params.push(`sayr=${encodeUrlParameter(sayrParam)}`);
+        const sayr = selectedMaqamData.getSuyur().find((s) => s.id === maqamSayrId);
+        if (sayr) params.push(`sayr=${createSayrToken(sayr)}`);
       }
     }
 

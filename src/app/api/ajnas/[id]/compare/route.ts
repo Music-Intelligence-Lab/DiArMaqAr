@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -582,7 +582,7 @@ export async function GET(
       const comparisonJinsNamespace = buildEntityNamespace(
         {
           id: jins.getId(),
-          idName: isTransposed ? standardizeText(selectedTransposition.name) : jins.getIdName(),
+          idName: isTransposed ? entityToken(selectedTransposition) : jins.getIdName(),
           displayName: isTransposed ? selectedTransposition.name : jins.getName(),
         },
         {

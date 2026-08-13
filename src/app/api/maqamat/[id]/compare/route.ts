@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -340,7 +340,7 @@ export async function GET(
         }
         const jinsObj: Record<string, unknown> = {
           id: jinsAtThisNote.jinsId,
-          idName: standardizeText(jinsAtThisNote.name || ""),
+          idName: entityToken(jinsAtThisNote),
           displayName: jinsAtThisNote.name || "",
           isBaseForm: jinsAtThisNote.isBaseForm,
         };
@@ -632,7 +632,7 @@ export async function GET(
       const comparisonMaqamNamespace = buildEntityNamespace(
         {
           id: maqam.getId(),
-          idName: isTransposed ? standardizeText(selectedTransposition.name) : maqam.getIdName(),
+          idName: isTransposed ? entityToken(selectedTransposition) : maqam.getIdName(),
           displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
         },
         {

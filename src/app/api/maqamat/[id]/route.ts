@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
@@ -1036,7 +1036,7 @@ export async function GET(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
               availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
-                idName: standardizeText(t.name),
+                idName: entityToken(t),
                 displayName: t.name,
                 tonic: {
                   idName: standardizeText(t.ascendingPitchClasses[0].noteName),
@@ -1096,7 +1096,7 @@ export async function GET(
     const maqamNamespace = buildEntityNamespace(
       {
         id: maqam.getId(),
-        idName: isTransposed ? standardizeText(selectedTransposition.name) : maqam.getIdName(),
+        idName: isTransposed ? entityToken(selectedTransposition) : maqam.getIdName(),
         displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
       },
       {
@@ -1262,7 +1262,7 @@ export async function GET(
         );
         if (jinsAtNote) {
           entry.jinsId = jinsAtNote.jinsId;
-          entry.jinsIdName = standardizeText(jinsAtNote.name || '');
+          entry.jinsIdName = entityToken(jinsAtNote);
           entry.jinsDisplayName = jinsAtNote.name || '';
           entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
           if (inArabic) {
@@ -1389,7 +1389,7 @@ export async function GET(
         } else {
           const jinsObj: any = {
             id: jinsAtThisNote.jinsId,
-            idName: standardizeText(jinsAtThisNote.name || ''),
+            idName: entityToken(jinsAtThisNote),
             displayName: jinsAtThisNote.name || '',
             isBaseForm: jinsAtThisNote.isBaseForm
           };
@@ -1412,7 +1412,7 @@ export async function GET(
         } else {
           const jinsObj: any = {
             id: jinsAtThisNote.jinsId,
-            idName: standardizeText(jinsAtThisNote.name || ''),
+            idName: entityToken(jinsAtThisNote),
             displayName: jinsAtThisNote.name || '',
             isBaseForm: jinsAtThisNote.isBaseForm
           };
@@ -1492,7 +1492,7 @@ export async function GET(
 
           const modObj: any = {
             id: entity.id,
-            idName: standardizeText(m.name),
+            idName: entityToken(m),
             displayName: m.name,
             tonicIdName: standardizeText(m.ascendingPitchClasses?.[0]?.noteName || m.jinsPitchClasses?.[0]?.noteName || ''),
             tonicDisplayName: m.ascendingPitchClasses?.[0]?.noteName || m.jinsPitchClasses?.[0]?.noteName || ''

@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "idName": "jins_nikriz_(al-sabbagh)",
+    "idName": "jins_nikriz_alsabbagh",
     "name": "jins nikrīz (al-Ṣabbāgh)",
     "noteNames": [
       "rāst",
@@ -150,7 +150,7 @@
   },
   {
     "id": "8",
-    "idName": "jins_saba_(al-sabbagh)",
+    "idName": "jins_saba_alsabbagh",
     "name": "jins ṣabā (al-Ṣabbāgh)",
     "noteNames": [
       "dūgāh",
@@ -190,7 +190,7 @@
   },
   {
     "id": "10",
-    "idName": "jins_chahargah_(al-sabbagh)",
+    "idName": "jins_chahargah_alsabbagh",
     "name": "jins chahārgāh (al-Ṣabbāgh)",
     "noteNames": [
       "chahārgāh",
@@ -271,7 +271,7 @@
   },
   {
     "id": "14",
-    "idName": "jins_nahawand_(al-sabbagh)",
+    "idName": "jins_nahawand_alsabbagh",
     "name": "jins nahāwand (al-Ṣabbāgh)",
     "noteNames": [
       "rāst",
@@ -352,7 +352,7 @@
   },
   {
     "id": "21",
-    "idName": "jins_buselik_(al-shawwa)",
+    "idName": "jins_buselik_alshawwa",
     "name": "jins būselīk (al-Shawwā)",
     "noteNames": [
       "dūgāh",
@@ -372,7 +372,7 @@
   },
   {
     "id": "22",
-    "idName": "jins_buselik_(al-hilu)",
+    "idName": "jins_buselik_alhilu",
     "name": "jins būselīk (al-Ḥilū)",
     "noteNames": [
       "dūgāh",
@@ -412,7 +412,7 @@
   },
   {
     "id": "24",
-    "idName": "jins_awj_ara_(al-shawwa)",
+    "idName": "jins_awj_ara_alshawwa",
     "name": "jins awj ʾārāʾ (al-Shawwā)",
     "noteNames": [
       "ʿirāq",
@@ -604,7 +604,7 @@
   },
   {
     "id": "38",
-    "idName": "jins_rahat_al-arwah",
+    "idName": "jins_rahat_alarwah",
     "name": "jins rāḥat al-arwāḥ",
     "noteNames": [
       "ʿirāq",
@@ -744,7 +744,7 @@
   },
   {
     "id": "45",
-    "idName": "jins_mazij_al-tib",
+    "idName": "jins_mazij_altib",
     "name": "jins mazīj al-ṭīb",
     "noteNames": [
       "ʿirāq",
@@ -764,7 +764,7 @@
   },
   {
     "id": "47",
-    "idName": "jins_ashwaq_al-kharif",
+    "idName": "jins_ashwaq_alkharif",
     "name": "jins ashwāq al-kharīf",
     "noteNames": [
       "ʿirāq",
@@ -804,7 +804,7 @@
   },
   {
     "id": "49",
-    "idName": "jins_awj_ara_(al-hilu)",
+    "idName": "jins_awj_ara_alhilu",
     "name": "jins awj ʾārāʾ (al-Ḥilū)",
     "noteNames": [
       "kawasht",

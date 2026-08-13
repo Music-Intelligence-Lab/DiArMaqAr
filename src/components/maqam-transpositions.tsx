@@ -7,7 +7,7 @@ import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
@@ -1037,7 +1037,7 @@ const MaqamTranspositions: React.FC = () => {
               {/* Note names lead: the column's identity comes first, and the
                   maqām degree follows as its position within the maqām */}
               <tr data-row-type="noteNames">
-                <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-noteNames-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.noteNames")}</th>
+                <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-noteNames-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.noteNames")}</th>
                 {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                 {pitchClasses.map((pitchClass, i) => {
                   // The ghammāz mark runs down the column, so the note name
@@ -1061,7 +1061,7 @@ const MaqamTranspositions: React.FC = () => {
                 })}
               </tr>
               <tr data-row-type="scaleDegrees">
-                <th scope="col" id={`maqam-${standardizeText(maqam.name)}-scaleDegrees-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.scaleDegrees")}</th>
+                <th scope="col" id={`maqam-${entityToken(maqam)}-scaleDegrees-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.scaleDegrees")}</th>
                 {leadingSpacer("maqam-jins-transpositions-shared__table-cell--scale-degree", true)}
                 {pitchClasses.map((_, i) => {
                   const isGhammaz = isGhammazColumn(i);
@@ -1085,7 +1085,7 @@ const MaqamTranspositions: React.FC = () => {
               </tr>
               {filters["pitchClass"] && (
                 <tr data-row-type="pitchClass">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-pitchClass-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.pitchClass")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-pitchClass-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.pitchClass")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
@@ -1097,7 +1097,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["abjadName"] && (
                 <tr data-row-type="abjadName">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-abjadName-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.abjadName")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-abjadName-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.abjadName")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
@@ -1109,7 +1109,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["englishName"] && (
                 <tr data-row-type="englishName">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-englishName-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.englishName")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-englishName-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.englishName")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pc, i) => (
                     <React.Fragment key={i}>
@@ -1121,7 +1121,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["solfege"] && (
                 <tr data-row-type="solfege">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-solfege-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.solfege")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-solfege-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.solfege")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pc, i) => (
                     <React.Fragment key={i}>
@@ -1133,7 +1133,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters[valueType as keyof typeof filters] && (
               <tr data-row-type={valueType}>
-                <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-primaryValue-header`} className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`maqam.${valueType}`)}</th>
+                <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-primaryValue-header`} className="maqam-jins-transpositions-shared__row-header maqam-jins-transpositions-shared__row-header--primary-value" data-column-type="row-header">{t(`maqam.${valueType}`)}</th>
                 {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                 <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type={valueType}>{pitchClasses[0].originalValue}</td>
                 {intervals.map((interval, i) => (
@@ -1147,7 +1147,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {valueType !== "fraction" && filters["fraction"] && (
                 <tr data-row-type="fraction">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-fraction-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.fraction")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-fraction-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.fraction")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fraction">{pitchClasses[0].fraction}</td>
                   {intervals.map((interval, i) => (
@@ -1161,7 +1161,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {valueType !== "cents" && filters["cents"] && (
                 <tr data-row-type="cents">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-cents-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.cents")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-cents-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.cents")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents">{parseFloat(pitchClasses[0].cents).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
@@ -1175,7 +1175,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["centsFromZero"] && (
                 <tr data-row-type="centsFromZero">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-centsFromZero-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.centsFromZero")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-centsFromZero-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.centsFromZero")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-from-zero">0.000</td>
                   {intervals.map((interval, i) => (
@@ -1189,7 +1189,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["centsDeviation"] && (
                 <tr data-row-type="centsDeviation">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-centsDeviation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.centsDeviation")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-centsDeviation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.centsDeviation")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="cents-deviation">
                     <span>{getIpnReferenceNoteNameWithOctave(pitchClasses[0])}</span>
@@ -1211,7 +1211,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {valueType !== "decimalRatio" && filters["decimalRatio"] && (
                 <tr data-row-type="decimalRatio">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-decimalRatio-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.decimalRatio")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-decimalRatio-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.decimalRatio")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="decimal-ratio">{parseFloat(pitchClasses[0].decimalRatio).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
@@ -1225,7 +1225,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {valueType !== "stringLength" && filters["stringLength"] && (
                 <tr data-row-type="stringLength">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-stringLength-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.stringLength")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-stringLength-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.stringLength")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="string-length">{parseFloat(pitchClasses[0].stringLength).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
@@ -1239,7 +1239,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {valueType !== "fretDivision" && filters["fretDivision"] && (
                 <tr data-row-type="fretDivision">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-fretDivision-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.fretDivision")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-fretDivision-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.fretDivision")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                   <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" data-column-type="fret-division">{parseFloat(pitchClasses[0].fretDivision).toFixed(3)}</td>
                   {intervals.map((interval, i) => (
@@ -1253,7 +1253,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["midiNote"] && (
                 <tr data-row-type="midiNote">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-midiNote-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNote")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-midiNote-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNote")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
@@ -1265,7 +1265,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["midiNoteDeviation"] && (
                 <tr data-row-type="midiNoteDeviation">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-midiNoteDeviation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNoteDeviation")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-midiNoteDeviation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.midiNoteDeviation")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pitchClass, i) => {
                     const referenceMidiNote = calculateIpnReferenceMidiNote(pitchClass);
@@ -1283,7 +1283,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters["frequency"] && (
                 <tr data-row-type="frequency">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-frequency-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.frequency")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-frequency-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.frequency")}</th>
                   {leadingSpacer("maqam-jins-transpositions-shared__table-cell--pitch-class")}
                   {pitchClasses.map((pitchClass, i) => (
                     <React.Fragment key={i}>
@@ -1294,7 +1294,7 @@ const MaqamTranspositions: React.FC = () => {
                 </tr>
               )}
               <tr data-row-type="play">
-                <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-play-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.play")}</th>
+                <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-play-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.play")}</th>
                 {leadingSpacer("maqam-jins-transpositions-shared__table-cell")}
                 {pitchClasses.map((pitchClass, i) => {
                   return (
@@ -1321,7 +1321,7 @@ const MaqamTranspositions: React.FC = () => {
               {jinsTranspositions && (
                 <>
                   <tr data-row-type="ajnas">
-                    <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-ajnas-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.ajnas")}</th>
+                    <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-ajnas-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.ajnas")}</th>
                     {jinsTranspositions.map((jinsTransposition, index) => {
                       const noteNames = jinsTransposition?.jinsPitchClasses.map((pc) => pc.noteName) || [];
                       const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) &&
@@ -1364,7 +1364,7 @@ const MaqamTranspositions: React.FC = () => {
               )}
               {filters.staffNotation && (
                 <tr data-row-type="staffNotation">
-                  <th scope="row" id={`maqam-${standardizeText(maqam.name)}-${ascending ? 'ascending' : 'descending'}-staffNotation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.staffNotation")}</th>
+                  <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-staffNotation-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.staffNotation")}</th>
                   <td className="staff-notation-cell" colSpan={pitchClasses.length * 2}>
                     {/* Only render staff notation when actually open to improve performance */}
                     {open && <StaffNotation pitchClasses={pitchClasses} />}

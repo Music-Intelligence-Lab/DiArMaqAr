@@ -658,17 +658,17 @@ paths:
                       hasAsymmetricDescending: true
                       hasSuyur: true
                     availableTranspositions:
-                      - idName: "maqam_rast_al-qarar_chahargah"
+                      - idName: "maqam_rast_al_qarar_chahargah"
                         displayName: "maqām rāst al-qarār chahārgāh"
                         tonic:
                           idName: "qarar_chahargah"
                           displayName: "qarār chahārgāh"
-                      - idName: "maqam_rast_al-chahargah"
+                      - idName: "maqam_rast_al_chahargah"
                         displayName: "maqām rāst al-chahārgāh"
                         tonic:
                           idName: "chahargah"
                           displayName: "chahārgāh"
-                      - idName: "maqam_rast_al-mahuran"
+                      - idName: "maqam_rast_al_mahuran"
                         displayName: "maqām rāst al-māhūrān"
                         tonic:
                           idName: "mahuran"
@@ -787,14 +787,14 @@ paths:
                         dūgāh: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
                         segāh: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
                         chahārgāh: null
-                        nawā: { id: "19", idName: "jins_rast_al-nawa", displayName: "jins rāst al-nawā" }
-                        ḥusaynī: { id: "2", idName: "jins_bayyat_al-husayni", displayName: "jins bayyāt al-ḥusaynī" }
-                        awj: { id: "3", idName: "jins_segah_al-awj", displayName: "jins segāh al-awj" }
+                        nawā: { id: "19", idName: "jins_rast_al_nawa", displayName: "jins rāst al-nawā" }
+                        ḥusaynī: { id: "2", idName: "jins_bayyat_al_husayni", displayName: "jins bayyāt al-ḥusaynī" }
+                        awj: { id: "3", idName: "jins_segah_al_awj", displayName: "jins segāh al-awj" }
                       descending:
                         ʿajam: null
-                        ḥusaynī: { id: "7", idName: "jins_kurd_al-husayni", displayName: "jins kurd al-ḥusaynī" }
-                        nawā: { id: "6", idName: "jins_nahawand_al-nawa", displayName: "jins nahāwand al-nawā" }
-                        chahārgāh: { id: "5", idName: "jins_ajam_ushayran_al-chahargah", displayName: "jins ʿajam ʿushayrān al-chahārgāh" }
+                        ḥusaynī: { id: "7", idName: "jins_kurd_al_husayni", displayName: "jins kurd al-ḥusaynī" }
+                        nawā: { id: "6", idName: "jins_nahawand_al_nawa", displayName: "jins nahāwand al-nawā" }
+                        chahārgāh: { id: "5", idName: "jins_ajam_ushayran_al_chahargah", displayName: "jins ʿajam ʿushayrān al-chahārgāh" }
                         segāh: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
                         dūgāh: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
                         rāst: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
@@ -810,7 +810,7 @@ paths:
                         noteNameDisplay: "nawā"
                         maqamDegree: "V"
                         jinsId: "19"
-                        jinsIdName: "jins_rast_al-nawa"
+                        jinsIdName: "jins_rast_al_nawa"
                         jinsDisplayName: "jins rāst al-nawā"
                     tertiaryJins: null
                     ghammaz:
@@ -822,7 +822,7 @@ paths:
                   value:
                     maqam:
                       id: "1"
-                      idName: "maqam_rast_al-chahargah"
+                      idName: "maqam_rast_al_chahargah"
                       displayName: "maqām rāst al-chahārgāh"
                       version: "2025-12-10T17:03:34.565Z"
                     family:
@@ -848,17 +848,17 @@ paths:
                       hasAsymmetricDescending: true
                       hasSuyur: true
                     availableTranspositions:
-                      - idName: "maqam_rast_al-qarar_chahargah"
+                      - idName: "maqam_rast_al_qarar_chahargah"
                         displayName: "maqām rāst al-qarār chahārgāh"
                         tonic:
                           idName: "qarar_chahargah"
                           displayName: "qarār chahārgāh"
-                      - idName: "maqam_rast_al-chahargah"
+                      - idName: "maqam_rast_al_chahargah"
                         displayName: "maqām rāst al-chahārgāh"
                         tonic:
                           idName: "chahargah"
                           displayName: "chahārgāh"
-                      - idName: "maqam_rast_al-mahuran"
+                      - idName: "maqam_rast_al_mahuran"
                         displayName: "maqām rāst al-māhūrān"
                         tonic:
                           idName: "mahuran"
@@ -973,9 +973,9 @@ paths:
                           noteNameDisplay: "chahārgāh"
                     ajnas:
                       ascending:
-                        chahārgāh: { id: "19", idName: "jins_rast_al-chahargah", displayName: "jins rāst al-chahārgāh" }
-                        nawā: { id: "2", idName: "jins_bayyat_al-nawa", displayName: "jins bayyāt al-nawā" }
-                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al-tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
+                        chahārgāh: { id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }
+                        nawā: { id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }
+                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
                         ʿajam: null
                         kurdān: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
                         muḥayyar: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
@@ -985,15 +985,15 @@ paths:
                         muḥayyar: { id: "7", idName: "jins_kurd", displayName: "jins kurd" }
                         kurdān: { id: "6", idName: "jins_nahawand", displayName: "jins nahāwand" }
                         ʿajam: { id: "5", idName: "jins_ajam_ushayran", displayName: "jins ʿajam ʿushayrān" }
-                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al-tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
-                        nawā: { id: "2", idName: "jins_bayyat_al-nawa", displayName: "jins bayyāt al-nawā" }
-                        chahārgāh: { id: "19", idName: "jins_rast_al-chahargah", displayName: "jins rāst al-chahārgāh" }
+                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
+                        nawā: { id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }
+                        chahārgāh: { id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }
                     primaryJins:
                       - noteName: "chahargah"
                         noteNameDisplay: "chahārgāh"
                         maqamDegree: "I"
                         jinsId: "19"
-                        jinsIdName: "jins_rast_al-chahargah"
+                        jinsIdName: "jins_rast_al_chahargah"
                         jinsDisplayName: "jins rāst al-chahārgāh"
                     secondaryJins:
                       - noteName: "kurdan"
@@ -1062,7 +1062,7 @@ paths:
                             tonicDisplayName: "rāst"
                             isTransposition: false
                           - id: "13"
-                            idName: "maqam_bayyat_shuri_al-rast"
+                            idName: "maqam_bayyat_shuri_al_rast"
                             displayName: "maqām bayyāt shūrī al-rāst"
                             tonicIdName: "rast"
                             tonicDisplayName: "rāst"
@@ -1078,7 +1078,7 @@ paths:
                         fourthDegree: []
                         fifthDegree:
                           - id: "10"
-                            idName: "maqam_nahawand_al-nawa"
+                            idName: "maqam_nahawand_al_nawa"
                             displayName: "maqām nahāwand al-nawā"
                             tonicIdName: "nawa"
                             tonicDisplayName: "nawā"
@@ -1090,7 +1090,7 @@ paths:
                       ajnas:
                         firstDegree:
                           - id: "2"
-                            idName: "jins_bayyat_al-rast"
+                            idName: "jins_bayyat_al_rast"
                             displayName: "jins bayyāt al-rāst"
                             tonicIdName: "rast"
                             tonicDisplayName: "rāst"
@@ -2120,7 +2120,7 @@ paths:
                             "noteNameDisplay": "qarār chahārgāh",
                             "maqamDegree": "I",
                             "jinsId": "19",
-                            "jinsIdName": "jins_rast_al-qarar_chahargah",
+                            "jinsIdName": "jins_rast_al_qarar_chahargah",
                             "jinsDisplayName": "jins rāst al-qarār chahārgāh"
                           }
                         ],
@@ -2161,7 +2161,7 @@ paths:
                             "noteNameDisplay": "chahārgāh",
                             "maqamDegree": "I",
                             "jinsId": "19",
-                            "jinsIdName": "jins_rast_al-chahargah",
+                            "jinsIdName": "jins_rast_al_chahargah",
                             "jinsDisplayName": "jins rāst al-chahārgāh"
                           }
                         ],
@@ -2202,7 +2202,7 @@ paths:
                             "noteNameDisplay": "māhūrān",
                             "maqamDegree": "I",
                             "jinsId": "19",
-                            "jinsIdName": "jins_rast_al-mahuran",
+                            "jinsIdName": "jins_rast_al_mahuran",
                             "jinsDisplayName": "jins rāst al-māhūrān"
                           }
                         ],
@@ -2512,7 +2512,7 @@ paths:
                                 Per-cell maqām entity namespace with family classification.
                                 **Present on successful cells only.** When the cell represents a
                                 transposition, `idName` and `displayName` reflect the transposed
-                                name (e.g. `maqam_rast_al-nawa`); the canonical `id` is preserved.
+                                name (e.g. `maqam_rast_al_nawa`); the canonical `id` is preserved.
                               properties:
                                 id:
                                   type: string
@@ -3067,12 +3067,12 @@ paths:
                               numberOfPitchClasses: 7
                               isOctaveRepeating: true
                           availableTranspositions:
-                            - idName: "maqam_bayyat_al-yegah"
+                            - idName: "maqam_bayyat_al_yegah"
                               displayName: "maqām bayyāt al-yegāh"
                               tonic:
                                 idName: "yegah"
                                 displayName: "yegāh"
-                            - idName: "maqam_bayyat_al-nawa"
+                            - idName: "maqam_bayyat_al_nawa"
                               displayName: "maqām bayyāt al-nawā"
                               tonic:
                                 idName: "nawa"
@@ -3112,7 +3112,7 @@ paths:
                                 displayName: "jins bayyāt"
                               nawā:
                                 id: "19"
-                                idName: "jins_rast_al-nawa"
+                                idName: "jins_rast_al_nawa"
                                 displayName: "jins rāst al-nawā"
                             descending:
                               kurdān:
@@ -3160,12 +3160,12 @@ paths:
                               numberOfPitchClasses: 7
                               isOctaveRepeating: true
                           availableTranspositions:
-                            - idName: "maqam_bayyat_al-ushayran"
+                            - idName: "maqam_bayyat_al_ushayran"
                               displayName: "maqām bayyāt al-ʿushayrān"
                               tonic:
                                 idName: "ushayran"
                                 displayName: "ʿushayrān"
-                            - idName: "maqam_bayyat_al-nawa"
+                            - idName: "maqam_bayyat_al_nawa"
                               displayName: "maqām bayyāt al-nawā"
                               tonic:
                                 idName: "nawa"
@@ -5749,7 +5749,7 @@ paths:
                   value:
                     jins:
                       id: "5"
-                      idName: "jins_kurd_al-nawa"
+                      idName: "jins_kurd_al_nawa"
                       displayName: "jins kurd al-nawā"
                       version: "2025-10-18T19:41:17.132Z"
                       isBaseForm: false
@@ -6658,7 +6658,7 @@ paths:
                               description: |
                                 Per-cell jins entity namespace. **Present on successful cells
                                 only.** When the cell represents a transposition, `idName` and
-                                `displayName` reflect the transposed name (e.g. `jins_bayyat_al-nawa`);
+                                `displayName` reflect the transposed name (e.g. `jins_bayyat_al_nawa`);
                                 the canonical `id` is preserved.
                               properties:
                                 id:
@@ -7109,12 +7109,12 @@ paths:
                             jins:
                               numberOfPitchClasses: 4
                           availableTranspositions:
-                            - idName: "jins_bayyat_al-yegah"
+                            - idName: "jins_bayyat_al_yegah"
                               displayName: "jins bayyāt al-yegāh"
                               tonic:
                                 idName: "yegah"
                                 displayName: "yegāh"
-                            - idName: "jins_bayyat_al-nawa"
+                            - idName: "jins_bayyat_al_nawa"
                               displayName: "jins bayyāt al-nawā"
                               tonic:
                                 idName: "nawa"
@@ -7166,12 +7166,12 @@ paths:
                             jins:
                               numberOfPitchClasses: 4
                           availableTranspositions:
-                            - idName: "jins_bayyat_al-ushayran"
+                            - idName: "jins_bayyat_al_ushayran"
                               displayName: "jins bayyāt al-ʿushayrān"
                               tonic:
                                 idName: "ushayran"
                                 displayName: "ʿushayrān"
-                            - idName: "jins_bayyat_al-nawa"
+                            - idName: "jins_bayyat_al_nawa"
                               displayName: "jins bayyāt al-nawā"
                               tonic:
                                 idName: "nawa"
@@ -9788,7 +9788,7 @@ paths:
                     {
                       "jins": {
                         "id": "21",
-                        "idName": "jins_buselik_(al-shawwa)",
+                        "idName": "jins_buselik_alshawwa",
                         "displayName": "jins būselīk (al-Shawwā)",
                         "version": "2025-10-18T19:34:26.343Z"
                       },
@@ -9798,7 +9798,7 @@ paths:
                         }
                       ],
                       "links": {
-                        "detail": "https://diarmaqar.net/api/ajnas/jins_buselik_(al-shawwa)",
+                        "detail": "https://diarmaqar.net/api/ajnas/jins_buselik_alshawwa",
                         "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
                       }
                     },
@@ -10003,7 +10003,7 @@ components:
           description: >-
             Entity namespace for the maqām. When the maqām is transposed to a
             different modal degree (taswīr), idName and displayName carry the
-            transposed name (e.g. maqam_rast_al-nawa). Note this is the entity
+            transposed name (e.g. maqam_rast_al_nawa). Note this is the entity
             triplet, not the MaqamMetadata wrapper used by the list endpoint.
           required:
             - id
@@ -10154,7 +10154,7 @@ components:
             jinsIdName:
               type: string
               nullable: true
-              description: URL-safe identifier for the jins (e.g. `jins_rast_al-nawa`). `null` if no matching jins is found.
+              description: URL-safe identifier for the jins (e.g. `jins_rast_al_nawa`). `null` if no matching jins is found.
             jinsDisplayName:
               type: string
               nullable: true
@@ -10226,7 +10226,7 @@ components:
           description: >-
             Entity namespace for the jins. When the jins is transposed to a
             different modal degree (taswīr), idName and displayName carry the
-            transposed name (e.g. jins_bayyat_al-nawa).
+            transposed name (e.g. jins_bayyat_al_nawa).
           required:
             - id
             - idName
@@ -10981,7 +10981,7 @@ components:
 
         Use `maqamId` (stable numeric) or the pair `maqamIdName` + `tonicId` for
         identification. For transposed maqāmāt, `maqamIdName` includes the
-        transposition suffix (e.g., "maqam_nahawand_al-kurdan").
+        transposition suffix (e.g., "maqam_nahawand_al_kurdan").
       required:
         - maqamId
         - maqamIdName
@@ -10999,7 +10999,7 @@ components:
           description: |
             Identifier for this (maqam, tonic) variant. For non-transpositions
             this is the bare maqam id (e.g. "maqam_nahawand"); for taṣwīr forms
-            it includes the tonic suffix (e.g. "maqam_nahawand_al-kurdan").
+            it includes the tonic suffix (e.g. "maqam_nahawand_al_kurdan").
           example: "maqam_rast"
         maqamDisplayName:
           type: string

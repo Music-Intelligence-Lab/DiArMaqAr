@@ -107,12 +107,12 @@ Each maqām node in API responses includes two identifier fields:
 | Field | Purpose | Stability | Example |
 |-------|---------|-----------|---------|
 | `baseMaqamIdName` | Query/lookup identifier | **Stable** across transpositions | `maqam_nahawand` |
-| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al-kurdan` |
+| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al_kurdan` |
 
 ### Naming Pattern
 
 - **Original form (taḥlīl)**: Uses base name only → `maqam_nahawand`
-- **Transposed form (taṣwīr)**: Adds `_al-{tonic}` suffix → `maqam_nahawand_al-kurdan`
+- **Transposed form (taṣwīr)**: Adds `_al-{tonic}` suffix → `maqam_nahawand_al_kurdan`
 
 ### Querying Transposed Maqāmāt
 
@@ -123,7 +123,7 @@ Each maqām node in API responses includes two identifier fields:
 ?toMaqam=maqam_nahawand&toTonic=kurdan   # ✅ Correct
 
 # NOT the display name format
-?toMaqam=maqam_nahawand_al-kurdan        # ❌ Will not work
+?toMaqam=maqam_nahawand_al_kurdan        # ❌ Will not work
 ```
 
 ### Example Response
@@ -138,7 +138,7 @@ Each maqām node in API responses includes two identifier fields:
   },
   "to": {
     "baseMaqamIdName": "maqam_nahawand",
-    "maqamIdName": "maqam_nahawand_al-kurdan",
+    "maqamIdName": "maqam_nahawand_al_kurdan",
     "maqamDisplayName": "maqām nahāwand al-kurdān",
     "isTransposition": true
   }
@@ -155,10 +155,10 @@ Always use `baseMaqamIdName` + `tonic` parameters for API queries. The `maqamIdN
 
 ```bash
 # List all transpositions for a maqām in a tuning context (separate endpoint)
-curl "https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah"
+curl "https://diarmaqar.net/api/maqamat/maqam_rahat_alarwah/transpositions?tuningSystem=ibnsina_1037&startingNote=yegah"
 
 # Or fetch full pitch-class detail for one realization:
-curl "https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
+curl "https://diarmaqar.net/api/maqamat/maqam_rahat_alarwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents"
 
 # The transpositions response includes entries with:
 # - Transposed name

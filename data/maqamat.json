@@ -1190,7 +1190,7 @@
   },
   {
     "id": "8",
-    "idName": "maqam_yegah_(abbas)",
+    "idName": "maqam_yegah_abbas",
     "name": "maqām yegāh (ʿAbbās)",
     "ascendingNoteNames": [
       "yegāh",
@@ -1751,7 +1751,7 @@
   },
   {
     "id": "14",
-    "idName": "maqam_rast_(al-sabbagh)",
+    "idName": "maqam_rast_alsabbagh",
     "name": "maqām rāst (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -2694,7 +2694,7 @@
   },
   {
     "id": "21",
-    "idName": "maqam_rahat_al-arwah",
+    "idName": "maqam_rahat_alarwah",
     "name": "maqām rāḥat al-arwāḥ",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -3174,7 +3174,7 @@
   },
   {
     "id": "24",
-    "idName": "maqam_nahawand_(al-sabbagh)",
+    "idName": "maqam_nahawand_alsabbagh",
     "name": "maqām nahāwand (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -3740,7 +3740,7 @@
   },
   {
     "id": "28",
-    "idName": "maqam_nawa_athar_(al-sabbagh/abbas)",
+    "idName": "maqam_nawa_athar_alsabbagh_abbas",
     "name": "maqām nawā athar (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -6650,7 +6650,7 @@
   },
   {
     "id": "50",
-    "idName": "maqam_nikriz_(al-sabbagh)",
+    "idName": "maqam_nikriz_alsabbagh",
     "name": "maqām nikrīz (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -6986,7 +6986,7 @@
   },
   {
     "id": "53",
-    "idName": "maqam_hijaz_kar_kurd_(al-sabbagh)",
+    "idName": "maqam_hijaz_kar_kurd_alsabbagh",
     "name": "maqām ḥijāz kār kurd (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -7133,7 +7133,7 @@
   },
   {
     "id": "54",
-    "idName": "maqam_hijaz_(al-sabbagh/abbas)",
+    "idName": "maqam_hijaz_alsabbagh_abbas",
     "name": "maqām ḥijāz (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -7681,7 +7681,7 @@
   },
   {
     "id": "59",
-    "idName": "maqam_hijaz_kar_(al-sabbagh/abbas)",
+    "idName": "maqam_hijaz_kar_alsabbagh_abbas",
     "name": "maqām ḥijāz kār (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -7828,7 +7828,7 @@
   },
   {
     "id": "60",
-    "idName": "maqam_zangulah/zanjaran_(al-sabbagh)",
+    "idName": "maqam_zangulah_zanjaran_alsabbagh",
     "name": "maqām zangulāh/zanjarān (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -7869,7 +7869,7 @@
   },
   {
     "id": "61",
-    "idName": "maqam_bayyat_(al-sabbagh)",
+    "idName": "maqam_bayyat_alsabbagh",
     "name": "maqām bayyāt (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -8017,7 +8017,7 @@
   },
   {
     "id": "62",
-    "idName": "maqam_qarjaghar/bayyat_shuri_(al-sabbagh)",
+    "idName": "maqam_qarjaghar_bayyat_shuri_alsabbagh",
     "name": "maqām qarjaghār/bayyāt shūrī (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -9645,7 +9645,7 @@
   },
   {
     "id": "78",
-    "idName": "maqam_ajam/ajam_murassa",
+    "idName": "maqam_ajam_ajam_murassa",
     "name": "maqām ʿajam/ʿajam muraṣṣaʿ",
     "ascendingNoteNames": [
       "dūgāh",
@@ -10085,7 +10085,7 @@
   },
   {
     "id": "83",
-    "idName": "maqam_saba_(al-sabbagh)",
+    "idName": "maqam_saba_alsabbagh",
     "name": "maqām ṣabā (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -13447,7 +13447,7 @@
   },
   {
     "id": "123",
-    "idName": "maqam_huzam_(al-sabbagh)",
+    "idName": "maqam_huzam_alsabbagh",
     "name": "maqām huzām (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "segāh",
@@ -13587,7 +13587,7 @@
   },
   {
     "id": "124",
-    "idName": "maqam_chahargah_(al-sabbagh)",
+    "idName": "maqam_chahargah_alsabbagh",
     "name": "maqām chahārgāh (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "chahārgāh",
@@ -13729,7 +13729,7 @@
   },
   {
     "id": "125",
-    "idName": "maqam_ajam_ushayran_(al-sabbagh)",
+    "idName": "maqam_ajam_ushayran_alsabbagh",
     "name": "maqām ʿajam ʿushayrān (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "nīm ʿajam ʿushayrān",
@@ -13859,7 +13859,7 @@
   },
   {
     "id": "126",
-    "idName": "maqam_iraq_(al-sabbagh)",
+    "idName": "maqam_iraq_alsabbagh",
     "name": "maqām ʿirāq (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -13998,7 +13998,7 @@
   },
   {
     "id": "127",
-    "idName": "maqam_segah_(al-sabbagh)",
+    "idName": "maqam_segah_alsabbagh",
     "name": "maqām segāh (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "segāh",
@@ -14158,7 +14158,7 @@
   },
   {
     "id": "128",
-    "idName": "maqam_suznak_(abbas)",
+    "idName": "maqam_suznak_abbas",
     "name": "maqām sūznāk (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -14301,7 +14301,7 @@
   },
   {
     "id": "129",
-    "idName": "maqam_huzam_(abbas)",
+    "idName": "maqam_huzam_abbas",
     "name": "maqām huzām (ʿAbbās)",
     "ascendingNoteNames": [
       "segāh",
@@ -14478,7 +14478,7 @@
   },
   {
     "id": "131",
-    "idName": "maqam_bestenegar_(abbas)",
+    "idName": "maqam_bestenegar_abbas",
     "name": "maqām bestenegār (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -14596,7 +14596,7 @@
   },
   {
     "id": "132",
-    "idName": "maqam_nahawand_(abbas)",
+    "idName": "maqam_nahawand_abbas",
     "name": "maqām nahāwand (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -14756,7 +14756,7 @@
   },
   {
     "id": "133",
-    "idName": "maqam_shat_araban_(abbas)",
+    "idName": "maqam_shat_araban_abbas",
     "name": "maqām shat ʿarabān (ʿAbbās)",
     "ascendingNoteNames": [
       "yegāh",
@@ -14901,7 +14901,7 @@
   },
   {
     "id": "134",
-    "idName": "maqam_mahur_(abbas)",
+    "idName": "maqam_mahur_abbas",
     "name": "maqām māhūr (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -14973,7 +14973,7 @@
   },
   {
     "id": "135",
-    "idName": "maqam_tarznwin_(abbas)",
+    "idName": "maqam_tarznwin_abbas",
     "name": "maqām ṭarznwīn (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -15111,7 +15111,7 @@
   },
   {
     "id": "136",
-    "idName": "maqam_buselik_(abbas)",
+    "idName": "maqam_buselik_abbas",
     "name": "maqām būselīk (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -15288,7 +15288,7 @@
   },
   {
     "id": "137",
-    "idName": "maqam_shawq_afza_(abbas)",
+    "idName": "maqam_shawq_afza_abbas",
     "name": "maqām shawq afzā (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿajam ʿushayrān",
@@ -15413,7 +15413,7 @@
   },
   {
     "id": "138",
-    "idName": "maqam_nishaburek_(abbas)",
+    "idName": "maqam_nishaburek_abbas",
     "name": "maqām nīshaburek (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -15450,7 +15450,7 @@
   },
   {
     "id": "139",
-    "idName": "maqam_farahnak_(abbas)",
+    "idName": "maqam_farahnak_abbas",
     "name": "maqām faraḥnāk (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -15591,7 +15591,7 @@
   },
   {
     "id": "140",
-    "idName": "maqam_hisar_(abbas)",
+    "idName": "maqam_hisar_abbas",
     "name": "maqām ḥiṣār (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -15756,7 +15756,7 @@
   },
   {
     "id": "141",
-    "idName": "maqam_shahnaz_(abbas)",
+    "idName": "maqam_shahnaz_abbas",
     "name": "maqām shahnāz (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -15831,7 +15831,7 @@
   },
   {
     "id": "142",
-    "idName": "maqam_nuhuft_(abbas)",
+    "idName": "maqam_nuhuft_abbas",
     "name": "maqām nuhuft (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿushayrān",
@@ -15927,7 +15927,7 @@
   },
   {
     "id": "143",
-    "idName": "maqam_nahawand_murassa_(abbas)",
+    "idName": "maqam_nahawand_murassa_abbas",
     "name": "maqām nahāwand muraṣṣaʿ (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -15964,7 +15964,7 @@
   },
   {
     "id": "144",
-    "idName": "maqam_suzdalara_(abbas)",
+    "idName": "maqam_suzdalara_abbas",
     "name": "maqām sūzdalārā (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",

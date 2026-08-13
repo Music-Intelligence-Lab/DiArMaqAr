@@ -12,7 +12,6 @@
 import Book from "./Book";
 import Article from "./Article";
 import Thesis from "./Thesis";
-import { standardizeText } from "@/functions/export";
 
 /**
  * Union type representing all possible bibliographic source types.
@@ -114,9 +113,19 @@ export function sourceSortKey(source: Source): string {
  * Source ids are snake_case now ("abbas_1986"); this format survives only so
  * that sourceIds written before that change can still be matched back to their
  * source. It is an identifier, not a citation — never render it to a reader.
+ *
+ * The transformation is spelled out here rather than delegated to
+ * standardizeText: this string has to keep reproducing what was written to disk
+ * years ago, so it must not follow standardizeText as that evolves. It is
+ * deliberately frozen, brackets and all.
  */
 export function urlSafeSourceId(source: Source, english: boolean = true): string {
   const citation = stringifySource(source, english, null);
   if (!citation) return "";
-  return standardizeText(citation).replace(/_/g, "-");
+  return citation
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/['ʿʾ]/g, "")
+    .replace(/\s+/g, "-")
+    .toLowerCase();
 }

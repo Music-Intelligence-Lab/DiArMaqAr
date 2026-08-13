@@ -41,9 +41,28 @@ export interface ExportMaqamFamilyClassification {
 }
 
 /**
- * Converts a string with diacritics to their natural letters and replaces spaces with underscores
- * @param text The input string to convert
- * @returns The converted string with diacritics removed and spaces replaced with underscores
+ * Reduces a display name to the project's canonical identifier form: lowercase
+ * `[a-z0-9_]`, words joined by single underscores.
+ *
+ * The output is the `idName` of a maqām or jins, the tuning-system and source
+ * id, and every identifier that appears in an API path or an app URL. Two
+ * properties are relied on elsewhere and must hold:
+ *
+ * - **URL-safe.** No character needs percent-encoding, so an identifier can be
+ *   interpolated into a path or query string verbatim. A `/` in particular
+ *   would otherwise open a second path segment and 404 the route.
+ * - **One selectable token.** Underscore is a word character, so a reader can
+ *   double-click an identifier in the address bar and get all of it. Hyphens,
+ *   brackets and slashes all break that selection, so they are folded away.
+ *
+ * The definite article is written with a hyphen in transliteration and closes
+ * up here — "al-Ṣabbāgh" becomes "alsabbagh", matching how source ids have
+ * always been formed. That leaves "al" unable to appear as a word of its own,
+ * which is what lets `_al_` name a transposition ("maqam_rast_al_nawa") without
+ * ever being mistaken for part of a name.
+ *
+ * @param text The display name to convert
+ * @returns The canonical identifier form
  */
 export function standardizeText(text: string): string {
   return (
@@ -58,11 +77,76 @@ export function standardizeText(text: string): string {
       .replace(/ʿ/g, "")
       // Remove Arabic hamza character
       .replace(/ʾ/g, "")
+      // Drop the brackets around an attribution, keeping the attribution itself
+      .replace(/[()]/g, "")
+      // A slash separates alternative names; it is a word break, not a path segment
+      .replace(/\//g, "_")
+      // Close up the hyphen of the definite article, so "al-Ṣabbāgh" is one word
+      .replace(/-/g, "")
       // Replace spaces with underscores
       .replace(/\s+/g, "_")
+      // Collapse the runs the removals above leave behind, and trim the edges
+      .replace(/_+/g, "_")
+      .replace(/^_|_$/g, "")
       // Convert to lowercase for consistent matching
       .toLowerCase()
   );
+}
+
+/**
+ * Separates an entity from the tonic it is transposed to, mirroring how the
+ * transposition is named aloud — "maqām rāst al-nawā".
+ *
+ * standardizeText closes up the hyphen of the definite article, so "al" can
+ * never be a word of its own inside an identifier. That makes this separator
+ * unambiguous by construction rather than by convention.
+ */
+export const TONIC_SEPARATOR = "_al_";
+
+/**
+ * Builds the canonical identifier for a maqām or jins: its idName, with the
+ * tonic appended when this is a transposition rather than the taḥlīl.
+ *
+ *   maqam_rast                                     — the taḥlīl
+ *   maqam_rast_al_nawa                             — transposed to nawā
+ *   maqam_hijaz_kar_alsabbagh_abbas_al_qarar_dugah — attributed, transposed
+ *
+ * This is the one spelling of a transposed entity: it names it in the app URL
+ * and in export filenames alike. It is an identifier, never a display name.
+ */
+export function createEntityToken(idName: string, tonicNoteName?: string): string {
+  if (!tonicNoteName) return idName;
+  return `${idName}${TONIC_SEPARATOR}${standardizeText(tonicNoteName)}`;
+}
+
+/**
+ * The same identifier, for callers holding a rendered maqām or jins — which
+ * carries a display name and its pitch classes, but no idName of its own.
+ *
+ * A transposition's display name ends in " al-<tonic>", so that exact suffix is
+ * what gets stripped. Searching for " al-" instead would also find the article
+ * inside a name that contains one, cutting "maqām rāḥat al-arwāḥ" down to
+ * "maqām rāḥat".
+ */
+export function createEntityTokenFromName(name: string, tonicNoteName: string): string {
+  const transpositionSuffix = ` al-${tonicNoteName}`;
+  if (!name.endsWith(transpositionSuffix)) return standardizeText(name);
+
+  const baseName = name.slice(0, -transpositionSuffix.length);
+  return createEntityToken(standardizeText(baseName), tonicNoteName);
+}
+
+/**
+ * The canonical identifier of a rendered maqām or jins, whichever it is.
+ *
+ * This is what every export, API response and URL names a transposed entity
+ * by — call it rather than standardizing the display name, which would close up
+ * the article and yield "maqam_rast_alnawa" instead of "maqam_rast_al_nawa".
+ */
+export function entityToken(entity: { name: string; ascendingPitchClasses: PitchClass[] } | { name: string; jinsPitchClasses: PitchClass[] }): string {
+  const tonic = "ascendingPitchClasses" in entity ? entity.ascendingPitchClasses[0]?.noteName : entity.jinsPitchClasses[0]?.noteName;
+
+  return createEntityTokenFromName(entity.name, tonic ?? "");
 }
 
 export interface MergedJins {
@@ -639,14 +723,14 @@ function createJinsModulationDegrees8vbNoteNames(
 function createMaqamToMaqamModulations(modulations: MaqamatModulations): MaqamToMaqamModulationsStructure {
   const maqamatMods = modulations as MaqamatModulations;
   return {
-    maqamToMaqamModulationsOnFirstDegree: (maqamatMods.modulationsOnFirstDegree || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnThirdDegree: (maqamatMods.modulationsOnThirdDegree || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnAltThirdDegree: (maqamatMods.modulationsOnAltThirdDegree || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnFourthDegree: (maqamatMods.modulationsOnFourthDegree || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnFifthDegree: (maqamatMods.modulationsOnFifthDegree || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnSixthDegreeAsc: (maqamatMods.modulationsOnSixthDegreeAsc || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnSixthDegreeDesc: (maqamatMods.modulationsOnSixthDegreeDesc || []).map((maqam) => standardizeText(maqam.name)),
-    maqamToMaqamModulationsOnSixthDegreeIfNoThird: (maqamatMods.modulationsOnSixthDegreeIfNoThird || []).map((maqam) => standardizeText(maqam.name)),
+    maqamToMaqamModulationsOnFirstDegree: (maqamatMods.modulationsOnFirstDegree || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnThirdDegree: (maqamatMods.modulationsOnThirdDegree || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnAltThirdDegree: (maqamatMods.modulationsOnAltThirdDegree || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnFourthDegree: (maqamatMods.modulationsOnFourthDegree || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnFifthDegree: (maqamatMods.modulationsOnFifthDegree || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnSixthDegreeAsc: (maqamatMods.modulationsOnSixthDegreeAsc || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnSixthDegreeDesc: (maqamatMods.modulationsOnSixthDegreeDesc || []).map((maqam) => entityToken(maqam)),
+    maqamToMaqamModulationsOnSixthDegreeIfNoThird: (maqamatMods.modulationsOnSixthDegreeIfNoThird || []).map((maqam) => entityToken(maqam)),
     maqamToMaqamModulationsNisfBelowThirdNoteName: maqamatMods.noteNameNisfBelowThird || '',
   };
 }
@@ -673,14 +757,14 @@ function createMaqamToJinsModulations(modulations: AjnasModulations): MaqamToJin
   }
   
   return {
-    maqamToJinsModulationsOnFirstDegree: (ajnasMods.modulationsOnFirstDegree || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnThirdDegree: (ajnasMods.modulationsOnThirdDegree || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnAltThirdDegree: (ajnasMods.modulationsOnAltThirdDegree || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnFourthDegree: (ajnasMods.modulationsOnFourthDegree || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnFifthDegree: (ajnasMods.modulationsOnFifthDegree || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnSixthDegreeAsc: (ajnasMods.modulationsOnSixthDegreeAsc || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnSixthDegreeDesc: (ajnasMods.modulationsOnSixthDegreeDesc || []).map((jins) => standardizeText(jins.name)),
-    maqamToJinsModulationsOnSixthDegreeIfNoThird: (ajnasMods.modulationsOnSixthDegreeIfNoThird || []).map((jins) => standardizeText(jins.name)),
+    maqamToJinsModulationsOnFirstDegree: (ajnasMods.modulationsOnFirstDegree || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnThirdDegree: (ajnasMods.modulationsOnThirdDegree || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnAltThirdDegree: (ajnasMods.modulationsOnAltThirdDegree || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnFourthDegree: (ajnasMods.modulationsOnFourthDegree || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnFifthDegree: (ajnasMods.modulationsOnFifthDegree || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnSixthDegreeAsc: (ajnasMods.modulationsOnSixthDegreeAsc || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnSixthDegreeDesc: (ajnasMods.modulationsOnSixthDegreeDesc || []).map((jins) => entityToken(jins)),
+    maqamToJinsModulationsOnSixthDegreeIfNoThird: (ajnasMods.modulationsOnSixthDegreeIfNoThird || []).map((jins) => entityToken(jins)),
     maqamToJinsNoteNameNisfBelowThird: ajnasMods.noteNameNisfBelowThird || '',
   };
 }
@@ -699,49 +783,49 @@ function createMaqamToMaqamLowerOctaveModulations(
     maqamToMaqamModulationsOnFirstDegree8vb: (maqamatMods.modulationsOnFirstDegree || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnThirdDegree8vb: (maqamatMods.modulationsOnThirdDegree || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnAltThirdDegree8vb: (maqamatMods.modulationsOnAltThirdDegree || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFourthDegree8vb: (maqamatMods.modulationsOnFourthDegree || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFifthDegree8vb: (maqamatMods.modulationsOnFifthDegree || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeAsc8vb: (maqamatMods.modulationsOnSixthDegreeAsc || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeDesc8vb: (maqamatMods.modulationsOnSixthDegreeDesc || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb: (maqamatMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((maqam) => {
         const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsNisfBelowThird8vb: maqamatMods.noteNameNisfBelowThird ? 
@@ -778,49 +862,49 @@ function createMaqamToJinsLowerOctaveModulations(
     maqamToJinsModulationsOnFirstDegree8vb: (ajnasMods.modulationsOnFirstDegree || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnThirdDegree8vb: (ajnasMods.modulationsOnThirdDegree || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnAltThirdDegree8vb: (ajnasMods.modulationsOnAltThirdDegree || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFourthDegree8vb: (ajnasMods.modulationsOnFourthDegree || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFifthDegree8vb: (ajnasMods.modulationsOnFifthDegree || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeAsc8vb: (ajnasMods.modulationsOnSixthDegreeAsc || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeDesc8vb: (ajnasMods.modulationsOnSixthDegreeDesc || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: (ajnasMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((jins) => {
         const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
-        return shifted ? standardizeText(shifted.name) : null;
+        return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsNoteNameNisfBelowThird8vb: ajnasMods.noteNameNisfBelowThird ? 
@@ -1051,7 +1135,7 @@ export async function exportTuningSystem(
           version: jinsOverview.getVersion(),
         };
 
-        jinsReference[standardizeText(possibleJins.name)] = mergedJins;
+        jinsReference[entityToken(possibleJins)] = mergedJins;
       }
     }
   }
@@ -1264,12 +1348,12 @@ export async function exportTuningSystem(
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
               )
             : undefined,
           suyur: maqamOverview.getSuyur().map(sayr => ({
@@ -1321,7 +1405,7 @@ export async function exportTuningSystem(
         if (possibleMaqam.maqamToMaqamModulations) mergedMaqam.maqamToMaqamModulations = possibleMaqam.maqamToMaqamModulations;
         if (possibleMaqam.maqamToJinsModulations) mergedMaqam.maqamToJinsModulations = possibleMaqam.maqamToJinsModulations;
 
-        maqamReference[standardizeText(possibleMaqam.name)] = mergedMaqam;
+        maqamReference[entityToken(possibleMaqam)] = mergedMaqam;
       }
     }
   }
@@ -1525,6 +1609,9 @@ export async function exportJins(
   if (options.includeTranspositions && jinsData) {
     updateProgress(87, "Processing jins transpositions...");
     const transpositions: MergedJins[] = [];
+    // Collected as each transposition is named, since a MergedJins keeps only
+    // standardized note names and can no longer rebuild its own token.
+    const transpositionNames: string[] = [];
     let numberOfTranspositions = 0;
 
     const jinsTranspositions = Array.from(calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance));
@@ -1557,14 +1644,16 @@ export async function exportJins(
           version: jinsOverview.getVersion(),
         };
 
-        jinsReference[standardizeText(jinsTransposition.name)] = mergedJins;
+        const englishifiedName = entityToken(jinsTransposition);
+        jinsReference[englishifiedName] = mergedJins;
         transpositions.push(mergedJins);
+        transpositionNames.push(englishifiedName);
         numberOfTranspositions++;
       }
     }
 
     updateProgress(94, "Finalizing jins transpositions...");
-    result.transpositions = transpositions.map((jins) => standardizeText(jins.name));
+    result.transpositions = transpositionNames;
     result.numberOfTranspositions = numberOfTranspositions;
   }
 
@@ -1830,12 +1919,12 @@ export async function exportMaqam(
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
           )
         : undefined,
       suyur: maqamData.getSuyur().map(sayr => ({
@@ -2045,12 +2134,12 @@ export async function exportMaqam(
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? standardizeText(jins.name) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
               )
             : undefined,
           transposition: maqamTransposition.transposition,
@@ -2062,7 +2151,7 @@ export async function exportMaqam(
           maqamFamilyClassification: sharedClassification,
         };
 
-        const englishifiedName = standardizeText(maqamTransposition.name);
+        const englishifiedName = entityToken(maqamTransposition);
         maqamReference[englishifiedName] = mergedMaqam;
         transpositionNames.push(englishifiedName);
       }

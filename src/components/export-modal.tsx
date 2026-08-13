@@ -2,11 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import useAppContext from "@/contexts/app-context";
-import {
-  exportTuningSystem,
-  exportJins,
-  exportMaqam,
-} from "@/functions/export";
+import { entityToken, exportJins, exportMaqam, exportTuningSystem } from "@/functions/export";
 import {
   exportTuningSystemToScala,
   exportMaqamToScala,
@@ -367,7 +363,7 @@ export default function ExportModal({
 
       // Non-Scala (JSON): legacy structure.
       if (specificJins) {
-        parts.push(standardizeText(specificJins.name));
+        parts.push(entityToken(specificJins));
       } else {
         parts.push("jins");
       }
@@ -390,7 +386,7 @@ export default function ExportModal({
 
       // Non-Scala (JSON): legacy structure.
       if (specificMaqam) {
-        parts.push(standardizeText(specificMaqam.name));
+        parts.push(entityToken(specificMaqam));
       } else {
         parts.push("maqam");
       }

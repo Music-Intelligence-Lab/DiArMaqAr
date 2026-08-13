@@ -7,7 +7,7 @@ import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
 import { createSetFromMaqam } from "./classifyMaqamat12PitchClassSets";
 import { getMaqamat, getAjnas } from "./import";
-import { standardizeText } from "./export";
+import { createEntityTokenFromName, standardizeText } from "./export";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "./getIpnReferenceNoteName";
 
 // ============================================================================
@@ -1836,8 +1836,8 @@ export function exportMaqamWithTuningSystemOctave(
   // so the KBM's "This keyboard mapping uses the following .scl file:" line
   // matches the actual downloaded companion. Fall back to a legacy default.
   const tuningSystemId = tuningSystem.getId();
-  const maqamName = maqam.name.toLowerCase().replace(/\s+/g, '_');
-  const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
+  const maqamName = createEntityTokenFromName(maqam.name, maqam.ascendingPitchClasses[0]?.noteName ?? "");
+  const startingNoteForFilename = standardizeText(startingNote);
   const scalaFilename = scalaFilenameOverride || `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
   const keymapFilename = keymapFilenameOverride || `${maqamName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
 
@@ -1940,8 +1940,8 @@ export function exportJinsWithTuningSystemOctave(
   // so the KBM's "This keyboard mapping uses the following .scl file:" line
   // matches the actual downloaded companion. Fall back to a legacy default.
   const tuningSystemId = tuningSystem.getId();
-  const jinsName = jins.name.toLowerCase().replace(/\s+/g, '_');
-  const startingNoteForFilename = startingNote.toLowerCase().replace(/\s+/g, '_');
+  const jinsName = createEntityTokenFromName(jins.name, jins.jinsPitchClasses[0]?.noteName ?? "");
+  const startingNoteForFilename = standardizeText(startingNote);
   const scalaFilename = scalaFilenameOverride || `${tuningSystemId}_${startingNoteForFilename}_octave1.scl`;
   const keymapFilename = keymapFilenameOverride || `${jinsName}_${tuningSystemId}_${startingNoteForFilename}.kbm`;
 

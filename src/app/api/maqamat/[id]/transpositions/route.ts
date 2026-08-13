@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -267,7 +267,7 @@ export async function GET(
         );
         if (jinsAtNote) {
           entry.jinsId = jinsAtNote.jinsId;
-          entry.jinsIdName = standardizeText(jinsAtNote.name || '');
+          entry.jinsIdName = entityToken(jinsAtNote);
           entry.jinsDisplayName = jinsAtNote.name || '';
           entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
           if (inArabic) {

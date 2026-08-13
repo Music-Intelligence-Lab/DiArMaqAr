@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -705,7 +705,7 @@ export async function GET(
             {
               error: `Cannot transpose to '${transposeToNote}' in this tuning system`,
               availableTranspositions: transpositions.filter((t) => t.transposition).map((t) => ({
-                idName: standardizeText(t.name),
+                idName: entityToken(t),
                 displayName: t.name,
                 tonic: {
                   idName: standardizeText(t.jinsPitchClasses[0].noteName),
@@ -743,7 +743,7 @@ export async function GET(
     const jinsNamespace = buildEntityNamespace(
       {
         id: jins.getId(),
-        idName: isTransposed ? standardizeText(selectedTransposition.name) : jins.getIdName(),
+        idName: isTransposed ? entityToken(selectedTransposition) : jins.getIdName(),
         displayName: isTransposed ? selectedTransposition.name : jins.getName(),
       },
       {

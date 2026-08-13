@@ -385,7 +385,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
   },
   "availableTranspositions": [
     {
-      "idName": "maqam_rast_al-qarar_chahargah",
+      "idName": "maqam_rast_al_qarar_chahargah",
       "displayName": "maqām rāst al-qarār chahārgāh",
       "tonic": {
         "idName": "qarar_chahargah",
@@ -393,7 +393,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       }
     },
     {
-      "idName": "maqam_rast_al-chahargah",
+      "idName": "maqam_rast_al_chahargah",
       "displayName": "maqām rāst al-chahārgāh",
       "tonic": {
         "idName": "chahargah",
@@ -401,7 +401,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       }
     },
     {
-      "idName": "maqam_rast_al-mahuran",
+      "idName": "maqam_rast_al_mahuran",
       "displayName": "maqām rāst al-māhūrān",
       "tonic": {
         "idName": "mahuran",
@@ -585,17 +585,17 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       "chahārgāh": null,
       "nawā": {
         "id": "19",
-        "idName": "jins_rast_al-nawa",
+        "idName": "jins_rast_al_nawa",
         "displayName": "jins rāst al-nawā"
       },
       "ḥusaynī": {
         "id": "2",
-        "idName": "jins_bayyat_al-husayni",
+        "idName": "jins_bayyat_al_husayni",
         "displayName": "jins bayyāt al-ḥusaynī"
       },
       "awj": {
         "id": "3",
-        "idName": "jins_segah_al-awj",
+        "idName": "jins_segah_al_awj",
         "displayName": "jins segāh al-awj"
       }
     },
@@ -603,17 +603,17 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       "ʿajam": null,
       "ḥusaynī": {
         "id": "7",
-        "idName": "jins_kurd_al-husayni",
+        "idName": "jins_kurd_al_husayni",
         "displayName": "jins kurd al-ḥusaynī"
       },
       "nawā": {
         "id": "6",
-        "idName": "jins_nahawand_al-nawa",
+        "idName": "jins_nahawand_al_nawa",
         "displayName": "jins nahāwand al-nawā"
       },
       "chahārgāh": {
         "id": "5",
-        "idName": "jins_ajam_ushayran_al-chahargah",
+        "idName": "jins_ajam_ushayran_al_chahargah",
         "displayName": "jins ʿajam ʿushayrān al-chahārgāh"
       },
       "segāh": {
@@ -649,7 +649,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       "noteNameDisplay": "nawā",
       "maqamDegree": "V",
       "jinsId": "19",
-      "jinsIdName": "jins_rast_al-nawa",
+      "jinsIdName": "jins_rast_al_nawa",
       "jinsDisplayName": "jins rāst al-nawā"
     }
   ],
@@ -841,7 +841,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteNameDisplay": "qarār chahārgāh",
             "maqamDegree": "I",
             "jinsId": "19",
-            "jinsIdName": "jins_rast_al-qarar_chahargah",
+            "jinsIdName": "jins_rast_al_qarar_chahargah",
             "jinsDisplayName": "jins rāst al-qarār chahārgāh"
           }
         ],
@@ -882,7 +882,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteNameDisplay": "chahārgāh",
             "maqamDegree": "I",
             "jinsId": "19",
-            "jinsIdName": "jins_rast_al-chahargah",
+            "jinsIdName": "jins_rast_al_chahargah",
             "jinsDisplayName": "jins rāst al-chahārgāh"
           }
         ],
@@ -923,7 +923,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteNameDisplay": "māhūrān",
             "maqamDegree": "I",
             "jinsId": "19",
-            "jinsIdName": "jins_rast_al-mahuran",
+            "jinsIdName": "jins_rast_al_mahuran",
             "jinsDisplayName": "jins rāst al-māhūrān"
           }
         ],
@@ -4716,7 +4716,7 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
     {
       "jins": {
         "id": "21",
-        "idName": "jins_buselik_(al-shawwa)",
+        "idName": "jins_buselik_alshawwa",
         "displayName": "jins būselīk (al-Shawwā)",
         "version": "2025-10-18T19:34:26.343Z"
       },
@@ -4726,7 +4726,7 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
         }
       ],
       "links": {
-        "detail": "https://diarmaqar.net/api/ajnas/jins_buselik_(al-shawwa)",
+        "detail": "https://diarmaqar.net/api/ajnas/jins_buselik_alshawwa",
         "source": "https://diarmaqar.net/api/sources/alshawwa_1946"
       }
     },

@@ -269,7 +269,7 @@ tuning-system-export.json
 ```json
 {
   "tuningSystemData": {
-    "id": "IbnSina-(1037)",
+    "id": "ibnsina_1037",
     "titleEnglish": "7-Fret Oud 17-Tone",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
@@ -499,7 +499,7 @@ The `allAjnasData` section contains all melodic genera available in the tuning s
       "commentsArabic": "",
       "SourcePageReferences": [
         {"sourceId": "alkhulai_1904_2011", "page": "55"},
-        {"sourceId": "al-Urmawī-al-Baghdādī-(2017)", "page": "23"}
+        {"sourceId": "alurmawialbaghdadi_1986_2017", "page": "23"}
       ],
       "version": "2025-10-18T19:34:26.343Z"
     }
@@ -564,25 +564,25 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
         "dugah": "jins_bayyat",
         "segah": "jins_segah",
         "chahargah": null,
-        "nawa": "jins_rast_al-nawa",
-        "husayni": "jins_bayyat_al-husayni",
-        "awj": "jins_segah_al-awj"
+        "nawa": "jins_rast_al_nawa",
+        "husayni": "jins_bayyat_al_husayni",
+        "awj": "jins_segah_al_awj"
       },
       "descendingMaqamAjnas": {
         "ajam": null,
-        "husayni": "jins_kurd_al-husayni",
-        "nawa": "jins_nahawand_al-nawa",
-        "chahargah": "jins_chahargah_(al-Shawwa)",
+        "husayni": "jins_kurd_al_husayni",
+        "nawa": "jins_nahawand_al_nawa",
+        "chahargah": "jins_chahargah_alshawwa",
         "segah": "jins_segah",
         "dugah": "jins_bayyat",
         "rast": "jins_rast"
       },
       "suyur": [
         {
-          "id": "Sayr al-Ṣabbāgh-(1950)",
+          "id": "sayr_alsabbagh_1950",
           "creatorEnglish": "Ṣabbāgh",
           "creatorArabic": "صبّاغ",
-          "sourceId": "al-Ṣabbāgh-(1950)",
+          "sourceId": "alsabbagh_1950",
           "page": "41",
           "commentsEnglish": "Known in Tunis as Ṭabe' al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq...",
           "commentsArabic": "",
@@ -770,7 +770,7 @@ Ordered lists of elements:
 
 * Base forms have "isBaseForm": true and serve as the canonical version of each jins or maqām. Exactly one entry per `jinsId` / `maqamId` carries it.
 
-* **"transposition": false does not by itself mean base form.** A register shift is not taṣwīr, so the octave siblings of the base form (e.g. `jins_bayyat_al-muhayyar` beside `jins_bayyat`) also carry "transposition": false. Filtering on that alone returns the base form *and* its octave siblings. Filter on "isBaseForm": true instead.
+* **"transposition": false does not by itself mean base form.** A register shift is not taṣwīr, so the octave siblings of the base form (e.g. `jins_bayyat_al_muhayyar` beside `jins_bayyat`) also carry "transposition": false. Filtering on that alone returns the base form *and* its octave siblings. Filter on "isBaseForm": true instead.
 
 * The two flags together give the full taxonomy:
 

@@ -130,9 +130,13 @@ function buildModulationGraph(
     maqamIdToBaseIdName.set(maqamData.getId(), maqamData.getIdName());
   }
 
-  // Helper to get base idName from a Maqam transposition
+  // Helper to get base idName from a Maqam transposition. Every transposition
+  // is derived from a maqam in allMaqamat, so a miss is a broken invariant
+  // rather than a case to substitute a value for.
   const getBaseIdName = (maqam: Maqam): string => {
-    return maqamIdToBaseIdName.get(maqam.maqamId) || standardizeText(maqam.name);
+    const baseIdName = maqamIdToBaseIdName.get(maqam.maqamId);
+    if (!baseIdName) throw new Error(`No maqam found for maqamId "${maqam.maqamId}" while naming a modulation route`);
+    return baseIdName;
   };
 
   // Find all available maqamat and their transpositions.

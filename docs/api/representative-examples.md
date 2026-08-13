@@ -550,7 +550,7 @@ GET https://diarmaqar.net/api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingN
 
 ---
 
-### jins kurd (binsir) - `jins_kurd_(binsir)`
+### jins kurd (binsir) - `jins_kurd_binsir`
 
 **Description**: The same as jins kurd but starting on a different tonic, giving it slightly different intervals. Interesting for comparison and understanding why the maqām based on it (maqām ḥijāz kār kurd) is supposedly a transposition of maqām kurd with the same intervals, but in fact is not. Does not include a zalzalian interval.
 
@@ -560,7 +560,7 @@ GET https://diarmaqar.net/api/ajnas/jins_kurd?tuningSystem=alkindi_874&startingN
 
 **Example**:
 ```
-GET https://diarmaqar.net/api/ajnas/jins_kurd_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_kurd_binsir?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -595,7 +595,7 @@ GET https://diarmaqar.net/api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startin
 
 ---
 
-### jins ḥijāz (binsir) - `jins_hijaz_(binsir)`
+### jins ḥijāz (binsir) - `jins_hijaz_binsir`
 
 **Description**: The same as jins ḥijāz but starting on a different tonic, giving it slightly different intervals. Interesting for comparison. Does not include a zalzalian interval.
 
@@ -605,7 +605,7 @@ GET https://diarmaqar.net/api/ajnas/jins_hijaz?tuningSystem=ibnsina_1037&startin
 
 **Example**:
 ```
-GET https://diarmaqar.net/api/ajnas/jins_hijaz_(binsir)?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/ajnas/jins_hijaz_binsir?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
@@ -666,7 +666,7 @@ GET https://diarmaqar.net/api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&st
 
 **Complex and transposed maqāmāt:**
 
-### rāḥat al-arwāḥ - `maqam_rahat_al-arwah`
+### rāḥat al-arwāḥ - `maqam_rahat_alarwah`
 
 **Description**: A transposition of maqām huzām given its own name because of its character. Its darajat al-istiqrār (tonic) is the zalzalian interval ʿirāq.
 
@@ -676,7 +676,7 @@ GET https://diarmaqar.net/api/maqamat/maqam_hijaz?tuningSystem=alsabbagh_1954&st
 
 **Example**:
 ```
-GET https://diarmaqar.net/api/maqamat/maqam_rahat_al-arwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
+GET https://diarmaqar.net/api/maqamat/maqam_rahat_alarwah?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents
 ```
 
 ---
