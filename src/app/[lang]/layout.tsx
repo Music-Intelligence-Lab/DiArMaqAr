@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Readex_Pro } from "next/font/google";
 import { isLocale, dir, locales, type Locale } from "@/i18n/config";
 import { localeMeta } from "@/i18n/metadata";
+import { SITE_URL } from "@/site";
 import { notFound } from "next/navigation";
 import { AppContextProvider } from "@/contexts/app-context";
 import { SoundContextProvider } from "@/contexts/sound-context";
@@ -30,7 +31,7 @@ export async function generateMetadata({
   const m = localeMeta[locale];
 
   return {
-    metadataBase: new URL("https://diarmaqar.net"),
+    metadataBase: new URL(SITE_URL),
     title: m.title,
     description: m.description,
 
@@ -79,16 +80,19 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       locale: m.ogLocale,
-      url: `https://diarmaqar.net/${locale}`,
+      url: `${SITE_URL}/${locale}`,
       siteName: "Digital Arabic Maqām Archive",
       title: m.title,
       description: m.description,
     },
 
+    // Same localized copy as openGraph, from the one localeMeta source. The
+    // card previously carried a longer English-only blurb, which meant an
+    // Arabic or French share was described in English.
     twitter: {
       card: "summary_large_image",
-      title: "Digital Arabic Maqām Archive (DiArMaqAr)",
-      description: "Interactive multilingual platform spanning 1000+ years of Arabic maqām documentation. First computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines. REST API, JSON exports, Scala files. Grounded in decolonial computing.",
+      title: m.title,
+      description: m.description,
     },
 
     robots: {
@@ -119,7 +123,7 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  const baseUrl = "https://diarmaqar.net";
+  const baseUrl = SITE_URL;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -127,7 +131,7 @@ export default async function RootLayout({
     "name": "Digital Arabic Maqām Archive",
     "alternateName": "DiArMaqAr",
     "url": baseUrl,
-    "description": "Open-source, multilingual, browser-based computational platform and machine-readable corpus of Arabic maqām theory spanning over one thousand years of documentation. Comprises tanāghīm (tuning systems), ajnās (tri/tetra/pentachords), maqāmāt (melodic modes), suyūr (melodic pathways), and intiqālāt (modulation practices) compiled from primary Arabic, English, and French sources ranging from al-Kindī&apos;s 9th-century ratios to 20th-century scholarship, with complete bibliographic provenance. Grounded in culture-specific and decolonial computing methodologies.",
+    "description": "Open-source, multilingual, browser-based computational platform and machine-readable corpus of Arabic maqām theory spanning over one thousand years of documentation. Comprises tanāghīm (tuning systems), ajnās (tri/tetra/pentachords), maqāmāt (melodic modes), suyūr (melodic pathways), and intiqālāt (modulation practices) compiled from primary Arabic, English, and French sources ranging from al-Kindī's 9th-century ratios to 20th-century scholarship, with complete bibliographic provenance. Grounded in culture-specific and decolonial computing methodologies.",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "Web Browser",
     "offers": {
@@ -150,13 +154,13 @@ export default async function RootLayout({
     },
     "featureList": [
       "Machine-readable corpus spanning over one thousand years of documentation",
-      "Historically documented tuning systems from al-Kindī&apos;s 9th-century ratios to 20th-century scholarship",
+      "Historically documented tuning systems from al-Kindī's 9th-century ratios to 20th-century scholarship",
       "Complete bibliographic provenance for all entries",
       "Persian-Arab-Ottoman note naming convention as foundational abstraction",
       "Precise pitch-class data in multiple mathematical representations (fractional ratios, cents, string lengths, frequencies)",
       "Complete intervallic analyses",
       "Pattern-matching algorithms for valid transpositions across four-octave range",
-      "First computational implementation of Sāmī al-Shawwā&apos;s 1946 intiqālāt guidelines",
+      "First computational implementation of Sāmī al-Shawwā's 1946 intiqālāt guidelines",
       "Systematic exploration of modulation networks across all maqāmāt and tanāghīm",
       "Interactive interface supporting computer keyboard input, MIDI/MPE connectivity",
       "Scala tuning file exports for integration with external instruments and software",
@@ -292,7 +296,7 @@ export default async function RootLayout({
               <li><a href="/docs/openapi.json">OpenAPI Specification</a></li>
             </ul>
             <h2>API Access</h2>
-            <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
+            <p>Base URL: <a href={`${SITE_URL}/api`}>{`${SITE_URL}/api`}</a></p>
             <p>OpenAPI Spec: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
             <h3>For AI Assistants</h3>
             <p><strong>API access:</strong> All endpoints are public, unauthenticated, and return plain JSON. No browser, cookies, or authentication required.</p>
@@ -320,7 +324,7 @@ export default async function RootLayout({
           </ul>
 
           <h2>API Access</h2>
-          <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
+          <p>Base URL: <a href={`${SITE_URL}/api`}>{`${SITE_URL}/api`}</a></p>
           <p>OpenAPI Specification: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
           <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
 
@@ -334,7 +338,7 @@ export default async function RootLayout({
             <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
             <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
           </ul>
-          <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+          <p><strong>Quick Test URL:</strong> <code>{`GET ${SITE_URL}/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents`}</code></p>
           <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
 
           <h2>Quick Links</h2>

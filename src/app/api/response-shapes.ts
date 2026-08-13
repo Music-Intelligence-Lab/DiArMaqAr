@@ -1,9 +1,10 @@
 import { addArabicFields } from "@/app/api/arabic-helpers";
+import { SITE_URL } from "@/site";
 
 type Nullable<T> = T | null | undefined;
 
 /** Canonical production URL - prevents branch/deploy URLs from leaking into API responses */
-const CANONICAL_BASE = "https://diarmaqar.net";
+const CANONICAL_BASE = SITE_URL;
 
 /**
  * Returns the canonical production URL for links.self.

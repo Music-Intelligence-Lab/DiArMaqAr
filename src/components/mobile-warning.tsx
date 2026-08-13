@@ -3,6 +3,7 @@
 import React from "react";
 import { usePathname, useParams } from "next/navigation";
 import { stripLocale } from "@/i18n/navigation";
+import { SITE_URL } from "@/site";
 
 export default function MobileWarning() {
   const pathname = usePathname();
@@ -57,7 +58,7 @@ export default function MobileWarning() {
         </ul>
         
         <h2>API Access</h2>
-        <p>Base URL: <a href="https://diarmaqar.net/api">https://diarmaqar.net/api</a></p>
+        <p>Base URL: <a href={`${SITE_URL}/api`}>{`${SITE_URL}/api`}</a></p>
         <p>OpenAPI Specification: <a href="/docs/openapi.json">/docs/openapi.json</a></p>
         <p>Interactive Playground: <a href="/docs/api/playground">/docs/api/playground</a></p>
         
@@ -70,7 +71,7 @@ export default function MobileWarning() {
           <li>List all tuning systems: <code>GET /api/tuning-systems</code></li>
           <li>Most common tuning system: <code>GET /api/tuning-systems/ibnsina_1037/yegah/pitch-classes?pitchClassDataType=cents</code></li>
         </ul>
-        <p><strong>Quick Test URL:</strong> <code>GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&amp;startingNote=yegah&amp;pitchClassDataType=cents</code></p>
+        <p><strong>Quick Test URL:</strong> <code>{`GET ${SITE_URL}/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents`}</code></p>
         <p>All endpoints return JSON with complete data including pitch classes, intervals, bibliographic sources, and more. See <a href="/docs/api/representative-examples">Representative Examples</a> for complete list of recommended examples. Use the OpenAPI specification for complete endpoint documentation and parameter details.</p>
         
         <h2>Quick Links</h2>

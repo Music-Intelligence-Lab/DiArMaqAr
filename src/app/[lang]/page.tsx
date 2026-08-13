@@ -6,6 +6,7 @@ import LanguageSelector from "@/components/language-selector";
 import useLanguageContext from "@/contexts/language-context";
 import Footer from "@/components/footer";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
+import { SITE_URL } from "@/site";
 
 export default function LandingPage() {
   const { language, isRTL } = useLanguageContext();
@@ -302,7 +303,7 @@ export default function LandingPage() {
 
           {codeBlock(
             language === "ar" ? "مثال" : language === "fr" ? "Exemple" : "Example",
-            "GET https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents",
+            `GET ${SITE_URL}/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&startingNote=yegah&pitchClassDataType=cents`,
             "gold"
           )}
 
@@ -317,10 +318,10 @@ export default function LandingPage() {
           {codeBlock(
             language === "ar" ? "الموجّه" : language === "fr" ? "Invite" : "Prompt",
             language === "ar"
-              ? "لديك وصول إلى أرشيف المقام العربي الرقمي (DiArMaqAr)، وهو واجهة برمجية (REST API) عامّة للقراءة فقط على https://diarmaqar.net/api (دون مصادقة). اكتشف كلّ شيء عبر https://diarmaqar.net/docs/llms.txt. العقد الكامل القابل للقراءة آلياً: https://diarmaqar.net/docs/openapi.json"
+              ? `لديك وصول إلى أرشيف المقام العربي الرقمي (DiArMaqAr)، وهو واجهة برمجية (REST API) عامّة للقراءة فقط على ${SITE_URL}/api (دون مصادقة). اكتشف كلّ شيء عبر ${SITE_URL}/docs/llms.txt. العقد الكامل القابل للقراءة آلياً: ${SITE_URL}/docs/openapi.json`
               : language === "fr"
-              ? "Vous avez accès à l'Archive Numérique du Maqām Arabe (DiArMaqAr), une API REST publique en lecture seule sur https://diarmaqar.net/api (sans authentification). Découvrez tout via https://diarmaqar.net/docs/llms.txt. Contrat complet lisible par machine : https://diarmaqar.net/docs/openapi.json"
-              : "You have access to the Digital Arabic Maqām Archive (DiArMaqAr), a public read-only REST API at https://diarmaqar.net/api (no auth). Discover everything via https://diarmaqar.net/docs/llms.txt. Full machine-readable contract: https://diarmaqar.net/docs/openapi.json",
+              ? `Vous avez accès à l'Archive Numérique du Maqām Arabe (DiArMaqAr), une API REST publique en lecture seule sur ${SITE_URL}/api (sans authentification). Découvrez tout via ${SITE_URL}/docs/llms.txt. Contrat complet lisible par machine : ${SITE_URL}/docs/openapi.json`
+              : `You have access to the Digital Arabic Maqām Archive (DiArMaqAr), a public read-only REST API at ${SITE_URL}/api (no auth). Discover everything via ${SITE_URL}/docs/llms.txt. Full machine-readable contract: ${SITE_URL}/docs/openapi.json`,
             "accent",
             language === "ar" ? "rtl" : "ltr"
           )}

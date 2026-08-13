@@ -2,8 +2,9 @@ import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 import { locales } from '@/i18n/config'
+import { SITE_URL } from '@/site'
 
-const baseUrl = 'https://diarmaqar.net'
+const baseUrl = SITE_URL
 
 const localizablePages = ["", "app", "bibliography", "statistics"] as const;
 
