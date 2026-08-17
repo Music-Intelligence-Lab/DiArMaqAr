@@ -61,7 +61,7 @@ The platform shows every jins that matches a degree, stacked together on that de
 
 **Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference: at the degree nawā in maqām rāst, jins yegāh is the jins conventionally seated there, but the suyūr, across the whole corpus, repeatedly name jins rāst at nawā and never jins yegāh — so jins rāst leads instead.
 
-Where the suyūr are silent about a family, seating decides instead, and a jins nested inside a longer one ranks below the jins containing it. Both rules apply deterministically, so the order shown never depends on how the underlying data happens to be listed.
+Where the suyūr are silent about a family, seating decides instead, and a jins nested inside a longer one ranks below the jins containing it. Where even that ties, a stable identifier settles it, so the order shown never depends on how the underlying data happens to be listed.
 
 **Families.** A maqām named for one of its own ajnās is classified under that eponymous jins even when a different reading leads the tonic degree's display — maqām nawā athar's tonic also matches jins nikrīz, but the maqām still files under nawā athar. Family names always carry the jins's full name rather than a truncated first word — nawā athar, rāḥat al-arwāḥ, ḥijāz kār kurd — and keep any source attribution that distinguishes readings, so būselīk (al-Shawwā) and būselīk (al-Ḥilū) remain separate families.
 
