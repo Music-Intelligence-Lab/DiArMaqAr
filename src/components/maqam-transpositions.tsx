@@ -393,15 +393,16 @@ const MaqamTranspositions: React.FC = () => {
           let octaveTransposition = ascendingJins[0];
           if (octaveTransposition) {
             const shiftedFirstCell = shiftPitchClassByOctaveExtended(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
-            const foundJinsData = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
-            if (foundJinsData) {
-              octaveTransposition = {
-                ...octaveTransposition,
-                jinsPitchClasses: [shiftedFirstCell],
-                jinsPitchClassIntervals: [],
-                name: getDisplayName(foundJinsData.getName(), "jins") + " al-" + getDisplayName(shiftedFirstCell.noteName, "note"),
-              };
-            }
+            // Only the pitch class moves. The name is inherited verbatim from the
+            // tonic's jins: a register shift is not taṣwīr, so the octave-completion
+            // cell keeps the base form (jins nahāwand, not jins nahāwand al-kurdān),
+            // matching how calculateMaqamTranspositions names ajnās that land on an
+            // octave sibling in maqāmāt long enough to reach one on their own.
+            octaveTransposition = {
+              ...octaveTransposition,
+              jinsPitchClasses: [shiftedFirstCell],
+              jinsPitchClassIntervals: [],
+            };
           }
           ascendingJins = [...ascendingJins, octaveTransposition];
           descendingJins = [octaveTransposition, ...(descendingJins || [])];
@@ -788,15 +789,12 @@ const MaqamTranspositions: React.FC = () => {
         if (jinsTranspositions) {
           let octaveTransposition = maqam.ascendingMaqamAjnas ? maqam.ascendingMaqamAjnas[0] : null;
           if (octaveTransposition) {
-            const foundJinsData = ajnas.find((jins) => jins.getId() === octaveTransposition?.jinsId);
-            if (foundJinsData) {
-              octaveTransposition = {
-                ...octaveTransposition,
-                jinsPitchClasses: [shiftedFirstCell],
-                jinsPitchClassIntervals: [],
-                name: getDisplayName(foundJinsData.getName(), "jins") + " al-" + getDisplayName(shiftedFirstCell.noteName, "note"),
-              };
-            }
+            // Only the pitch class moves — see the matching block in maqamConfig above.
+            octaveTransposition = {
+              ...octaveTransposition,
+              jinsPitchClasses: [shiftedFirstCell],
+              jinsPitchClassIntervals: [],
+            };
           }
           jinsTranspositions = ascending ? [...jinsTranspositions, octaveTransposition] : [octaveTransposition, ...jinsTranspositions];
         }
