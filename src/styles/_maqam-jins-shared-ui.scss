@@ -810,6 +810,42 @@
     white-space: nowrap;
   }
 
+  // Every ajnās cell wraps its matches — one or many — in this stack: a flex
+  // column that resolves its height against the [data-column-type="jins"]
+  // cell's definite height (the same mechanism a lone button's height:100%
+  // relied on) and divides it equally among its buttons, so a 2-match cell
+  // fills the row exactly like a 4-match neighbour, with no dead space.
+  //
+  // The class name deliberately avoids the substring "__jins-button": this
+  // file styles buttons through [class*="__jins-button"], so a wrapper named
+  // "__jins-button-stack" matches that selector and gets styled as a button
+  // itself — one slab whose background and hover swallow the real buttons'
+  // boundaries.
+  [class*="__jins-stack"] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+
+    > [class*="__jins-button"] {
+      // flex-basis 0 + grow 1: equal shares of the cell. The automatic flex
+      // minimum still floors each button at its own wrapped label (and at the
+      // base rule's min-height), so a long name takes the height it needs
+      // instead of clipping, and equality degrades gracefully around it.
+      flex: 1 1 0;
+    }
+
+    // Two or more readings sharing one cell: tighten the metrics so wrapped
+    // names sit comfortably in a fractional share, and centre each label in
+    // its own button — the --multiline top-alignment below exists for a lone
+    // button spanning a tall row, not for buttons that own only a slice of it.
+    > [class*="__jins-button"]:not(:only-child) {
+      padding: 2px 8px;
+      line-height: $line-height-tight;
+      align-items: center;
+    }
+  }
+
   [class*="__jins-button"] {
     background-color: rgba($primary, 0.5);
     color: $text;
@@ -818,7 +854,8 @@
     cursor: pointer;
     font-size: 12px;
     width: 100%;
-    height: 100%;
+    // No height here: every button lives inside the __jins-stack flex column
+    // above, which owns the cell's height and hands each button its share.
     min-height: 27px;
     vertical-align: middle;
     text-align: left;
@@ -835,15 +872,6 @@
     white-space: normal;
     word-wrap: break-word;
     box-sizing: border-box;
-
-    // A degree cell can hold several matches; stacked copies sit one per
-    // line rather than running together (see the --stacked modifier below,
-    // which also drops the height:100% this rule relies on — every stacked
-    // button would otherwise claim the full cell height for itself and
-    // overflow past it).
-    & + & {
-      margin-block-start: 4px;
-    }
 
     &:focus {
       outline: transparent;
@@ -876,19 +904,6 @@
       justify-content: flex-end;
     }
 
-    // Multiple matches on one degree: swap the single-match proportions
-    // (height:100%, which lets one button fill the whole cell — see the
-    // [data-column-type="jins"] "definite height" comment above) for a
-    // block that only takes the room its own line(s) need, and tighten the
-    // padding/line-height so two or three readings, including wrapped
-    // two-line names, sit comfortably in one cell.
-    &[class*="--stacked"] {
-      display: block;
-      height: auto;
-      min-height: 20px;
-      padding: 2px 8px;
-      line-height: $line-height-tight;
-    }
   }
 
   // When the table's cells are rotated, center the jins-button labels to
