@@ -567,70 +567,94 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
   },
   "ajnas": {
     "ascending": {
-      "rāst": {
-        "id": "19",
-        "idName": "jins_rast",
-        "displayName": "jins rāst"
-      },
-      "dūgāh": {
-        "id": "2",
-        "idName": "jins_bayyat",
-        "displayName": "jins bayyāt"
-      },
-      "segāh": {
-        "id": "3",
-        "idName": "jins_segah",
-        "displayName": "jins segāh"
-      },
-      "chahārgāh": null,
-      "nawā": {
-        "id": "19",
-        "idName": "jins_rast_al_nawa",
-        "displayName": "jins rāst al-nawā"
-      },
-      "ḥusaynī": {
-        "id": "2",
-        "idName": "jins_bayyat_al_husayni",
-        "displayName": "jins bayyāt al-ḥusaynī"
-      },
-      "awj": {
-        "id": "3",
-        "idName": "jins_segah_al_awj",
-        "displayName": "jins segāh al-awj"
-      }
+      "rāst": [
+        {
+          "id": "19",
+          "idName": "jins_rast",
+          "displayName": "jins rāst"
+        }
+      ],
+      "dūgāh": [
+        {
+          "id": "2",
+          "idName": "jins_bayyat",
+          "displayName": "jins bayyāt"
+        }
+      ],
+      "segāh": [
+        {
+          "id": "3",
+          "idName": "jins_segah",
+          "displayName": "jins segāh"
+        }
+      ],
+      "chahārgāh": [],
+      "nawā": [
+        {
+          "id": "19",
+          "idName": "jins_rast_al_nawa",
+          "displayName": "jins rāst al-nawā"
+        }
+      ],
+      "ḥusaynī": [
+        {
+          "id": "2",
+          "idName": "jins_bayyat_al_husayni",
+          "displayName": "jins bayyāt al-ḥusaynī"
+        }
+      ],
+      "awj": [
+        {
+          "id": "3",
+          "idName": "jins_segah_al_awj",
+          "displayName": "jins segāh al-awj"
+        }
+      ]
     },
     "descending": {
-      "ʿajam": null,
-      "ḥusaynī": {
-        "id": "7",
-        "idName": "jins_kurd_al_husayni",
-        "displayName": "jins kurd al-ḥusaynī"
-      },
-      "nawā": {
-        "id": "6",
-        "idName": "jins_nahawand_al_nawa",
-        "displayName": "jins nahāwand al-nawā"
-      },
-      "chahārgāh": {
-        "id": "5",
-        "idName": "jins_ajam_ushayran_al_chahargah",
-        "displayName": "jins ʿajam ʿushayrān al-chahārgāh"
-      },
-      "segāh": {
-        "id": "3",
-        "idName": "jins_segah",
-        "displayName": "jins segāh"
-      },
-      "dūgāh": {
-        "id": "2",
-        "idName": "jins_bayyat",
-        "displayName": "jins bayyāt"
-      },
-      "rāst": {
-        "id": "19",
-        "idName": "jins_rast",
-        "displayName": "jins rāst"
-      }
+      "ʿajam": [],
+      "ḥusaynī": [
+        {
+          "id": "7",
+          "idName": "jins_kurd_al_husayni",
+          "displayName": "jins kurd al-ḥusaynī"
+        }
+      ],
+      "nawā": [
+        {
+          "id": "6",
+          "idName": "jins_nahawand_al_nawa",
+          "displayName": "jins nahāwand al-nawā"
+        }
+      ],
+      "chahārgāh": [
+        {
+          "id": "5",
+          "idName": "jins_ajam_ushayran_al_chahargah",
+          "displayName": "jins ʿajam ʿushayrān al-chahārgāh"
+        }
+      ],
+      "segāh": [
+        {
+          "id": "3",
+          "idName": "jins_segah",
+          "displayName": "jins segāh"
+        }
+      ],
+      "dūgāh": [
+        {
+          "id": "2",
+          "idName": "jins_bayyat",
+          "displayName": "jins bayyāt"
+        }
+      ],
+      "rāst": [
+        {
+          "id": "19",
+          "idName": "jins_rast",
+          "displayName": "jins rāst"
+        }
+      ]
     }
   },
   "primaryJins": [
@@ -1134,25 +1158,31 @@ respective cell via `note` or `error` fields. The counters
         },
         "ajnas": {
           "ascending": {
-            "rāst": {
-              "id": "19",
-              "idName": "jins_rast",
-              "displayName": "jins rāst"
-            },
-            "dūgāh": {
-              "id": "2",
-              "idName": "jins_bayyat",
-              "displayName": "jins bayyāt"
-            },
-            "chahārgāh": null
+            "rāst": [
+              {
+                "id": "19",
+                "idName": "jins_rast",
+                "displayName": "jins rāst"
+              }
+            ],
+            "dūgāh": [
+              {
+                "id": "2",
+                "idName": "jins_bayyat",
+                "displayName": "jins bayyāt"
+              }
+            ],
+            "chahārgāh": []
           },
           "descending": {
-            "ʿajam": null,
-            "ḥusaynī": {
-              "id": "30",
-              "idName": "jins_kurd_ushayran",
-              "displayName": "jins kurd ʿushayrān"
-            }
+            "ʿajam": [],
+            "ḥusaynī": [
+              {
+                "id": "30",
+                "idName": "jins_kurd_ushayran",
+                "displayName": "jins kurd ʿushayrān"
+              }
+            ]
           }
         },
         "intervals": {

@@ -987,7 +987,7 @@ paths:
                         ʿajam: [{ id: "5", idName: "jins_ajam_ushayran", displayName: "jins ʿajam ʿushayrān" }]
                         tīk ḥiṣār: [{ id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }]
                         nawā: [{ id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }]
-                        chahārgāh: { id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }
+                        chahārgāh: [{ id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }]
                     primaryJins:
                       - noteName: "chahargah"
                         noteNameDisplay: "chahārgāh"
