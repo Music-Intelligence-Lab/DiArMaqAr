@@ -95,3 +95,9 @@ CLAUDE.md
 docs/superpowers/
 # source scans, PDFs and working notes (never published)
 .references/
+
+# Tests are local-only and not part of the public-facing repo.
+# They stay on disk and npm run test:functions keeps working.
+**/__tests__/
+*.test.ts
+*.test.tsx
