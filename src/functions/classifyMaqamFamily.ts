@@ -1,6 +1,7 @@
 import { Maqam } from "@/models/Maqam";
 import MaqamData from "@/models/Maqam";
 import { Jins } from "@/models/Jins";
+import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 
 /**
  * Classification method types for future extensibility
@@ -28,25 +29,27 @@ export interface MaqamFamilyClassification {
 }
 
 /**
- * Extracts base jins name from full jins name.
- * 
- * Removes transposition suffixes (e.g., " al-rast") and "Jins " prefix,
- * then applies special case logic for compound jins names.
- * 
- * Special Cases:
- * - "ṣabā zamzam" kept separate from "ṣabā"
- * - "athar kurd" kept separate from "athar"
- * - "awj ʾārāʾ" kept separate from "awj"
- * 
- * For all other jins, groups by first word.
- * 
- * @param jinsName - Full jins name (e.g., "Jins Rast al-rast")
- * @returns Base family name (e.g., "rast")
- * 
+ * Reduces a full jins name to the name of its family.
+ *
+ * A jins keeps its whole name — only the "jins " prefix and a taṣwīr suffix come
+ * off. Nothing is truncated to a first word: jins nawā athar belongs to the nawā
+ * athar family, not the athar family, and jins rāḥat al-arwāḥ to rāḥat al-arwāḥ,
+ * not rāḥat. Cutting a name short files a jins under a family it does not belong
+ * to, and 21 of the 44 ajnās in the archive carry more than one word.
+ *
+ * The taṣwīr suffix is only stripped when what follows " al-" is an actual note
+ * name, because three ajnās carry " al-" inside the name itself — rāḥat al-arwāḥ,
+ * mazīj al-ṭīb and ashwāq al-kharīf. Matching on the last " al-" then handles a
+ * transposed compound: "jins rāḥat al-arwāḥ al-nawā" loses only " al-nawā".
+ *
+ * @param jinsName - Full jins name (e.g., "jins rāst al-nawā")
+ * @returns Family name (e.g., "rāst")
+ *
  * @example
- * getBaseJinsName("Jins Rast al-rast") // returns "rast"
- * getBaseJinsName("Jins ṣabā zamzam al-dūkāh") // returns "ṣabā zamzam"
- * getBaseJinsName("Jins Bayyāt al-dūkāh") // returns "bayyāt"
+ * getBaseJinsName("jins rāst al-nawā")        // returns "rāst"
+ * getBaseJinsName("jins nawā athar")          // returns "nawā athar"
+ * getBaseJinsName("jins rāḥat al-arwāḥ")      // returns "rāḥat al-arwāḥ"
+ * getBaseJinsName("jins ṣabā zamzam al-dūgāh") // returns "ṣabā zamzam"
  */
 export function getBaseJinsName(jinsName: string): string {
   // Handle empty or invalid input
@@ -54,75 +57,54 @@ export function getBaseJinsName(jinsName: string): string {
     return 'no jins';
   }
 
-  // First, remove " al-" and everything after it to get the base jins name
-  let baseName = jinsName;
-  const alIndex = jinsName.indexOf(' al-');
+  // Remove the "jins " or "جنس " prefix if present
+  let baseName = jinsName.replace(/^(jins\s+|جنس\s+)/i, '').trim();
+
+  // Strip a taṣwīr suffix, but only when what follows " al-" is a real note name.
+  // Three ajnās carry " al-" inside the name itself (rāḥat al-arwāḥ, mazīj al-ṭīb,
+  // ashwāq al-kharīf), so an unconditional cut would rename them. Taking the LAST
+  // " al-" keeps a transposed compound intact: "rāḥat al-arwāḥ al-nawā" loses only
+  // " al-nawā".
+  const alIndex = baseName.lastIndexOf(' al-');
   if (alIndex !== -1) {
-    baseName = jinsName.substring(0, alIndex);
-  }
-
-  // Remove "Jins " or "جنس " prefix if present
-  baseName = baseName.replace(/^(Jins\s+|جنس\s+)/i, '');
-
-  // Handle empty result after prefix removal
-  if (!baseName || !baseName.trim()) {
-    return 'no jins';
-  }
-
-  // Special exceptions: keep these separate from their base forms
-  const lowerBaseName = baseName.toLowerCase();
-
-  // ṣabā exception
-  if (lowerBaseName.includes('ṣabā')) {
-    if (lowerBaseName.includes('zamzam')) {
-      return 'ṣabā zamzam';
-    } else {
-      return 'ṣabā';
+    const suffix = baseName.substring(alIndex + ' al-'.length).trim();
+    if (getNoteNameIndexAndOctave(suffix as NoteName).index >= 0) {
+      baseName = baseName.substring(0, alIndex).trim();
     }
   }
 
-  // athar exception
-  if (lowerBaseName.includes('athar')) {
-    if (lowerBaseName.includes('kurd')) {
-      return 'athar kurd';
-    } else {
-      return 'athar';
-    }
-  }
+  // The source attribution stays. It is part of the entry's name, and two sources
+  // reading a jins differently are two families here, not one: jins būselīk
+  // (al-Shawwā) and jins būselīk (al-Ḥilū) each keep their own label.
 
-  // awj exception
-  if (lowerBaseName.includes('awj')) {
-    if (lowerBaseName.includes('ʾārāʾ') || lowerBaseName.includes('araa')) {
-      return 'awj ʾārāʾ';
-    } else {
-      return 'awj';
-    }
-  }
-
-  // For all other jins, group by first word
-  const firstWord = baseName.split(/\s+/)[0];
-  const result = firstWord || baseName;
-  
   // Final safety check - return 'no jins' if we somehow got an empty result
-  return result && result.trim() ? result : 'no jins';
+  return baseName ? baseName : 'no jins';
 }
 
 /**
  * Reduces a maqām name onto the same axis as getBaseJinsName, so the two sides can
  * be compared for equality.
  *
- * Strips the "maqām " prefix and any trailing parenthetical attribution — names
- * appear as "maqām faraḥnāk (ʿAbbās)" while the jins is plain "jins faraḥnāk", and
- * an attribution left in place can trip getBaseJinsName's substring exceptions.
- * The remainder then goes through the identical reduction the jins side gets,
- * including its truncation at " al-", so "maqām rāḥat al-arwāḥ" and
- * "jins rāḥat al-arwāḥ" both land on "rāḥat" and still match each other.
+ * Strips the "maqām " prefix, then hands the remainder to the identical reduction
+ * the jins side gets — so "maqām rāḥat al-arwāḥ" and "jins rāḥat al-arwāḥ" both
+ * land on "rāḥat al-arwāḥ" and match each other.
  */
 function getBaseMaqamName(maqamName: string): string {
   if (!maqamName || !maqamName.trim()) return "no jins";
   const withoutPrefix = maqamName.replace(/^(Maqām\s+|Maqam\s+|مقام\s+)/i, "");
-  const withoutAttribution = withoutPrefix.replace(/\s*\([^)]*\)\s*$/, "");
-  return getBaseJinsName(withoutAttribution);
+  return getBaseJinsName(withoutPrefix);
+}
+
+/**
+ * Removes a trailing source attribution, for comparison only.
+ *
+ * Attributions are kept in the family label, but they must not decide whether a
+ * maqām is named for a jins: the sources disagree about which entry a maqām is
+ * named after, so maqām būselīk (ʿAbbās) is still named for jins būselīk even
+ * when the matching jins entry is al-Ḥilū's reading.
+ */
+function withoutAttribution(name: string): string {
+  return name.replace(/\s*\([^)]*\)\s*$/, "").trim();
 }
 
 /**
@@ -145,8 +127,8 @@ function getBaseMaqamName(maqamName: string): string {
  */
 function pickFamilyJins(degree: Jins[] | undefined, maqamName: string): Jins | undefined {
   if (!degree || degree.length === 0) return undefined;
-  const baseMaqamName = getBaseMaqamName(maqamName);
-  return degree.find((jins) => getBaseJinsName(jins.name) === baseMaqamName) ?? degree[0];
+  const baseMaqamName = withoutAttribution(getBaseMaqamName(maqamName));
+  return degree.find((jins) => withoutAttribution(getBaseJinsName(jins.name)) === baseMaqamName) ?? degree[0];
 }
 
 /**
