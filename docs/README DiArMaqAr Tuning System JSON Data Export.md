@@ -560,22 +560,22 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
         // ... additional intervals
       ],
       "ascendingMaqamAjnas": {
-        "rast": ["jins_rast"],
+        "rast": ["jins_rast", "jins_yegah_al_rast"],
         "dugah": ["jins_bayyat"],
-        "segah": ["jins_segah"],
+        "segah": ["jins_segah_alhilu", "jins_mayeh_al_segah", "jins_segah", "jins_farahnak_al_segah"],
         "chahargah": [],
-        "nawa": ["jins_rast_al_nawa", "jins_nahawand_al_nawa"],
+        "nawa": ["jins_rast_al_nawa", "jins_yegah"],
         "husayni": ["jins_bayyat_al_husayni"],
-        "awj": ["jins_segah_al_awj"]
+        "awj": ["jins_awj", "jins_iraq", "jins_segah_al_awj"]
       },
       "descendingMaqamAjnas": {
-        "ajam": [],
+        "ajam": ["jins_mahran"],
         "husayni": ["jins_kurd_al_husayni"],
         "nawa": ["jins_nahawand_al_nawa"],
-        "chahargah": ["jins_chahargah_alshawwa"],
-        "segah": ["jins_segah"],
+        "chahargah": ["jins_chahargah"],
+        "segah": ["jins_segah_alhilu", "jins_mayeh_al_segah", "jins_segah", "jins_farahnak_al_segah"],
         "dugah": ["jins_bayyat"],
-        "rast": ["jins_rast"]
+        "rast": ["jins_rast", "jins_yegah_al_rast"]
       },
       "suyur": [
         {
@@ -651,7 +651,7 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
 | **`descendingPitchClasses[]`** | Array of pitch class keys for descending melodic motion (may differ from ascending) | Keys match `pitchClassReference` |
 | **`ascendingPitchClassIntervals[]`** | Array of interval objects between consecutive ascending pitches (see Interval Properties) | Computed from pitch ratios |
 | **`descendingPitchClassIntervals[]`** | Array of interval objects between consecutive descending pitches | Computed from pitch ratios |
-| **`ascendingMaqamAjnas{}`** | Object mapping each ascending pitch degree to an array of jins references, in suyūr-attested order. Empty array if no jins matches | Example: `"rast": ["jins_rast"]` |
+| **`ascendingMaqamAjnas{}`** | Object mapping each ascending pitch degree to an array of jins references, in suyūr-attested order. Empty array if no jins matches | Example: `"rast": ["jins_rast", "jins_yegah_al_rast"]` |
 | **`descendingMaqamAjnas{}`** | Object mapping each descending pitch degree to an array of jins references, in suyūr-attested order | Same structure as ascending |
 | `suyur[]` | Array of sayr (plural: suyur) objects. Each contains documentation from a specific source about how a maqām is performed, including stops and structural notes | Links to documented performance practice |
 | `transposition` | Boolean: `true` for taṣwīr (transposed to a different modal degree), `false` for the base form **and** for its octave/register siblings, since a register shift is not taṣwīr | Distinguishes original vs transposed forms |
@@ -707,8 +707,8 @@ String values that point to other objects in the data structure:
 ```json
 {
   "ascendingMaqamAjnas": { // Property: Maps degrees to arrays of jins references
-    "rāst": ["jins_rast"],    // ← Reference Value: Points to allAjnasData object
-    "dūgāh": ["jins_bayyat"]         // ← Reference Value: Points to allAjnasData object
+    "rāst": ["jins_rast", "jins_yegah_al_rast"], // ← Reference Values: each points to an allAjnasData object
+    "dūgāh": ["jins_bayyat"]                     // ← Reference Value: Points to allAjnasData object
     // ... more references
 
   }
