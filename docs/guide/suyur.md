@@ -45,6 +45,8 @@ Suyūr are implemented as structured sequences of "stops," where each stop repre
 - Direction combined with note/jins/maqām
 - Example: "ascending to nawā"
 
+Jins stops do more than record structural identity: the sources naming a jins at a note is exactly the evidence used to [decide which jins leads when a maqām degree matches several](/guide/maqamat/#multiple-ajnas-on-one-degree).
+
 ## Transposition of Suyūr
 
 One of the platform's innovative features is the **automatic transposition of suyūr** to any possible maqām transposition.

@@ -46,6 +46,8 @@ Transpositions follow Arabic music theory naming:
 - Original: Jins kurd starting on dūgāh → **jins kurd**
 - Transposition: Same interval pattern starting on muhayyar → **jins kurd al-muhayyar**
 
+When a maqām degree matches more than one jins under this naming, [suyūr attestation decides which one leads the display](/guide/maqamat/#multiple-ajnas-on-one-degree).
+
 ### How Transposition Works
 
 The transposition algorithm:

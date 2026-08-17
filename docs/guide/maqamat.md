@@ -53,6 +53,18 @@ As building blocks, ajnās combine to form maqāmāt. The platform automatically
 - Matches against known ajnās interval patterns
 - Uses cents tolerance mechanism for performance practice variations
 
+### Multiple Ajnās on One Degree
+
+A maqām degree often satisfies the interval pattern of more than one jins — roughly 40% of matched degrees do. Most of these are not real ambiguity: the ajnās involved share an identical interval pattern and exist as separate entries only because tradition seats that one shape on different notes. Jins rāst and jins yegāh are the same shape, named for where each is conventionally played.
+
+The platform shows every jins that matches a degree, stacked together on that degree. Nothing is hidden in favor of a single "correct" reading.
+
+**Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference. At nawā within maqām rāst, the suyūr name jins rāst there 44 times, more than any other reading at that note, so jins rāst leads the degree even though jins yegāh is the jins conventionally seated on nawā.
+
+Where the suyūr are silent about a family, seating decides instead, and a jins nested inside a longer one ranks below the jins containing it. Both rules apply deterministically, so the order shown never depends on how the underlying data happens to be listed.
+
+**Families.** A maqām named for one of its own ajnās — nawā athar, rāḥat al-arwāḥ — is classified under that jins's family even on a tonic degree where a different jins leads the display. Family names always carry the jins's full name rather than a truncated first word, and keep any source attribution that distinguishes readings, so būselīk (al-Shawwā) and būselīk (al-Ḥilū) remain separate families.
+
 ## Maqām Transpositions
 
 Like ajnās, maqāmāt can be systematically transposed to begin from different pitch classes while preserving their essential intervallic relationships and directional characteristics.
