@@ -38,7 +38,7 @@ export interface MaqamFamilyClassification {
  * to, and many of the archive's ajnās carry more than one word.
  *
  * The taṣwīr suffix is only stripped when what follows " al-" is an actual note
- * name, because three ajnās carry " al-" inside the name itself — rāḥat al-arwāḥ,
+ * name, because some ajnās carry " al-" inside the name itself — rāḥat al-arwāḥ,
  * mazīj al-ṭīb and ashwāq al-kharīf. Matching on the last " al-" then handles a
  * transposed compound: "jins rāḥat al-arwāḥ al-nawā" loses only " al-nawā".
  *
@@ -61,7 +61,7 @@ export function getBaseJinsName(jinsName: string): string {
   let baseName = jinsName.replace(/^(jins\s+|جنس\s+)/i, '').trim();
 
   // Strip a taṣwīr suffix, but only when what follows " al-" is a real note name.
-  // Three ajnās carry " al-" inside the name itself (rāḥat al-arwāḥ, mazīj al-ṭīb,
+  // Some ajnās carry " al-" inside the name itself (rāḥat al-arwāḥ, mazīj al-ṭīb,
   // ashwāq al-kharīf), so an unconditional cut would rename them. Taking the LAST
   // " al-" keeps a transposed compound intact: "rāḥat al-arwāḥ al-nawā" loses only
   // " al-nawā".
