@@ -1,5 +1,6 @@
 import { Maqam } from "@/models/Maqam";
 import MaqamData from "@/models/Maqam";
+import { Jins } from "@/models/Jins";
 
 /**
  * Classification method types for future extensibility
@@ -107,8 +108,50 @@ export function getBaseJinsName(jinsName: string): string {
 }
 
 /**
+ * Reduces a maqām name onto the same axis as getBaseJinsName, so the two sides can
+ * be compared for equality.
+ *
+ * Strips the "maqām " prefix and any trailing parenthetical attribution — names
+ * appear as "maqām faraḥnāk (ʿAbbās)" while the jins is plain "jins faraḥnāk", and
+ * an attribution left in place can trip getBaseJinsName's substring exceptions.
+ * The remainder then goes through the identical reduction the jins side gets,
+ * including its truncation at " al-", so "maqām rāḥat al-arwāḥ" and
+ * "jins rāḥat al-arwāḥ" both land on "rāḥat" and still match each other.
+ */
+function getBaseMaqamName(maqamName: string): string {
+  if (!maqamName || !maqamName.trim()) return "no jins";
+  const withoutPrefix = maqamName.replace(/^(Maqām\s+|Maqam\s+|مقام\s+)/i, "");
+  const withoutAttribution = withoutPrefix.replace(/\s*\([^)]*\)\s*$/, "");
+  return getBaseJinsName(withoutAttribution);
+}
+
+/**
+ * Picks the jins on one degree whose name decides the maqām's family.
+ *
+ * A degree carries every jins matching there in suyūr-attested order, and that order
+ * is the right one for display. It is not the right one for the family label: on
+ * nawā athar and besendīdah the tonic carries both jins nikrīz and jins nawā athar
+ * (the latter is the former's first four notes), and the suyūr rank nikrīz first —
+ * which files maqām nawā athar under nikrīz. A maqām filed under a jins it is not
+ * named for is a classification the archive cannot defend, so an eponymous match on
+ * the degree wins and the suyūr-ordered head applies only when there is none.
+ *
+ * Base names are compared for EQUALITY, never by substring: maqām nawā athar must
+ * match jins nawā athar and must not match a jins nawā. Where no eponymous jins
+ * exists at all — besendīdah has no jins of its name — the head correctly stands.
+ *
+ * This narrows what the family label reads and nothing else; every other consumer
+ * keeps the suyūr-ordered head.
+ */
+function pickFamilyJins(degree: Jins[] | undefined, maqamName: string): Jins | undefined {
+  if (!degree || degree.length === 0) return undefined;
+  const baseMaqamName = getBaseMaqamName(maqamName);
+  return degree.find((jins) => getBaseJinsName(jins.name) === baseMaqamName) ?? degree[0];
+}
+
+/**
  * Gets the first jins name for a maqam from its ajnas analysis.
- * 
+ *
  * Checks ascending ajnas first (most common case), then descending ajnas
  * at the first scale degree. The descending ajnas array is in reverse order,
  * so the first scale degree jins is at the END of the array.
@@ -124,7 +167,7 @@ export function getBaseJinsName(jinsName: string): string {
 export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
   // First, try to get jins from ascending ajnas (first scale degree)
   if (maqam.ascendingMaqamAjnas && maqam.ascendingMaqamAjnas.length > 0) {
-    const firstAscendingJins = maqam.ascendingMaqamAjnas[0]?.[0];
+    const firstAscendingJins = pickFamilyJins(maqam.ascendingMaqamAjnas[0], maqam.name);
     if (firstAscendingJins?.name) {
       return firstAscendingJins.name;
     }
@@ -134,7 +177,7 @@ export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
   // Descending ajnas are in reverse order, so the "first scale degree"
   // (which is the last note of the maqam) is at the END of the descending array
   if (maqam.descendingMaqamAjnas && maqam.descendingMaqamAjnas.length > 0) {
-    const lastDescendingJins = maqam.descendingMaqamAjnas[maqam.descendingMaqamAjnas.length - 1]?.[0];
+    const lastDescendingJins = pickFamilyJins(maqam.descendingMaqamAjnas[maqam.descendingMaqamAjnas.length - 1], maqam.name);
     if (lastDescendingJins?.name) {
       return lastDescendingJins.name;
     }
@@ -188,7 +231,9 @@ export function classifyMaqamFamily(maqam: Maqam): MaqamFamilyClassification {
   // Determine source (ascending or descending)
   let source: "ascending" | "descending" = "ascending";
   if (maqam.ascendingMaqamAjnas && maqam.ascendingMaqamAjnas.length > 0) {
-    const firstAscendingJins = maqam.ascendingMaqamAjnas[0]?.[0];
+    // Same picker as getFirstJinsNameForMaqam, so the two cannot disagree about
+    // which jins was chosen and mislabel the source.
+    const firstAscendingJins = pickFamilyJins(maqam.ascendingMaqamAjnas[0], maqam.name);
     if (firstAscendingJins?.name !== fullJinsName) {
       source = "descending";
     }
