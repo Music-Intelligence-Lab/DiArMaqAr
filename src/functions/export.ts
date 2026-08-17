@@ -556,8 +556,8 @@ interface ExportedMaqam {
 }
 
 interface MaqamWithAjnasAsObjects extends Omit<Maqam, "ascendingMaqamAjnas" | "descendingMaqamAjnas"> {
-  ascendingMaqamAjnas?: { [noteName: string]: Jins | null };
-  descendingMaqamAjnas?: { [noteName: string]: Jins | null };
+  ascendingMaqamAjnas?: { [noteName: string]: Jins[] };
+  descendingMaqamAjnas?: { [noteName: string]: Jins[] };
   maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
   maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
 }
@@ -568,11 +568,11 @@ function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
 
   // Convert ascending ajnas array to object
   if (ascendingMaqamAjnas) {
-    const ascendingAjnasObject: { [noteName: string]: Jins | null } = {};
+    const ascendingAjnasObject: { [noteName: string]: Jins[] } = {};
     ascendingMaqamAjnas.forEach((jins, index) => {
       if (index < maqam.ascendingPitchClasses.length) {
         const noteName = maqam.ascendingPitchClasses[index].noteName;
-        ascendingAjnasObject[noteName] = jins;
+        ascendingAjnasObject[noteName] = jins ?? [];
       }
     });
     convertedMaqam.ascendingMaqamAjnas = ascendingAjnasObject;
@@ -580,11 +580,11 @@ function convertMaqamAjnasToObjects(maqam: Maqam): MaqamWithAjnasAsObjects {
 
   // Convert descending ajnas array to object
   if (descendingMaqamAjnas) {
-    const descendingAjnasObject: { [noteName: string]: Jins | null } = {};
+    const descendingAjnasObject: { [noteName: string]: Jins[] } = {};
     descendingMaqamAjnas.forEach((jins, index) => {
       if (index < maqam.descendingPitchClasses.length) {
         const noteName = maqam.descendingPitchClasses[index].noteName;
-        descendingAjnasObject[noteName] = jins;
+        descendingAjnasObject[noteName] = jins ?? [];
       }
     });
     convertedMaqam.descendingMaqamAjnas = descendingAjnasObject;
@@ -1348,12 +1348,12 @@ export async function exportTuningSystem(
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
               )
             : undefined,
           suyur: maqamOverview.getSuyur().map(sayr => ({
@@ -1919,12 +1919,12 @@ export async function exportMaqam(
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
           )
         : undefined,
       suyur: maqamData.getSuyur().map(sayr => ({
@@ -2134,12 +2134,12 @@ export async function exportMaqam(
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins ? entityToken(jins) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
               )
             : undefined,
           transposition: maqamTransposition.transposition,

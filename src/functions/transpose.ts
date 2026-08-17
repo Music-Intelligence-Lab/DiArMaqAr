@@ -4,6 +4,7 @@ import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
 import { getNoteNameIndexAndOctave, sameModalDegreeSlot } from "@/models/NoteName";
+import { compareJinsCandidates, getSuyurAttestation, JinsCandidate } from "@/functions/ajnasOrdering";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
@@ -269,6 +270,9 @@ export function calculateMaqamTranspositions(
     ajnasIntervals.push({ jins, intervals: ascendingJinsIntervalPattern });
   }
 
+  // Fetched once per call rather than once per transposition or per degree.
+  const suyurAttestation = getSuyurAttestation();
+
   const maqamTranspositions: Maqam[] = mergeSequences(ascendingSequences, descendingSequences).map((sequencePair) => {
     const ascendingPitchClasses = sequencePair.ascendingSequence;
     let sliceIndex = 0;
@@ -286,89 +290,77 @@ export function calculateMaqamTranspositions(
     const extendedAscendingPitchClasses = [...ascendingPitchClasses, ...ascendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1))];
 
     const ascendingPitchClassIntervals = getPitchClassIntervals(ascendingPitchClasses);
-    const ascendingMaqamAjnas: (Jins | null)[] = [];
 
     const descendingPitchClasses = [...sequencePair.descendingSequence].reverse();
 
     const extendedDescendingPitchClasses = [...descendingPitchClasses, ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1))];
 
     const descendingPitchClassIntervals = getPitchClassIntervals(descendingPitchClasses);
-    const descendingMaqamAjnas: (Jins | null)[] = [];
 
     const extendedAscendingPitchClassIntervals = getPitchClassIntervals(extendedAscendingPitchClasses);
     const extendedDescendingPitchClassIntervals = getPitchClassIntervals(extendedDescendingPitchClasses);
 
-    if (allAjnas.length > 0) {
-      for (let i = 0; i < extendedAscendingPitchClassIntervals.length; i++) {
-        let found = false;
+    // One helper for both directions: the ascending and descending loops were
+    // near-identical copies and had already drifted once.
+    const collectAjnasPerDegree = (
+      extendedPitchClasses: PitchClass[],
+      extendedIntervals: PitchClassInterval[],
+      ownIntervalCount: number
+    ): Jins[][] => {
+      const perDegree: Jins[][] = [];
+      if (allAjnas.length === 0) return perDegree;
 
+      for (let i = 0; i < extendedIntervals.length; i++) {
+        const degreeNoteName = extendedPitchClasses[i].noteName;
+        const matches: { candidate: JinsCandidate; jins: Jins }[] = [];
+
+        // Every match is collected, not just the first. Stopping at the first hit
+        // meant data/ajnas.json order silently decided which of several valid
+        // readings a degree showed.
         for (const jinsInterval of ajnasIntervals) {
           const lengthOfInterval = jinsInterval.intervals.length;
-          if (matchingListOfIntervals(extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval), jinsInterval.intervals, centsTolerance)) {
-            const jins = jinsInterval.jins;
-            const firstJinsNote = jins.getNoteNames()[0];
-            const firstCell = extendedAscendingPitchClasses[i];
+          if (!matchingListOfIntervals(extendedIntervals.slice(i, i + lengthOfInterval), jinsInterval.intervals, centsTolerance)) continue;
 
-            // Embedded jins transposition should treat register/octave variants as equivalent.
-            const isTransposed = !sameModalDegreeSlot(firstJinsNote, firstCell.noteName);
-            const jinsTransposition = {
+          const jins = jinsInterval.jins;
+          const firstJinsNote = jins.getNoteNames()[0];
+          // Register/octave variants are equivalent for taṣwīr: a jins seated on
+          // rāst is still that jins on kurdān.
+          const isTransposed = !sameModalDegreeSlot(firstJinsNote, degreeNoteName);
+
+          matches.push({
+            candidate: { jinsId: jins.getId(), firstNoteName: firstJinsNote, noteCount: jins.getNoteNames().length },
+            jins: {
               jinsId: jins.getId(),
-              name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
+              name: isTransposed ? `${jins.getName()} al-${degreeNoteName}` : jins.getName(),
               transposition: isTransposed,
-              // Same exact canonical-note test calculateJinsTranspositions uses
-              // to pick the tahlil, so an embedded jins agrees with its
-              // standalone entry.
-              isBaseForm: firstJinsNote === firstCell.noteName,
-              jinsPitchClasses: extendedAscendingPitchClasses.slice(i, i + lengthOfInterval + 1),
-              jinsPitchClassIntervals: extendedAscendingPitchClassIntervals.slice(i, i + lengthOfInterval),
-            };
-
-            ascendingMaqamAjnas.push(jinsTransposition);
-
-            found = true;
-            break;
-          }
+              // Same exact canonical-note test calculateJinsTranspositions uses to
+              // pick the tahlil, so an embedded jins agrees with its standalone entry.
+              isBaseForm: firstJinsNote === degreeNoteName,
+              jinsPitchClasses: extendedPitchClasses.slice(i, i + lengthOfInterval + 1),
+              jinsPitchClassIntervals: extendedIntervals.slice(i, i + lengthOfInterval),
+            },
+          });
         }
 
-        if (!found) ascendingMaqamAjnas.push(null);
-        if (ascendingMaqamAjnas.length - 1 === ascendingPitchClassIntervals.length) break;
+        matches.sort((x, y) => compareJinsCandidates(x.candidate, y.candidate, degreeNoteName, suyurAttestation));
+        perDegree.push(matches.map((match) => match.jins));
+
+        if (perDegree.length - 1 === ownIntervalCount) break;
       }
 
-      for (let i = 0; i < extendedDescendingPitchClassIntervals.length; i++) {
-        let found = false;
+      return perDegree;
+    };
 
-        for (const jinsInterval of ajnasIntervals) {
-          const lengthOfInterval = jinsInterval.intervals.length;
-          if (matchingListOfIntervals(extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval), jinsInterval.intervals, centsTolerance)) {
-            const jins = jinsInterval.jins;
-            const firstJinsNote = jins.getNoteNames()[0];
-            const firstCell = extendedDescendingPitchClasses[i];
-
-            // Embedded jins transposition should treat register/octave variants as equivalent.
-            const isTransposed = !sameModalDegreeSlot(firstJinsNote, firstCell.noteName);
-            const jinsTransposition = {
-              jinsId: jins.getId(),
-              name: isTransposed ? `${jins.getName()} al-${firstCell.noteName}` : jins.getName(),
-              transposition: isTransposed,
-              // Same exact canonical-note test calculateJinsTranspositions uses
-              // to pick the tahlil, so an embedded jins agrees with its
-              // standalone entry.
-              isBaseForm: firstJinsNote === firstCell.noteName,
-              jinsPitchClasses: extendedDescendingPitchClasses.slice(i, i + lengthOfInterval + 1),
-              jinsPitchClassIntervals: extendedDescendingPitchClassIntervals.slice(i, i + lengthOfInterval),
-            };
-
-            descendingMaqamAjnas.push(jinsTransposition);
-
-            found = true;
-            break;
-          }
-        }
-
-        if (!found) descendingMaqamAjnas.push(null);
-        if (descendingMaqamAjnas.length - 1 === descendingPitchClassIntervals.length) break;
-      }
-    }
+    const ascendingMaqamAjnas = collectAjnasPerDegree(
+      extendedAscendingPitchClasses,
+      extendedAscendingPitchClassIntervals,
+      ascendingPitchClassIntervals.length
+    );
+    const descendingMaqamAjnas = collectAjnasPerDegree(
+      extendedDescendingPitchClasses,
+      extendedDescendingPitchClassIntervals,
+      descendingPitchClassIntervals.length
+    );
 
     const firstMaqamNote = ascendingNoteNames[0];
     const firstTransposedNote = sequencePair.ascendingSequence[0].noteName;
@@ -403,18 +395,16 @@ export function calculateMaqamTranspositions(
     // Look up jins objects for the three jins degrees. Must run BEFORE the
     // descendingMaqamAjnas.reverse() in the return statement, so we capture the
     // ascending-index layout of the descending array here.
-    const jinsLookup = (noteNames: string[] | null): Jins[] => {
+    const jinsLookup = (noteNames: string[] | null): Jins[][] => {
       if (noteNames == null) return [];
-      const out: Jins[] = [];
+      const out: Jins[][] = [];
       for (const n of noteNames) {
-        const asc = ascendingMaqamAjnas.find((j): j is Jins =>
-          j != null && j.jinsPitchClasses[0]?.noteName === n
-        );
-        if (asc) { out.push(asc); continue; }
-        const desc = descendingMaqamAjnas.find((j): j is Jins =>
-          j != null && j.jinsPitchClasses[0]?.noteName === n
-        );
-        if (desc) { out.push(desc); continue; }
+        // Every jins at a degree is sliced from the same starting pitch class, so
+        // the head's first note identifies the whole degree.
+        const ascIndex = ascendingMaqamAjnas.findIndex((degree) => degree[0]?.jinsPitchClasses[0]?.noteName === n);
+        if (ascIndex !== -1) { out.push(ascendingMaqamAjnas[ascIndex]); continue; }
+        const descIndex = descendingMaqamAjnas.findIndex((degree) => degree[0]?.jinsPitchClasses[0]?.noteName === n);
+        if (descIndex !== -1) { out.push(descendingMaqamAjnas[descIndex]); continue; }
         // No matching jins — skip this noteName. Keeps the array compact.
       }
       return out;

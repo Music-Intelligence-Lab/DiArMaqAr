@@ -259,10 +259,14 @@ export async function GET(
           maqamDegree,
         };
         if (!resolveJins) return entry;
-        const fromAsc = t.ascendingMaqamAjnas?.find(
+        // .flat() first: each degree is now an array of every jins matching
+        // there, so searching the degrees directly would test arrays, not ajnās.
+        // This endpoint keeps its flat single-jins fields; the head it reports is
+        // now suyūr-ordered rather than file-ordered.
+        const fromAsc = t.ascendingMaqamAjnas?.flat().find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
-        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.find(
+        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.flat().find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
         if (jinsAtNote) {

@@ -124,7 +124,7 @@ export function getBaseJinsName(jinsName: string): string {
 export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
   // First, try to get jins from ascending ajnas (first scale degree)
   if (maqam.ascendingMaqamAjnas && maqam.ascendingMaqamAjnas.length > 0) {
-    const firstAscendingJins = maqam.ascendingMaqamAjnas[0];
+    const firstAscendingJins = maqam.ascendingMaqamAjnas[0]?.[0];
     if (firstAscendingJins?.name) {
       return firstAscendingJins.name;
     }
@@ -134,7 +134,7 @@ export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
   // Descending ajnas are in reverse order, so the "first scale degree"
   // (which is the last note of the maqam) is at the END of the descending array
   if (maqam.descendingMaqamAjnas && maqam.descendingMaqamAjnas.length > 0) {
-    const lastDescendingJins = maqam.descendingMaqamAjnas[maqam.descendingMaqamAjnas.length - 1];
+    const lastDescendingJins = maqam.descendingMaqamAjnas[maqam.descendingMaqamAjnas.length - 1]?.[0];
     if (lastDescendingJins?.name) {
       return lastDescendingJins.name;
     }
@@ -188,7 +188,7 @@ export function classifyMaqamFamily(maqam: Maqam): MaqamFamilyClassification {
   // Determine source (ascending or descending)
   let source: "ascending" | "descending" = "ascending";
   if (maqam.ascendingMaqamAjnas && maqam.ascendingMaqamAjnas.length > 0) {
-    const firstAscendingJins = maqam.ascendingMaqamAjnas[0];
+    const firstAscendingJins = maqam.ascendingMaqamAjnas[0]?.[0];
     if (firstAscendingJins?.name !== fullJinsName) {
       source = "descending";
     }

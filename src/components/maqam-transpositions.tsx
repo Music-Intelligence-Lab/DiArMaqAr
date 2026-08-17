@@ -42,6 +42,7 @@ export function scrollToMaqamHeader(firstNote: string, selectedMaqamData?: any, 
   smoothScrollIntoPosition(el, HEADER_SCROLL_MARGIN_TOP_PX, SCROLL_DURATION_MS, onComplete);
 }
 import { Maqam } from "@/models/Maqam";
+import { Jins } from "@/models/Jins";
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import { shiftPitchClassByOctaveExtended } from "@/functions/shiftPitchClassByOctave";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
@@ -390,26 +391,28 @@ const MaqamTranspositions: React.FC = () => {
         
         // Apply octave transformations to jins data as well
         if (noOctaveMaqam && ascendingJins) {
-          let octaveTransposition = ascendingJins[0];
-          if (octaveTransposition) {
+          let octaveTransposition = ascendingJins[0] ?? [];
+          if (octaveTransposition.length) {
             const shiftedFirstCell = shiftPitchClassByOctaveExtended(allPitchClasses, maqam.ascendingPitchClasses[0], 1);
             // Only the pitch class moves. The name is inherited verbatim from the
             // tonic's jins: a register shift is not taṣwīr, so the octave-completion
             // cell keeps the base form (jins nahāwand, not jins nahāwand al-kurdān),
             // matching how calculateMaqamTranspositions names ajnās that land on an
             // octave sibling in maqāmāt long enough to reach one on their own.
-            octaveTransposition = {
-              ...octaveTransposition,
+            octaveTransposition = octaveTransposition.map((jins) => ({
+              ...jins,
               jinsPitchClasses: [shiftedFirstCell],
               jinsPitchClassIntervals: [],
-            };
+            }));
           }
           ascendingJins = [...ascendingJins, octaveTransposition];
           descendingJins = [octaveTransposition, ...(descendingJins || [])];
         }
 
         // Function to build rows for one direction
-        const buildDirectionRows = (pitchClasses: any[], intervals: any[], ascending: boolean, jinsTranspositions?: any[]) => {
+        // jinsTranspositions is typed rather than any[]: as an any[] the widening
+        // to Jins[][] would have blanked this row with no compiler complaint.
+        const buildDirectionRows = (pitchClasses: any[], intervals: any[], ascending: boolean, jinsTranspositions?: Jins[][]) => {
           const rows: string[][] = [];
           
           // Maqām degrees row
@@ -605,7 +608,9 @@ const MaqamTranspositions: React.FC = () => {
           // Ajnas row
           if (jinsTranspositions && jinsTranspositions.length > 0) {
             const ajnasRow = [t("maqam.ajnas")];
-            jinsTranspositions.forEach((jinsTransposition) => {
+            jinsTranspositions.forEach((degreeAjnas) => {
+              // Head of the degree — see the matching table row below.
+              const jinsTransposition = degreeAjnas?.[0];
               if (jinsTransposition && jinsTransposition.name) {
                 ajnasRow.push(getDisplayName(jinsTransposition.name, "jins"));
               } else {
@@ -787,14 +792,14 @@ const MaqamTranspositions: React.FC = () => {
         descendingIntervals = [shiftedCellInterval, ...descendingIntervals];
 
         if (jinsTranspositions) {
-          let octaveTransposition = maqam.ascendingMaqamAjnas ? maqam.ascendingMaqamAjnas[0] : null;
-          if (octaveTransposition) {
+          let octaveTransposition = maqam.ascendingMaqamAjnas?.[0] ?? [];
+          if (octaveTransposition.length) {
             // Only the pitch class moves — see the matching block in maqamConfig above.
-            octaveTransposition = {
-              ...octaveTransposition,
+            octaveTransposition = octaveTransposition.map((jins) => ({
+              ...jins,
               jinsPitchClasses: [shiftedFirstCell],
               jinsPitchClassIntervals: [],
-            };
+            }));
           }
           jinsTranspositions = ascending ? [...jinsTranspositions, octaveTransposition] : [octaveTransposition, ...jinsTranspositions];
         }
@@ -1320,7 +1325,10 @@ const MaqamTranspositions: React.FC = () => {
                 <>
                   <tr data-row-type="ajnas">
                     <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-ajnas-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.ajnas")}</th>
-                    {jinsTranspositions.map((jinsTransposition, index) => {
+                    {jinsTranspositions.map((degreeAjnas, index) => {
+                      // A degree now carries every jins matching there; the head
+                      // is shown until a later commit widens this table.
+                      const jinsTransposition = degreeAjnas?.[0];
                       const noteNames = jinsTransposition?.jinsPitchClasses.map((pc) => pc.noteName) || [];
                       const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) &&
                                       noteNames.every(name => highlightedNotes.noteNames.includes(name)) &&

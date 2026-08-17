@@ -327,13 +327,13 @@ export async function GET(
     // 40+ lines of mirrored construction into one body.
     const buildAjnasMap = (
       pitchClasses: PitchClass[],
-      ajnasForDirection: (Jins | null)[] | undefined
+      ajnasForDirection: Jins[][] | undefined
     ): Record<string, unknown> => {
       const result: Record<string, unknown> = {};
       if (!ajnasForDirection) return result;
       for (let i = 0; i < pitchClasses.length; i++) {
         const noteName = pitchClasses[i].noteName;
-        const jinsAtThisNote = ajnasForDirection[i];
+        const jinsAtThisNote = ajnasForDirection[i]?.[0] ?? null;
         if (jinsAtThisNote === null) {
           result[noteName] = null;
           continue;

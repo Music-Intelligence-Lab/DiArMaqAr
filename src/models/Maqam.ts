@@ -586,11 +586,14 @@ export interface Maqam {
    */
   ascendingPitchClassIntervals: PitchClassInterval[];
   
-  /** 
-   * Optional array of embedded ajnas found within the ascending sequence.
-   * Generated through algorithmic pattern matching against known ajnās database.
+  /**
+   * Optional array of embedded ajnās found within the ascending sequence, one
+   * entry per degree. A degree may match several ajnās — most collisions are
+   * between ajnās with identical interval patterns — so each entry holds every
+   * match, ordered by suyūr attestation (see ajnasOrdering.ts). An empty array
+   * means no jins matched at that degree.
    */
-  ascendingMaqamAjnas?: (Jins | null)[];
+  ascendingMaqamAjnas?: Jins[][];
   
   /** 
    * Array of actual pitch classes for the descending sequence (hubūṭ).
@@ -605,10 +608,13 @@ export interface Maqam {
   descendingPitchClassIntervals: PitchClassInterval[];
   
   /**
-   * Optional array of embedded ajnas found within the descending sequence.
-   * Generated through algorithmic pattern matching against known ajnās database.
+   * Optional array of embedded ajnās found within the descending sequence, one
+   * entry per degree. A degree may match several ajnās — most collisions are
+   * between ajnās with identical interval patterns — so each entry holds every
+   * match, ordered by suyūr attestation (see ajnasOrdering.ts). An empty array
+   * means no jins matched at that degree.
    */
-  descendingMaqamAjnas?: (Jins | null)[];
+  descendingMaqamAjnas?: Jins[][];
 
   /**
    * Transposed primary jins degree as note names.
@@ -628,18 +634,18 @@ export interface Maqam {
   ghammazNoteName?: NoteName[] | null;
 
   /**
-   * Jins objects found on each primaryJinsNoteName entry.
-   * Parallel to primaryJinsNoteName but possibly shorter — entries for which no
-   * matching jins was found in ascendingMaqamAjnas / descendingMaqamAjnas are
-   * omitted to keep the array compact. Empty array when primaryJinsNoteName is null.
+   * Ajnās found on each primaryJinsNoteName entry, parallel to it: one array per
+   * note name, each holding every jins matching there in suyūr-attested order.
+   * Entries with no match are omitted, so this may be shorter than
+   * primaryJinsNoteName. Empty array when primaryJinsNoteName is null.
    */
-  primaryJins?: Jins[];
+  primaryJins?: Jins[][];
 
-  /** Jins objects for secondaryJinsNoteName. See primaryJins for semantics. */
-  secondaryJins?: Jins[];
+  /** Ajnās for secondaryJinsNoteName. See primaryJins for semantics. */
+  secondaryJins?: Jins[][];
 
-  /** Jins objects for tertiaryJinsNoteName. See primaryJins for semantics. */
-  tertiaryJins?: Jins[];
+  /** Ajnās for tertiaryJinsNoteName. See primaryJins for semantics. */
+  tertiaryJins?: Jins[][];
 
   /**
    * Optional modulation possibilities to other maqamat or ajnas.

@@ -1254,10 +1254,12 @@ export async function GET(
           maqamDegree,
         };
         if (!resolveJins) return entry;
-        const fromAsc = t.ascendingMaqamAjnas?.find(
+        // .flat() first: each degree is now an array of every jins matching
+        // there, so searching the degrees directly would test arrays, not ajnās.
+        const fromAsc = t.ascendingMaqamAjnas?.flat().find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
-        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.find(
+        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.flat().find(
           (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
         );
         if (jinsAtNote) {
@@ -1382,7 +1384,7 @@ export async function GET(
     if (selectedTransposition.ascendingMaqamAjnas) {
       for (let i = 0; i < selectedTransposition.ascendingPitchClasses.length; i++) {
         const noteName = selectedTransposition.ascendingPitchClasses[i].noteName;
-        const jinsAtThisNote = selectedTransposition.ascendingMaqamAjnas[i];
+        const jinsAtThisNote = selectedTransposition.ascendingMaqamAjnas[i]?.[0] ?? null;
 
         if (jinsAtThisNote === null) {
           ascendingAjnasObject[noteName] = null;
@@ -1405,7 +1407,7 @@ export async function GET(
     if (selectedTransposition.descendingMaqamAjnas) {
       for (let i = 0; i < selectedTransposition.descendingPitchClasses.length; i++) {
         const noteName = selectedTransposition.descendingPitchClasses[i].noteName;
-        const jinsAtThisNote = selectedTransposition.descendingMaqamAjnas[i];
+        const jinsAtThisNote = selectedTransposition.descendingMaqamAjnas[i]?.[0] ?? null;
 
         if (jinsAtThisNote === null) {
           descendingAjnasObject[noteName] = null;
