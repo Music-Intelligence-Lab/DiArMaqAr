@@ -59,11 +59,11 @@ A maqām degree often satisfies the interval pattern of more than one jins — r
 
 The platform shows every jins that matches a degree, stacked together on that degree. Nothing is hidden in favor of a single "correct" reading.
 
-**Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference. At nawā within maqām rāst, the suyūr name jins rāst there 44 times, more than any other reading at that note, so jins rāst leads the degree even though jins yegāh is the jins conventionally seated on nawā.
+**Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference: at the degree nawā in maqām rāst, jins yegāh is the jins conventionally seated there, but the suyūr, across the whole corpus, name jins rāst at nawā 44 times against jins yegāh's zero — so jins rāst leads instead.
 
 Where the suyūr are silent about a family, seating decides instead, and a jins nested inside a longer one ranks below the jins containing it. Both rules apply deterministically, so the order shown never depends on how the underlying data happens to be listed.
 
-**Families.** A maqām named for one of its own ajnās — nawā athar, rāḥat al-arwāḥ — is classified under that jins's family even on a tonic degree where a different jins leads the display. Family names always carry the jins's full name rather than a truncated first word, and keep any source attribution that distinguishes readings, so būselīk (al-Shawwā) and būselīk (al-Ḥilū) remain separate families.
+**Families.** A maqām named for one of its own ajnās is classified under that eponymous jins even when a different reading leads the tonic degree's display — maqām nawā athar's tonic also matches jins nikrīz, but the maqām still files under nawā athar. Family names always carry the jins's full name rather than a truncated first word — nawā athar, rāḥat al-arwāḥ, ḥijāz kār kurd — and keep any source attribution that distinguishes readings, so būselīk (al-Shawwā) and būselīk (al-Ḥilū) remain separate families.
 
 ## Maqām Transpositions
 
