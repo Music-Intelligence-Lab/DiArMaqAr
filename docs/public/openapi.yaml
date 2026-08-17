@@ -783,21 +783,21 @@ paths:
                           noteNameDisplay: "rāst"
                     ajnas:
                       ascending:
-                        rāst: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
-                        dūgāh: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
-                        segāh: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
-                        chahārgāh: null
-                        nawā: { id: "19", idName: "jins_rast_al_nawa", displayName: "jins rāst al-nawā" }
-                        ḥusaynī: { id: "2", idName: "jins_bayyat_al_husayni", displayName: "jins bayyāt al-ḥusaynī" }
-                        awj: { id: "3", idName: "jins_segah_al_awj", displayName: "jins segāh al-awj" }
+                        rāst: [{ id: "19", idName: "jins_rast", displayName: "jins rāst" }]
+                        dūgāh: [{ id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }]
+                        segāh: [{ id: "3", idName: "jins_segah", displayName: "jins segāh" }]
+                        chahārgāh: []
+                        nawā: [{ id: "19", idName: "jins_rast_al_nawa", displayName: "jins rāst al-nawā" }]
+                        ḥusaynī: [{ id: "2", idName: "jins_bayyat_al_husayni", displayName: "jins bayyāt al-ḥusaynī" }]
+                        awj: [{ id: "3", idName: "jins_segah_al_awj", displayName: "jins segāh al-awj" }]
                       descending:
-                        ʿajam: null
-                        ḥusaynī: { id: "7", idName: "jins_kurd_al_husayni", displayName: "jins kurd al-ḥusaynī" }
-                        nawā: { id: "6", idName: "jins_nahawand_al_nawa", displayName: "jins nahāwand al-nawā" }
-                        chahārgāh: { id: "5", idName: "jins_ajam_ushayran_al_chahargah", displayName: "jins ʿajam ʿushayrān al-chahārgāh" }
-                        segāh: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
-                        dūgāh: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
-                        rāst: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
+                        ʿajam: []
+                        ḥusaynī: [{ id: "7", idName: "jins_kurd_al_husayni", displayName: "jins kurd al-ḥusaynī" }]
+                        nawā: [{ id: "6", idName: "jins_nahawand_al_nawa", displayName: "jins nahāwand al-nawā" }]
+                        chahārgāh: [{ id: "5", idName: "jins_ajam_ushayran_al_chahargah", displayName: "jins ʿajam ʿushayrān al-chahārgāh" }]
+                        segāh: [{ id: "3", idName: "jins_segah", displayName: "jins segāh" }]
+                        dūgāh: [{ id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }]
+                        rāst: [{ id: "19", idName: "jins_rast", displayName: "jins rāst" }]
                     primaryJins:
                       - noteName: "rast"
                         noteNameDisplay: "rāst"
@@ -973,20 +973,20 @@ paths:
                           noteNameDisplay: "chahārgāh"
                     ajnas:
                       ascending:
-                        chahārgāh: { id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }
-                        nawā: { id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }
-                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
-                        ʿajam: null
-                        kurdān: { id: "19", idName: "jins_rast", displayName: "jins rāst" }
-                        muḥayyar: { id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }
-                        buzurk: { id: "3", idName: "jins_segah", displayName: "jins segāh" }
+                        chahārgāh: [{ id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }]
+                        nawā: [{ id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }]
+                        tīk ḥiṣār: [{ id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }]
+                        ʿajam: []
+                        kurdān: [{ id: "19", idName: "jins_rast", displayName: "jins rāst" }]
+                        muḥayyar: [{ id: "2", idName: "jins_bayyat", displayName: "jins bayyāt" }]
+                        buzurk: [{ id: "3", idName: "jins_segah", displayName: "jins segāh" }]
                       descending:
-                        sunbuleh/zawāl: null
-                        muḥayyar: { id: "7", idName: "jins_kurd", displayName: "jins kurd" }
-                        kurdān: { id: "6", idName: "jins_nahawand", displayName: "jins nahāwand" }
-                        ʿajam: { id: "5", idName: "jins_ajam_ushayran", displayName: "jins ʿajam ʿushayrān" }
-                        tīk ḥiṣār: { id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }
-                        nawā: { id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }
+                        sunbuleh/zawāl: []
+                        muḥayyar: [{ id: "7", idName: "jins_kurd", displayName: "jins kurd" }]
+                        kurdān: [{ id: "6", idName: "jins_nahawand", displayName: "jins nahāwand" }]
+                        ʿajam: [{ id: "5", idName: "jins_ajam_ushayran", displayName: "jins ʿajam ʿushayrān" }]
+                        tīk ḥiṣār: [{ id: "3", idName: "jins_segah_al_tik_hisar", displayName: "jins segāh al-tīk ḥiṣār" }]
+                        nawā: [{ id: "2", idName: "jins_bayyat_al_nawa", displayName: "jins bayyāt al-nawā" }]
                         chahārgāh: { id: "19", idName: "jins_rast_al_chahargah", displayName: "jins rāst al-chahārgāh" }
                     primaryJins:
                       - noteName: "chahargah"
@@ -2645,22 +2645,23 @@ paths:
                               type: object
                               description: |
                                 Ajnās mapping keyed by note name. **Present on successful cells
-                                only.** Each value is either a jins entity namespace
-                                (`{id, idName, displayName, displayNameAr?}`) or `null` if no
-                                jins begins at that note.
+                                only.** Each value is an array of every jins entity namespace
+                                (`{id, idName, displayName, displayNameAr?}`) matching at that
+                                degree, ordered by suyūr attestation — empty if no jins matches.
+                                A degree may carry several readings.
                               properties:
                                 ascending:
                                   type: object
                                   additionalProperties:
-                                    oneOf:
-                                      - type: object
-                                      - type: "null"
+                                    type: array
+                                    items:
+                                      type: object
                                 descending:
                                   type: object
                                   additionalProperties:
-                                    oneOf:
-                                      - type: object
-                                      - type: "null"
+                                    type: array
+                                    items:
+                                      type: object
                             intervals:
                               type: object
                               description: |
@@ -2862,20 +2863,20 @@ paths:
                           ajnas:
                             ascending:
                               rāst:
-                                id: "19"
-                                idName: "jins_rast"
-                                displayName: "jins rāst"
+                                - id: "19"
+                                  idName: "jins_rast"
+                                  displayName: "jins rāst"
                               dūgāh:
-                                id: "2"
-                                idName: "jins_bayyat"
-                                displayName: "jins bayyāt"
-                              chahārgāh: null
+                                - id: "2"
+                                  idName: "jins_bayyat"
+                                  displayName: "jins bayyāt"
+                              chahārgāh: []
                             descending:
-                              ʿajam: null
+                              ʿajam: []
                               ḥusaynī:
-                                id: "30"
-                                idName: "jins_kurd_ushayran"
-                                displayName: "jins kurd ʿushayrān"
+                                - id: "30"
+                                  idName: "jins_kurd_ushayran"
+                                  displayName: "jins kurd ʿushayrān"
                           intervals:
                             ascending:
                               - cents: 203.91000173077484
@@ -2981,16 +2982,16 @@ paths:
                           ajnas:
                             ascending:
                               dūgāh:
-                                id: "2"
-                                idName: "jins_bayyat"
-                                displayName: "jins bayyāt"
-                              chahārgāh: null
+                                - id: "2"
+                                  idName: "jins_bayyat"
+                                  displayName: "jins bayyāt"
+                              chahārgāh: []
                             descending:
                               kurdān:
-                                id: "19"
-                                idName: "jins_rast"
-                                displayName: "jins rāst"
-                              ʿajam: null
+                                - id: "19"
+                                  idName: "jins_rast"
+                                  displayName: "jins rāst"
+                              ʿajam: []
                           intervals:
                             ascending:
                               - cents: 152.95309101871007
@@ -3107,19 +3108,19 @@ paths:
                           ajnas:
                             ascending:
                               dūgāh:
-                                id: "2"
-                                idName: "jins_bayyat"
-                                displayName: "jins bayyāt"
+                                - id: "2"
+                                  idName: "jins_bayyat"
+                                  displayName: "jins bayyāt"
                               nawā:
-                                id: "19"
-                                idName: "jins_rast_al_nawa"
-                                displayName: "jins rāst al-nawā"
+                                - id: "19"
+                                  idName: "jins_rast_al_nawa"
+                                  displayName: "jins rāst al-nawā"
                             descending:
                               kurdān:
-                                id: "19"
-                                idName: "jins_rast"
-                                displayName: "jins rāst"
-                              ʿajam: null
+                                - id: "19"
+                                  idName: "jins_rast"
+                                  displayName: "jins rāst"
+                              ʿajam: []
                           intervals:
                             ascending:
                               - cents: 138.57266090392318
@@ -3313,14 +3314,14 @@ paths:
                           ajnas:
                             ascending:
                               rāst:
-                                id: "19"
-                                idName: "jins_rast"
-                                displayName: "jins rāst"
+                                - id: "19"
+                                  idName: "jins_rast"
+                                  displayName: "jins rāst"
                             descending:
                               rāst:
-                                id: "19"
-                                idName: "jins_rast"
-                                displayName: "jins rāst"
+                                - id: "19"
+                                  idName: "jins_rast"
+                                  displayName: "jins rāst"
                           parameters:
                             pitchClassDataType: "cents"
                             includeIntervals: true
@@ -10726,26 +10727,32 @@ components:
         ascending:
           type: object
           additionalProperties:
-            oneOf:
-              - $ref: '#/components/schemas/EntityRef'
-              - type: 'null'
-          description: Note-name keyed map of ajnās present at each ascending maqām degree
+            type: array
+            items:
+              $ref: '#/components/schemas/EntityRef'
+          description: >-
+            Note-name keyed map of every ajnās matching at each ascending maqām
+            degree, ordered by suyūr attestation; an empty array where nothing matches.
           example:
-            rast: { id: "3", idName: "jins_rast", displayName: "jins rāst" }
-            dugah: null
+            rast: [{ id: "3", idName: "jins_rast", displayName: "jins rāst" }]
+            dugah: []
         descending:
           type: object
           additionalProperties:
-            oneOf:
-              - $ref: '#/components/schemas/EntityRef'
-              - type: 'null'
-          description: Note-name keyed map of ajnās present at each descending maqām degree
+            type: array
+            items:
+              $ref: '#/components/schemas/EntityRef'
+          description: >-
+            Note-name keyed map of every ajnās matching at each descending maqām
+            degree, ordered by suyūr attestation; an empty array where nothing matches.
           example:
-            kurd: { id: "9", idName: "jins_kurd", displayName: "jins kurd" }
-            nahawand: { id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }
+            kurd: [{ id: "9", idName: "jins_kurd", displayName: "jins kurd" }]
+            nahawand: [{ id: "4", idName: "jins_nahawand", displayName: "jins nahāwand" }]
       description: |
-        Ajnās present on each maqām degree, keyed by standardized note names. Values are full entity objects
-        `{ id, idName, displayName }` when a jins is present, or `null` when no jins is assigned.
+        Ajnās present on each maqām degree, keyed by standardized note names. Each degree
+        maps to an array of full entity objects `{ id, idName, displayName }` — every jins
+        matching there, ordered by suyūr attestation — empty where no jins matches. A degree
+        may carry several readings when more than one jins is attested there.
 
     IntervalsData:
       type: object

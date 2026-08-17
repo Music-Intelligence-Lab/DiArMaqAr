@@ -1375,7 +1375,9 @@ export async function GET(
     }
 
     // Always include ajnās data for maqām analysis
-    // Return as object with note-to-jins mapping, values are ENTITY OBJECTS { id, idName, displayName } | null
+    // Return as object with note-to-jins mapping, values are ENTITY OBJECT ARRAYS.
+    // Each degree maps to EVERY jins matching there, in suyūr-attested order —
+    // an empty array where nothing matches.
     // Keeps positional context while conforming to Entity Object Pattern
     const ascendingAjnasObject: any = {};
     const descendingAjnasObject: any = {};
@@ -1384,22 +1386,18 @@ export async function GET(
     if (selectedTransposition.ascendingMaqamAjnas) {
       for (let i = 0; i < selectedTransposition.ascendingPitchClasses.length; i++) {
         const noteName = selectedTransposition.ascendingPitchClasses[i].noteName;
-        const jinsAtThisNote = selectedTransposition.ascendingMaqamAjnas[i]?.[0] ?? null;
-
-        if (jinsAtThisNote === null) {
-          ascendingAjnasObject[noteName] = null;
-        } else {
+        ascendingAjnasObject[noteName] = (selectedTransposition.ascendingMaqamAjnas[i] ?? []).map((jins) => {
           const jinsObj: any = {
-            id: jinsAtThisNote.jinsId,
-            idName: entityToken(jinsAtThisNote),
-            displayName: jinsAtThisNote.name || '',
-            isBaseForm: jinsAtThisNote.isBaseForm
+            id: jins.jinsId,
+            idName: entityToken(jins),
+            displayName: jins.name || '',
+            isBaseForm: jins.isBaseForm
           };
           if (inArabic) {
-            jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
+            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || '');
           }
-          ascendingAjnasObject[noteName] = jinsObj;
-        }
+          return jinsObj;
+        });
       }
     }
 
@@ -1407,22 +1405,18 @@ export async function GET(
     if (selectedTransposition.descendingMaqamAjnas) {
       for (let i = 0; i < selectedTransposition.descendingPitchClasses.length; i++) {
         const noteName = selectedTransposition.descendingPitchClasses[i].noteName;
-        const jinsAtThisNote = selectedTransposition.descendingMaqamAjnas[i]?.[0] ?? null;
-
-        if (jinsAtThisNote === null) {
-          descendingAjnasObject[noteName] = null;
-        } else {
+        descendingAjnasObject[noteName] = (selectedTransposition.descendingMaqamAjnas[i] ?? []).map((jins) => {
           const jinsObj: any = {
-            id: jinsAtThisNote.jinsId,
-            idName: entityToken(jinsAtThisNote),
-            displayName: jinsAtThisNote.name || '',
-            isBaseForm: jinsAtThisNote.isBaseForm
+            id: jins.jinsId,
+            idName: entityToken(jins),
+            displayName: jins.name || '',
+            isBaseForm: jins.isBaseForm
           };
           if (inArabic) {
-            jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || '');
+            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || '');
           }
-          descendingAjnasObject[noteName] = jinsObj;
-        }
+          return jinsObj;
+        });
       }
     }
 

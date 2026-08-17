@@ -321,10 +321,12 @@ export async function GET(
           };
         });
 
-    // Build a {noteName → jinsObject | null} map for one direction of a
-    // maqām (ascending or descending). The two call sites differ only in
-    // their source pitch-class array and ajnās array, so this collapses
-    // 40+ lines of mirrored construction into one body.
+    // Build a {noteName → jinsObject[]} map for one direction of a maqām
+    // (ascending or descending). Each degree maps to EVERY jins matching
+    // there, in suyūr-attested order — an empty array where nothing
+    // matches. The two call sites differ only in their source pitch-class
+    // array and ajnās array, so this collapses 40+ lines of mirrored
+    // construction into one body.
     const buildAjnasMap = (
       pitchClasses: PitchClass[],
       ajnasForDirection: Jins[][] | undefined
@@ -333,21 +335,18 @@ export async function GET(
       if (!ajnasForDirection) return result;
       for (let i = 0; i < pitchClasses.length; i++) {
         const noteName = pitchClasses[i].noteName;
-        const jinsAtThisNote = ajnasForDirection[i]?.[0] ?? null;
-        if (jinsAtThisNote === null) {
-          result[noteName] = null;
-          continue;
-        }
-        const jinsObj: Record<string, unknown> = {
-          id: jinsAtThisNote.jinsId,
-          idName: entityToken(jinsAtThisNote),
-          displayName: jinsAtThisNote.name || "",
-          isBaseForm: jinsAtThisNote.isBaseForm,
-        };
-        if (inArabic) {
-          jinsObj.displayNameAr = getJinsNameDisplayAr(jinsAtThisNote.name || "");
-        }
-        result[noteName] = jinsObj;
+        result[noteName] = (ajnasForDirection[i] ?? []).map((jins) => {
+          const jinsObj: Record<string, unknown> = {
+            id: jins.jinsId,
+            idName: entityToken(jins),
+            displayName: jins.name || "",
+            isBaseForm: jins.isBaseForm,
+          };
+          if (inArabic) {
+            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || "");
+          }
+          return jinsObj;
+        });
       }
       return result;
     };
