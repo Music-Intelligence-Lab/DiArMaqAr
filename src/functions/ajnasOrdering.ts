@@ -5,17 +5,17 @@ import { getMaqamat } from "@/functions/import";
 /**
  * Ordering for the ajnās that match a single maqām degree.
  *
- * A degree frequently matches several ajnās, and 91% of those collisions are
+ * A degree frequently matches several ajnās, and most of those collisions are
  * between ajnās with *identical* interval patterns — jins rāst and jins yegāh are
  * one shape that tradition names for where it is seated, not two shapes a tighter
  * cents tolerance could separate. Something has to decide which reading leads.
  *
  * The suyūr decide. Their stops record `type: "jins"` with a jins id and a
- * startingNote: the sources naming a jins at a note, 555 times across the corpus.
+ * startingNote: the sources naming a jins at a note, throughout the corpus.
  * That is evidence. Structural seating — "this jins's canonical first note is this
  * degree" — is only inference, and where the two disagree the evidence wins. The
- * clearest case: the suyūr name jins rāst at nawā 44 times, while jins yegāh is
- * structurally seated there and never attested at all.
+ * clearest case: the suyūr name jins rāst at nawā again and again, while jins
+ * yegāh is structurally seated there and never attested at all.
  */
 export interface SuyurAttestation {
   /** `${jinsId}@${noteName}` → stops naming that jins at that exact note, register included */
@@ -72,13 +72,13 @@ function tiersFor(candidate: JinsCandidate, degreeNoteName: string, attestation:
   return [
     // 1. Attested at this exact note. MUST precede the folded tier: ʿirāq and awj
     //    are one shape an octave apart recorded as two entries, and folding their
-    //    counts lets awj's 7 mentions outvote ʿirāq's 5 at the note ʿirāq —
+    //    counts lets awj's corpus-wide mentions outvote ʿirāq's at the note ʿirāq —
     //    erasing the register distinction the two entries exist to make.
     -(attestation.perNote.get(`${candidate.jinsId}@${degreeNoteName}`) ?? 0),
     // 2. Attested at this modal degree slot, registers pooled. As a tiebreak below
     //    tier 1 this stops a degree and its own octave leading with different
-    //    names: nikrīz is attested 9 times at rāst but only twice at kurdān, where
-    //    it would otherwise tie with nawā athar and lose.
+    //    names: nikrīz is attested mostly at rāst and only rarely at kurdān, where
+    //    it would otherwise tie with nawā athar and lose its own octave.
     -(attestation.perSlot.get(`${candidate.jinsId}@${slot}`) ?? 0),
     // 3. Attested anywhere. transposeSayr shifts stored note names by the
     //    transposition offset, which means suyūr are recorded at each maqām's

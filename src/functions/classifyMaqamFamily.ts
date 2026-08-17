@@ -35,7 +35,7 @@ export interface MaqamFamilyClassification {
  * off. Nothing is truncated to a first word: jins nawā athar belongs to the nawā
  * athar family, not the athar family, and jins rāḥat al-arwāḥ to rāḥat al-arwāḥ,
  * not rāḥat. Cutting a name short files a jins under a family it does not belong
- * to, and 21 of the 44 ajnās in the archive carry more than one word.
+ * to, and many of the archive's ajnās carry more than one word.
  *
  * The taṣwīr suffix is only stripped when what follows " al-" is an actual note
  * name, because three ajnās carry " al-" inside the name itself — rāḥat al-arwāḥ,

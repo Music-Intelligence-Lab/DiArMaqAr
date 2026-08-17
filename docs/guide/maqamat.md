@@ -55,11 +55,11 @@ As building blocks, ajnās combine to form maqāmāt. The platform automatically
 
 ### Multiple Ajnās on One Degree
 
-A maqām degree often satisfies the interval pattern of more than one jins — roughly 40% of matched degrees do. Most of these are not real ambiguity: the ajnās involved share an identical interval pattern and exist as separate entries only because tradition seats that one shape on different notes. Jins rāst and jins yegāh are the same shape, named for where each is conventionally played.
+A maqām degree often satisfies the interval pattern of more than one jins. Most of these are not real ambiguity: the ajnās involved share an identical interval pattern and exist as separate entries only because tradition seats that one shape on different notes. Jins rāst and jins yegāh are the same shape, named for where each is conventionally played.
 
 The platform shows every jins that matches a degree, stacked together on that degree. Nothing is hidden in favor of a single "correct" reading.
 
-**Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference: at the degree nawā in maqām rāst, jins yegāh is the jins conventionally seated there, but the suyūr, across the whole corpus, name jins rāst at nawā 44 times against jins yegāh's zero — so jins rāst leads instead.
+**Ordering.** Where a degree carries more than one match, which one leads is decided by the suyūr. A sayr's stops record which jins the historical sources actually name at a given note, and that recorded usage is evidence, while a jins's structural seat — the note tradition treats as its home — is only inference. Evidence outranks inference: at the degree nawā in maqām rāst, jins yegāh is the jins conventionally seated there, but the suyūr, across the whole corpus, repeatedly name jins rāst at nawā and never jins yegāh — so jins rāst leads instead.
 
 Where the suyūr are silent about a family, seating decides instead, and a jins nested inside a longer one ranks below the jins containing it. Both rules apply deterministically, so the order shown never depends on how the underlying data happens to be listed.
 
