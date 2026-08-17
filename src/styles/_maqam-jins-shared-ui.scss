@@ -835,7 +835,16 @@
     white-space: normal;
     word-wrap: break-word;
     box-sizing: border-box;
-    
+
+    // A degree cell can hold several matches; stacked copies sit one per
+    // line rather than running together (see the --stacked modifier below,
+    // which also drops the height:100% this rule relies on — every stacked
+    // button would otherwise claim the full cell height for itself and
+    // overflow past it).
+    & + & {
+      margin-block-start: 4px;
+    }
+
     &:focus {
       outline: transparent;
     }
@@ -843,11 +852,11 @@
     &:hover {
       background-color: rgba($primary, 1);
     }
-    
+
     &:active {
       background-color: rgba($gold, 0.8) !important;
     }
-    
+
     // Active/highlighted state (similar to toggle button)
     &[class*="--active"] {
       background-color: rgba($tertiary, 0.7);
@@ -865,6 +874,20 @@
     [dir="rtl"] & {
       text-align: right;
       justify-content: flex-end;
+    }
+
+    // Multiple matches on one degree: swap the single-match proportions
+    // (height:100%, which lets one button fill the whole cell — see the
+    // [data-column-type="jins"] "definite height" comment above) for a
+    // block that only takes the room its own line(s) need, and tighten the
+    // padding/line-height so two or three readings, including wrapped
+    // two-line names, sit comfortably in one cell.
+    &[class*="--stacked"] {
+      display: block;
+      height: auto;
+      min-height: 20px;
+      padding: 2px 8px;
+      line-height: $line-height-tight;
     }
   }
 

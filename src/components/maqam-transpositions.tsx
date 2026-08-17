@@ -608,14 +608,9 @@ const MaqamTranspositions: React.FC = () => {
           // Ajnas row
           if (jinsTranspositions && jinsTranspositions.length > 0) {
             const ajnasRow = [t("maqam.ajnas")];
-            jinsTranspositions.forEach((degreeAjnas) => {
-              // Head of the degree — see the matching table row below.
-              const jinsTransposition = degreeAjnas?.[0];
-              if (jinsTransposition && jinsTransposition.name) {
-                ajnasRow.push(getDisplayName(jinsTransposition.name, "jins"));
-              } else {
-                ajnasRow.push('');
-              }
+            jinsTranspositions.forEach((jinsAtDegree) => {
+              const names = (jinsAtDegree ?? []).map((jins) => getDisplayName(jins.name, "jins"));
+              ajnasRow.push(names.join(" / "));
               ajnasRow.push(''); // interval column
             });
             // Fill remaining columns if needed
@@ -1325,43 +1320,49 @@ const MaqamTranspositions: React.FC = () => {
                 <>
                   <tr data-row-type="ajnas">
                     <th scope="row" id={`maqam-${entityToken(maqam)}-${ascending ? 'ascending' : 'descending'}-ajnas-header`} className="maqam-jins-transpositions-shared__row-header" data-column-type="row-header">{t("maqam.ajnas")}</th>
-                    {jinsTranspositions.map((degreeAjnas, index) => {
-                      // A degree now carries every jins matching there; the head
-                      // is shown until a later commit widens this table.
-                      const jinsTransposition = degreeAjnas?.[0];
-                      const noteNames = jinsTransposition?.jinsPitchClasses.map((pc) => pc.noteName) || [];
-                      const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) &&
-                                      noteNames.every(name => highlightedNotes.noteNames.includes(name)) &&
-                                      highlightedNotes.noteNames.every(name => noteNames.includes(name));
+                    {jinsTranspositions.map((jinsAtDegree, index) => {
                       // Conventional jins rank for this degree (1° primary / 2° secondary / 3° tertiary)
                       const degreeIndex = ascending ? index : jinsTranspositions.length - 1 - index;
                       const jinsDegreeRank = jinsDegreeRankByIndex[degreeIndex];
 
+                      // A cell holding more than one match switches to a compact
+                      // button variant (see SCSS) — otherwise each button's
+                      // height:100% would claim the full row height on its own,
+                      // and stacked copies would overflow past the cell.
+                      const isStacked = (jinsAtDegree ?? []).length > 1;
+
                       return (
                         <td className="maqam-jins-transpositions-shared__table-cell--pitch-class" colSpan={2} key={index} data-column-type="jins">
-                          {jinsTransposition && (
-                            <button
-                              className={`maqam-jins-transpositions-shared__jins-button ${isActive ? "maqam-jins-transpositions-shared__jins-button--active" : ""}`}
-                              onClick={() => {
-                                // Toggle: if already active, clear highlights; otherwise set new highlights
-                                if (isActive) {
-                                  setHighlightedNotes({ index: -1, noteNames: [] });
-                                } else {
-                                  setHighlightedNotes({
-                                    index: rowIndex + (ascending ? 0 : 0.5),
-                                    noteNames,
-                                  });
-                                }
-                              }}
-                            >
-                              {/* Single inline span so the rank flows with the first line
-                                  of the name instead of centering against the whole block */}
-                              <span>
-                                {jinsDegreeRank && <span className="maqam-jins-transpositions-shared__jins-degree-rank">{jinsDegreeRank}</span>}
-                                {noteNameWithBreaks(getDisplayName(jinsTransposition.name, "jins"))}
-                              </span>
-                            </button>
-                          )}
+                          {(jinsAtDegree ?? []).map((jinsTransposition, matchIndex) => {
+                            const noteNames = jinsTransposition.jinsPitchClasses.map((pc) => pc.noteName);
+                            const isActive = highlightedNotes.index === rowIndex + (ascending ? 0 : 0.5) &&
+                                            noteNames.every((name) => highlightedNotes.noteNames.includes(name)) &&
+                                            highlightedNotes.noteNames.every((name) => noteNames.includes(name));
+                            return (
+                              <button
+                                key={jinsTransposition.jinsId + "-" + matchIndex}
+                                className={`maqam-jins-transpositions-shared__jins-button ${isStacked ? "maqam-jins-transpositions-shared__jins-button--stacked" : ""} ${isActive ? "maqam-jins-transpositions-shared__jins-button--active" : ""}`}
+                                onClick={() => {
+                                  if (isActive) {
+                                    setHighlightedNotes({ index: -1, noteNames: [] });
+                                  } else {
+                                    setHighlightedNotes({ index: rowIndex + (ascending ? 0 : 0.5), noteNames });
+                                  }
+                                }}
+                              >
+                                {/* Single inline span so the rank flows with the first line
+                                    of the name instead of centering against the whole block */}
+                                <span>
+                                  {/* The rank belongs to the degree, not to each reading of it,
+                                      so only the leading match carries the badge. */}
+                                  {matchIndex === 0 && jinsDegreeRank && (
+                                    <span className="maqam-jins-transpositions-shared__jins-degree-rank">{jinsDegreeRank}</span>
+                                  )}
+                                  {noteNameWithBreaks(getDisplayName(jinsTransposition.name, "jins"))}
+                                </span>
+                              </button>
+                            );
+                          })}
                         </td>
                       );
                     })}
