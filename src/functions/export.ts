@@ -169,8 +169,8 @@ export interface MergedMaqam {
   descendingPitchClasses: string[];
   descendingPitchClassIntervals: PitchClassInterval[];
   ascendingPitchClassIntervals: PitchClassInterval[];
-  ascendingMaqamAjnas?: { [noteName: string]: string | null };
-  descendingMaqamAjnas?: { [noteName: string]: string | null };
+  ascendingMaqamAjnas?: { [noteName: string]: string[] };
+  descendingMaqamAjnas?: { [noteName: string]: string[] };
   maqamToMaqamModulations?: MaqamToMaqamModulationsWithKeys;
   maqamToJinsModulations?: MaqamToJinsModulationsWithKeys;
   suyur?: Sayr[];
@@ -1348,12 +1348,18 @@ export async function exportTuningSystem(
           descendingPitchClassIntervals: possibleMaqam.descendingPitchClassIntervals,
           ascendingMaqamAjnas: possibleMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+                Object.entries(possibleMaqam.ascendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+                  standardizeText(noteName),
+                  (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+                ])
               )
             : undefined,
           descendingMaqamAjnas: possibleMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+                Object.entries(possibleMaqam.descendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+                  standardizeText(noteName),
+                  (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+                ])
               )
             : undefined,
           suyur: maqamOverview.getSuyur().map(sayr => ({
@@ -1919,12 +1925,18 @@ export async function exportMaqam(
       descendingPitchClassIntervals: maqamToExport.descendingPitchClassIntervals,
       ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+            Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+              standardizeText(noteName),
+              (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+            ])
           )
         : undefined,
       descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
         ? Object.fromEntries(
-            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+            Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+              standardizeText(noteName),
+              (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+            ])
           )
         : undefined,
       suyur: maqamData.getSuyur().map(sayr => ({
@@ -2134,12 +2146,18 @@ export async function exportMaqam(
           descendingPitchClassIntervals: maqamTransposition.descendingPitchClassIntervals,
           ascendingMaqamAjnas: convertedMaqam.ascendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+                Object.entries(convertedMaqam.ascendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+                  standardizeText(noteName),
+                  (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+                ])
               )
             : undefined,
           descendingMaqamAjnas: convertedMaqam.descendingMaqamAjnas
             ? Object.fromEntries(
-                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, jins]) => [standardizeText(noteName), jins?.[0] ? entityToken(jins[0]) : null])
+                Object.entries(convertedMaqam.descendingMaqamAjnas).map(([noteName, degreeAjnas]) => [
+                  standardizeText(noteName),
+                  (degreeAjnas ?? []).map((jins) => entityToken(jins)),
+                ])
               )
             : undefined,
           transposition: maqamTransposition.transposition,
