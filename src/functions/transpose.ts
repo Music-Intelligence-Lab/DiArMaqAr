@@ -3,16 +3,10 @@ import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
-import { getNoteNameIndexAndOctave } from "@/models/NoteName";
+import { getNoteNameIndexAndOctave, sameModalDegreeSlot } from "@/models/NoteName";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
-
-function sameModalDegreeSlot(a: string, b: string): boolean {
-  const aIdx = getNoteNameIndexAndOctave(a as NoteName).index;
-  const bIdx = getNoteNameIndexAndOctave(b as NoteName).index;
-  return aIdx >= 0 && bIdx >= 0 && aIdx === bIdx;
-}
 
 /**
  * Universal Interval Pattern Transposition Algorithm

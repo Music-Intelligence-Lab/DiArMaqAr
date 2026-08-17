@@ -266,3 +266,18 @@ export function shiftNoteName(noteName: NoteName, shift: number): NoteName {
     octave: octave + shift,
   }) as NoteName;
 }
+
+/**
+ * True when two note names occupy the same modal degree slot — that is, they are
+ * the same degree in different registers (qarār rāst / rāst / kurdān).
+ *
+ * Deliberately octave-blind: a register shift is not taṣwīr, so a jins seated on
+ * rāst is still "jins rāst" when it appears on kurdān. Callers that must tell
+ * registers apart (see the tier-1 rule in ajnasOrdering.ts) have to compare the
+ * exact note names instead.
+ */
+export function sameModalDegreeSlot(a: string, b: string): boolean {
+  const aIdx = getNoteNameIndexAndOctave(a as NoteName).index;
+  const bIdx = getNoteNameIndexAndOctave(b as NoteName).index;
+  return aIdx >= 0 && bIdx >= 0 && aIdx === bIdx;
+}
