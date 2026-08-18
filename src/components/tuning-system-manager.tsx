@@ -27,6 +27,7 @@ import { compareNormalized } from "@/functions/normalizeForSort";
 import { matchesSearchQuery } from "@/functions/searchMatch";
 import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
+import OudFretboard from "./oud-fretboard";
 import JinsData from "@/models/Jins";
 import MaqamData, { Maqam } from "@/models/Maqam";
 import ExportModal from "./export-modal";
@@ -112,6 +113,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     selectedJinsData,
     selectedMaqamData,
     selectedMaqam,
+    selectedPitchClasses,
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
@@ -120,6 +122,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const { listRef, onScroll } = useRememberedCarouselScroll("tuningSystems", language === "ar");
 
   const [searchQuery, setSearchQuery] = useState("");
+
+  /** Which presentation of the tanghīm is showing: the dīwān tables or the dasātīn. */
+  const [tuningView, setTuningView] = useState<"tables" | "fretboard">("tables");
 
   const {
     clearHangingNotes,
@@ -1336,6 +1341,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               />
             </div>
 
+            {/* Which presentation of the tanghīm is showing. It sits with the
+                starting note and string length because it belongs to the same
+                decision — how this tanghīm is being read — rather than to the
+                presentation it selects. */}
+            <div className="tuning-system-manager__options-column tuning-system-manager__options-column--view">
+              <span className="tuning-system-manager__options-header">
+                {t("fretboard.view")}
+              </span>
+              <div className="tuning-system-manager__view-segments" role="group">
+                <button
+                  className={
+                    "tuning-system-manager__view-segment" +
+                    (tuningView === "tables" ? " tuning-system-manager__view-segment_active" : "")
+                  }
+                  aria-pressed={tuningView === "tables"}
+                  onClick={() => setTuningView("tables")}
+                >
+                  {t("fretboard.viewTables")}
+                </button>
+                <button
+                  className={
+                    "tuning-system-manager__view-segment" +
+                    (tuningView === "fretboard" ? " tuning-system-manager__view-segment_active" : "")
+                  }
+                  aria-pressed={tuningView === "fretboard"}
+                  onClick={() => setTuningView("fretboard")}
+                >
+                  {t("fretboard.viewFretboard")}
+                </button>
+              </div>
+            </div>
+
+
             {admin && (
               <div className="tuning-system-manager__starting-note-right">
                 <button
@@ -1373,9 +1411,15 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         )}
       </div>
 
-      {/* TUNING OCTAVES TABLES GRID */}
+      {/* TUNING OCTAVES TABLES GRID, or the same pitches as dasātīn on awtār.
+          Mutually exclusive: one presentation of the tanghīm at a time. The
+          taḥlīl below is downstream analysis of the selection, so it stays. */}
 
-      <TuningSystemOctaveTables admin={admin} />
+      {tuningView === "tables" ? (
+        <TuningSystemOctaveTables admin={admin} />
+      ) : (
+        <OudFretboard highlightPitchClasses={selectedPitchClasses} />
+      )}
 
       <SelectedPitchClassesAnalysis />
 

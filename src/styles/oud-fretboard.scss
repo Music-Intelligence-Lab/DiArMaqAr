@@ -1,0 +1,406 @@
+@use "./variables" as *;
+
+/**
+ * Dasātīn (ʿūd) view of a tanghīm.
+ *
+ * The plot is direction-locked: the anf is always at the left and the octave
+ * always at the right, in every language, because the geometry reads from the
+ * nut outward and mirroring it would misrepresent the instrument. Only the
+ * chrome above it follows the page direction. Nothing here may use logical
+ * properties for a division's offset — plain `left`, always.
+ */
+.oud-fretboard {
+  width: 100%;
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: $space-block;
+  }
+
+  &__control {
+    @include manager-groupby;
+    flex-wrap: wrap;
+  }
+
+  &__control-label {
+    @include manager-groupby-label;
+  }
+
+  &__select {
+    @include form-control;
+    height: 27px;
+    min-width: 180px;
+
+    &_narrow {
+      min-width: 56px;
+    }
+  }
+
+  &__segments {
+    @include manager-groupby-segments;
+  }
+
+  &__segment {
+    @include manager-groupby-segment;
+
+    &_active {
+      @include manager-groupby-segment-active;
+    }
+  }
+
+  // ---------------------------------------------------------------- plot
+
+  &__plot {
+    direction: ltr;
+    width: 100%;
+    overflow-x: auto;
+    @include scrollbar-thin;
+  }
+
+  &__scale {
+    display: flex;
+    margin-bottom: 6px;
+  }
+
+  &__scale-gutter {
+    flex: 0 0 var(--fretboard-gutter);
+  }
+
+  &__scale-head {
+    flex: 0 0 var(--fretboard-head);
+  }
+
+  &__scale-tail {
+    flex: 0 0 var(--fretboard-tail);
+  }
+
+  &__scale-track {
+    flex: 1 1 auto;
+    position: relative;
+    height: 14px;
+  }
+
+  &__scale-mark {
+    @include type-eyebrow;
+    position: absolute;
+    top: 0;
+    color: silver;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    text-transform: none;
+    letter-spacing: 0;
+
+    &_start {
+      transform: none;
+      left: 0;
+    }
+
+    &_end {
+      transform: none;
+      right: 0;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /**
+   * Stacked rather than side by side: the open note sits above its course
+   * number, which buys back horizontal room for the neck itself.
+   */
+  &__gutter {
+    flex: 0 0 var(--fretboard-gutter);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding-inline-end: 8px;
+    padding-block: 12px;
+  }
+
+  &__open-select {
+    @include form-control;
+    height: 22px;
+    width: 100%;
+    font-size: $font-size-xs;
+    text-align: center;
+    padding: 0 2px;
+  }
+
+  /**
+   * Tablature numbering: the lowest-pitched watar carries the highest number,
+   * so a four-course ʿūd reads 4-3-2-1 from top to bottom.
+   */
+  &__course {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__course-number {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid $light-grey;
+    color: $text;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-xs;
+    line-height: 1;
+  }
+
+  &__course-value {
+    font-size: $font-size-xs;
+    color: silver;
+    line-height: 1.1;
+  }
+
+  /** Room for a centred label sitting on the anf, and past the octave. */
+  &__head {
+    flex: 0 0 var(--fretboard-head);
+  }
+
+  &__tail {
+    flex: 0 0 var(--fretboard-tail);
+  }
+
+  &__track {
+    flex: 1 1 auto;
+    position: relative;
+    min-width: 420px;
+    /* Pre-measurement height; the component sets the measured lane height
+       inline once the track width is known. */
+    height: 96px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  &__row:nth-child(even) &__track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__string {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.28));
+  }
+
+  /**
+   * The anf and the octave terminal are centred on their exact positions.
+   * Edge-aligning them put them a pixel off the ticks they coincide with,
+   * which showed as a jump when the matching note was hovered.
+   */
+  &__anf,
+  &__octave-end {
+    position: absolute;
+    top: 50%;
+    height: 36px;
+    margin-top: -18px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: $light-grey;
+  }
+
+  &__anf {
+    left: 0;
+  }
+
+  &__octave-end {
+    left: 100%;
+  }
+
+  &__division {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @include hover-tooltip;
+  }
+
+  /** A 1px tick is far too small a target; this widens the hit area. */
+  &__hit {
+    position: absolute;
+    left: -7px;
+    width: 15px;
+    top: 50%;
+    height: 34px;
+    margin-top: -17px;
+  }
+
+  /**
+   * `left: 0` is load-bearing. Without it the static position inside a centred
+   * flex box is used, and that position is itself width-dependent — so
+   * translateX(-50%) applied twice and the tick grew to one side on hover.
+   */
+  &__tick {
+    position: absolute;
+    top: 50%;
+    height: 18px;
+    margin-top: -9px;
+    width: 1px;
+    left: 0;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &__division_unnamed &__tick {
+    background: rgba(255, 255, 255, 0.22);
+    height: 10px;
+    margin-top: -5px;
+  }
+
+  /** The terminals already draw those two positions. */
+  &__division_open &__tick,
+  &__division_octave &__tick {
+    width: 0;
+  }
+
+  /**
+   * A dastān is a gut fret tied right across the neck, so it crosses awtār on
+   * which it lands on no pitch of the tanghīm. Drawn, but not interactive.
+   */
+  &__division_phantom {
+    pointer-events: none;
+
+    .oud-fretboard__tick {
+      background: none;
+      width: 0;
+      border-left: 1px dotted rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  &__label {
+    position: absolute;
+    font-size: $font-size-xs;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: $text;
+    cursor: default;
+    /* A name starts AT its tick and reads rightward, so which name belongs to
+       which dastān is never ambiguous. */
+    left: 0;
+    text-align: left;
+
+    &_above {
+      top: auto;
+      /* Anchored by its bottom, so a name that wraps to two lines grows upward
+         and its last line stays the same distance from the string. */
+      bottom: calc(50% + 22px);
+    }
+
+    &_below {
+      top: calc(50% + 22px);
+    }
+
+    /* Numeric labels are narrow and symmetrical, so they centre on their tick.
+       Digit ink measures the same as the lowercase names, but every digit is
+       full cap-height with no x-height body, so a run of them reads heavier —
+       one step down optically matches it. */
+    &_numeric {
+      left: 0;
+      right: auto;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 10px;
+    }
+  }
+
+  /** Ratios read as a true fraction: numerator over denominator with a rule. */
+  &__fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.05;
+  }
+
+  &__fraction-denominator {
+    border-top: 1px solid currentColor;
+    padding-top: 1px;
+  }
+
+  /**
+   * Past the note this watar shares with the next one down. Those pitches are
+   * reachable lower on that next watar, so the undimmed span is the range for
+   * which this watar is the practical choice.
+   */
+  &__division_beyond &__tick {
+    background: rgba(255, 255, 255, 0.17);
+  }
+
+  &__division_beyond &__label {
+    color: rgba(238, 238, 238, 0.34);
+  }
+
+  &__division_beyond.oud-fretboard__division_unnamed &__tick {
+    background: rgba(255, 255, 255, 0.09);
+  }
+
+  /* 1px → 3px keeps the growth symmetrical about the tick's centre. */
+  &__division:hover &__tick {
+    background: $gold;
+    width: 3px;
+  }
+
+  &__division:hover &__label {
+    color: $gold;
+  }
+
+  /* A terminal that coincides with a hovered note goes gold itself, rather
+     than a second tick appearing on top of it. */
+  &__track:has(&__division_open:hover) &__anf,
+  &__track:has(&__division_octave:hover) &__octave-end {
+    background: $gold;
+  }
+
+  /** What a jins or maqām selection will drive, once those pass a highlight set. */
+  &__division_highlighted &__tick {
+    background: $tertiary;
+    width: 3px;
+  }
+
+  &__division_highlighted &__label {
+    color: color-mix(in srgb, $tertiary 55%, $text);
+  }
+
+  // -------------------------------------------------------- unavailable
+
+  &__unavailable {
+    padding: $space-block 0;
+  }
+
+  &__unavailable-title {
+    color: $gold;
+    margin-bottom: 6px;
+  }
+
+  &__unavailable-item {
+    font-size: $font-size-sm;
+    color: silver;
+    line-height: 1.6;
+  }
+}
+
+/**
+ * Set on the block rather than :root so the plot's spacing tokens stay scoped
+ * to it. These are role widths, not places: gutter carries the open-note
+ * chrome, head and tail carry label overhang past the anf and the octave.
+ */
+.oud-fretboard {
+  --fretboard-gutter: 88px;
+  --fretboard-head: 26px;
+  --fretboard-tail: 76px;
+}

@@ -382,6 +382,20 @@
     @include manager-item-grid;
   }
 
+  /* Dīwān tables vs dasātīn: one presentation of the tanghīm at a time.
+     Lives in the options row beside the starting note and string length. */
+  &__view-segments {
+    @include manager-groupby-segments;
+  }
+
+  &__view-segment {
+    @include manager-groupby-segment;
+
+    &_active {
+      @include manager-groupby-segment-active;
+    }
+  }
+
   &__carousel {
     @include manager-carousel;
 
