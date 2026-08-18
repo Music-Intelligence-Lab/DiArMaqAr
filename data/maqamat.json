@@ -5746,8 +5746,8 @@
   },
   {
     "id": "44",
-    "idName": "maqam_farahnak",
-    "name": "maqām faraḥnāk",
+    "idName": "maqam_farahnak_alshawwa",
+    "name": "maqām faraḥnāk (al-Shawwā)",
     "ascendingNoteNames": [
       "ʿirāq",
       "rāst",
@@ -5889,13 +5889,9 @@
       {
         "sourceId": "alshawwa_1946",
         "page": "35"
-      },
-      {
-        "sourceId": "alhilu_1961",
-        "page": "115"
       }
     ],
-    "version": "2026-07-26T09:06:58.608Z"
+    "version": "2026-08-17T12:21:30.760Z"
   },
   {
     "id": "45",
@@ -15587,7 +15583,7 @@
         "page": "64/79"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-08-17T12:24:59.304Z"
   },
   {
     "id": "140",
@@ -15998,5 +15994,56 @@
       }
     ],
     "version": "2026-08-11T16:17:11.488Z"
+  },
+  {
+    "id": "145",
+    "idName": "maqam_farahnak_alhilu",
+    "name": "maqām faraḥnāk (al-Ḥilū)",
+    "ascendingNoteNames": [
+      "ʿirāq",
+      "rāst",
+      "dūgāh",
+      "būselīk/ʿushshāq",
+      "ḥijāz",
+      "nawā",
+      "ḥusaynī",
+      "awj",
+      "kurdān",
+      "muḥayyar",
+      "buzurk",
+      "māhūrān",
+      "saham/ramal tūtī",
+      "jawāb ḥusaynī"
+    ],
+    "descendingNoteNames": [
+      "jawāb ḥusaynī",
+      "saham/ramal tūtī",
+      "māhūrān",
+      "buzurk",
+      "muḥayyar",
+      "kurdān",
+      "awj",
+      "ḥusaynī",
+      "nawā",
+      "nīm ḥijāz",
+      "būselīk/ʿushshāq",
+      "dūgāh",
+      "rāst",
+      "ʿirāq"
+    ],
+    "primaryJinsDegree": null,
+    "secondaryJinsDegree": null,
+    "tertiaryJinsDegree": null,
+    "ghammaz": null,
+    "suyur": [],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alhilu_1961",
+        "page": "115"
+      }
+    ],
+    "version": "2026-08-17T12:27:58.611Z"
   }
 ]

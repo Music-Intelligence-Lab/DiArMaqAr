@@ -70,11 +70,11 @@
         "version": "2026-07-19T19:12:36.330Z"
       },
       {
-        "id": "sayr_alsabbagh_1950",
+        "id": "sayr_alsabbagh_1954",
         "creatorEnglish": "Ṣabbāgh",
         "creatorArabic": "صبّاغ",
-        "sourceId": "alsabbagh_1950",
-        "page": "41",
+        "sourceId": "alsabbagh_1954",
+        "page": "24",
         "commentsEnglish": "Known in Tunis as Ṭabe' al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayyāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
         "commentsArabic": "",
         "stops": [
@@ -184,15 +184,11 @@
         "page": "107"
       },
       {
-        "sourceId": "alsabbagh_1954",
-        "page": "26"
-      },
-      {
         "sourceId": "abbas_1986",
-        "page": "30/36"
+        "page": "30/36/91"
       }
     ],
-    "version": "2026-08-10T19:04:09.620Z"
+    "version": "2026-08-11T19:43:52.080Z"
   },
   {
     "id": "2",
@@ -552,10 +548,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/53"
+        "page": "34/53/104"
       }
     ],
-    "version": "2026-08-10T20:00:51.918Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "4",
@@ -713,10 +709,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/56"
+        "page": "34/56/107"
       }
     ],
-    "version": "2026-08-10T20:03:49.870Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "5",
@@ -869,10 +865,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "35/58"
+        "page": "35/58/109"
       }
     ],
-    "version": "2026-08-10T20:04:58.406Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "6",
@@ -1187,14 +1183,14 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "30/39"
+        "page": "30/39/94"
       }
     ],
-    "version": "2026-08-10T19:04:55.422Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "8",
-    "idName": "maqam_yegah_(abbas)",
+    "idName": "maqam_yegah_abbas",
     "name": "maqām yegāh (ʿAbbās)",
     "ascendingNoteNames": [
       "yegāh",
@@ -1218,7 +1214,126 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "17",
+        "commentsEnglish": "Sayr can start from chahārgāh or nawā, ascends and then descends until the qarār. Ascent is not defined, so it is assumed that it will be in jins rāst al-nawā following the construction of the maqām.",
+        "commentsArabic": "هذا المقام قراره صوت اليك كاه ويختلف فى الهبوط عن الصعود فى استعمال صوت الثيه كاه بدلا من النيم بوسليك وصوت الجهاركاه بدلا من النيم حجاز وهذا فى حالة الهبوط : ويبدأ من صوت الجهاركاه أو النواه صعوداً ثم يعود هبوطاً لغاية القرار .\n( ملاحظه ) درجات الصعود هى من القرار إلى الجواب والهبوط من الجواب إلى القرار .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "94",
+        "commentsEnglish": "Method of procedure: the nature of maqām yegāh necessitates beginning from it by presenting the third ʿiqd, entering it from the note ḥijāz, then descending to the second ʿiqd and the first ʿiqd, then ascending ʿiqd by ʿiqd up to the fourth if possible.\n\nIn the descent, it is permissible in maqām yegāh, by way of variety, to perform jins bayyāt on the note ʿushayrān al-ḥusaynī; and in the ascent, to perform awj on awj, the latter being among the incidental ajnās together with jins chahārgāh on chahārgāh. Likewise, when performing bayyāt on muḥayyar, it is permissible to transform it into jins kurd in addition to transforming it into jins ḥijāz.\n\nThis maqām settles in the end on yegāh.",
+        "commentsArabic": "اجراء العمل ـ ان طبيعة مقام اليكاه تحتم البدء منه باظهار العقد الثالث دخولاً اليه من درجة الحجاز ثم الهبوط الى العقد الثاني ، والعقد الاول ، ثم الصعود عقداً فعقداً حتى الرابع اذا امكن .\n\nوفي الهبوط ـ يجوز في مقام اليكاه على سبيل التنويع عمل جنس البياتي على درجة عشيران الحسيني ، وفي الصعود عمل الاوج على الاوج وهذا الاخير من العرضيات هو وجنس الجهاركاه على الجهاركاه وكذلك عند عمل البياتي على المحير يجوز تحويله الى جنس كرد بالاضافة الى تحويله الى جنس الحجاز .\n\nويستقر هذا المقام في النهاية على اليكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-25T14:29:46.732Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -1227,12 +1342,12 @@
         "page": "62/70"
       }
     ],
-    "version": "2026-08-10T20:22:44.350Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "9",
-    "idName": "maqam_al-lami",
-    "name": "maqām al-lāmī",
+    "idName": "maqam_lami",
+    "name": "maqām lāmī",
     "ascendingNoteNames": [
       "dūgāh",
       "kurdī",
@@ -1267,10 +1382,10 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "34/54"
+        "page": "34/54/105"
       }
     ],
-    "version": "2026-08-10T20:00:19.991Z"
+    "version": "2026-08-11T18:13:49.797Z"
   },
   {
     "id": "10",
@@ -1629,14 +1744,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "67"
+        "page": "62/67/95"
       }
     ],
-    "version": "2026-08-10T20:43:31.423Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "14",
-    "idName": "maqam_rast_(al-sabbagh)",
+    "idName": "maqam_rast_alsabbagh",
     "name": "maqām rāst (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -1660,7 +1775,147 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "42",
+        "commentsEnglish": "Begins from the note rāst or yegāh and repeats the sayr from the qarār, then it ascends to nawā and above. In the end it descends to the qarār which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست أو صوت اليك كاه ويكرر فى سير العمل من القرار ثم الصعود إلى درجة صوت النواه فما فوق وفى النهايه يعود العمل بالهبوط إلى القرار وقراره هو صوت الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alsabbagh_1954",
+        "creatorEnglish": "Ṣabbāgh",
+        "creatorArabic": "صبّاغ",
+        "sourceId": "alsabbagh_1954",
+        "page": "26",
+        "commentsEnglish": "Known in Tunis as Ṭabe' al-Dhīl, also Ṭabe' al-Sharqī and Inqilāb al-'irāq.\n\nThe melodies that are close to the melodies of maqām rāst that can be utilised during composition or taqsīm are nahāwand, nawā athar, nikrīz or chahārgāh all on rāst, ṣabā ḥusaynī, ḥijāz nawā and bayyāt nawā. Sometimes after chahārgāh, a transposition of segāh on rāst, then a return to chahārgāh and then to rāst. ",
+        "commentsArabic": "",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          }
+        ],
+        "version": "2025-12-10T17:03:21.299Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "107",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām rāst to begin by touching the degree rāst and descending from it to the degree yegāh, passing over the notes ʿirāq and ʿushayrān, so as to work with the jins rāst transposed onto this yegāh; then it returns to working in the circle of the first ʿiqd, and moves from it to the second ʿiqd to make the jins rāst on nawā, then to the third ʿiqd, then to the fourth if possible.\n\nIn the descent to the resting place, awj is substituted by ʿajam to make būselīk on nawā, or for passing and returning directly to the degree rāst, the resting place of the maqām. Some find it commendable to descend once more to yegāh before the repose on the degree rāst.",
+        "commentsArabic": "اجراء العمل ــ جرت العادة بأن يبدأ العمل من مقام الراست بلمس درجة الراست ويهبط منها الى درجة اليكاه بالمرور على اصوات العراق والعشيران للعمل بجنس الراست مصوراً على هــذا اليكاه ، ثم يعود الى العمل بدائرة العقد الاول ، وينتقل منه الى العقد الثاني لعمل جنس الراست على النوا ثم الى العقد الثالث ثم الى الرابع اذا امكن .\n\nوفي الهبوط الى المستقر يستبدل الاوج بالعجم لعمل البوسليك على النوا او للمرور والعودة رأساً الى درجة الراست مستقر المقام . والبعض يستحسن الهبوط مرة اخرى الى اليكاه قبل الاستقرار على درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:29:30.593Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -1669,7 +1924,7 @@
         "page": "26"
       }
     ],
-    "version": "2026-08-10T20:13:27.776Z"
+    "version": "2026-08-11T19:41:37.031Z"
   },
   {
     "id": "15",
@@ -1829,10 +2084,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/49"
+        "page": "33/49/101"
       }
     ],
-    "version": "2026-08-10T19:47:18.522Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "16",
@@ -2016,10 +2271,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/52"
+        "page": "31/52/103"
       }
     ],
-    "version": "2026-08-10T19:20:35.124Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "18",
@@ -2280,10 +2535,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/42"
+        "page": "31/42/97"
       }
     ],
-    "version": "2026-08-10T19:22:29.866Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "20",
@@ -2439,7 +2694,7 @@
   },
   {
     "id": "21",
-    "idName": "maqam_rahat_al-arwah",
+    "idName": "maqam_rahat_alarwah",
     "name": "maqām rāḥat al-arwāḥ",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -2919,7 +3174,7 @@
   },
   {
     "id": "24",
-    "idName": "maqam_nahawand_(al-sabbagh)",
+    "idName": "maqam_nahawand_alsabbagh",
     "name": "maqām nahāwand (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -2943,7 +3198,130 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "49",
+        "commentsEnglish": "Starts on the note chahārgāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahārgāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه أو النواه ثم بعد الهبوط الى صوت الراست يصير الصعود من صوت النواه الى الـكردان وما فوقه وقراره على صوت الراست",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "māhūrān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "113",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām nahāwand to begin by presenting the first ʿiqd, entering it mostly from nawā, with a touch of chahārgāh or rāst as a ẓahīr for nawā. There follows: the ascent to the second ʿiqd, then to the third, and from it to the fourth if possible.\n\nIn the descent, ʿajam is substituted by nahaft so as to arrive at the voicing of ḥijāz on nawā at times, and the emphasis of chahārgāh at other times; the second ʿiqd may also be kept as it is. Before the repose on the degree rāst, which is the resting place of the maqām, it is commendable to touch the degrees of the jins ḥijāz transposed onto the degree yegāh.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ بالعمل من مقام النهاوند بإظهار العقد الاول دخولاً اليه غالباً من النوا مع لمس الجهاركاه او الراست كظهير للنوا . يلي ذلك : الصعود الى العقد الثاني ثم الى الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط ـ يستبدل العجم بالنهفت ليصار الى تصوير الحجاز على النوا تارة ، والتركيز على الجهاركاه تارة اخرى ، ويمكن ابقاء العقد الثاني على ما هو عليه . وقبل الاستقرار على درجة الراست الذي هو مستقر المقام ، يستحسن لمس درجات جنس الحجاز المصور على درجة اليكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:58:50.162Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -2952,7 +3330,7 @@
         "page": "28"
       }
     ],
-    "version": "2026-08-10T19:55:30.318Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "25",
@@ -3194,10 +3572,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "33/44"
+        "page": "33/44/99"
       }
     ],
-    "version": "2026-08-10T19:41:44.006Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "27",
@@ -3356,18 +3734,14 @@
       {
         "sourceId": "alhilu_1961",
         "page": "108"
-      },
-      {
-        "sourceId": "abbas_1986",
-        "page": "30/37"
       }
     ],
-    "version": "2026-08-10T19:03:32.197Z"
+    "version": "2026-08-11T16:45:58.397Z"
   },
   {
     "id": "28",
-    "idName": "maqam_nawa_athar_(abbas/al-sabbagh)",
-    "name": "maqām nawā athar (ʿAbbās/al-Ṣabbāgh)",
+    "idName": "maqam_nawa_athar_alsabbagh_abbas",
+    "name": "maqām nawā athar (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
       "dūgāh",
@@ -3390,20 +3764,129 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "52",
+        "commentsEnglish": "This maqām starts on nawā with a touch of ḥijāz to render the nagham of ḥijāz on nawā then it ascends to kurdān to render the nagham of nawā athar on kurdān, then up to jawāb al-nawā (saham/ramal tūtī) and then descends to its qarār which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النـواه مع مس صوت الحجاز لعمل نغم حجاز على صوت النواه ثم يصعد إلى الـكردان لعمل نغم نوأثر عليه ثم إلى جواب النواه وبعد ذلك هبوطاً إلى القرار وقراره هو صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "maqam",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "114",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām al-nawā athar to begin by presenting the first ʿiqd, working with the jins nawā athar on the degree rāst; then the move to the second ʿiqd, working with the jins ḥijāz on nawā.\n\nThere follows: the ascent to the third ʿiqd, and from it to the fourth if possible.\n\nThe descent is like the ascent, except that it is commendable to descend to the degree yegāh so that the jins ḥijāz may be voiced upon it before the repose with the jins nawā athar on rāst; this is also permissible during the work, the choice returning to the composer's taste.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ العمل من مقام النوأثر باظهار العقد الاول للعمل بجنس النوأثر على درجة الراست . ثم الانتقال الى العقد الثاني للعمل بجنس الحجاز على النوا .\n\nيلي ذلك : الصعود الى العقد الثالث ومنه الى الرابع اذا امكن .\n\nوالهبوط كالصعود ـ غير انه يستحسن الهبوط الى درجة اليكاه ليصور عليه جنس الحجاز قبل الاستقرار بجنس النوأثر على الراست ويجوز هذا ايضاً اثناء العمل واختيــار ذلك يعود الى ذوق الملحن .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:00:42.939Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/59"
+        "page": "35/59/110"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "29"
       }
     ],
-    "version": "2026-08-10T20:12:09.869Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "29",
@@ -4432,7 +4915,7 @@
           },
           {
             "type": "jins",
-            "value": "18",
+            "value": "50",
             "startingNote": "rāst",
             "direction": "none"
           },
@@ -4520,10 +5003,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "31/41"
+        "page": "31/41/96"
       }
     ],
-    "version": "2026-08-10T19:19:25.285Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "38",
@@ -4880,7 +5363,7 @@
           },
           {
             "type": "jins",
-            "value": "18",
+            "value": "50",
             "startingNote": "rāst",
             "direction": "none"
           },
@@ -4902,7 +5385,7 @@
         "page": "29"
       }
     ],
-    "version": "2026-07-20T12:15:11.065Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "41",
@@ -5263,8 +5746,8 @@
   },
   {
     "id": "44",
-    "idName": "maqam_farahnak",
-    "name": "maqām faraḥnāk",
+    "idName": "maqam_farahnak_alshawwa",
+    "name": "maqām faraḥnāk (al-Shawwā)",
     "ascendingNoteNames": [
       "ʿirāq",
       "rāst",
@@ -5406,13 +5889,9 @@
       {
         "sourceId": "alshawwa_1946",
         "page": "35"
-      },
-      {
-        "sourceId": "alhilu_1961",
-        "page": "115"
       }
     ],
-    "version": "2026-07-26T09:06:58.608Z"
+    "version": "2026-08-17T12:21:30.760Z"
   },
   {
     "id": "45",
@@ -6160,14 +6639,14 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "32/51"
+        "page": "32/51/102"
       }
     ],
-    "version": "2026-08-10T19:40:45.357Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "50",
-    "idName": "maqam_nikriz_(al-sabbagh)",
+    "idName": "maqam_nikriz_alsabbagh",
     "name": "maqām nikrīz (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -6191,7 +6670,112 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "53",
+        "commentsEnglish": "This maqām starts on rāst ascending to nawā, then from there ascends to kurdān step by step, then to what is above the kurdān and then it descends until its qarār which is rāst",
+        "commentsArabic": "هذا المقام يبـدأ من صوت الراست صعودا إلى صوت النواه ثم من صوت النواه يصير الصعود إلى الـكردان تدريجيا ثم إلى ما فوق الـكردان ويلى ذلك هبوطا لغـاية القرار وقراره هـو صـوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "111",
+        "commentsEnglish": "Method of procedure: the work in maqām al-nikrīz begins with the presentation of the first ʿiqd, entering it from the degree rāst while touching the degree ʿirāq. It is permissible to open this maqām from the second ʿiqd, that is [būselīk on nawā], entering it from the degree kurdān; but the first way is sounder, since the first ʿiqd is the maqām's fundamental ʿiqd, that is, the ʿiqd with which it begins and closes.\n\nThere follows: the ascent to the second ʿiqd, then the third, and from it to the fourth if possible.\n\nIn the descent the degree ʿajam is substituted by awj so as to work with the jins rāst on nawā, and this rāst is in the origin of the maqām; then the descent to the first ʿiqd, and before the repose on the degree rāst, the resting place of the maqām, the degree ʿirāq is touched.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من مقام النكريز في اظهار العقد الاول دخولاً اليه من درجة الراست مع لمس درجة العراق ، ويجوز الاستهلال من هذا المقام من العقد الثاني اي [ بوسليك على النوا ] دخولاً اليه من درجة الكردان والطريقة الاولى اصح نظراً لكون العقد الاول هو العقد الاساسي للمقام اي العقد الذي يبدأ ويختم به .\n\nيلي ذلك : الصعود الى العقد الثاني ثم الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط تستبدل درجة العجم بالاوج للعمل بجنس الراست على النوا ، وهذا الراست في اصل المقام ـ ثم الهبوط الى العقد الاول ، وقبل الاستقرار على درجة الراست مستقر المقام يلمس درجة العراق .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:52:18.967Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -6200,7 +6784,7 @@
         "page": "29"
       }
     ],
-    "version": "2026-08-10T20:13:02.600Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "51",
@@ -6398,7 +6982,7 @@
   },
   {
     "id": "53",
-    "idName": "maqam_hijaz_kar_kurd_(al-sabbagh)",
+    "idName": "maqam_hijaz_kar_kurd_alsabbagh",
     "name": "maqām ḥijāz kār kurd (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -6422,7 +7006,117 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "57",
+        "commentsEnglish": "Begins from ʿajam to kurdān, then ascends above kurdān; in the descent it performs kurdī on kurdān and continues descending to the qarār, which is rāst.\n\nal-Shawwā names this maqām kūrdīlī ḥijāz kār.",
+        "commentsArabic": "هذا المقام يـبدأ من صوت العجم إلى الـكردان ثم يصير الصعود إلى ما فوق صوت الـكردان وفى الهبوط يعمل نغم كوردى على الـكردان ويستمر فى الهبوط إلى القرار وقراره صــوت الراست .\n\nيسمّي الشوّا هذا المقام كورديلى حجاز كار.",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-20T08:26:02.162Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "117",
+        "commentsEnglish": "Method of procedure: the work begins from the maqām's jawāb region, working in the circle of the third ʿiqd, entering it from the degree ʿajam as a ẓahīr for kurdān; then the ascent to the fourth ʿiqd if possible.\n\nIn the descent the gradation is ʿiqd by ʿiqd down to the second; then come partial reposes on the two degrees kurdān and chahārgāh, then the descent to the first ʿiqd, and the final work turns between the two degrees kurdān and rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من المنطقة الجوابية للمقام للعمل في دائرة العقد الثالث دخولاً اليه من درجة العجم كظهير للكردان ، ثم الصعود الى العقد الرابع اذا امكن .\n\nوفي الهبوط يكون التدرج عقداً فعقداً حتى الثاني . ثم يصير استقرارات جزئية على درجتي الكردان والجهاركاه ثم النزول الى العقد الاول ، ويدور العمل النهائي بين درجتي الكردان والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:20:11.576Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -6431,11 +7125,11 @@
         "page": "31"
       }
     ],
-    "version": "2026-08-10T20:10:13.923Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "54",
-    "idName": "maqam_hijaz_(al-sabbagh/abbas)",
+    "idName": "maqam_hijaz_alsabbagh_abbas",
     "name": "maqām ḥijāz (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -6448,7 +7142,7 @@
     ],
     "descendingNoteNames": [
       "kurdān",
-      "awj",
+      "ʿajam",
       "ḥusaynī",
       "nawā",
       "ḥijāz",
@@ -6459,7 +7153,138 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "65",
+        "commentsEnglish": "Begins from the degree rāst, descending to the degree yegāh, then ḥijāz is rendered on the degree dūgāh; there follows rāst rendered on the degree nawā, then ascending to above muḥayyar, then descending to the qarār — and its qarār is the degree dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الراست هبوطاً إلى صوت اليك كاه ثم عمل حجاز على صوت الدوكاه يلى ذلك عمـل راست عـلى صوت النواه ثم صعوداً إلى مافوق المحير فهبوطا للقرار وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:29:39.178Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "121",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām ḥijāz to begin from the circle of the first ʿiqd, entering it from rāst as a ẓahīr for dūgāh. After presenting this ʿiqd, which represents the spirit of the maqām, comes the descent to yegāh with the jins rāst transposed onto the degree yegāh, then the ascent to the second ʿiqd, working at times with the jins būselīk on nawā and at other times with the jins rāst on nawā and bayyāt on ḥusaynī. There follows: the ascent to the third ʿiqd with the jins ḥijāz and būselīk on muḥayyar, and from it to the fourth ʿiqd if possible.\n\nIn the descent, kurdān is substituted by shahnāz to make ḥijāz on ḥusaynī, then būselīk or rāst on nawā in the second ʿiqd, by substituting awj for ʿajam; and from it to the first ʿiqd. It is commendable, before the repose on dūgāh, the resting place of the maqām, that the degree rāst be touched.",
+        "commentsArabic": "اجراء العمل ــ جرت العادة ان يبدأ العمل في مقام الحجاز من دائرة العقد الاول دخولاً اليه من الراست كظهيراً للدوكاه . وبعد اظهار هذا العقد الذي يمثل روح المقام يكون الهبوط الى اليكاه بجنس الراست المصور على درجة اليكاه ثم الصعود الى العقد الثاني للعمل تارة بجنس البوسليك على النوا وتارة اخرى بجنس الراست على النوا والبياتي على الحسيني . يلي ذلك : الصعود الى العقد الثالث بجنس الحجاز والبوسليك على المحير ، ومنه الى العقد الرابع اذا امكن .\n\nوفي الهبوط يستبدل الكردان بالشاهناز لعمل الحجاز على الحسيني ثم البوسليك أو الراست على النوا في العقد الثاني ، وذلك باستبدال العجم بالاوج . ومنه الى العقد الاول . ويستحسن قبل الاستقرار على الدوكاه مستقر المقام ان تلمس درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:30:18.187Z"
+      }
+    ],
     "commentsEnglish": "al-Ṣabbāgh gives only the ascending form whilst ʿAbbās gives both ascending and descending",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -6469,10 +7294,10 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "34/38"
+        "page": "34/38/93"
       }
     ],
-    "version": "2026-08-11T16:38:43.309Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "55",
@@ -6852,8 +7677,8 @@
   },
   {
     "id": "59",
-    "idName": "maqam_hijaz_kar_(abbas/al-sabbagh)",
-    "name": "maqām ḥijāz kār (ʿAbbās/al-Ṣabbāgh)",
+    "idName": "maqam_hijaz_kar_alsabbagh_abbas",
+    "name": "maqām ḥijāz kār (al-Ṣabbāgh/ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
       "zīrgūleh",
@@ -6876,24 +7701,130 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "56",
+        "commentsEnglish": "Begins from nīm māhūr to kurdān to perform nahāwand on kurdān; after ascending above kurdān it returns descending, performing ḥijāz on kurdān when needed, then descends to the qarār, which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النيم ماهور إلى الـكردان لعمل نغم نهاوند عـلى الـكردان ثم بعدالصعود إلى مافوق الـكردان من الأصوات يعود للهبوط مع عمل نغم حجاز على الـكردان فى حالة اللزوم ثم يهبط للقرار وقراره هو صوت الراست .\n( ملاحظه ) كان هذا المقـام قديما يستعمل فيه صوتى الثيه كاه والاوج بدلا من صوتى النيم بوسليك والنيم ماهور .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm māhūr"
+          },
+          {
+            "type": "maqam",
+            "value": "10",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": ""
+          }
+        ],
+        "version": "2026-07-20T10:12:09.875Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "112",
+        "commentsEnglish": "Method of procedure: the nature of maqām ḥijāz kār requires beginning from its jawāb, not from its qarār — that is, from the degree nahaft, for example, down to kurdān, to work in the circle of the third ʿiqd in its two forms [ḥijāz on kurdān, and nahāwand on kurdān], then ascending from it to the fourth if possible. In the descent the player passes through the third ʿiqd [nahāwand on kurdān] and also ḥijāz on kurdān, then moves from it to the second ʿiqd to work with the jins ḥijāz on nawā, and at times with the jins nahāwand on chahārgāh of the fifth. There follows: the descent to the first ʿiqd. Before the repose on the degree rāst, which is the resting place of the maqām, it is commendable to touch the degree kawasht, which represents the ḥassās note of the maqām.",
+        "commentsArabic": "اجراء العمل ـ ان طبيعة مقام الحجازكار (١) توجب البدء من جوابه لا من قراره ، اي من درجة النهفت مثلاً الى الكردان للعمل في دائرة العقد الثالث بشكليه [حجاز على الكردان ـ ونهاوند على الكردان] ثم الصعود منه الى الرابع اذا امكن . وفي الهبوط يمر العازف بالعقد الثالث [نهاوند على الكردان] وايضاً حجاز على الكردان ، ثم الانتقال منه الى العقد الثاني للعمل بجنس حجاز على النوا وتارة بجنس نهاوند على الجهاركاه ذي خمس . يلي ذلك : الهبوط الى العقد الاول . وقبل الاستقرار على درجة الراست التي هي مستقر المقام يستحسن لمس درجة الكوشت التي تمثل صوت الحساس للمقام .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "māhūr"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kawasht"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:56:24.471Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/57"
+        "page": "35/57/108"
       },
       {
         "sourceId": "alsabbagh_1954",
         "page": "33"
       }
     ],
-    "version": "2026-08-10T20:09:12.550Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "60",
-    "idName": "maqam_zangulah/zanjaran_(al-sabbagh)",
+    "idName": "maqam_zangulah_zanjaran_alsabbagh",
     "name": "maqām zangulāh/zanjarān (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "rāst",
@@ -6927,14 +7858,14 @@
       },
       {
         "sourceId": "abbas_1986",
-        "page": "60"
+        "page": "60/111"
       }
     ],
-    "version": "2026-08-10T20:57:21.444Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "61",
-    "idName": "maqam_bayyat_(al-sabbagh)",
+    "idName": "maqam_bayyat_alsabbagh",
     "name": "maqām bayyāt (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -6958,16 +7889,132 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "59",
+        "commentsEnglish": "Begins from nawā or chahārgāh, ascending to ḥusaynī, ʿajam and kurdān up to muḥayyar, then returns to chahārgāh repeatedly; at the end the descent follows the scale of the maqām down to the qarār, which is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النواه أو الجهاركاه للصعود إلى أصوات الحسينى والعجم والـكردان إلى المحير ثم يعود إلى صوت الجهاركاه مكرراً وعند الانتهى يصير الهبوط حسب تركيب سلم المقام لغاية القرار وقرارة صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "118",
+        "commentsEnglish": "Method of procedure: the work in maqām al-bayyātī begins in the circle of the first ʿiqd, entering it from nawā in the manner of the Turks. The modern Arabs, however, have abandoned this narrow restriction and given themselves the freedom to enter from any of the maqām's concordant notes, such as dūgāh, which is the resting place of the maqām, or its ghammāz, which is the note ḥusaynī, or its ẓahīr, which is the note rāst. There follows: entry into the circle of the second ʿiqd, working at times with the jins būselīk on nawā and at other times with the jins chahārgāh on chahārgāh, and occasionally, incidentally, with the jins ʿajam on ʿajam. Then the ascent to the third ʿiqd in its two forms, bayyāt, and būselīk on muḥayyar in the descent, and from it to the fourth if possible. The descent is like the ascent, except that in descending it is permissible to work the jins būselīk on muḥayyar instead of bayyāt on muḥayyar. Before the repose on dūgāh, the resting place of the maqām, it is commendable to toy with the two degrees ʿirāq and rāst.",
+        "commentsArabic": "اجراء العمل ــ يبدأ العمل من مقام البياتي في دائرة العقد الاول . دخولاً اليه من النوا على طريقة الاتراك . اما المحدثين من العرب فقد اهملوا هذا التقيــد الضيق واطلقوا لانفسهم حرية الدخول من اي صوت من اصوات المقام المتآلفة امثال ــ الدوكاه الذي هو مستقر المقام ، أو غمازه الذي هو صوت الحسيني أو ظهيره الذي هو صوت الراست ، يلي ذلك : الدخول في دائرة العقد الثاني للعمل تارة بجنس البوسليك على النوا وتارة اخرى بجنس الجهاركاه على الجهاركاه واحياناً وبطريق العرض بجنس عجم على العجم . ثم الصعود الى العقد الثالث بشكليه البياتي والبوسليك على المحير عند الهبوط ومنه الى الرابع اذا امكن . والهبوط كالصعود . غير انه في حالة الهبوط يجوز عمل جنس البوسليك على المحير بدلاً من بياتي على المحير . وقبل الاستقرار على الدوكاه مستقر المقام يستحسن مداعبة درجتي ــ العراق والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:27:30.693Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:17:40.039Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "35"
+      }
+    ],
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "62",
-    "idName": "maqam_bayyat_shuri/qarjaghar_(al-sabbagh)",
-    "name": "maqām bayyāt shūrī/qarjaghār (al-Ṣabbāgh)",
+    "idName": "maqam_qarjaghar_bayyat_shuri_alsabbagh",
+    "name": "maqām qarjaghār/bayyāt shūrī (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
       "segāh",
@@ -6993,8 +8040,13 @@
     "suyur": [],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:19:44.485Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "36"
+      }
+    ],
+    "version": "2026-08-11T18:48:24.705Z"
   },
   {
     "id": "63",
@@ -7147,7 +8199,7 @@
         "stops": [
           {
             "type": "jins",
-            "value": "18",
+            "value": "50",
             "startingNote": "rāst"
           },
           {
@@ -7187,7 +8239,7 @@
         "page": "54"
       }
     ],
-    "version": "2026-08-07T10:34:55.244Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "65",
@@ -8589,7 +9641,7 @@
   },
   {
     "id": "78",
-    "idName": "maqam_ajam/ajam_murassa",
+    "idName": "maqam_ajam_ajam_murassa",
     "name": "maqām ʿajam/ʿajam muraṣṣaʿ",
     "ascendingNoteNames": [
       "dūgāh",
@@ -9029,7 +10081,7 @@
   },
   {
     "id": "83",
-    "idName": "maqam_saba_(al-sabbagh)",
+    "idName": "maqam_saba_alsabbagh",
     "name": "maqām ṣabā (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -9053,7 +10105,117 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "69",
+        "commentsEnglish": "Begins from chahārgāh to perform ḥijāz on chahārgāh, then returns from ascent to descent according to the scale of the maqām, ending on dūgāh.\n\nNote: al-Shawwā gives the fourth degree as the note ṣabā, where our scale uses ḥijāz.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه لعمل حجاز عـلى صوت الجهاركاه ثم يعود من الصعود إلى الهبوط حسب تركيب سلم المقام وينتهى على صوت الدوكاه .\n\nملاحظة: يعطي الشوّا الدرجة الرابعة نغمةَ صبا، حيث يستعمل سلّمنا الحجاز.",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-20T08:40:56.038Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "122",
+        "commentsEnglish": "Method of procedure: it has been customary to begin maqām al-ṣabā by entering the first ʿiqd from the degree chahārgāh [and it is the mother of this maqām's centres], while toying with the degree segāh, so as to work with the jins ḥijāz on chahārgāh. This ḥijāz jins then acts jointly with the jins ṣabā on dūgāh.\n\nThere follows: the course to the third ʿiqd, to work with the jins ḥijāz on kurdān as the completer of what precedes it, as an independent jins; then the fourth ʿiqd if possible.\n\nIn the case of the descent, one works with the jins ṣabā on muḥayyar and the jins ḥijāz on kurdān, and after that the jins ḥijāz on chahārgāh. At the close, the repose is on the degree dūgāh with the jins ṣabā.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة ان يبدأ من مقام الصبا بالدخول الى العقد الاول من درجة الجهاركاه [وهي ام مراكز هذا المقام] مع مداعبة درجة السيكاه للعمل بجنس الحجاز على الجهاركاه . ثم يشترك جنس الحجاز هذا مع جنس الصبا على الدوكاه .\n\nيلي ذلك : السير الى العقد الثالث للعمل بجنس الحجاز على الكردان بصفته متمم لما قبله كجنس مستقل . ثم العقد الرابع اذا امكن .\n\nوفي حالة الهبوط يعمل بجنس الصبا على المحير وجنس الحجاز على الكردان ، وبعد ذلك جنس الحجاز على الجهاركاه . وعند الختام يكون الاستقرار على درجة الدوكاه بجنس الصبا .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:32:50.270Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -9062,7 +10224,7 @@
         "page": "37"
       }
     ],
-    "version": "2026-08-10T20:13:56.372Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "84",
@@ -12281,7 +13443,7 @@
   },
   {
     "id": "123",
-    "idName": "maqam_huzam_(al-sabbagh)",
+    "idName": "maqam_huzam_alsabbagh",
     "name": "maqām huzām (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "segāh",
@@ -12305,7 +13467,110 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "85",
+        "commentsEnglish": "Begins from segāh with a touch of kurdī, then performs ḥijāz on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.\n\nNote: al-Shawwā adds that sāzkār is sometimes performed on kurdān in this maqām.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الثيه كاه مع لمس عربة السكوردى ثم عمل حجاز على النواه وبعد الصعود إلى الجواب يصير الهبوط إلى قرار المقام وهو صوت الثيه كاه .\nملاحظه : يستعمل أحيانا فى هذا المقام عمل سازكار على صوت الكردان .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:20:55.789Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "132",
+        "commentsEnglish": "Method of procedure: the work in maqām al-huzām begins in the circle of the first ʿiqd, which represents the maqām's fundamental character, entering it from the degree segāh with a touching of the two degrees kurd and rāst. There follows: the work in the circle of the second ʿiqd with the jins ḥijāz on nawā; then the first and second ʿuqūd join together. Then comes the ascent to the third ʿiqd, to work with the jins rāst on kurdān in the ascent; and in the descent there is added to the jins rāst on kurdān, incidentally, the jins al-bayyāt on muḥayyar; then it passes by the jins būselīk on nawā once more, and at the close the repose falls on the degree segāh with a touching of the two degrees kurd and rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الهزام في دائرة العقد الاول الذي يمثل شخصية المقام الاساسية دخولاً اليه من درجة السيكاه مع مداعبة درجتي الكرد والراست . يلي ذلك : العمل في دائرة العقد الثاني بجنس الحجاز على النوا « ثم يشترك العقدان الاول والثاني معاً . ثم يكون الصعود الى العقد الثالث للعمل بجنس الراست على الكردان في الصعود وفي الهبوط يضاف الى جنس الراست على الكردان بصفة عرضية جنس البياتي على المحير ، ثم يمر بجنس البوسليك على النوا مرة اخرى وعند الختام يكون الاستقرار على درجة السيكاه مع مداعبة درجتي الكرد والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-26T09:58:06.402Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12314,11 +13579,11 @@
         "page": "39"
       }
     ],
-    "version": "2026-08-10T20:11:33.307Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "124",
-    "idName": "maqam_chahargah_(al-sabbagh)",
+    "idName": "maqam_chahargah_alsabbagh",
     "name": "maqām chahārgāh (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "chahārgāh",
@@ -12342,15 +13607,125 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "90",
+        "commentsEnglish": "Begins from ḥusaynī or ʿajam ascending, to perform rāst — or chahārgāh — on kurdān; then returns descending to the qarār of the maqām, which is chahārgāh. Before ascending to kurdān, chahārgāh may be performed on chahārgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحسينى أو العجم صعوداً لعمل راست على صوت الكردان أو جهاركاه : ثم يعود هبوطاً إلى قرار المقـام وقراره هـو صوت الجهاركاه : ويصح قبـل الصعود إلى صوت الكردان عمل جهاركاه على صوت الجهاركاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "133",
+        "commentsEnglish": "Method of procedure: the work in maqām al-chahārgāh begins in the circle of the first ʿiqd, entering it from the degree ʿajam or chahārgāh. Then comes the movement to the second ʿiqd with the jins chahārgāh on kurdān, joined incidentally by the jins rāst on kurdān; and from it to the third ʿiqd, then the fourth if possible. The descent is like the ascent, with no difference between them. And at the end the maqām reposes on the degree chahārgāh with the jins ʿajam, that is, chahārgāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الجهاركاه في دائرة العقد الاول دخولاً اليه من درجة العجم او الجهاركاه . ثم يكون الانتقال الى العقد الثاني بجنس جهاركاه على الكردان ويشترك معه جنس الراست على الكردان بصفة عرضية ، ومنه الى العقد الثالث ثم الرابع اذا امكن . والهبوط كالصعود ولا فرق بينهما . وفي النهاية يستقر المقام على درجة الجهاركاه بجنس العجم أي الجهاركاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿajam"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "jawāb kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          }
+        ],
+        "version": "2026-07-26T09:59:40.039Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:34:22.262Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "125",
-    "idName": "maqam_ajam_ushayran_(al-sabbagh)",
+    "idName": "maqam_ajam_ushayran_alsabbagh",
     "name": "maqām ʿajam ʿushayrān (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "nīm ʿajam ʿushayrān",
@@ -12374,15 +13749,113 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "30",
+        "commentsEnglish": "Begins from chahārgāh ascending to kurdān, then returns to chahārgāh, and after that descends until the qarār, which is ʿajam ʿushayrān.",
+        "commentsArabic": "هـذا المقـام يبدأ من صوت الجهاركاه صعوداً إلى الـكردان ثم يعود إلى الجهاركاه وبعد ذلك ينزل هبوطاً لغاية القرار وقراره هو صوت العجم عشيران .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "100",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām ʿajam ʿushayrān to begin by presenting the second ʿiqd, entering it from the degree chahārgāh, which is the ghammāz of the maqām.\n\nThere follows: the descent to the first ʿiqd, then the return to the second ʿiqd, and from it to the fourth ʿiqd if possible, and the repose on the resting place of the maqām.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ العمل في مقام العجم عشيران بإظهار العقد الثاني دخولاً اليه من درجة الجهاركاه التي هي غماز المقام .\n\nيلي ذلك : النزول الى العقد الاول ثم العودة الى العقد الثاني ، ومنه الى العقد الرابع اذا امكن ، والاستقرار على مستقر المقام .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-26T08:05:00.037Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-08-09T14:38:46.831Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "43"
+      }
+    ],
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "126",
-    "idName": "maqam_iraq_(al-sabbagh)",
+    "idName": "maqam_iraq_alsabbagh",
     "name": "maqām ʿirāq (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -12406,7 +13879,109 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "33",
+        "commentsEnglish": "Starts on 'iraq or dūgāh descending until yegāh, then bayyāt dūgāh until nawā then rāst nawā and descends to the qarār which is 'irāq",
+        "commentsArabic": "هذا المقام يبدأ من صوت العراق أو الدوكاه هبوطاً إلى صوت اليك كاه ثم بياتى على الدوكاه لغاية صوت النواه ثم عمل راست على النواه ويعود هبوطاً إلى قرار المقام : وقراره هو صوت العراق .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "102",
+        "commentsEnglish": "The descent is like the ascent, except that the jins awj is replaced by ʿajam in the third ʿiqd; then one descends from it to the second ʿiqd and from it to the first, where it reposes on ʿirāq, the resting place of the maqām.\n\nMethod of procedure: it has been customary for the work in maqām ʿirāq to begin by presenting the first ʿiqd, entering it usually from the degree rāst, with the note yegāh used as a ẓahīr for it; then comes the move to the second ʿiqd [bayyāt on dūgāh], ascending from it to the third [rāst on nawā], where another ʿiqd acts jointly with it, namely awj on awj; and from it to the fourth if possible; then the descent is as noted above.",
+        "commentsArabic": "والهبوط كالصعود غير انه يبدل جنس الاوج بالعجم في العقد الثالث . ثم يهبط منه الى العقد الثاني ومنه الى الاول حيث يستقر على العراق مستقر المقام .\n\nاجراء العمل ـ جرت العادة ان يبدأ العمل في مقام العراق باظهار العقد الاول دخولاً اليه عادة من درجة الراست مع استعمال صوت اليكاه كظهير له ، ثم يصير الانتقال الى العقد الثاني [بياتي على الدوكاه] ويصعد منه الى الثالث [راست على النوا] حيث يشترك معه عقد آخر هو اوج على الاوج . ومنه الى الرابع اذا امكن ثم يكون الهبوط كما هو مدون اعلاه",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "jins",
+            "value": "26",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "buzurk"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:17:32.275Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12415,11 +13990,11 @@
         "page": "44"
       }
     ],
-    "version": "2026-08-10T20:10:59.291Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "127",
-    "idName": "maqam_segah_(al-sabbagh)",
+    "idName": "maqam_segah_alsabbagh",
     "name": "maqām segāh (al-Ṣabbāgh)",
     "ascendingNoteNames": [
       "segāh",
@@ -12443,7 +14018,130 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "84",
+        "commentsEnglish": "Begins from the qarār, segāh, then performs rāst on nawā, followed by awj on the note awj, then descends to the qarār, segāh. In the opening, kurdī must be touched. Note: al-Shawwā adds that this nagham has many paths other than this construction.",
+        "commentsArabic": "هذا المقــام يبدأ من القرار أى من صوت الثيه كاه ثم عمل راست على صوت النواه يلى ذلك عمل اوج على صوت الاوج ثم هبوطاً إلى القرار وهو صوت الثيه كاه : وفى الاستهلال يجب لمس عربة الــكوردى .\n( ملاحظه ) ولهذا النغم طرق كثيره خلاف هذا التركيب .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "awj"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:20:55.789Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "131",
+        "commentsEnglish": "Method of procedure: the work in maqām al-segāh begins in the circle of the first ʿiqd, entering it from the degree rāst, with a slight touching of kurd at the beginning and the end.\n\nThere follows: the ascent to the second ʿiqd, to work with the jins rāst on nawā. Then awj on awj is worked incidentally, for variety. Then the work moves to the third ʿiqd, to work with the jins rāst on kurdān, and the ascent from it to the fourth if possible.\n\nAnd in the descent one passes over the jins al-bayyāt on muḥayyar [incidentally], or works with the jins rāst on kurdān once more, then with the jins būselīk on nawā, and the repose comes finally with the jins segāh on the degree segāh, with a touching of kurd.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام السيكاه في دائرة العقد الاول دخولاً اليه من درجة الراست مع مداعبة الكرد قليلاً عند البداية والنهاية .\n\nيلي ذلك : الصعود الى العقد الثاني للعمل بجنس الراست على النوا . ثم يعمل الاوج على الاوج بصفة عرضية للتنويع . ثم ينتقل العمل الى العقد الثالث للعمل بجنس الراست على الكردان والصعود منه الى الرابع اذا امكن .\n\nوفي الهبوط يمر على جنس البياتي على المحير [ بصفة عرضية ] أو يعمل بجنس الراست على الكردان مرة اخرى ، ثم بجنس البوسليك على النوا والاستقرار اخيراً بجنس السيكاه على درجة السيكاه مع مداعبة الكرد .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-26T09:53:57.214Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12452,11 +14150,11 @@
         "page": "41"
       }
     ],
-    "version": "2026-08-10T20:15:09.972Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "128",
-    "idName": "maqam_suznak_(abbas)",
+    "idName": "maqam_suznak_abbas",
     "name": "maqām sūznāk (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -12480,20 +14178,126 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "44",
+        "commentsEnglish": "Starts by ascending from rāst to nawā followed by ḥijāz on nawā the nahāwand on kurdān, it then descends with būselīk on nawā until the qarār which is rāst ",
+        "commentsArabic": "هذا المقام يبدأ صعوداً من صوت الراست إلى صوت النواه ثم يعمل حجاز على صوت النواه ثم نهاوند على صوت الـكردان ثم هبوطاً لعمل بوسليك على النواه ومنه إلى قرار المقام وهـو صوت الراست .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "48",
+            "startingNote": "nawā",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "108",
+        "commentsEnglish": "Method of procedure: the work begins by presenting the first ʿiqd; some find it good to open from its second ʿiqd, then descend from it to the first and return to the second, and from it to the third, then the fourth if possible.\n\nThe old systematists made it obligatory to begin from the degree chahārgāh followed by nawā, and the moderns have annulled this rule. Some modern Arabs toy with the jins ḥijāz transposed onto the degree rāst at the opening, in keeping with the Turkish way of opening this maqām. Some analyse this maqām from two connected ajnās of the fifth kind, as is the case in maqām al-nikrīz. Some of them also proceed in the descent to maqām ḥijāz transposed onto the degree yegāh, that is maqām [shadd ʿarabān], or ḥijāz kār transposed onto yegāh, in response to and consistency with its second ʿiqd [ḥijāz on nawā].",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل باظهار العقد الاول ، وبعضهم يستحسن الاستهلال من عقده الثاني ثم الهبوط منه الى الاول والعودة الى الثاني . ومنه الى الثالث ثم الرابع اذا امكن .\n\nوالنظاميون القدماء يحتمون البدء من درجة الجهاركاه متبوعة بالنوا . وقد ابطل المحدثون هذه القاعدة . وبعض المحدثين العرب يداعبون جنس الحجاز المصور على درجة الراست في الاستهلال تمشياً مع الطريقة التركية في استهلالهم من هذا المقام . والبعض يحلل هذا المقام من جنسين من ذوات الذي بالخمس متصلين كما هو الحال في مقام النكريز . ومنهم ايضاً من يتطرق في الهبوط الى مقام الحجاز مصوراً على درجة اليكاه اي مقام [ شدعربان ] او حجازكار مصوراً على اليكاه وذلك تجاوباً واتساقاً مع عقده الثاني [ حجاز على النوا ] .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:32:24.654Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "30"
+        "page": "30/37/92"
       }
     ],
-    "version": "2026-08-10T18:56:05.607Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "129",
-    "idName": "maqam_huzam_(abbas)",
+    "idName": "maqam_huzam_abbas",
     "name": "maqām huzām (ʿAbbās)",
     "ascendingNoteNames": [
       "segāh",
@@ -12517,16 +14321,119 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "85",
+        "commentsEnglish": "Begins from segāh with a touch of kurdī, then performs ḥijāz on nawā; after ascending to the jawāb, it descends to the qarār of the maqām, which is segāh.\n\nNote: al-Shawwā adds that sāzkār is sometimes performed on kurdān in this maqām.",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الثيه كاه مع لمس عربة السكوردى ثم عمل حجاز على النواه وبعد الصعود إلى الجواب يصير الهبوط إلى قرار المقام وهو صوت الثيه كاه .\nملاحظه : يستعمل أحيانا فى هذا المقام عمل سازكار على صوت الكردان .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-20T10:20:55.789Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "132",
+        "commentsEnglish": "Method of procedure: the work in maqām al-huzām begins in the circle of the first ʿiqd, which represents the maqām's fundamental character, entering it from the degree segāh with a touching of the two degrees kurd and rāst. There follows: the work in the circle of the second ʿiqd with the jins ḥijāz on nawā; then the first and second ʿuqūd join together. Then comes the ascent to the third ʿiqd, to work with the jins rāst on kurdān in the ascent; and in the descent there is added to the jins rāst on kurdān, incidentally, the jins al-bayyāt on muḥayyar; then it passes by the jins būselīk on nawā once more, and at the close the repose falls on the degree segāh with a touching of the two degrees kurd and rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في مقام الهزام في دائرة العقد الاول الذي يمثل شخصية المقام الاساسية دخولاً اليه من درجة السيكاه مع مداعبة درجتي الكرد والراست . يلي ذلك : العمل في دائرة العقد الثاني بجنس الحجاز على النوا « ثم يشترك العقدان الاول والثاني معاً . ثم يكون الصعود الى العقد الثالث للعمل بجنس الراست على الكردان في الصعود وفي الهبوط يضاف الى جنس الراست على الكردان بصفة عرضية جنس البياتي على المحير ، ثم يمر بجنس البوسليك على النوا مرة اخرى وعند الختام يكون الاستقرار على درجة السيكاه مع مداعبة درجتي الكرد والراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "3",
+            "startingNote": "segāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "segāh"
+          }
+        ],
+        "version": "2026-07-26T09:58:06.402Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "31/43"
+        "page": "31/43/98"
       }
     ],
-    "version": "2026-08-10T19:25:26.322Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "130",
@@ -12560,14 +14467,14 @@
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "32/45"
+        "page": "32/45/112"
       }
     ],
-    "version": "2026-08-10T19:29:09.873Z"
+    "version": "2026-08-11T16:51:32.170Z"
   },
   {
     "id": "131",
-    "idName": "maqam_bestenegar_(abbas)",
+    "idName": "maqam_bestenegar_abbas",
     "name": "maqām bestenegār (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -12591,20 +14498,101 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "37",
+        "commentsEnglish": "Starts on ṣabā dūgāh and it's qarār is irāq",
+        "commentsArabic": "يبدأ هذا المقام بعمل نغمة الصباه على الدوكاه : وقراره على صوت العراق .",
+        "stops": [
+          {
+            "type": "maqam",
+            "value": "15",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "104",
+        "commentsEnglish": "Method of procedure: one opens in maqām bestenegār, which is [a composite maqām], by working ṣabā on dūgāh. After the stop on this dūgāh, one works with the jins ʿirāq on ʿirāq, by touching rāst and ʿirāq. Then one ascends ʿiqd by ʿiqd up to the fourth ʿiqd in its first and second forms, if possible.\n\nThen the descent proceeds gradually like the ascent, and one works with the jins awj on awj, by substituting awj for ʿajam and muḥayyar for shahnāz. This ʿiqd and others among the ʿuqūd called the incidentals, or whatever occurs upon this maqām or other Arab maqāms: these indeterminate, unbounded changes are nothing but incidentals from which it is permissible to work even though they are absent from the origin of the maqām, whether this maqām is simple or composite.",
+        "commentsArabic": "اجراء العمل ـ يستهل في مقام البسته نكار وهو [ مقام مركب ] بعمل الصبا على الدوكاه . وبعــد الوقوف على هذا الدوكاه ، يعمل بجنس عراق على العراق وذلك بلمس الراست والعراق . ثم يصعــد عقداً فعقداً حتى العقد الرابع بشكليه الاول والثاني اذا امكن .\n\nثم يصير الهبوط تدريجياً كالصعود ويعمل بجنس اوج على الاوج وذلك باستبدال العجم بالاوج والشاهناز بالمحير . وهذا العقد وسواه من العقود التي تسمى بالعرضيات أو ما يطرأ على هذا المقام او سواه من المقامات العربية ، فليست هذه التغيرات الغير معينة او محدودة سوى عرضيات يجوز العمل منها مع عدم وجودها في اصل المقام . ان كان هذا المقام صحيح او مركب .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "26",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "51",
+            "startingNote": "awj"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T08:23:08.922Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "33/48"
+        "page": "33/48/100"
       }
     ],
-    "version": "2026-08-10T19:50:36.993Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "132",
-    "idName": "maqam_nahawand_(abbas)",
+    "idName": "maqam_nahawand_abbas",
     "name": "maqām nahāwand (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -12628,20 +14616,143 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "49",
+        "commentsEnglish": "Starts on the note chahārgāh or nawā and after a descent to the note rāst the ascent begins from nawā using jins ḥijāz until kurdān, then  ascend to muḥayyar, sunbuleh, jawāb chahārgāh (mahūran) until saham/ramal tūtī followed by a descent along it's scale degrees until its qarār which is rāst. ",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه أو النواه ثم بعد الهبوط الى صوت الراست يصير الصعود من صوت النواه الى الـكردان وما فوقه وقراره على صوت الراست",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "sunbuleh/zawāl",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "māhūrān",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "saham/ramal tūtī",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "113",
+        "commentsEnglish": "Method of procedure: it has been customary for the work in maqām nahāwand to begin by presenting the first ʿiqd, entering it mostly from nawā, with a touch of chahārgāh or rāst as a ẓahīr for nawā. There follows: the ascent to the second ʿiqd, then to the third, and from it to the fourth if possible.\n\nIn the descent, ʿajam is substituted by nahaft so as to arrive at the voicing of ḥijāz on nawā at times, and the emphasis of chahārgāh at other times; the second ʿiqd may also be kept as it is. Before the repose on the degree rāst, which is the resting place of the maqām, it is commendable to touch the degrees of the jins ḥijāz transposed onto the degree yegāh.",
+        "commentsArabic": "اجراء العمل ـ جرت العادة بأن يبدأ بالعمل من مقام النهاوند بإظهار العقد الاول دخولاً اليه غالباً من النوا مع لمس الجهاركاه او الراست كظهير للنوا . يلي ذلك : الصعود الى العقد الثاني ثم الى الثالث ومنه الى الرابع اذا امكن .\n\nوفي الهبوط ـ يستبدل العجم بالنهفت ليصار الى تصوير الحجاز على النوا تارة ، والتركيز على الجهاركاه تارة اخرى ، ويمكن ابقاء العقد الثاني على ما هو عليه . وقبل الاستقرار على درجة الراست الذي هو مستقر المقام ، يستحسن لمس درجات جنس الحجاز المصور على درجة اليكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T08:58:50.162Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "35/55"
+        "page": "35/55/106"
       }
     ],
-    "version": "2026-08-10T19:58:34.143Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "133",
-    "idName": "maqam_shat_araban_(abbas)",
+    "idName": "maqam_shat_araban_abbas",
     "name": "maqām shat ʿarabān (ʿAbbās)",
     "ascendingNoteNames": [
       "yegāh",
@@ -12665,7 +14776,115 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "20",
+        "commentsEnglish": "Begins from ḥijāz to perform a taṣwīr of ḥijāz on nawā; then from nawā it descends to chahārgāh, then kurdī, dūgāh, rāst, nīm kawasht, qarār ḥiṣār and yegāh; its qarār is yegāh.",
+        "commentsArabic": "هذا المقام يبدأ من عربة الحجاز لعمل تصوير حجاز على صوت النواه ثم من النواه هبوطا إلى الجهاركاه فالكوردى والدوكاه والراست والنيم كوشت وقرار الحصار واليك كاه وقراره صوت اليك كاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "nawā",
+            "direction": "none"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "nīm kawasht"
+          },
+          {
+            "type": "note",
+            "value": "qarār ḥiṣār"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-20T07:58:17.338Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "97",
+        "commentsEnglish": "Method of procedure: the work in maqām shad ʿarabān begins from the third ʿiqd, and entering it from the note nawā or around it is obligatory; then the descent to the second ʿiqd to work within its circle in its first and second forms. Then it returns to the ascent up to the fourth if possible. Then the descent ʿiqd by ʿiqd, and upon reaching the second ʿiqd it is worked in its two forms or its three forms, namely: ḥijāz, nahāwand and nawā athar, the first on dūgāh and the second and third on rāst. The repose is on the degree yegāh, the resting place of the maqām, and touching the qarār of ḥijāz or its jawāb is commendable if repose on the degree nawā is desired.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل من مقام الشدعربان من العقد الثالث ويحتم الدخول اليه من درجة النوا أو ما حولها ـ ثم الهبوط الى العقد الثاني للعمل في دائرته بشكليه الاول والثاني . ثم يعود الى الصعود حتى الرابع اذا امكن . ثم الهبوط عقداً فعقداً وعند الوصول الى العقد الثاني يعمل بشكليه أو بأشكاله الثلاثة وهي : الحجاز والنهاوند والنوأثر . الاول على الدوكاه والثاني والثالث على الراست . والاستقرار على درجة اليكاه مستقر المقام ويستحسن لمس قرار الحجاز أو جوابه اذا اريد الاستقرار على درجة النوا .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          }
+        ],
+        "version": "2026-07-25T15:28:02.561Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12674,11 +14893,11 @@
         "page": "62/68"
       }
     ],
-    "version": "2026-08-10T20:40:24.141Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "134",
-    "idName": "maqam_mahur_(abbas)",
+    "idName": "maqam_mahur_abbas",
     "name": "maqām māhūr (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -12702,7 +14921,42 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "46",
+        "commentsEnglish": "This maqām starts from the upper octave, from kurdān or nīm mahūr and during it's descent it uses a brief chahārgāh on rāst and another brief nikrīz on rāst and ends on its qarār which is rāst",
+        "commentsArabic": "هذا المقام يبدأ من الجواب أى مـن صوت الـكردان أو من صوت النيم ماهور وعنـد الهبوط يعمـل تارة جهاركاه على صوت الراست وتارة أخرى نـكريز عـلى صوت الراست وينتهى قراره عـلى صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "maqam",
+            "value": "49",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "maqam",
+            "value": "5",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12711,11 +14965,11 @@
         "page": "62/75"
       }
     ],
-    "version": "2026-08-10T20:53:35.599Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "135",
-    "idName": "maqam_tarznwin_(abbas)",
+    "idName": "maqam_tarznwin_abbas",
     "name": "maqām ṭarznwīn (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -12739,7 +14993,108 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "55",
+        "commentsEnglish": "Begins from chahārgāh ascending gradually to kurdān, to perform ḥijāz on kurdān; then descends to the qarār of the maqām, which is rāst.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الجهاركاه صعوداً بالتدريج إلى الـكردان لعمل نغم حجاز على صوت الـكردان ويلى ذلك هبوطاً لغاية قرار المقام وقراره صوت الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "116",
+        "commentsEnglish": "Method of procedure: the opening is in the circle of the second ʿiqd [ḥijāz on chahārgāh], entering it from the last of the degrees of the first ʿiqd. There follows: the ascent to the third ʿiqd [ḥijāz on kurdān], then the ascent to the fourth ʿiqd if possible.\n\nIn the descent one works with the jins ḥijāz on jawāb al-chahārgāh instead of nahāwand on jawāb al-chahārgāh, and in the third ʿiqd [jawāb al-būselīk] is substituted by sunbuleh so as to work with the jins kurd on kurdān instead of ḥijāz on kurdān.\n\nThere follows: the descent to the second ʿiqd, and from it to the first, where the repose is with the jins kurd on the degree rāst, touching the degree ʿushayrān al-ʿajam before the repose.",
+        "commentsArabic": "اجراء العمل ـ يكون الاستهلال بدائرة العقد الثاني [حجاز على الجهاركاه] دخولاً اليه من آخر درجات العقد الاول . يلي ذلك : الصعود الى العقد الثالث [حجاز على الكردان] ثم الصعود الى العقد الرابع اذا امكن .\n\nوفي الهبوط يعمل بجنس الحجاز على جواب الجهاركاه بدلاً من النهاوند على جواب الجهاركاه ويستبدل في العقد الثالث [جواب البوسليك] بالسنبلة للعمل بجنس كرد على الكردان بدلاً من الحجاز على الكردان .\n\nيلي ذلك : النزول الى العقد الثاني ، ومنه الى الاول حيث يكون الاستقرار بجنس الكرد على درجة الراست مع لمس درجة عشيران العجم قبل الاستقرار .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "6",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "māhūrān"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "rāst"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          }
+        ],
+        "version": "2026-07-26T09:10:56.339Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12748,11 +15103,11 @@
         "page": "63/77"
       }
     ],
-    "version": "2026-08-10T20:56:22.915Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "136",
-    "idName": "maqam_buselik_(abbas)",
+    "idName": "maqam_buselik_abbas",
     "name": "maqām būselīk (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -12776,7 +15131,147 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "70",
+        "commentsEnglish": "Begins from nīm būselīk or chahārgāh ascending, then the sayr returns descending to dūgāh while showing zīrgūleh, and its qarār is dūgāh, as shown in the descending form of its scale.",
+        "commentsArabic": "هذا المقام يبدأ من صوت النيم بوسليك أو صوت الجهاركاه صعوداً ثم يعود السير فيــه هبوطاً لغاية صوت الدوكاه مع اظهار صوت الزير كولاه وينتهى قراره على صوت الدوكاه كما هو مبين فى تركيب سلمه فى حالة الهبوط :",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "zīrgūleh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "129",
+        "commentsEnglish": "Method of procedure: the work begins in the circle of the first ʿiqd, entering it from the degree būselīk to chahārgāh, and from it to nawā, then ḥusaynī, to descend after that to dūgāh with the jins būselīk. By this working the character of the maqām becomes clear.\n\nThere follows: the ascent to the second ʿiqd, to work at times with the jins ḥijāz on ḥusaynī, and at other times with the jins ḥiṣār on dūgāh or būselīk on nawā. Then comes the ascent to the third ʿiqd, and from it to the fourth if possible.\n\nThen the descent to the second ʿiqd, to work at times with the jins bayyāt on ḥusaynī and at other times with the jins rāst on nawā; and before the descent to the first ʿiqd, to work with the jins būselīk on dūgāh, it is permitted incidentally to work kurd on ḥusaynī or with the jins būselīk on nawā (1); then the repose takes place with the jins būselīk on dūgāh after touching the degree zīrgūleh — an obligatory touching, that is, the touching of zīrgūleh is required before the repose on dūgāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل في دائرة العقد الاول دخولاً اليه من درجة البوسليك الى الجهاركاه ومنها الى النوا فالحسيني للهبوط بعد ذلك الى الدوكاه بجنس البوسليك . وبهذا العمل تتبين شخصية المقام .\n\nيلي ذلك : الصعود الى العقد الثاني للعمل تارة بجنس الحجاز على الحسيني ، وتارة اخرى بجنس الحصار على الدوكاه او البوسليك على النوا . ثم يكون الصعود الى العقد الثالث ومنه الى الرابع اذا امكن .\n\nثم الهبوط الى العقد الثاني للعمل تارة بجنس بياتي على الحسيني وتارة اخرى بجنس راست على النوا وقبل الهبوط الى العقد الاول للعمل بجنس البوسليك على الدوكاه ، يجوز بصفة عرضية عمل الكرد على الحسيني او بجنس البوسليك على النوا (1) ثم يكون الاستقرار بجنس البوسليك على الدوكاه بعد مداعبة درجة الزركولاه مداعبة حتمية أي يحتم لمس الزركولاه قبل الاستقرار على الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "nīm būselīk"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "note",
+            "value": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "jawāb ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "note",
+            "value": "zīrgūleh"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:49:29.606Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12785,11 +15280,11 @@
         "page": "63/80"
       }
     ],
-    "version": "2026-08-10T21:01:22.418Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "137",
-    "idName": "maqam_shawq_afza_(abbas)",
+    "idName": "maqam_shawq_afza_abbas",
     "name": "maqām shawq afzā (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿajam ʿushayrān",
@@ -12813,7 +15308,95 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "31",
+        "commentsEnglish": "Starts on chahārgāh ascending to kurdān and above to render ḥijāz chahārgāh, then descends from chahārgāh until it's qarār 'ajam 'ushayrān",
+        "commentsArabic": "هذا المقـام يبدأ من صوت الجهاركاه صعوداً إلى الـكردان وما فوقه لعمل تصوير حجاز كار على صوت الجهاركاه ثم من الجهاركاه يصير النزول إلى القرار وقراره هو صوت العجم عشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "kurdān"
+          },
+          {
+            "type": "note",
+            "value": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "4",
+            "startingNote": "dūgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam ʿushayrān",
+            "direction": "descending"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "101",
+        "commentsEnglish": "Method of procedure: according to the Turkish convention, the work begins by presenting nawā athar on ʿajam at times, and nawā athar on kurd at other times. Then a phrase of ḥijāz on chahārgāh, touching ʿajam, ḥusaynī, ṣabā and chahārgāh, or nawā athar on kurd, by adding kurd to the notes of ḥijāz al-chahārgāh. After resting on kurd, the work is closed with the close of maqām ʿajam ʿushayrān on ʿajam al-ʿushayrān: either by presenting ʿajam, ḥiṣār, nawā, chahārgāh, kurdī, dūgāh, rāst and ʿajam al-ʿushayrān, or by contenting oneself with presenting nawā, then chahārgāh, then kurd, then dūgāh, then rāst, then ʿajam al-ʿushayrān, on which the maqām reposes.\n\nSome find it commendable to add a phrase of nawā athar on ʿajam al-ʿushayrān with which the work of the maqām is closed: after the stop on ʿajam al-ʿushayrān as above, one touches rāst, then zīrgūleh, then būselīk, then zīrgūleh, then rāst, then ʿajam al-ʿushayrān.",
+        "commentsArabic": "اجراء العمل ـ بموجب الاصطلاح التركي ، يبدأ العمل باظهار النوأثر على العجم تارة والنوأثر على الكرد تارة اخرى . ثم عبارة حجاز على الجهاركاه يلمس العجم والحسيني والصبا والجهاركاه ـ أو النوأثر على الكرد . وذلك باضافة الكرد على اصوات حجاز الجهاركاه . وبعد الاستقرار على الكرد يختم العمل بختام مقام العجم عشيران على عجم العشيران . ويكون ذلك اما باظهار العجم والحصار والنوا والجهاركاه والكردي والدوكاه والراست وعجم العشيران ـ أو الاكتفاء باظهار النوا ثم الجهاركاه ثم الكرد ثم الدوكاه فالراست فعجم العشيران الذي يستقر عليه المقام .\n\nوالبعض يستحسن اضافة عبارة من النوأثر على عجم العشيران . يختم بها العمل من المقام وذلك انه بعد الوقوف على عجم العشيران كما تقدم يلمس الراست فالزركولاه فالبوسليك ثم الزركولاه فالراست فعجم العشيران .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "ʿajam"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "chahārgāh"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "kurdī"
+          },
+          {
+            "type": "note",
+            "value": "kurdī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "5",
+            "startingNote": "ʿajam ʿushayrān"
+          },
+          {
+            "type": "note",
+            "value": "ʿajam ʿushayrān"
+          }
+        ],
+        "version": "2026-07-26T08:09:32.658Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12822,11 +15405,11 @@
         "page": "63/78"
       }
     ],
-    "version": "2026-08-10T21:04:49.090Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "138",
-    "idName": "maqam_nishaburek_(abbas)",
+    "idName": "maqam_nishaburek_abbas",
     "name": "maqām nīshaburek (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -12863,7 +15446,7 @@
   },
   {
     "id": "139",
-    "idName": "maqam_farahnak_(abbas)",
+    "idName": "maqam_farahnak_abbas",
     "name": "maqām faraḥnāk (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿirāq",
@@ -12887,7 +15470,111 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "35",
+        "commentsEnglish": "\"Rules\": Starts with rāst on dūgāh then descends to 'irāq and from there descends to yegāh and then ends on the qarār, 'irāq. Note: maqām bayyāt muḥayyar should be rendered during the ascent. An alternative sayr is to start on awj to render rāst kurdān, then 'irāq on awj, then descending until its qarār, 'irāq.\"Analysis\": jins segāh on 'irāq, jins rāst on dūgāh, jins bayyāt on muhayyar, then descends until 'irāq. Slightly conflicting directions. Must be clarified.",
+        "commentsArabic": "يبدأ هذا المقام بعمل راست على الدوكاه ثم هبوطاً إلى صوت العراق : ومن صوت العراق هبوطاً إلى صوت اليك كاه ثم يعـود إلى التسليم لقـراره وقراره هو صوت العراق . « ملاحظه ، ويجب اظهار تصوير مقام البياتى على المحير عند الصعود : وطريقـة اخرى وهى يبدأ من الاوج لعمل راست على الـكردان ثم عراق على الاوج ثم هبوطا إلى القرار .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq",
+            "direction": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh",
+            "startingNote": "ʿirāq",
+            "direction": "none"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "115",
+        "commentsEnglish": "Method of procedure: it usually begins by presenting the second ʿiqd [chahārgāh on dūgāh], or nīshābūr, that is [rāst voiced on dūgāh], and the first is sounder. There follows: the descent to the first ʿiqd, then the gradual ascent, ʿiqd by ʿiqd, up to the fourth.\n\nThe descent is like the ascent, except that in the descent the second ʿiqd may be worked in its two forms [rāst, and chahārgāh]; and before the repose on ʿirāq [the resting place of the maqām] it is good to descend to the degree yegāh.",
+        "commentsArabic": "اجراء العمل ـ يبدأ عادة باظهار العقد الثاني [ جهاركاه على الدوكاه ] ، او نيشابور أي [ راست مصور على الدوكاه ] والاول اصح . يلي ذلك : النزول الى العقد الاول ثم الصعود تدريجياً عقداً فعقداً حتى الرابع .\n\nوالهبوط كالصعود غير انه في الهبوط يجوز عمل العقد الثاني بشكليه [ الراست ـ والجهاركاه ] وقبل الاستقرار على العراق [ مستقر المقام ] يحسن الهبوط الى درجة اليكاه .",
+        "stops": [
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "52",
+            "startingNote": "ʿirāq"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "yegāh"
+          },
+          {
+            "type": "note",
+            "value": "ʿirāq"
+          }
+        ],
+        "version": "2026-07-26T09:06:58.608Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12896,11 +15583,11 @@
         "page": "64/79"
       }
     ],
-    "version": "2026-08-10T22:05:47.467Z"
+    "version": "2026-08-17T12:24:59.304Z"
   },
   {
     "id": "140",
-    "idName": "maqam_hisar_(abbas)",
+    "idName": "maqam_hisar_abbas",
     "name": "maqām ḥiṣār (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -12924,7 +15611,135 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "75",
+        "commentsEnglish": "Begins from ḥiṣār to ḥusaynī, to perform ḥijāz on ḥusaynī, and returns descending to perform nawā athar on dūgāh; its qarār is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت الحصار إلى صوت الحسينى لعمل نغم حجاز على صوت الحسينى ويعود هبوطاً لعمل نغم نو أثر على الدوكاه وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥiṣār"
+          },
+          {
+            "type": "note",
+            "value": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "33",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-20T07:58:17.338Z"
+      },
+      {
+        "id": "sayr_alhilu_1961",
+        "creatorEnglish": "al-Ḥilū",
+        "creatorArabic": "الحلو",
+        "sourceId": "alhilu_1961",
+        "page": "130",
+        "commentsEnglish": "Method of procedure: the work begins by presenting the second ʿiqd, entering it from the degree ḥiṣār to the degree ḥusaynī, to work with the jins ḥijāz on the degree ḥusaynī. There follows: the descent to the first ʿiqd, to work with the jins ḥiṣār, that is [al-nawʾathar] on dūgāh; the ʿiqd of bayyāt on dūgāh may be omitted, since it is considered among the incidentals, not the fundamentals. Then the ascent to the second ʿiqd, to work with an incidental jins, kurd on ḥusaynī, or with another incidental jins, būselīk on nawā. There follows: the ascent to the third ʿiqd, būselīk on muḥayyar, and from it to būselīk on jawāb al-nawā if possible.\n\nAnd in the descent it is permitted to work the jins chahārgāh on the degree kurdān, then the return to the jins ḥijāz on the degree ḥusaynī and the descent from it to the first ʿiqd, that the work may end with the jins ḥiṣār on dūgāh, on which it reposes after touching the degree rāst.",
+        "commentsArabic": "اجراء العمل ـ يبدأ العمل باظهار العقد الثاني دخولاً اليه من درجة الحصار الى درجة الحسيني للعمل بجنس الحجاز على درجة الحسيني ، يلي ذلك : النزول الى العقد الاول للعمل بجنس الحصار أي [ النوأثر ] على الدوكاه ، ويمكن اغفال عقد البياتي على الدوكاه لانه يعتبر من العرضيات لا من الاساسيات . ثم الصعود الى العقد الثاني للعمل بجنس عرضي هو الكرد على الحسيني او بجنس عرضي آخر هو البوسليك على النوا . يلي ذلك : الصعود الى العقد الثالث بوسليك على المحير ، ومنه الى بوسليك على جواب النوا اذا امكن .\n\nوفي الهبوط يجوز عمل جنس الجهاركاه على درجة الكردان ثم العودة الى جنس الحجاز على درجة الحسيني والهبوط منه الى العقد الاول لينتهي العمل بجنس الحصار على الدوكاه فيستقر عليه بعد لمس درجة الراست .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥiṣār"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "nawā"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "22",
+            "startingNote": "saham/ramal tūtī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "10",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "rāst"
+          },
+          {
+            "type": "jins",
+            "value": "34",
+            "startingNote": "dūgāh"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-26T09:51:36.413Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12933,11 +15748,11 @@
         "page": "65/84"
       }
     ],
-    "version": "2026-08-10T22:10:37.620Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "141",
-    "idName": "maqam_shahnaz_(abbas)",
+    "idName": "maqam_shahnaz_abbas",
     "name": "maqām shahnāz (ʿAbbās)",
     "ascendingNoteNames": [
       "dūgāh",
@@ -12961,7 +15776,45 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "66",
+        "commentsEnglish": "Begins from muḥayyar with a touch of shahnāz, to perform ḥijāz on ḥusaynī; then ascends above muḥayyar, then descends to the qarār of the maqām, which is dūgāh.",
+        "commentsArabic": "هذا المقام يبدأ من صوت المحير مع لمس عربة الشاهناز لعمل حجاز على الحسينى ثم صعوداً إلى مافوق صوت المحير يليه هبوطا إلى قرار المقام وقراره صوت الدوكاه .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "note",
+            "value": "shahnāz"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "ḥusaynī"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "note",
+            "value": "dūgāh"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -12970,11 +15823,11 @@
         "page": "65/82"
       }
     ],
-    "version": "2026-08-10T22:12:55.220Z"
+    "version": "2026-08-11T19:16:28.764Z"
   },
   {
     "id": "142",
-    "idName": "maqam_nuhuft_(abbas)",
+    "idName": "maqam_nuhuft_abbas",
     "name": "maqām nuhuft (ʿAbbās)",
     "ascendingNoteNames": [
       "ʿushayrān",
@@ -13000,7 +15853,64 @@
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
     "ghammaz": null,
-    "suyur": [],
+    "suyur": [
+      {
+        "id": "sayr_alshawwa_1946",
+        "creatorEnglish": "al-Shawwā, Sāmī",
+        "creatorArabic": "",
+        "sourceId": "alshawwa_1946",
+        "page": "29",
+        "commentsEnglish": "There is a discrepancy in Shawwā's representation of this maqām. In the \"rules\" section it says: Starts on ḥijaz to render rāst al-dūgāh then ascends to muḥayyar and during the descent 'ajam is used to render bayyāt dūgāh then kurd on dūgāh then ḥijaz on dūgāh and it ends on 'ushayrān. But in the \"analysis\" section it says: First, jins bayyāt 'ushayrān, second, jins rāst dūgāh, third, bayyāt ḥusaynī. Then ascend to render bayyāt muḥayyar and descend to render rāst nawā, followed by kurdī or ḥijāz dūgāh, then nikrīz rāst and ends with bayyāt 'ushayrān. Rāst dūgāh does not render in most tuning systems, and the note ḥijāz doesn't comply with it's jins. Needs to be researched",
+        "commentsArabic": "هذا المقـام يبدأ من عربة الحجاز لعمل مقام راست على صوت الدوكاه ثم صعودا إلى صوت المحير وعند الهبوط تستعمل عربة العجم لعمل بياتى على الدوكاه ثم كوردى على الدوكاه ثم حجاز على الدوكاه أيضا وينتهى قراره حسب شروط سلفه على صوت العشيران .",
+        "stops": [
+          {
+            "type": "note",
+            "value": "ḥijāz"
+          },
+          {
+            "type": "jins",
+            "value": "19",
+            "startingNote": "dūgāh",
+            "direction": "ascending"
+          },
+          {
+            "type": "note",
+            "value": "muḥayyar"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ḥusaynī",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "7",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "dūgāh",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "50",
+            "startingNote": "rāst",
+            "direction": "none"
+          },
+          {
+            "type": "jins",
+            "value": "2",
+            "startingNote": "ʿushayrān",
+            "direction": "none"
+          }
+        ],
+        "version": "2026-07-19T19:12:36.330Z"
+      }
+    ],
     "commentsEnglish": "",
     "commentsArabic": "",
     "sourcePageReferences": [
@@ -13009,11 +15919,11 @@
         "page": "66/81"
       }
     ],
-    "version": "2026-08-11T16:10:29.934Z"
+    "version": "2026-08-11T19:23:42.789Z"
   },
   {
     "id": "143",
-    "idName": "maqam_nahawand_murassa_(abbas)",
+    "idName": "maqam_nahawand_murassa_abbas",
     "name": "maqām nahāwand muraṣṣaʿ (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
@@ -13050,7 +15960,7 @@
   },
   {
     "id": "144",
-    "idName": "maqam_suzdalara_(abbas)",
+    "idName": "maqam_suzdalara_abbas",
     "name": "maqām sūzdalārā (ʿAbbās)",
     "ascendingNoteNames": [
       "rāst",
