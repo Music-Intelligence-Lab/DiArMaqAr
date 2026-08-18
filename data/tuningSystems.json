@@ -1774,12 +1774,16 @@
   },
   {
     "id": "almawsili_850",
-    "titleEnglish": "9-Tone",
+    "titleEnglish": "5-fret oud",
     "titleArabic": "9-نغمات",
     "year": "850",
     "sourceEnglish": "",
     "sourceArabic": "",
     "sourcePageReferences": [
+      {
+        "sourceId": "alrejab_2002_unknown",
+        "page": "22-27"
+      },
       {
         "sourceId": "farmer_1937",
         "page": "247"
@@ -1787,7 +1791,7 @@
     ],
     "creatorEnglish": "al-Mawṣilī",
     "creatorArabic": "الموصلي",
-    "commentsEnglish": "According to Farmer this is \"the scale of Isḥāq al-Mauṣilī (d. 850), as reported by his pupil Yaḥyā b. ʿAlī b. Yahya b. Abī Manṣūr (d. 912)\" as cited in the manuscript at the British Museum MS., Or. 2361, fol. 236v (Farmer 1937:247).\n\nFarmer provides it in cents only and doesn't give any note names for the values although he mentions that \"when the Arabs adopted the Persian system of tuning the strings a fourth (498 cents) apart, i.e. the lowest string was depressed to A, and the highest string was lifted to c\" (Farmer 1937:246) which would align with assigning his 0 cents value for the Bamm string with starting note name as ʿushayrān (A/La).  As these cents values align perfectly with well-known and often used ratios for tuning systems of the same historical period, they are provided here as fraction ratios instead of the cents provided by Farmer.\n\nAdditionally neither the yegāh or ʿushayrān as starting note names produce many suitable ajnās or maqāmāt in this tuning because we have not yet included the modes that were used during the 9th and 10th centuries in the database due to varying accuracy of scholarship on the subject. ",
+    "commentsEnglish": "According to Farmer this is \"the scale of Isḥāq al-Mauṣilī (d. 850), as reported by his pupil Yaḥyā b. ʿAlī b. Yahya b. Abī Manṣūr (d. 912)\" as cited in the manuscript at the British Museum MS., Or. 2361, fol. 236v (Farmer 1937:247).\n\nFarmer provides values for four frets and gives them in cents only, without any note names for the values, although he mentions that \"when the Arabs adopted the Persian system of tuning the strings a fourth (498 cents) apart, i.e. the lowest string was depressed to A, and the highest string was lifted to c\" (Farmer 1937:246) which would align with assigning his 0 cents value for the Bamm string with starting note name as ʿushayrān (A/La). \n\nThis slightly contradicts the analysis offered by al-Rejab who notes that al-Mawṣilī started his tuning system on the open string of the third out of four oud strings which were tuned in fourths. Therefore if we follow the current tuning of oud strings in fourths starting from ushayran/a/la, then the third string would be nawa/g/sol meaning this tuning system should be rendered from the starting note name yegāh which is where al-Rejab places the tuning system (2002:27). Additionally al-Rejab also gives a value for a fifth fret which he states is only used after the fourth finger fret (4/3) on the fourth string (meaning after the 16/9). He gives this value as 243/128. By including this value, we are then also obliged to include it's value on the string below it (after the 4/3) which would be 729/512.\n\nAdditionally neither the yegāh or ʿushayrān as starting note names produce many suitable ajnās or maqāmāt in this tuning because we have not yet included the modes that were used during the 9th and 10th centuries in the database due to varying accuracy of scholarship on the subject. ",
     "commentsArabic": "",
     "tuningSystemPitchClasses": [
       "1/1",
@@ -1795,36 +1799,46 @@
       "32/27",
       "81/64",
       "4/3",
+      "729/512",
       "3/2",
       "128/81",
       "27/16",
-      "16/9"
+      "16/9",
+      "243/128"
     ],
     "noteNames": [
-      [
-        "ʿushayrān",
-        "kawasht",
-        "rāst",
-        "zīrgūleh",
-        "dūgāh",
-        "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz",
-        "nawā"
-      ],
       [
         "yegāh",
         "ʿushayrān",
         "ʿajam ʿushayrān",
         "kawasht",
         "rāst",
+        "zīrgūleh",
         "dūgāh",
         "kurdī",
         "būselīk/ʿushshāq",
-        "chahārgāh"
+        "chahārgāh",
+        "ḥijāz"
+      ],
+      [
+        "ʿushayrān",
+        "kawasht",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār"
       ]
     ],
     "abjadNames": [
+      "",
+      "",
+      "",
+      "",
       "",
       "",
       "",
@@ -1850,7 +1864,7 @@
       "yegāh": 98,
       "ʿushayrān": 110
     },
-    "version": "2026-08-05T17:22:17.688Z"
+    "version": "2026-08-18T15:39:01.940Z"
   },
   {
     "id": "cairocongresstuningcommittee_1929",
