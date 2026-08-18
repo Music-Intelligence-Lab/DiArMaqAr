@@ -3,7 +3,7 @@ import MaqamData, { Maqam, Sayr } from "@/models/Maqam";
 import JinsData, { Jins } from "@/models/Jins";
 import TuningSystem from "@/models/TuningSystem";
 import NoteName from "@/models/NoteName";
-import { getNoteNameIndexAndOctave, sameModalDegreeSlot } from "@/models/NoteName";
+import { sameModalDegreeSlot } from "@/models/NoteName";
 import { compareJinsCandidates, getSuyurAttestation, JinsCandidate } from "@/functions/ajnasOrdering";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
