@@ -338,25 +338,24 @@ export function create12PitchClassSet(
   alKindiTuningSystem: TuningSystem,
   alKindiStartingNote: string
 ): PitchClassSet | null {
-  // Apply sequential reference note logic with cross-direction visibility so
-  // diatonic-slot collisions (e.g. segāh E-b + nīm būselīk E-3 both resolving
-  // to natural E in bayyātī ʿushayrān) are detected and the maqām-theory
-  // displacement rule is applied. Always pass the combined pitch classes,
-  // regardless of symmetry.
-  const allMaqamPitchClassesForSequential = [
-    ...maqamTransposition.ascendingPitchClasses,
-    ...maqamTransposition.descendingPitchClasses,
-  ];
+  // A 12-pitch-class set holds every pitch of the maqām on its own key, so both
+  // directions are keyed together: each note gets one spelling and one key for
+  // both calls, and clashes are settled by the maqām-context rule (octave
+  // ignored; repeated until settled — see renderPitchClassSpellings).
+  const pitchClassSetSequences = {
+    ascending: maqamTransposition.ascendingPitchClasses,
+    descending: maqamTransposition.descendingPitchClasses,
+  };
 
   const ascendingWithSequentialRefs = renderPitchClassSpellings(
     maqamTransposition.ascendingPitchClasses,
     true,
-    allMaqamPitchClassesForSequential
+    pitchClassSetSequences
   );
   const descendingWithSequentialRefs = renderPitchClassSpellings(
     maqamTransposition.descendingPitchClasses,
     false,
-    allMaqamPitchClassesForSequential
+    pitchClassSetSequences
   );
   
   // Collect all pitch classes from ascending and descending sequences (now with consistent reference notes)
