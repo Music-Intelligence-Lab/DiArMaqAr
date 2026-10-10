@@ -120,50 +120,6 @@ function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitc
 }
 
 /**
- * Maqām-Specific Bidirectional Sequence Merging
- *
- * Since we are transposing the ascending and descending sequences for maqāmāt separately,
- * we require this function to merge both sequences into filtered ascending/descending sequence pairs.
- *
- * Pairing Logic:
- * - Ascending sequences start from the tonic note
- * - Descending sequences end on the tonic note  
- * - Successful pairing requires matching note names at these positions
- * - Enables complete bidirectional maqām transposition analysis
- * 
- * @param ascendingSequences - Array of ascending maqām pitch class sequences
- * @param descendingSequences - Array of descending maqām pitch class sequences
- * @returns Array of objects containing paired ascending and descending sequences
- */
-function mergeSequences(ascendingSequences: PitchClass[][], descendingSequences: PitchClass[][]) {
-  // Array to store successfully paired ascending/descending sequence combinations
-  const filteredSequences: { ascendingSequence: PitchClass[]; descendingSequence: PitchClass[] }[] = [];
-
-  // Pairing loop: For each ascending sequence, find a matching descending sequence
-  ascendingSequences.forEach((ascSeq) => {
-    // Get the starting note name of the ascending sequence (the tonic)
-    const ascNoteName = ascSeq[0].noteName;
-    
-    // Search for matching descending sequence: Find one that ends on the same tonic
-    const descSeq = descendingSequences.find((descSeq) => {
-      // Get the ending note name of the descending sequence
-      const descNoteName = descSeq[descSeq.length - 1].noteName;
-      
-      // Check if ascending start matches descending end (same tonic)
-      return ascNoteName === descNoteName;
-    });
-    
-    // Successful pairing: If we found a matching descending sequence, add the pair
-    if (descSeq) {
-      filteredSequences.push({ ascendingSequence: ascSeq, descendingSequence: descSeq });
-    }
-    // Note: If no matching descending sequence found, this ascending sequence is ignored
-  });
-
-  return filteredSequences;
-}
-
-/**
  * Maqām Transposition Analysis
  * 
  * 
@@ -250,16 +206,26 @@ export function calculateMaqamTranspositions(
   // does not exist here. Mirrors the embedded-ajnās check further down.
   if (!maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) return [];
 
+  // The stored form is one structure: every distinct note the maqām uses going
+  // up or coming down, in pitch order. A transposition moves that whole
+  // structure, and its ascending and descending sequences are read back out of
+  // it at the positions the stored form gives. The descending sequence is never
+  // searched for on its own, so a symmetric maqām stays symmetric and an
+  // asymmetric one keeps exactly its stored relationship between directions.
+  // (Searching each direction separately and pairing by tonic let a descending
+  // run through near-identical notes stand in for the stored one: ḥijāz kār
+  // kurd (al-Ṣabbāgh) in Allami 2025 descended through jawāb nayrūz and jawāb
+  // shūrī instead of its own nīm ʿajam and nīm ḥiṣār.)
   const ascendingMaqamCells = allPitchClasses.filter((pitchClass) => ascendingNoteNames.includes(pitchClass.noteName));
   const descendingMaqamCells = [...allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName))].reverse();
+  const structureCells = allPitchClasses.filter(
+    (pitchClass) => ascendingNoteNames.includes(pitchClass.noteName) || descendingNoteNames.includes(pitchClass.noteName)
+  );
+  const ascendingPositions = ascendingMaqamCells.map((cell) => structureCells.indexOf(cell));
+  const descendingPositions = descendingMaqamCells.map((cell) => structureCells.indexOf(cell));
 
-  const ascendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(ascendingMaqamCells);
-
-  const descendingIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(descendingMaqamCells);
-
-  const ascendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, ascendingIntervalPattern, true, centsTolerance);
-
-  const descendingSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, descendingIntervalPattern, false, centsTolerance);
+  const structureIntervalPattern: PitchClassInterval[] = getPitchClassIntervals(structureCells);
+  const structureSequences: PitchClass[][] = calculatePitchClassTranspositions(allPitchClasses, structureIntervalPattern, true, centsTolerance);
 
   const ajnasIntervals: { jins: JinsData; intervals: PitchClassInterval[] }[] = [];
 
@@ -273,8 +239,8 @@ export function calculateMaqamTranspositions(
   // Fetched once per call rather than once per transposition or per degree.
   const suyurAttestation = getSuyurAttestation();
 
-  const maqamTranspositions: Maqam[] = mergeSequences(ascendingSequences, descendingSequences).map((sequencePair) => {
-    const ascendingPitchClasses = sequencePair.ascendingSequence;
+  const maqamTranspositions: Maqam[] = structureSequences.map((structure) => {
+    const ascendingPitchClasses = ascendingPositions.map((position) => structure[position]);
     let sliceIndex = 0;
     const lastAscendingPitchClass = ascendingPitchClasses[ascendingPitchClasses.length - 1];
 
@@ -291,7 +257,8 @@ export function calculateMaqamTranspositions(
 
     const ascendingPitchClassIntervals = getPitchClassIntervals(ascendingPitchClasses);
 
-    const descendingPitchClasses = [...sequencePair.descendingSequence].reverse();
+    // Low to high here, like the ascending notes; reversed to descending order on output
+    const descendingPitchClasses = descendingPositions.map((position) => structure[position]).reverse();
 
     const extendedDescendingPitchClasses = [...descendingPitchClasses, ...descendingPitchClasses.slice(sliceIndex + 1).map((pitchClass) => shiftPitchClassByOctave(allPitchClasses, pitchClass, 1))];
 
@@ -363,7 +330,7 @@ export function calculateMaqamTranspositions(
     );
 
     const firstMaqamNote = ascendingNoteNames[0];
-    const firstTransposedNote = sequencePair.ascendingSequence[0].noteName;
+    const firstTransposedNote = ascendingPitchClasses[0].noteName;
     // "Transposition" (taswīr) is a change of modal tonic, not a register/octave variant
     // like qarār dūgāh vs dūgāh vs muḥayyar (same modal degree slot in NoteName tables).
     const isTransposed = !sameModalDegreeSlot(firstMaqamNote, firstTransposedNote);
