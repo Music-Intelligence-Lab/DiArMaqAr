@@ -2703,7 +2703,7 @@ The same transformation applies to `transpositions[].maqamDegrees`.
   ipnReferenceNoteName, centsDeviation, midiNotePlusCentsDeviation }` instead of note-name strings.
   The same transformation applies to `transpositions[].maqamDegrees`. The last three fields are the same as in GET /maqamat/{id}: the 12-EDO key the degree is spelled
   against (`ipnReferenceNoteName`, e.g. "Bb"), the degree's deviation from it in cents
-  (`centsDeviation`), and both as "<MIDI note> <±cents>" (`midiNotePlusCentsDeviation`, e.g.
+  (`centsDeviation`), and the MIDI note number followed by the deviation (`midiNotePlusCentsDeviation`, e.g.
   "58 -9.8"). Each direction is spelled on its own, so an ascending and a descending degree may share
   a key.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
