@@ -1261,9 +1261,9 @@ note names.
   `startingNote` to ensure octaves align correctly
 - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
   starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
-- **Arabic Musicological Logic**: IPN references respect Arabic maqām theory where
-  microtonal modifiers indicate what the pitch is a variant OF, not mathematical proximity
-  to 12-EDO semitones
+- **Arabic Musicological Logic**: IPN references follow Arabic maqām theory: a note's
+  quarter-tone or comma spelling names the note it is a variant of (E-b is a variant of E),
+  not the nearest 12-EDO semitone
 - **Direct Tuning System Values**: All cent values come directly from tuning systems
   without post-processing or calculation
 
@@ -1279,8 +1279,15 @@ note names.
 4. Names each group after the source maqām (e.g., "maqām rāst set")
 
 **Compatibility:**
-- Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
-  are marked as incompatible and cannot form valid 12-pitch-class sets
+- A 12-pitch-class set has one pitch class per key. Each pitch class of a maqām takes the key
+  of its own note letter, or a neighbouring key when that one is taken.
+- A maqām transposition is incompatible when two different pitch classes would need the same
+  key and the keys next to it are already taken. For example, maqām faraḥnāk (al-Ḥilū) on
+  qarār segāh needs both ʿirāq (B-b2) and nīm kawasht (B-2) on the B key.
+- Each incompatible transposition says which keys clash, which notes need them, and gives
+  the same in one plain sentence (`explanation`).
+- The number of incompatible transpositions is always in `statistics.incompatibleMaqamatCount`;
+  the full list is included on request.
 - Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
 
 **Output Format:**
@@ -1292,7 +1299,10 @@ note names.
 
 **Filtering Options:**
 - Use `setId` to retrieve a specific set and its compatible maqāmāt
-- Use `maqamId` to find all sets containing a specific maqām
+- Use `maqamId` to find all sets containing a specific maqām, together with its
+  transpositions that fit no set. A maqām with no transposition that fits still
+  returns 200, with `compatible: false`, an explanation and an empty `sets` list.
+  Only an id that names no maqām or transposition returns 404.
 
 
 **Query Parameters:**
@@ -1307,7 +1317,7 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeIncompatible` (optional): Include the full list of maqām transpositions that cannot form a 12-pitch-class set, with the clashing keys and notes of each (their number is always in the statistics). - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1355,7 +1365,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
   - Example: `cents`
 - `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
   - Example: `maqam_rast_set`
-- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+- `maqamId` (optional): Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (URL-safe, diacritics-insensitive). - Type: `string`
   - Example: `maqam_rast`
 
 **Example:**
@@ -1363,7 +1373,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
 curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
-**Response:** Classification results with sets and compatible maqāmāt
+**Response:** Classification results with sets and compatible maqāmāt; with a maqām filter, also whether the maqām fits any set and which of its transpositions do not
 
 **Example response — default:**
 

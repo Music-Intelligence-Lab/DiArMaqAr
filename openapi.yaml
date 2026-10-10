@@ -3412,9 +3412,9 @@ paths:
           `startingNote` to ensure octaves align correctly
         - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
           starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
-        - **Arabic Musicological Logic**: IPN references respect Arabic maqām theory where
-          microtonal modifiers indicate what the pitch is a variant OF, not mathematical proximity
-          to 12-EDO semitones
+        - **Arabic Musicological Logic**: IPN references follow Arabic maqām theory: a note's
+          quarter-tone or comma spelling names the note it is a variant of (E-b is a variant of E),
+          not the nearest 12-EDO semitone
         - **Direct Tuning System Values**: All cent values come directly from tuning systems
           without post-processing or calculation
 
@@ -3430,8 +3430,15 @@ paths:
         4. Names each group after the source maqām (e.g., "maqām rāst set")
 
         **Compatibility:**
-        - Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
-          are marked as incompatible and cannot form valid 12-pitch-class sets
+        - A 12-pitch-class set has one pitch class per key. Each pitch class of a maqām takes the key
+          of its own note letter, or a neighbouring key when that one is taken.
+        - A maqām transposition is incompatible when two different pitch classes would need the same
+          key and the keys next to it are already taken. For example, maqām faraḥnāk (al-Ḥilū) on
+          qarār segāh needs both ʿirāq (B-b2) and nīm kawasht (B-2) on the B key.
+        - Each incompatible transposition says which keys clash, which notes need them, and gives
+          the same in one plain sentence (`explanation`).
+        - The number of incompatible transpositions is always in `statistics.incompatibleMaqamatCount`;
+          the full list is included on request.
         - Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
 
         **Output Format:**
@@ -3443,7 +3450,10 @@ paths:
 
         **Filtering Options:**
         - Use `setId` to retrieve a specific set and its compatible maqāmāt
-        - Use `maqamId` to find all sets containing a specific maqām
+        - Use `maqamId` to find all sets containing a specific maqām, together with its
+          transpositions that fit no set. A maqām with no transposition that fits still
+          returns 200, with `compatible: false`, an explanation and an empty `sets` list.
+          Only an id that names no maqām or transposition returns 404.
       operationId: classifyMaqamat12PitchClassSets
       parameters:
         # Required like every other tuning-system-dependent endpoint. These once
@@ -3478,7 +3488,7 @@ paths:
           example: 5
         - name: includeIncompatible
           in: query
-          description: Include maqāmāt that cannot form valid 12-pitch-class sets
+          description: Include the full list of maqām transpositions that cannot form a 12-pitch-class set, with the clashing keys and notes of each (their number is always in the statistics)
           schema:
             type: string
             enum: ["true", "false"]
@@ -3584,13 +3594,13 @@ paths:
           example: "maqam_rast_set"
         - name: maqamId
           in: query
-          description: "Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast')"
+          description: "Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (URL-safe, diacritics-insensitive)"
           schema:
             type: string
           example: "maqam_rast"
       responses:
         '200':
-          description: Classification results with sets and compatible maqāmāt
+          description: Classification results with sets and compatible maqāmāt; with a maqām filter, also whether the maqām fits any set and which of its transpositions do not
           content:
             application/json:
               schema:
@@ -3639,6 +3649,25 @@ paths:
                         type: number
                       incompatibleMaqamatCount:
                         type: number
+                        description: Number of maqām transpositions in this tuning system that fit no 12-pitch-class set. Always present, and not narrowed by the set or maqām filters.
+                        example: 2
+                  maqamId:
+                    type: string
+                    description: The maqām (or transposition) the response is filtered by, as its idName. Present only with a maqām filter.
+                    example: "maqam_farahnak_alhilu"
+                  compatible:
+                    type: boolean
+                    description: Whether at least one transposition of the filtered maqām fits a 12-pitch-class set. Present only with a maqām filter.
+                    example: true
+                  explanation:
+                    type: string
+                    description: Why the filtered maqām has no sets, in one plain sentence. Either its transpositions all clash (listed in incompatibleTranspositions), or the tuning system lacks some of its notes so it has no transpositions at all. Present only when compatible is false.
+                    example: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh does not fit a 12-pitch-class set in al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone from rāst."
+                  incompatibleTranspositions:
+                    type: array
+                    description: Transpositions of the filtered maqām that fit no 12-pitch-class set (empty when all fit). Present only with a maqām filter.
+                    items:
+                      $ref: '#/components/schemas/IncompatibleTransposition'
                   sets:
                     type: array
                     description: Classification sets grouping compatible maqāmāt
@@ -3755,30 +3784,12 @@ paths:
                     description: Total number of compatible maqām transpositions across all sets
                   incompatibleMaqamat:
                     type: array
-                    description: Maqāmāt that cannot form valid 12-pitch-class sets
+                    description: Maqām transpositions that cannot form a 12-pitch-class set (only included when includeIncompatible=true)
                     items:
-                      type: object
-                      properties:
-                        maqam:
-                          $ref: '#/components/schemas/EntityRef'
-                        transposition:
-                          type: object
-                          nullable: true
-                          properties:
-                            name:
-                              type: string
-                            isTransposed:
-                              type: boolean
-                            isBaseForm:
-                              type: boolean
-                              description: >-
-                                Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
-                        reason:
-                          type: string
-                          example: "duplicate_ipn_reference"
+                      $ref: '#/components/schemas/IncompatibleTransposition'
                   incompatibleMaqamatCount:
                     type: number
-                    description: Number of incompatible maqāmāt
+                    description: Number of incompatible maqām transpositions (only included when includeIncompatible=true; the same number is always in statistics)
                   parameters:
                     type: object
                     description: Parameters used for classification
@@ -3899,6 +3910,135 @@ paths:
                         displayName: "ʿushayrān"
                       centsTolerance: 5
                       startSetFromC: false
+                incompatibleList:
+                  summary: Incompatible transpositions (includeIncompatible=true, trimmed)
+                  value:
+                    statistics:
+                      totalSets: 102
+                      totalCompatibleMaqamat: 1510
+                      incompatibleMaqamatCount: 2
+                    incompatibleMaqamat:
+                      - maqam:
+                          id: "145"
+                          idName: "maqam_farahnak_alhilu"
+                          displayName: "maqām faraḥnāk (al-Ḥilū)"
+                        transposition:
+                          idName: "maqam_farahnak_alhilu_alqarar_segah"
+                          displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh"
+                          isTransposed: true
+                          isBaseForm: false
+                        compatible: false
+                        reason: "shared_key"
+                        explanation: "ʿirāq (B-b2) and nīm kawasht (B-2) both need the B key, and the keys next to it are taken."
+                        clashes:
+                          - key: "B"
+                            notes:
+                              - noteName: "iraq"
+                                displayName: "ʿirāq"
+                                englishName: "B-b2"
+                                cents: -141.2
+                                centsInOctave: 701.9
+                              - noteName: "nim_kawasht"
+                                displayName: "nīm kawasht"
+                                englishName: "B-2"
+                                cents: -111.7
+                                centsInOctave: 731.4
+                    incompatibleMaqamatCount: 2
+                    parameters:
+                      tuningSystem:
+                        id: "alsabbagh_1954"
+                        idName: "alsabbagh_1954"
+                        displayName: "al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone"
+                      startingNote:
+                        idName: "rast"
+                        displayName: "rāst"
+                maqamPartlyFits:
+                  summary: Maqām filter, some transpositions fit (maqamId=maqam_farahnak_alhilu, trimmed)
+                  value:
+                    maqamId: "maqam_farahnak_alhilu"
+                    compatible: true
+                    statistics:
+                      totalSets: 3
+                      totalCompatibleMaqamat: 377
+                      incompatibleMaqamatCount: 2
+                    sets:
+                      - setIdName: "maqam_hisar_alqarar_dugah_set"
+                        setDisplayName: "maqām ḥiṣār al-qarār dūgāh set"
+                    incompatibleTranspositions:
+                      - maqam:
+                          id: "145"
+                          idName: "maqam_farahnak_alhilu"
+                          displayName: "maqām faraḥnāk (al-Ḥilū)"
+                        transposition:
+                          idName: "maqam_farahnak_alhilu_alqarar_tik_hisar_shuri"
+                          displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār tīk ḥiṣār/shūrī"
+                          isTransposed: true
+                          isBaseForm: false
+                        compatible: false
+                        reason: "shared_key"
+                        explanation: "segāh (E-b3) and nīm būselīk (E-3) both need the E key, and the keys next to it are taken."
+                        clashes:
+                          - key: "E"
+                            notes:
+                              - noteName: "segah"
+                                displayName: "segāh"
+                                englishName: "E-b3"
+                                cents: 356.9
+                                centsInOctave: 701.9
+                              - noteName: "nim_buselik"
+                                displayName: "nīm būselīk"
+                                englishName: "E-3"
+                                cents: 386.3
+                                centsInOctave: 731.4
+                maqamFitsNoSet:
+                  summary: Maqām filter, nothing fits (maqamId=maqam_farahnak_alhilu_alqarar_segah, trimmed)
+                  value:
+                    maqamId: "maqam_farahnak_alhilu_alqarar_segah"
+                    compatible: false
+                    explanation: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh does not fit a 12-pitch-class set in al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone from rāst."
+                    statistics:
+                      totalSets: 0
+                      totalCompatibleMaqamat: 0
+                      incompatibleMaqamatCount: 2
+                    sets: []
+                    incompatibleTranspositions:
+                      - maqam:
+                          id: "145"
+                          idName: "maqam_farahnak_alhilu"
+                          displayName: "maqām faraḥnāk (al-Ḥilū)"
+                        transposition:
+                          idName: "maqam_farahnak_alhilu_alqarar_segah"
+                          displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh"
+                          isTransposed: true
+                          isBaseForm: false
+                        compatible: false
+                        reason: "shared_key"
+                        explanation: "ʿirāq (B-b2) and nīm kawasht (B-2) both need the B key, and the keys next to it are taken."
+                        clashes:
+                          - key: "B"
+                            notes:
+                              - noteName: "iraq"
+                                displayName: "ʿirāq"
+                                englishName: "B-b2"
+                                cents: -141.2
+                                centsInOctave: 701.9
+                              - noteName: "nim_kawasht"
+                                displayName: "nīm kawasht"
+                                englishName: "B-2"
+                                cents: -111.7
+                                centsInOctave: 731.4
+                maqamNotRealizable:
+                  summary: Maqām filter, the tuning system lacks some of its notes (maqamId=maqam_dugah, trimmed)
+                  value:
+                    maqamId: "maqam_dugah"
+                    compatible: false
+                    explanation: "maqām dūgāh cannot be realized in al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone from rāst: the tuning system lacks some of its notes, so it has no transposition to fit a 12-pitch-class set."
+                    statistics:
+                      totalSets: 0
+                      totalCompatibleMaqamat: 0
+                      incompatibleMaqamatCount: 2
+                    sets: []
+                    incompatibleTranspositions: []
         '400':
           description: Invalid request parameters
           content:
@@ -3906,7 +4046,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Set or maqām not found
+          description: |
+            Set not found, or no maqām or maqām transposition has the given id.
+            A maqām that exists but fits no 12-pitch-class set is not a 404: it returns 200 with compatible false.
           content:
             application/json:
               schema:
@@ -3918,10 +4060,12 @@ paths:
                     error: "Set 'maqam_invalid_set' not found"
                     hint: "Use ?setId=<set-id> to filter by a specific set (e.g., ?setId=maqam_rast_set)"
                 maqamNotFound:
-                  summary: Maqām not found in any set
+                  summary: No maqām has this id
                   value:
-                    error: "No sets found containing maqam 'maqam_invalid'"
-                    hint: "Use ?maqamId=<maqam-id> to find sets containing a specific maqām (e.g., ?maqamId=maqam_rast)"
+                    error: "Maqām 'maqam_does_not_exist' not found"
+                    message: "No maqām or maqām transposition has this id."
+                    hint: "Use ?maqamId=<maqam-id> with a maqām idName or numeric id (e.g., ?maqamId=maqam_rast)"
+                    availableMaqamatUrl: "https://diarmaqar.net/api/maqamat"
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -10697,6 +10841,96 @@ components:
           type: string
           description: Arabic display name (present when includeArabic=true)
           example: "راست"
+
+    KeyClashNote:
+      type: object
+      description: A note of the maqām transposition that needs a clashing key
+      required: [noteName, displayName, englishName, cents, centsInOctave]
+      properties:
+        noteName:
+          type: string
+          description: URL-safe note name identifier
+          example: "iraq"
+        displayName:
+          type: string
+          description: Note name with diacritics
+          example: "ʿirāq"
+        displayNameAr:
+          type: string
+          description: Note name in Arabic script (present when includeArabic=true)
+          example: "عِراق"
+        englishName:
+          type: string
+          description: English note name with octave, showing the note's own spelling
+          example: "B-b2"
+        cents:
+          type: number
+          description: Cents of the note in the tuning system, to one decimal place
+          example: -141.2
+        centsInOctave:
+          type: number
+          description: Cents above the transposition's tonic with the octave ignored, to one decimal place. Two notes with the same value are one pitch class in different octaves and do not clash with each other.
+          example: 701.9
+
+    KeyClash:
+      type: object
+      description: A 12-EDO key that two or more different pitch classes of the maqām transposition would need
+      required: [key, notes]
+      properties:
+        key:
+          type: string
+          description: The 12-EDO key (IPN reference note name)
+          example: "B"
+        notes:
+          type: array
+          description: The notes that need this key, ordered by their position above the tonic
+          items:
+            $ref: '#/components/schemas/KeyClashNote'
+
+    IncompatibleTransposition:
+      type: object
+      description: |
+        A maqām transposition that cannot form a 12-pitch-class set. Two different pitch classes
+        would need the same key, and the keys next to it are already taken.
+      required: [maqam, transposition, compatible, reason, explanation, clashes]
+      properties:
+        maqam:
+          $ref: '#/components/schemas/EntityRef'
+        transposition:
+          type: object
+          properties:
+            idName:
+              type: string
+              description: URL-safe transposition identifier
+              example: "maqam_farahnak_alhilu_alqarar_segah"
+            displayName:
+              type: string
+              description: Transposition name with diacritics
+              example: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh"
+            isTransposed:
+              type: boolean
+            isBaseForm:
+              type: boolean
+              description: >-
+                Whether this is the base form (tahlīl). Not the inverse of isTransposed: an octave-register sibling of the base form is not a taṣwīr, so both are false for it.
+        compatible:
+          type: boolean
+          description: Always false
+          example: false
+        reason:
+          type: string
+          enum: [shared_key]
+          description: Why the transposition does not fit. shared_key means two different pitch classes would need the same key.
+          example: "shared_key"
+        explanation:
+          type: string
+          description: The clashes in one plain sentence
+          example: "ʿirāq (B-b2) and nīm kawasht (B-2) both need the B key, and the keys next to it are taken."
+        clashes:
+          type: array
+          description: Every key the transposition's pitch classes would have to share
+          items:
+            $ref: '#/components/schemas/KeyClash'
 
     Links:
       type: object
