@@ -10,17 +10,14 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Cache control for API routes - prevent caching to ensure dynamic responses
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
-    X-Content-Type-Options = "nosniff"
-    # Advertise the machine-readable OpenAPI spec on every API response so a
-    # tool inspecting a response can auto-discover the full contract.
-    # rel="service-desc" is the RFC 8631 link relation for an API description.
-    # Points at the stable root-level /openapi.json alias (see redirects below).
-    Link = "<https://diarmaqar.net/openapi.json>; rel=\"service-desc\"; type=\"application/json\""
+# API response headers (caching, CORS, X-Content-Type-Options, the OpenAPI
+# service-desc Link) are set by the app in src/app/api/cors.ts, not here:
+# netlify.toml [[headers]] apply only to static files, never to function
+# responses, and every /api/* route is a function.
+# Policy: a 200 is cached at Netlify's edge until the next deploy, keyed by the
+# full URL including the query string; clients revalidate with an ETag (304).
+# Errors are never cached. This is safe because data/*.json changes only with a
+# deploy, and every deploy purges the cache.
 
 # Note: Static files from public/docs/ should be served by Next.js automatically
 # The route handler at /docs/[[...slug]] will handle HTML pages, but static
