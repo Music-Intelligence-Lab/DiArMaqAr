@@ -1,5 +1,6 @@
 import PitchClass from "@/models/PitchClass";
-import { getSequentialEnglishNames, getSolfegeFromEnglishName, getSpellingPosition } from "@/functions/noteNameMappings";
+import { getEnglishNoteName, getSequentialEnglishNames, getSolfegeFromEnglishName, getSpellingPosition } from "@/functions/noteNameMappings";
+import NoteName, { getNoteNameIndexAndOctave, getParentNoteName } from "@/models/NoteName";
 import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 
@@ -156,28 +157,31 @@ export function renderPitchClassSpellings(
     };
   });
 
-  // Second pass: resolve collisions — two notes of the maqām tied to the same
-  // 12-EDO key, which the keyboard/MIDI projection cannot hold apart.
+  // Second pass: give every pitch its own 12-EDO key when two notes of the maqām
+  // would otherwise share one (the keyboard/MIDI projection cannot hold both).
   //
-  // Maqām-context rule, read from the spelling and never from measured cents:
-  // the note whose spelling is closer to the shared key keeps it; the other moves
-  // one key toward the side it lies on (below → flat, above → sharp). Closeness
-  // ranks a plain letter first, then comma symbols (-, +, --), then quarter-tone
-  // symbols (-b, -#).
-  //   segāh E-b + nīm būselīk E-  → nīm būselīk keeps E, segāh → Eb
-  //   chahārgāh F + nīm ḥijāz F-# → chahārgāh keeps F, nīm ḥijāz → F#
-  // Equally close notes on opposite sides both move, each toward the note it is
-  // a variant of (Arabic maqām logic: nīm X is X lowered, so it moves up toward
-  // X; tīk X is X raised, so it moves down toward X). The table always spells
-  // nīm notes below and tīk notes above their parent, so this is the side the
-  // spelling lies on. tīk ḥiṣār A-b + nīm ʿajam A-# → Ab and Bb; neither is an A.
+  // Each note has a first-choice key and may move one key to its own side:
+  // - a nīm or tīk note (PAO naming: nīm X is X lowered, tīk X is X raised)
+  //   first takes the key of the note it varies (12-pitch-class sets) and moves
+  //   down if nīm, up if tīk: tīk kawasht → kawasht's B, nīm ʿajam → ʿajam's Bb;
+  // - any other note first takes the key its spelling names and moves to the
+  //   side its spelling lies on, judged from the spelling, never from measured
+  //   cents (segāh E-b lies below E, so it moves to Eb);
+  // - a note spelled exactly on its key moves one key either way, but only as a
+  //   last resort, when no answer leaves it in place (al-Dīk 1926b: qarār ḥijāz
+  //   E## moves to F so qarār tīk ḥijāz/ṣabā and yegāh can take F# and G).
   //
-  // The rule repeats until no two pitches share a key: a moved note that lands
-  // on an occupied key is settled the same way (rāst al-kawasht in Ronzevalle:
-  // tīk ḥiṣār → Ab, nīm ʿajam → Bb, then meets ʿajam there and steps back to A).
-  // A note returns to a key it has left only once that key is empty; a clash
-  // that cannot settle stays, and the 12-pitch-class set reports the maqām as
-  // incompatible.
+  // The keys are chosen for the whole maqām at once: every pitch gets its own
+  // key, keys keep the order of the pitches, and the fewest notes move. Among
+  // equally few moves, the notes whose spellings are closest to their
+  // first-choice keys keep them (a plain letter, then comma symbols, then
+  // quarter-tone symbols). Examples:
+  //   segāh E-b + nīm būselīk E-   → Eb, E
+  //   chahārgāh F + nīm ḥijāz F-#  → F, F#
+  //   nīm shahnāz + tīk zīrgūleh + muḥayyar (Anglo-European 1800) → C, C#, D
+  //   nīm ʿajam + nīm māhūr + māhūr (Ronzevalle 1904)            → A, Bb, B
+  // If no such choice exists (more pitches than keys), the first-choice keys
+  // stay and the 12-pitch-class set reports the maqām as incompatible.
   //
   // Keys: in a 12-pitch-class set a key is one of the 12 pitch classes (octave
   // ignored, and a note and its octave are one pitch); otherwise it is a key in
@@ -230,10 +234,41 @@ export function renderPitchClassSpellings(
     return (side < 0 ? flatNames : sharpNames)[chroma];
   };
 
+  // PAO naming: nīm X is X lowered and tīk X is X raised. In a 12-pitch-class
+  // set a nīm or tīk note's first choice of key is the key of the note it
+  // varies, written on its own letter (tīk kawasht C-b → Cb, kawasht's B key).
+  const letterChroma: { [letter: string]: number } = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+  const parentKeyOnLetter = (pc: PitchClass, englishName: string): string | null => {
+    const parent = getParentNoteName(pc.noteName as NoteName);
+    if (!parent) return null;
+    const parentReference = calculateCentsDeviationWithReferenceNote(0, "0", 0, getEnglishNoteName(parent)).referenceNoteName;
+    const parentChroma = referenceToChroma(parentReference);
+    if (parentChroma === null) return null;
+    const letter = englishName[0].toUpperCase();
+    let semitones = (((parentChroma - letterChroma[letter]) % 12) + 12) % 12;
+    if (semitones > 6) semitones -= 12;
+    const accidental: { [semitones: number]: string } = { [-2]: "bb", [-1]: "b", 0: "", 1: "#", 2: "##" };
+    return accidental[semitones] === undefined ? parentReference : letter + accidental[semitones];
+  };
+
   // One unit per pitch: in a 12-pitch-class set a note and its octave (nawā G3,
   // saham/ramal tūtī G4) are the same pitch and share one key.
-  type Unit = { members: PitchClass[]; englishName: string; referenceNoteName: string; visited: Set<number> };
+  type Unit = {
+    members: PitchClass[];
+    englishName: string;
+    firstReference: string;
+    side: number;
+    spellingDistance: number;
+    key: number;
+    pitch: number;
+    chosenReference: string;
+  };
   const pitchClassOf = (pc: PitchClass) => Math.round(((((parseFloat(pc.cents) % 1200) + 1200) % 1200)) * 1e6) / 1e6;
+  // Position across octaves, so a nīm note sits below and a tīk note above its parent
+  const positionOf = (noteName: NoteName) => {
+    const { octave, index } = getNoteNameIndexAndOctave(noteName);
+    return octave * 37 + index;
+  };
   const units: Unit[] = [];
   const unitByPitch = new Map<number, Unit>();
   canonicalBaseReferenceNotes.forEach(({ pitchClass, maqamContextEnglishName, baseReferenceNote, baseCentsDeviation }) => {
@@ -244,73 +279,108 @@ export function renderPitchClassSpellings(
       shared.members.push(pitchClass);
       return;
     }
-    const unit: Unit = { members: [pitchClass], englishName: maqamContextEnglishName, referenceNoteName: baseReferenceNote, visited: new Set() };
+    const parentKey = pitchClassSetSequences ? parentKeyOnLetter(pitchClass, maqamContextEnglishName) : null;
+    const firstReference = parentKey ?? baseReferenceNote;
+    const firstChroma = referenceToChroma(firstReference);
+    const d = firstChroma === null ? null : displacementFromKey(maqamContextEnglishName, firstChroma);
+    // The side is judged from where the note starts: on its parent's key the name
+    // decides (nīm below, tīk above); on its own spelled key the spelling does.
+    const parent = parentKey ? getParentNoteName(pitchClass.noteName as NoteName) : null;
+    const side = parent
+      ? Math.sign(positionOf(pitchClass.noteName as NoteName) - positionOf(parent))
+      : d ? sideOf(d) : 0;
+    const key = calculateIpnReferenceMidiNote({ ...pitchClass, englishName: maqamContextEnglishName, referenceNoteName: firstReference });
+    const unit: Unit = {
+      members: [pitchClass],
+      englishName: maqamContextEnglishName,
+      firstReference,
+      side,
+      spellingDistance: d ? distance(d) : 0,
+      key,
+      pitch: pitchClass.midiNoteDecimal,
+      chosenReference: firstReference,
+    };
     units.push(unit);
     unitByPitch.set(pitch, unit);
   });
 
-  // The key a unit occupies: its pitch class in a set, else the key in its octave
-  const keyOf = (unit: Unit): number | null => {
-    const chroma = referenceToChroma(unit.referenceNoteName);
-    if (chroma === null) return null;
-    if (pitchClassSetSequences) return chroma;
-    return calculateIpnReferenceMidiNote({ ...unit.members[0], englishName: unit.englishName, referenceNoteName: unit.referenceNoteName });
-  };
-
-  const moveUnit = (unit: Unit, side: number): boolean => {
-    if (side === 0) return false;
-    const moved = moveKey(unit.referenceNoteName, side);
-    const from = keyOf(unit);
-    const previous = unit.referenceNoteName;
-    unit.referenceNoteName = moved;
-    const to = keyOf(unit);
-    // A note may go back to a key it left only if that key is now empty, so
-    // two notes cannot keep trading places
-    const occupied = units.some((other) => other !== unit && keyOf(other) === to);
-    if (to === null || (unit.visited.has(to) && occupied)) {
-      unit.referenceNoteName = previous;
-      return false;
-    }
-    if (from !== null) unit.visited.add(from);
-    return true;
-  };
-
-  for (let round = 0; round < 24; round++) {
-    const byKey = new Map<number, Unit[]>();
+  // In a 12-pitch-class set the keys wrap at the octave: bring every unit into
+  // one octave above the lowest first-choice key, pitch and key together.
+  if (pitchClassSetSequences && units.length > 0) {
+    const origin = Math.min(...units.map((unit) => unit.key));
     for (const unit of units) {
-      const key = keyOf(unit);
-      if (key !== null) byKey.set(key, [...(byKey.get(key) ?? []), unit]);
+      const shift = 12 * Math.floor((unit.key - origin) / 12);
+      unit.key -= shift;
+      unit.pitch -= shift;
     }
-    let changed = false;
-    for (const [key, sharing] of byKey) {
-      if (sharing.length < 2) continue;
-      const keyChroma = ((key % 12) + 12) % 12;
-      const placed = sharing
-        .map((unit) => ({ unit, d: displacementFromKey(unit.englishName, keyChroma) }))
-        .filter((x): x is { unit: Unit; d: [number, number] } => x.d !== null)
-        .sort((a, b) => distance(a.d) - distance(b.d));
-      if (placed.length < 2) continue;
-      const closest = distance(placed[0].d);
-      const tiedAtTop = placed.filter((x) => distance(x.d) === closest);
-      // The closest spelling keeps the key — unless equally close notes lie on
-      // opposite sides, in which case none of them is this key's note.
-      const keeper = tiedAtTop.length === 1 || new Set(tiedAtTop.map((x) => sideOf(x.d))).size === 1 ? placed[0] : undefined;
-      for (const { unit, d } of placed) {
-        if (unit === keeper?.unit) continue;
-        if (keeper === undefined && tiedAtTop.length > 1 && !tiedAtTop.some((x) => x.unit === unit)) continue;
-        if (moveUnit(unit, sideOf(d))) changed = true;
+  }
+
+  const slotOf = (key: number) => (pitchClassSetSequences ? ((key % 12) + 12) % 12 : key);
+  const hasClash = new Set(units.map((unit) => slotOf(unit.key))).size < units.length;
+
+  if (hasClash) {
+    const ordered = [...units].sort((a, b) => a.pitch - b.pitch);
+    // Each note may stay on its first-choice key or move one key to its own side.
+    // A note spelled exactly on its key has no side: it may move one key either
+    // way, but only as a last resort, when no answer leaves it in place.
+    const options = ordered.map((unit) =>
+      unit.side === 0
+        ? [{ step: 0, lastResort: false }, { step: -1, lastResort: true }, { step: 1, lastResort: true }]
+        : [{ step: 0, lastResort: false }, { step: unit.side, lastResort: false }]
+    );
+    type Best = { lastResortMoves: number; moves: number; movedDistance: number; steps: number[] };
+    let best: Best | null = null;
+    const keys: number[] = [];
+    const steps: number[] = [];
+    const worse = (lastResortMoves: number, moves: number, b: Best) =>
+      lastResortMoves > b.lastResortMoves || (lastResortMoves === b.lastResortMoves && moves > b.moves);
+    const search = (i: number, lastResortMoves: number, moves: number, movedDistance: number) => {
+      if (best && worse(lastResortMoves, moves, best)) return;
+      if (i === ordered.length) {
+        const better =
+          !best ||
+          lastResortMoves < best.lastResortMoves ||
+          (lastResortMoves === best.lastResortMoves && (moves < best.moves || movedDistance > best.movedDistance));
+        if (better) best = { lastResortMoves, moves, movedDistance, steps: [...steps] };
+        return;
       }
+      for (const option of options[i]) {
+        const key = ordered[i].key + option.step;
+        // Keys rise with pitch; a set's keys fit in one octave (12 distinct keys)
+        if (i > 0 && key <= keys[i - 1]) continue;
+        if (pitchClassSetSequences && i > 0 && key - keys[0] > 11) continue;
+        keys[i] = key;
+        steps[i] = option.step;
+        const moved = option.step !== 0;
+        search(
+          i + 1,
+          lastResortMoves + (option.lastResort ? 1 : 0),
+          moves + (moved ? 1 : 0),
+          movedDistance + (moved ? ordered[i].spellingDistance : 0)
+        );
+      }
+    };
+    search(0, 0, 0, 0);
+    const solution = best as Best | null;
+    if (solution) {
+      ordered.forEach((unit, i) => {
+        if (solution.steps[i] !== 0) unit.chosenReference = moveKey(unit.firstReference, solution.steps[i]);
+      });
     }
-    if (!changed) break;
   }
 
   for (const unit of units) {
     for (const pc of unit.members) {
       const base = canonicalReferenceNoteMap.get(pc.noteName)!;
-      if (base.referenceNoteName === unit.referenceNoteName) continue;
+      if (base.referenceNoteName === unit.chosenReference) continue;
       canonicalReferenceNoteMap.set(pc.noteName, {
-        referenceNoteName: unit.referenceNoteName,
-        centsDeviation: recalcDeviation({ ...pc, englishName: unit.englishName } as PitchClass, unit.referenceNoteName),
+        referenceNoteName: unit.chosenReference,
+        // Each member keeps its own octave: measure it with its own spelling, not
+        // the unit's (jawāb sunbuleh Eb4 against Eb4's key, not sunbuleh's Eb3).
+        centsDeviation: recalcDeviation(
+          { ...pc, englishName: contextEnglishNameByNoteName.get(pc.noteName) ?? pc.englishName } as PitchClass,
+          unit.chosenReference
+        ),
       });
     }
   }
