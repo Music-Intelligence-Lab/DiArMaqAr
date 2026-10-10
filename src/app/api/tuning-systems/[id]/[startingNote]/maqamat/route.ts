@@ -3,6 +3,8 @@ import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import { standardizeText } from "@/functions/export";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import PitchClass from "@/models/PitchClass";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
@@ -173,6 +175,20 @@ export async function GET(
       : null;
     const renderPitchClassSpellings = degreeSpellingsModule?.renderPitchClassSpellings;
 
+    // One degree-detail object, shared by the taḥlīl and every transposition in
+    // both directions. The 12-EDO fields match GET /maqamat/{id}: the reference
+    // key the degree is spelled against, the deviation from it, and the two as
+    // "<MIDI note> <±cents>", so a client can map degrees to keyboard keys
+    // without deriving the key from englishName.
+    const toDegreeDetail = (pc: PitchClass) => ({
+      noteName: standardizeText(pc.noteName),
+      englishName: pc.englishName,
+      solfege: pc.solfege!,
+      ipnReferenceNoteName: pc.referenceNoteName,
+      centsDeviation: pc.centsDeviation,
+      midiNotePlusCentsDeviation: `${calculateIpnReferenceMidiNote(pc)} ${pc.centsDeviation >= 0 ? "+" : ""}${pc.centsDeviation.toFixed(1)}`,
+    });
+
     // Find all maqamat that are possible in this tuning system
     const availableMaqamat: any[] = [];
 
@@ -299,16 +315,8 @@ export async function GET(
             const renderedDescending = renderPitchClassSpellings(tahlil.descendingPitchClasses, false);
 
             item.maqamDegrees = {
-              ascending: renderedAscending.map((pc: any) => ({
-                noteName: standardizeText(pc.noteName),
-                englishName: pc.englishName,
-                solfege: pc.solfege!,
-              })),
-              descending: renderedDescending.map((pc: any) => ({
-                noteName: standardizeText(pc.noteName),
-                englishName: pc.englishName,
-                solfege: pc.solfege!,
-              })),
+              ascending: renderedAscending.map(toDegreeDetail),
+              descending: renderedDescending.map(toDegreeDetail),
             };
           } else {
             item.maqamDegrees = {
@@ -342,16 +350,8 @@ export async function GET(
                 // This array is filtered to taswir, so never the base form.
                 isBaseForm: t.isBaseForm,
                 maqamDegrees: {
-                  ascending: renderedAscending.map((pc: any) => ({
-                    noteName: standardizeText(pc.noteName),
-                    englishName: pc.englishName,
-                    solfege: pc.solfege!,
-                  })),
-                  descending: renderedDescending.map((pc: any) => ({
-                    noteName: standardizeText(pc.noteName),
-                    englishName: pc.englishName,
-                    solfege: pc.solfege!,
-                  })),
+                  ascending: renderedAscending.map(toDegreeDetail),
+                  descending: renderedDescending.map(toDegreeDetail),
                 },
               };
             }
