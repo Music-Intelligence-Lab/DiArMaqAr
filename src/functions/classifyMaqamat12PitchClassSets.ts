@@ -42,12 +42,93 @@ export interface ClassificationSet {
 }
 
 /**
- * Represents an incompatible maqam with reason
+ * A note in a key clash: its own name and spelling, its cents, and its position
+ * above the maqām's tonic once octave is ignored (what a 12-pitch-class set
+ * compares).
+ */
+export interface KeyClashNote {
+  noteName: string;
+  englishName: string;
+  cents: number;
+  centsInOctave: number;
+}
+
+/**
+ * A 12-EDO key that two or more different pitches of a maqām would need.
+ */
+export interface KeyClash {
+  key: string;
+  notes: KeyClashNote[];
+}
+
+/**
+ * A maqām transposition that does not fit a 12-pitch-class set: the keys its
+ * pitches would share, and the same in one plain sentence.
  */
 export interface IncompatibleMaqam {
   maqam: MaqamData;
   transposition: Maqam | null;
-  reason: string;
+  reason: "shared_key";
+  clashes: KeyClash[];
+  explanation: string;
+}
+
+/**
+ * The keys a maqām transposition's pitches would have to share in a
+ * 12-pitch-class set (both directions together, octave ignored), after the
+ * maqām-context key rule has given every pitch its own key where it can.
+ * Empty when the transposition fits.
+ */
+export function findKeyClashes(transposition: Maqam): KeyClash[] {
+  const sequences = { ascending: transposition.ascendingPitchClasses, descending: transposition.descendingPitchClasses };
+  const keyed = [
+    ...renderPitchClassSpellings(transposition.ascendingPitchClasses, true, sequences),
+    ...renderPitchClassSpellings(transposition.descendingPitchClasses, false, sequences),
+  ];
+  const tonicCents = parseFloat(transposition.ascendingPitchClasses[0].cents);
+  // Same pitch identity the set compares: cents within the octave, to 1e-6
+  const pitchOf = (cents: number) => {
+    const inOctave = Math.round(((((cents - tonicCents) % 1200) + 1200) % 1200) * 1e6) / 1e6;
+    return inOctave >= 1200 ? 0 : inOctave;
+  };
+  const byKey = new Map<string, Map<number, KeyClashNote[]>>();
+  for (const pc of keyed) {
+    const key = getIpnReferenceNoteName(pc);
+    const pitch = pitchOf(parseFloat(pc.cents));
+    const pitches = byKey.get(key) ?? byKey.set(key, new Map()).get(key)!;
+    const notes = pitches.get(pitch) ?? pitches.set(pitch, []).get(pitch)!;
+    if (!notes.some((note) => note.noteName === pc.noteName)) {
+      notes.push({
+        noteName: pc.noteName,
+        englishName: pc.englishName,
+        cents: Math.round(parseFloat(pc.cents) * 10) / 10,
+        centsInOctave: Math.round(pitch * 10) / 10,
+      });
+    }
+  }
+  return [...byKey.entries()]
+    .filter(([, pitches]) => pitches.size > 1)
+    .map(([key, pitches]) => ({
+      key,
+      notes: [...pitches.entries()].sort((a, b) => a[0] - b[0]).flatMap(([, notes]) => notes),
+    }));
+}
+
+/**
+ * One plain sentence for a set of key clashes:
+ * "jawāb buzurk (E-b5) and jawāb būselīk (E4) both need the E key, and the
+ * keys next to it are taken."
+ */
+export function describeKeyClashes(clashes: KeyClash[]): string {
+  const clauses = clashes.map((clash) => {
+    // one name per distinct pitch (a note and its octave are one pitch)
+    const byPitch = new Map<number, KeyClashNote>();
+    for (const note of clash.notes) if (!byPitch.has(note.centsInOctave)) byPitch.set(note.centsInOctave, note);
+    const names = [...byPitch.values()].map((note) => `${note.noteName} (${note.englishName})`);
+    const list = names.length <= 2 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+    return `${list} ${names.length <= 2 ? "both" : "all"} need the ${clash.key} key`;
+  });
+  return `${clauses.join("; ")}, and the keys next to ${clashes.length === 1 ? "it" : "them"} are taken.`;
 }
 
 /**
@@ -768,11 +849,14 @@ export function classifyMaqamat(
         );
         
         if (!pitchClassSet) {
-          // Incompatible - duplicate IPN references
+          // Incompatible: two different pitches would need the same key
+          const clashes = findKeyClashes(transposition);
           incompatibleMaqamat.push({
             maqam: maqamData,
             transposition: transposition,
-            reason: "duplicate_ipn_reference"
+            reason: "shared_key",
+            clashes,
+            explanation: describeKeyClashes(clashes),
           });
           processedMaqamat.add(key);
           continue;
@@ -888,25 +972,90 @@ export function classifyMaqamat(
 }
 
 /**
- * Creates a single 12-pitch-class set from a specific maqam
+ * Whether one maqām transposition fits a 12-pitch-class set, without listing
+ * the set's compatible maqāmāt: quick enough to decide whether to offer a
+ * 12-pitch-class export. Same transposition rule as fitTwelvePitchClassSet.
  *
- * This function:
- * 1. Finds a transposition of the specified maqam that creates a complete 12-pitch-class set
- * 2. Finds all compatible maqāmāt for that set
- * 3. Returns a single ClassificationSet with the specified maqam as the source
- *
- * @param sourceMaqamData - The maqam to create the set from
- * @param allMaqamat - All maqamat to check for compatibility
- * @param cairoTuningSystem - The tuning system for maqamat
- * @param cairoStartingNote - The starting note for the tuning system
- * @param alKindiTuningSystem - The al-Kindi tuning system for filler pitches
- * @param alKindiStartingNote - The starting note for al-Kindi (should match cairoStartingNote)
- * @param ajnas - All ajnas data
- * @param centsTolerance - Tolerance for cents comparison (default: 5)
- * @returns A ClassificationSet or null if no complete set can be created
+ * @param tonicNoteName - Tonic of the transposition to check; null for the maqām's own form
  */
-export function createSetFromMaqam(
+export function checkTwelvePitchClassFit(
   sourceMaqamData: MaqamData,
+  tonicNoteName: string | null,
+  cairoTuningSystem: TuningSystem,
+  cairoStartingNote: string,
+  alKindiTuningSystem: TuningSystem,
+  alKindiStartingNote: string,
+  ajnas: any[]
+):
+  | { fits: true; transposition: Maqam; pitchClassSet: PitchClassSet }
+  | { fits: false; transposition: Maqam; clashes: KeyClash[]; explanation: string; fittingTonics: string[] } {
+  const transpositions = getMaqamTranspositions(sourceMaqamData, cairoTuningSystem, cairoStartingNote, ajnas);
+  const transposition =
+    tonicNoteName === null
+      ? transpositions.find((candidate) => candidate.isBaseForm)
+      : transpositions.find((candidate) => candidate.ascendingPitchClasses[0].noteName === tonicNoteName);
+  if (!transposition) {
+    throw new Error(
+      `${sourceMaqamData.getName()} has no transposition on ${tonicNoteName ?? "its own tonic"} in ${cairoTuningSystem.getId()} from ${cairoStartingNote}`
+    );
+  }
+
+  const setOf = (candidate: Maqam): PitchClassSet | null => {
+    const set = create12PitchClassSet(candidate, cairoTuningSystem, cairoStartingNote, alKindiTuningSystem, alKindiStartingNote);
+    return set && set.pitchClasses.size === 12 ? set : null;
+  };
+
+  const pitchClassSet = setOf(transposition);
+  if (pitchClassSet) return { fits: true, transposition, pitchClassSet };
+
+  const clashes = findKeyClashes(transposition);
+  const filled = create12PitchClassSet(transposition, cairoTuningSystem, cairoStartingNote, alKindiTuningSystem, alKindiStartingNote);
+  return {
+    fits: false,
+    transposition,
+    clashes,
+    explanation: clashes.length
+      ? describeKeyClashes(clashes)
+      : `Only ${filled ? filled.pitchClasses.size : 0} of the 12 keys could be filled.`,
+    fittingTonics: transpositions
+      .filter((candidate) => candidate !== transposition && setOf(candidate))
+      .map((candidate) => candidate.ascendingPitchClasses[0].noteName),
+  };
+}
+
+/**
+ * The result of fitting one maqām transposition to a 12-pitch-class set: the
+ * set, or why it does not fit and on which starting notes this maqām does.
+ */
+export type TwelvePitchClassSetFit =
+  | { fits: true; set: ClassificationSet }
+  | {
+      fits: false;
+      transposition: Maqam;
+      clashes: KeyClash[];
+      explanation: string;
+      /** Tonics of this maqām's other transpositions that do fit */
+      fittingTonics: string[];
+    };
+
+/**
+ * Creates the 12-pitch-class set of one maqām transposition: the one asked for,
+ * never a substitute. When it does not fit, says why (the keys its pitches
+ * would share) and which of the maqām's other transpositions do fit.
+ *
+ * @param sourceMaqamData - The maqām
+ * @param tonicNoteName - Tonic of the transposition to use; null for the maqām's own form
+ * @param allMaqamat - All maqāmāt, to list the set's compatible maqāmāt
+ * @param cairoTuningSystem - The tuning system for maqāmāt
+ * @param cairoStartingNote - The starting note for the tuning system
+ * @param alKindiTuningSystem - The al-Kindī tuning system for filler pitches
+ * @param alKindiStartingNote - The starting note for al-Kindī (matches cairoStartingNote)
+ * @param ajnas - All ajnās data
+ * @param centsTolerance - Tolerance for cents comparison (default: 5)
+ */
+export function fitTwelvePitchClassSet(
+  sourceMaqamData: MaqamData,
+  tonicNoteName: string | null,
   allMaqamat: MaqamData[],
   cairoTuningSystem: TuningSystem,
   cairoStartingNote: string,
@@ -914,39 +1063,18 @@ export function createSetFromMaqam(
   alKindiStartingNote: string,
   ajnas: any[],
   centsTolerance: number = 5
-): ClassificationSet | null {
-  // Get all transpositions of the source maqam
-  const transpositions = getMaqamTranspositions(
+): TwelvePitchClassSetFit {
+  const check = checkTwelvePitchClassFit(
     sourceMaqamData,
+    tonicNoteName,
     cairoTuningSystem,
     cairoStartingNote,
+    alKindiTuningSystem,
+    alKindiStartingNote,
     ajnas
   );
-
-  // Find a transposition that creates a complete 12-pitch-class set
-  let sourceMaqam: Maqam | null = null;
-  let pitchClassSet: PitchClassSet | null = null;
-
-  for (const transposition of transpositions) {
-    const testSet = create12PitchClassSet(
-      transposition,
-      cairoTuningSystem,
-      cairoStartingNote,
-      alKindiTuningSystem,
-      alKindiStartingNote
-    );
-
-    // Check if this transposition creates a complete 12-pitch-class set
-    if (testSet && testSet.pitchClasses.size === 12) {
-      sourceMaqam = transposition;
-      pitchClassSet = testSet;
-      break;
-    }
-  }
-
-  if (!sourceMaqam || !pitchClassSet) {
-    return null; // No transposition creates a complete 12-pitch-class set
-  }
+  if (!check.fits) return check;
+  const { transposition: sourceMaqam, pitchClassSet } = check;
 
   // Find all compatible maqāmāt
   const compatibleMaqamat: MaqamTranspositionInfo[] = [];
@@ -1009,7 +1137,7 @@ export function createSetFromMaqam(
   const setId = `maqam_${sourceMaqamData.getIdName()}_set`;
   const setName = `${sourceMaqam.name} set`;
 
-  return {
+  const set: ClassificationSet = {
     id: setId,
     name: setName,
     sourceMaqam: {
@@ -1021,6 +1149,8 @@ export function createSetFromMaqam(
     pitchClassSet: pitchClassSet,
     compatibleMaqamat: compatibleMaqamat
   };
+
+  return { fits: true, set };
 }
 
 /**

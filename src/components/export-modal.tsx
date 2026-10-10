@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useId } from "react";
 import useAppContext from "@/contexts/app-context";
 import { entityToken, exportJins, exportMaqam, exportTuningSystem } from "@/functions/export";
 import {
@@ -11,10 +11,11 @@ import {
   exportJinsWithTuningSystemOctave,
   exportJinsToScala,
 } from "@/functions/scala-export";
+import { checkTwelvePitchClassFit } from "@/functions/classifyMaqamat12PitchClassSets";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import NoteName from "@/models/NoteName";
 import { Jins } from "@/models/Jins";
-import { Maqam } from "@/models/Maqam";
+import MaqamData, { Maqam } from "@/models/Maqam";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import { standardizeText } from "@/functions/export";
 import { getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
@@ -63,6 +64,7 @@ export default function ExportModal({
     selectedIndices,
     selectedJinsData,
     selectedMaqamData,
+    selectedMaqam,
     allPitchClasses,
     referenceFrequencies,
   } = useAppContext();
@@ -70,6 +72,9 @@ export default function ExportModal({
   // Determine which jins/maqam to use for export - prioritize specific instances
   const jinsToExport = specificJins || selectedJinsData;
   const maqamToExport = specificMaqam || selectedMaqamData;
+  // The 12-pitch-class set is built for one transposition, the one being looked
+  // at: the row's own, else the one selected in the app, else the maqām's own form.
+  const twelveToneMaqam = specificMaqam || selectedMaqam || selectedMaqamData;
 
   // ------------------------------------------------------------------
   // Scala filename helpers (new convention)
@@ -285,7 +290,7 @@ export default function ExportModal({
             parts.push("• Scala keymap file (.kbm) only — Maps MIDI keys to maqām pitch classes; the referenced tuning system (.scl) must already be present locally");
           }
         } else if (exportOptions.scalaVariant === "12tone") {
-          parts.push("• 12-pitch-class chromatic set (.scl) — Full chromatic coverage using maqām's ascending and descending pitch classes, plus remaining chromatic positions from the tuning system");
+          parts.push("• 12-pitch-class chromatic set (.scl) — Full chromatic coverage using the maqām's ascending and descending pitch classes; the remaining keys come from the tuning system's own chromatic pitch classes, or from al-Kindī (874) when the tuning system does not have all 12");
         }
       } else {
         const maqamItems: string[] = ["Maqām ascending (ṣuʿūd) and descending (hubūṭ) sequences"];
@@ -374,11 +379,13 @@ export default function ExportModal({
     } else if (exportType === "maqam") {
       // Scala: mq-<baseName>-<tonicToken>[-12tone]-<tsId>
       if (opts.format === "scala") {
-        if (!selectedTuningSystem || !maqamToExport) return "";
-        const baseName = standardizeText(getBaseMaqamName(maqamToExport));
-        const tonicToken = buildTonicToken(resolveMaqamTonicPc(maqamToExport));
-        const tsId = standardizeText(selectedTuningSystem.getId());
         const is12tone = opts.scalaVariant === "12tone";
+        // The 12-tone file holds one transposition; its name carries that tonic
+        const filenameMaqam = is12tone ? twelveToneMaqam : maqamToExport;
+        if (!selectedTuningSystem || !filenameMaqam) return "";
+        const baseName = standardizeText(getBaseMaqamName(filenameMaqam));
+        const tonicToken = buildTonicToken(resolveMaqamTonicPc(filenameMaqam));
+        const tsId = standardizeText(selectedTuningSystem.getId());
         return is12tone
           ? `mq-${baseName}-${tonicToken}-12tone-${tsId}`
           : `mq-${baseName}-${tonicToken}-${tsId}`;
@@ -420,6 +427,7 @@ export default function ExportModal({
     selectedIndices,
     specificJins?.name,
     specificMaqam?.name,
+    selectedMaqam?.ascendingPitchClasses[0]?.noteName,
     exportOptions.includeAjnasDetails,
     exportOptions.includeMaqamatDetails,
     exportOptions.includeTranspositions,
@@ -431,6 +439,79 @@ export default function ExportModal({
     exportOptions.format,
     exportOptions.scalaVariant,
   ]);
+
+  // The tuning system's starting note and the al-Kindī (874) tuning system that
+  // fills the keys the maqām leaves empty; al-Kindī uses the same starting note.
+  const resolveTwelveToneSources = () => {
+    const alKindiTuningSystem = getTuningSystems().find(ts => ts.getId() === "alkindi_874");
+    if (!alKindiTuningSystem) {
+      throw new Error("al-Kindi (874) tuning system not found - required for 12-pitch-class chromatic export");
+    }
+    if (!selectedTuningSystem) {
+      throw new Error("12-pitch-class chromatic export requires a tuning system");
+    }
+
+    const firstNoteFromIndices = getFirstNoteName(selectedIndices);
+    if (firstNoteFromIndices === "none") {
+      throw new Error("12-pitch-class chromatic export requires a starting note. Please select a starting note in the tuning system manager.");
+    }
+    // Use the tuning system's own spelling of that starting note
+    const matchingNoteSet = selectedTuningSystem.getNoteNameSets().find(
+      (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
+    );
+    const startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
+
+    return { tuningSystem: selectedTuningSystem, startingNoteName, alKindiTuningSystem };
+  };
+
+  // Why this transposition cannot be offered as a 12-pitch-class set, one entry
+  // per line (the reason, then where the maqām does fit), or null when it can.
+  // Checked only while the maqām's Scala options are showing.
+  const twelveToneUnavailable = useMemo((): string[] | null => {
+    if (!isOpen || exportType !== "maqam" || exportOptions.format !== "scala" || !twelveToneMaqam) return null;
+    try {
+      let sourceMaqamData: MaqamData;
+      let tonicNoteName: string | null = null;
+      if (twelveToneMaqam instanceof MaqamData) {
+        sourceMaqamData = twelveToneMaqam;
+      } else {
+        const found = getMaqamat().find((md) => md.getId() === twelveToneMaqam.maqamId);
+        if (!found) throw new Error(`no maqām with id ${twelveToneMaqam.maqamId}`);
+        sourceMaqamData = found;
+        tonicNoteName = twelveToneMaqam.ascendingPitchClasses[0].noteName;
+      }
+
+      const { tuningSystem, startingNoteName, alKindiTuningSystem } = resolveTwelveToneSources();
+      const fit = checkTwelvePitchClassFit(
+        sourceMaqamData,
+        tonicNoteName,
+        tuningSystem,
+        startingNoteName,
+        alKindiTuningSystem,
+        startingNoteName,
+        getAjnas()
+      );
+      if (fit.fits) return null;
+
+      return [
+        `The 12-pitch-class set export is unavailable for ${fit.transposition.name} because ${fit.explanation}`,
+        fit.fittingTonics.length > 0
+          ? `It is available on: ${fit.fittingTonics.join(", ")}.`
+          : "No transposition of this maqām forms a 12-pitch-class set in this tuning system.",
+      ];
+    } catch (error: any) {
+      console.error("12-pitch-class set check failed:", error);
+      return [`The 12-pitch-class set export is unavailable: ${error.message}`];
+    }
+  }, [isOpen, exportType, exportOptions.format, twelveToneMaqam, selectedTuningSystem, selectedIndices]);
+  const twelveToneReasonId = useId();
+
+  // An unavailable set cannot stay selected
+  useEffect(() => {
+    if (twelveToneUnavailable && exportOptions.scalaVariant === "12tone") {
+      setExportOptions((prev) => ({ ...prev, scalaVariant: undefined }));
+    }
+  }, [twelveToneUnavailable, exportOptions.scalaVariant]);
 
   const [isExporting, setIsExporting] = useState(false);
   const isCancelledRef = useRef(false);
@@ -944,7 +1025,8 @@ export default function ExportModal({
         setTimeout(() => {
           setExportProgress((prev) => ({ ...prev, isVisible: false }));
         }, 3000);
-        alert("Export failed. Please try again.");
+        // The thrown messages are written for the reader: say what went wrong
+        alert(`Export failed: ${error.message}`);
       }
     } finally {
       setIsExporting(false);
@@ -1095,46 +1177,15 @@ export default function ExportModal({
             updateProgress(97.5, "Generating 12-pitch-class chromatic Scala file...");
             await new Promise((resolve) => setTimeout(resolve, 100));
 
-            // Get al-Kindi (874) tuning system for filler pitches
-            const allTuningSystems = getTuningSystems();
-            const alKindiTuningSystem = allTuningSystems.find(ts => ts.getId() === "alkindi_874");
-
-            if (!alKindiTuningSystem) {
-              throw new Error("al-Kindi (874) tuning system not found - required for 12-pitch-class chromatic export");
+            if (!twelveToneMaqam) {
+              throw new Error("12-pitch-class chromatic export requires a maqām");
             }
-
-            // Get the starting note name from the tuning system's note name sets
-            // Get all note name sets from the tuning system
-            const noteNameSets = selectedTuningSystem.getNoteNameSets();
-            
-            let startingNoteName: string | undefined;
-            
-            // Try to get starting note from selectedIndices first
-            if (selectedIndices && selectedIndices.length > 0 && selectedIndices[0] >= 0) {
-              const firstNoteFromIndices = getFirstNoteName(selectedIndices);
-              if (firstNoteFromIndices && firstNoteFromIndices !== "none") {
-                // Find the matching note name set in the tuning system
-                const matchingNoteSet = noteNameSets.find(
-                  (set) => standardizeText(set[0] || "") === standardizeText(firstNoteFromIndices)
-                );
-                startingNoteName = matchingNoteSet?.[0] || firstNoteFromIndices;
-              }
-            }
-            
-            // Fallback: use the first note name set from the tuning system
-            if (!startingNoteName && noteNameSets.length > 0 && noteNameSets[0] && noteNameSets[0][0]) {
-              startingNoteName = noteNameSets[0][0];
-            }
-            
-            // If still no starting note, throw an error
-            if (!startingNoteName) {
-              throw new Error("12-pitch-class chromatic Scala export requires a starting note. Please select a starting note in the tuning system manager or ensure the tuning system has at least one note name set configured.");
-            }
+            const { startingNoteName, alKindiTuningSystem } = resolveTwelveToneSources();
 
             // Generate .scl file only (no .kbm files)
             const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-            const scalaContent = exportMaqamTo12ToneScala(
-              maqamToExport,
+            const result = exportMaqamTo12ToneScala(
+              twelveToneMaqam,
               selectedTuningSystem,
               startingNoteName,
               alKindiTuningSystem,
@@ -1144,11 +1195,11 @@ export default function ExportModal({
               referenceFrequencies // current reference frequencies for accurate A4
             );
 
-            if (!scalaContent) {
-              throw new Error("Failed to generate 12-pitch-class chromatic Scala file");
+            if (!result.ok) {
+              throw new Error(`The 12-pitch-class set export is unavailable for this transposition because ${result.explanation}`);
             }
 
-            content = scalaContent;
+            content = result.content;
             mimeType = "text/plain";
             fileExtension = "scl";
           } else if (variant === 'keymap') {
@@ -1955,6 +2006,8 @@ export default function ExportModal({
                     <input
                       type="checkbox"
                       checked={exportOptions.scalaVariant === '12tone'}
+                      disabled={twelveToneUnavailable !== null}
+                      aria-describedby={twelveToneUnavailable ? twelveToneReasonId : undefined}
                       onChange={(e) =>
                         setExportOptions((prev) => ({
                           ...prev,
@@ -1965,6 +2018,14 @@ export default function ExportModal({
                     <span>12-Pitch-Class Chromatic Set (.scl file)</span>
                   </label>
                 </div>
+                {/* Why this transposition has no 12-pitch-class set, and where it does */}
+                {twelveToneUnavailable && (
+                  <div id={twelveToneReasonId} className="export-modal__option-description">
+                    {twelveToneUnavailable.map((line) => (
+                      <div key={line}>{line}</div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {exportOptions.scalaVariant === 'keymap' && (

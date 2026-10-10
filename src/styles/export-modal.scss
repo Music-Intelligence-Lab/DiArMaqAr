@@ -274,6 +274,16 @@
       accent-color: $primary;
       cursor: pointer;
     }
+
+    // An option this selection cannot have: the uniform disabled ink
+    &:has(> input:disabled) {
+      color: $text-disabled;
+      cursor: not-allowed;
+
+      input {
+        cursor: not-allowed;
+      }
+    }
   }
 
   &__select {
