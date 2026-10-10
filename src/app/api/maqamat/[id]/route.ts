@@ -8,6 +8,7 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { spellMaqamDirections } from "@/app/api/pitch-spellings";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { MaqamatModulations, shiftMaqamByOctaves } from "@/models/Maqam";
 import { AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
@@ -1333,24 +1334,17 @@ export async function GET(
       }),
     };
 
-    // Spell each direction on its own: ascending and descending sequences are
-    // independent here, so an ascending degree and a descending degree may share
-    // a 12-EDO key. Only 12-pitch-class sets combine the two directions.
-    const { renderPitchClassSpellings } = await import("@/functions/renderPitchClassIpnSpellings");
-
-    const ascendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
+    // Maqām-context spellings, each direction on its own (shared with the
+    // compare route so both read the same).
+    const spelled = spellMaqamDirections(
       selectedTransposition.ascendingPitchClasses,
-      true
-    );
-    const descendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
-      selectedTransposition.descendingPitchClasses,
-      false
+      selectedTransposition.descendingPitchClasses
     );
 
     // Always include pitch data
     responseData.pitchData = {
-      ascending: formatPitchData(ascendingPitchClassesWithSequentialRefs, pitchClassDataType, false, inArabic),
-      descending: formatPitchData(descendingPitchClassesWithSequentialRefs, pitchClassDataType, true, inArabic)
+      ascending: formatPitchData(spelled.ascending, pitchClassDataType, false, inArabic),
+      descending: formatPitchData(spelled.descending, pitchClassDataType, true, inArabic)
     };
 
     // Add intervals if requested

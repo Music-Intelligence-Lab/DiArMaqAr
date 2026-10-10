@@ -7,6 +7,7 @@ import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { spellMaqamDirections } from "@/app/api/pitch-spellings";
 import { parseInArabic, getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import type TuningSystem from "@/models/TuningSystem";
@@ -682,6 +683,13 @@ export async function GET(
 
       const pitchClassesInSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
 
+      // Maqām-context spellings, each direction on its own — the same as
+      // GET /api/maqamat/{id} returns for this tuning system and transposition.
+      const spelled = spellMaqamDirections(
+        selectedTransposition.ascendingPitchClasses,
+        selectedTransposition.descendingPitchClasses
+      );
+
       const comparisonItem: Record<string, unknown> = {
         tuningSystem: tuningSystemNamespace,
         startingNote: startingNoteNamespace,
@@ -700,18 +708,8 @@ export async function GET(
         },
         availableTranspositions: buildAvailableMaqamTranspositions(transpositions),
         pitchData: {
-          ascending: formatPitchData(
-            selectedTransposition.ascendingPitchClasses,
-            pitchClassDataType,
-            false,
-            inArabic
-          ),
-          descending: formatPitchData(
-            selectedTransposition.descendingPitchClasses,
-            pitchClassDataType,
-            true,
-            inArabic
-          ),
+          ascending: formatPitchData(spelled.ascending, pitchClassDataType, false, inArabic),
+          descending: formatPitchData(spelled.descending, pitchClassDataType, true, inArabic),
         },
         ajnas: {
           ascending: ascendingAjnasObject,

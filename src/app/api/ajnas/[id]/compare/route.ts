@@ -6,6 +6,7 @@ import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { spellJinsPitchClasses } from "@/app/api/pitch-spellings";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import type TuningSystem from "@/models/TuningSystem";
@@ -640,7 +641,9 @@ export async function GET(
           },
         },
         availableTranspositions: buildAvailableJinsTranspositions(transpositions),
-        pitchData: formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic),
+        // Maqām-context spellings — the same as the jins degrees of
+        // GET /api/tuning-systems/{id}/{startingNote}/ajnas.
+        pitchData: formatPitchData(spellJinsPitchClasses(selectedTransposition.jinsPitchClasses), pitchClassDataType, inArabic),
         parameters: {
           pitchClassDataType,
           includeIntervals,

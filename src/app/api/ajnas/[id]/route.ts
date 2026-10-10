@@ -7,6 +7,7 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { spellJinsPitchClasses } from "@/app/api/pitch-spellings";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
@@ -872,8 +873,10 @@ export async function GET(
       }),
     };
 
-    // Always include pitch data (ajnās are unidirectional)
-    responseData.pitchData = formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic);
+    // Always include pitch data (ajnās are unidirectional), with maqām-context
+    // spellings — the same as the jins degrees of
+    // GET /api/tuning-systems/{id}/{startingNote}/ajnas.
+    responseData.pitchData = formatPitchData(spellJinsPitchClasses(selectedTransposition.jinsPitchClasses), pitchClassDataType, inArabic);
 
     // Add intervals if requested
     if (includeIntervals) {
