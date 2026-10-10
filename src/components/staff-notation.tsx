@@ -3,9 +3,6 @@
 import React, { useRef, useEffect } from "react";
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental, TextNote } from "vexflow";
 import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
-import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
-import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import useAppContext from "@/contexts/app-context";
 import PitchClass from "@/models/PitchClass";
 import useLanguageContext from "@/contexts/language-context";
 
@@ -17,7 +14,6 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const clef = "treble"; // Always use treble clef
   const { language, getDisplayName } = useLanguageContext();
-  const { selectedMaqam, selectedJins, selectedPitchClasses: appSelectedPitchClasses } = useAppContext();
 
   useEffect(() => {
     if (!containerRef.current || !pitchClasses.length) return;
@@ -63,6 +59,7 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
     return {
       letter: noteLetter,
       accidental: accidental,
+      octave: octaveMatch ? parseInt(octaveMatch[1], 10) : null,
     };
   };
 
@@ -78,6 +75,8 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
         return "n";
       case "b--":
         return "b";
+      case "#++":
+        return "#";
       case "-b":
         return "bs";
       case "-#":
@@ -87,55 +86,36 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
       case "#":
         return "#";
       case "bb":
-        return "b";
+        return "bb";
+      case "##":
+        return "##";
       case "n":
         return "n";
       case "b+":
         return "b";
+      case "b-":
+        return "b";
       case "#-":
         return "#";
       case "#+":
-        return "++";
+        return "#";
       default:
-        return "n";
+        // Never guess a glyph: an unmapped accidental would otherwise be drawn as
+        // a natural (Cb-4 shown as C♮). renderStaff catches this and reports it.
+        throw new Error(`No staff glyph for accidental "${accidental}"`);
     }
   };
 
   const renderStaff = () => {
     if (!containerRef.current) return;
 
-    // Precompute context-aware english names and solfege for the pitchClasses array.
-    // Prefer pitchClasses' own englishName/solfege when already rendered (maqam/jins transpositions).
-    const { computedEnglishNames, computedSolfege }: { computedEnglishNames: string[]; computedSolfege: string[] } = (() => {
-      const preferredEnglishMap: Record<string, string> = {};
-      const preferredSolfegeMap: Record<string, string> = {};
-      const contextSeq =
-        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
-        (selectedJins && selectedJins.jinsPitchClasses) ||
-        (appSelectedPitchClasses && appSelectedPitchClasses.length >= 2 ? appSelectedPitchClasses : undefined);
-
-      if (contextSeq) {
-        const renderedSeq = renderPitchClassSpellings(contextSeq);
-        renderedSeq.forEach((pc) => {
-          preferredEnglishMap[pc.noteName] = pc.englishName;
-          preferredSolfegeMap[pc.noteName] = pc.solfege || getSolfegeFromEnglishName(pc.englishName);
-        });
-      }
-
-      const englishNames = pitchClasses.map((pc) => {
-        if (pc.englishName && /^[A-G][#b]?\d+/.test(pc.englishName)) {
-          return pc.englishName;
-        }
-        return preferredEnglishMap[pc.noteName] || getEnglishNoteName(pc.noteName);
-      });
-
-      const solfegeNames = pitchClasses.map((pc, idx) => {
-        if (pc.solfege && pc.solfege !== "--") return pc.solfege;
-        return preferredSolfegeMap[pc.noteName] || getSolfegeFromEnglishName(englishNames[idx]);
-      });
-
-      return { computedEnglishNames: englishNames, computedSolfege: solfegeNames };
-    })();
+    // Draw the spelling each caller already resolved (maqām/jins sequences arrive
+    // with sequential, maqām-context englishName); never respell here. Solfège is
+    // derived from the same englishName so the two labels always agree.
+    const computedEnglishNames = pitchClasses.map((pc) =>
+      pc.englishName && pc.englishName !== "--" ? pc.englishName : getEnglishNoteName(pc.noteName)
+    );
+    const computedSolfege = computedEnglishNames.map((englishName) => getSolfegeFromEnglishName(englishName));
 
     const notesCount = computedEnglishNames.filter((en) => en && en !== "--").length;
 
@@ -213,33 +193,14 @@ export default function StaffNotation({ pitchClasses }: StaffNotationProps) {
 
         if (!parsed) return;
 
-        const pcWithEnglish = { ...pitchClass, englishName };
-        const referenceMidiNote = calculateIpnReferenceMidiNote(pcWithEnglish);
-
-        // Use the parsed note letter from the English name instead of MIDI conversion
-        const noteLetter = parsed.letter;
-        
-        // Calculate the correct octave for the parsed note letter using the reference MIDI note
-        // MIDI note 60 = C4, so we can calculate from there
-        const baseOctave = Math.floor(referenceMidiNote / 12) - 1;
-        const semitoneInOctave = referenceMidiNote % 12;
-        
-        // Map note letters to their position in the chromatic scale (C=0, D=2, E=4, F=5, G=7, A=9, B=11)
-        const notePositions: { [key: string]: number } = {
-          'c': 0, 'd': 2, 'e': 4, 'f': 5, 'g': 7, 'a': 9, 'b': 11
-        };
-        
-        const expectedSemitone = notePositions[noteLetter];
-        
-        // Adjust octave if the note letter doesn't match the expected position
-        let adjustedOctave = baseOctave;
-        if (semitoneInOctave < expectedSemitone && (expectedSemitone - semitoneInOctave) > 6) {
-          // Note is in the next octave (e.g., B# in a higher octave)
-          adjustedOctave += 1;
-        } else if (semitoneInOctave > expectedSemitone && (semitoneInOctave - expectedSemitone) > 6) {
-          // Note is in the previous octave (e.g., Cb in a lower octave)
-          adjustedOctave += 1;
+        // The English name's octave number belongs to its letter (B#3 sounds as
+        // C4 but sits on the B3 line; Cb4 sounds as B3 but sits on the C4 line),
+        // so it is the staff position as written — never re-derived from pitch.
+        if (parsed.octave === null) {
+          throw new Error(`No octave number in English name "${englishName}"`);
         }
+        const noteLetter = parsed.letter;
+        const adjustedOctave = parsed.octave;
 
         // For 8vb clef display: transpose up one octave for visual display
         // (notes shown higher but sound lower)

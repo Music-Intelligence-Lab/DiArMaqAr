@@ -19,7 +19,8 @@ import {
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { abjadNames } from "@/functions/noteNameMappings";
-import { getEnglishNoteName } from "@/functions/noteNameMappings";
+import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
+import PitchClass from "@/models/PitchClass";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
@@ -307,10 +308,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         // English names row (if filter enabled)
         if (filters["englishName"]) {
           const englishRow = [t("octave.englishName")];
-          // Apply sequential naming for the octave pitch classes
-          const rendered = renderPitchClassSpellings(octavePitchClasses);
-          rendered.forEach((pc) => {
-            englishRow.push(pc.englishName);
+          octavePitchClasses.forEach((pc) => {
+            englishRow.push(displayEnglishName(pc));
           });
           rows.push(englishRow);
         }
@@ -319,7 +318,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
         if (filters["solfege"]) {
           const solfegeRow = [t("octave.solfege")];
           octavePitchClasses.forEach((pc) => {
-            solfegeRow.push(pc.solfege || "--");
+            solfegeRow.push(getSolfegeFromEnglishName(displayEnglishName(pc)));
           });
           rows.push(solfegeRow);
         }
@@ -648,6 +647,21 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
    *  10) "Play" button + checkbox
    */
 
+  // Maqām-context spellings, keyed by note name: the selected maqām's ascending
+  // sequence, else a selection of two or more pitch classes. Notes outside that
+  // context keep their tuning-system spelling. Every display row and the staff use
+  // this one source so they always agree.
+  const contextEnglishNames: Record<string, string> = {};
+  const contextSeq =
+    (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
+    (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
+  if (contextSeq) {
+    renderPitchClassSpellings(contextSeq).forEach((pc) => {
+      contextEnglishNames[pc.noteName] = pc.englishName;
+    });
+  }
+  const displayEnglishName = (pc: PitchClass) => contextEnglishNames[pc.noteName] || getEnglishNoteName(pc.noteName);
+
   function renderOctave(octave: number) {
     if (!tuningSystemPitchClassesArray.length) return null;
 
@@ -936,32 +950,11 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.englishName && (
                   <tr data-row-type="englishName">
                     <td className="tuning-system-manager__row-header">{t('octave.englishName')}</td>
-                    {(() => {
-                      // Build preferred mapping from current context (maqam/jins/selection)
-                      const preferredMap: Record<string, string> = {};
-                      const contextSeq = 
-                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
-                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
-
-                      if (contextSeq) {
-                        // Apply sequential naming for melodic sequences
-                        const renderedSeq = renderPitchClassSpellings(contextSeq);
-                        renderedSeq.forEach((pc) => {
-                          preferredMap[pc.noteName] = pc.englishName;
-                        });
-                      }
-
-                      const displays = rowCells.map((pc) => {
-                        const noteName = pc.noteName;
-                        return preferredMap[noteName] || getEnglishNoteName(noteName);
-                      });
-
-                      return displays.map((d, colIndex) => (
-                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                          {d}
-                        </td>
-                      ));
-                    })()}
+                    {rowCells.map((pitchClass, colIndex) => (
+                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                        {displayEnglishName(pitchClass)}
+                      </td>
+                    ))}
                   </tr>
                 )}
 
@@ -971,7 +964,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                     <td className="tuning-system-manager__row-header">{t('octave.solfege')}</td>
                     {rowCells.map((pitchClass, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
-                        {pitchClass.solfege || '--'}
+                        {getSolfegeFromEnglishName(displayEnglishName(pitchClass))}
                       </td>
                     ))}
                   </tr>
@@ -1090,19 +1083,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr data-row-type="midiNoteDeviation">
                     <td className="tuning-system-manager__row-header">{t('octave.midiNoteDeviation')}</td>
                     {(() => {
-                      // Build preferred mapping from current context (maqam/jins/selection)
-                      const preferredMap: Record<string, string> = {};
-                      const contextSeq = 
-                        (selectedMaqam && selectedMaqam.ascendingPitchClasses) ||
-                        (selectedPitchClasses && selectedPitchClasses.length >= 2 ? selectedPitchClasses : undefined);
-
-                      if (contextSeq) {
-                        // Apply sequential naming for melodic sequences
-                        const renderedSeq = renderPitchClassSpellings(contextSeq);
-                        renderedSeq.forEach((pc) => {
-                          preferredMap[pc.noteName] = pc.englishName;
-                        });
-                      }
+                      const preferredMap = contextEnglishNames;
 
                       return rowCells.map((pitchClass, colIndex) => {
                         // Create pitch class with appropriate reference note name
@@ -1201,7 +1182,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                   <tr data-row-type="staffNotation">
                     <td className="tuning-system-manager__row-header">{t('octave.staffNotation')}</td>
                     <td colSpan={tuningSystemPitchClassesArray.length} className="staff-notation-cell">
-                      <StaffNotation pitchClasses={rowCells} />
+                      <StaffNotation pitchClasses={rowCells.map((pc) => ({ ...pc, englishName: displayEnglishName(pc) }))} />
                     </td>
                   </tr>
                 )}

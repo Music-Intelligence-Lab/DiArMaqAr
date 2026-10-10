@@ -9,7 +9,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { entityToken, standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
+import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
 import EntitySourceNote from "@/components/entity-source-note";
@@ -526,7 +526,7 @@ const MaqamTranspositions: React.FC = () => {
           if (filters["centsDeviation"]) {
             const centsDeviationRow = [t("maqam.centsDeviation")];
             pitchClasses.forEach((pc, i) => {
-              const referenceNote = getIpnReferenceNoteName(pc);
+              const referenceNote = getIpnReferenceNoteNameWithOctave(pc);
               const deviationText = `${referenceNote}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
               centsDeviationRow.push(deviationText);
               if (i < pitchClasses.length - 1) {

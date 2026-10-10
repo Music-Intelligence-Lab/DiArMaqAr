@@ -276,8 +276,8 @@ export default function JinsTranspositions() {
             const centsDeviationRow = [t("jins.centsDeviation")];
             
             pitchClasses.forEach((pc, i) => {
-              const referenceNoteName = pc.referenceNoteName;
-              const deviationText = `${referenceNoteName || ''}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
+              const referenceNote = getIpnReferenceNoteNameWithOctave(pc);
+              const deviationText = `${referenceNote}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
               centsDeviationRow.push(deviationText);
               if (i < pitchClasses.length - 1) {
                 centsDeviationRow.push(''); // interval column empty for cents deviation

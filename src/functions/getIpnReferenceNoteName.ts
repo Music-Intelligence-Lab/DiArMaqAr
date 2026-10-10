@@ -1,7 +1,10 @@
 import { calculateIpnReferenceMidiNote } from "./calculateIpnReferenceMidiNote";
 
 /**
- * Extracts the 12-EDO reference note name (without microtonal modifiers) from a pitch class.
+ * The 12-EDO chromatic slot of a pitch class, as a sharps-only key ("C", "C#" … "B").
+ *
+ * For grouping and matching by slot (Ab and G# must compare equal). Not a display
+ * spelling: use getIpnReferenceNoteNameWithOctave() or `referenceNoteName` for that.
  *
  * This function respects Arabic musicological logic where microtonal modifiers indicate
  * what the pitch is a variant OF, not mathematical proximity to 12-EDO semitones.
@@ -31,20 +34,28 @@ export function getIpnReferenceNoteName(pitchClass: any): string {
 }
 
 /**
- * Extracts the 12-EDO reference note name with octave number from a pitch class.
+ * Display form of a pitch class's 12-EDO reference note, with octave number.
  *
- * @param pitchClass - Pitch class object with midiNoteDecimal
- * @returns 12-EDO reference note name with octave number (e.g., "E3", "Bb4", "F#2")
+ * Shows the stored maqām-context spelling (`referenceNoteName`, e.g. "Ab", "Eb")
+ * rather than the sharps-only slot key from getIpnReferenceNoteName(), which is
+ * for grouping by chromatic slot, not for display. The octave number follows the
+ * letter, so a "Cb" reference at MIDI 59 reads "Cb4".
+ *
+ * @param pitchClass - Pitch class object with referenceNoteName, englishName and midiNoteDecimal
+ * @returns Reference note name with octave number (e.g., "E3", "Bb4", "Ab3")
  *
  * @example
  * ```typescript
- * const pc = { midiNoteDecimal: 51.366, englishName: "E-b3", ... };
- * const ref = get12EdoReferenceNoteNameWithOctave(pc); // Returns "E3"
+ * const pc = { midiNoteDecimal: 56.49, englishName: "Ab3", referenceNoteName: "Ab" };
+ * getIpnReferenceNoteNameWithOctave(pc); // "Ab3" (not "G#3")
  * ```
  */
 export function getIpnReferenceNoteNameWithOctave(pitchClass: any): string {
   const referenceMidiNote = calculateIpnReferenceMidiNote(pitchClass);
-  const referenceNote = getIpnReferenceNoteName(pitchClass);
-  const midiOctave = Math.floor(referenceMidiNote / 12) - 1;
-  return `${referenceNote}${midiOctave}`;
+  const stored: string | undefined = pitchClass.referenceNoteName;
+  const spelling = stored && /^[A-G](##|bb|#|b)?$/.test(stored) ? stored : getIpnReferenceNoteName(pitchClass);
+  const accidental = spelling.slice(1);
+  const accidentalOffset = accidental.length * (accidental.startsWith("#") ? 1 : -1);
+  const octave = Math.floor((referenceMidiNote - accidentalOffset) / 12) - 1;
+  return `${spelling}${octave}`;
 }
