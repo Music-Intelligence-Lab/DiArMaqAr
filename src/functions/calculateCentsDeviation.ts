@@ -76,32 +76,18 @@ export function calculateCentsDeviationWithReferenceNote(
 ): { deviation: number; referenceNoteName: string } {
   // Parse the English note name to get the intended 12-EDO reference
   if (currentNoteName) {
-    const { baseNote, chromaticSemitones, mainAccidental } = parseEnglishNoteName(currentNoteName);
+    const { baseNote, chromaticSemitones } = parseEnglishNoteName(currentNoteName);
 
-    // Determine the reference note name based on the main accidental
-    // Rule: Use chromatic note (Ab, Eb, F#) only if b/# is IMMEDIATELY after the letter.
-    // E-b, F+# have +/- before the accidental → use natural (E, F).
-    // Ab--, Eb+ have b/# immediately after the letter → use chromatic (Ab, Eb).
-    const firstCharAfterBase = currentNoteName.charAt(1);
-    const accidentalImmediatelyAfterBase = firstCharAfterBase === "b" || firstCharAfterBase === "#";
-
-    let referenceNoteName: string;
-    let targetSemitone: number; // The semitone within an octave (0-11)
-
-    if (accidentalImmediatelyAfterBase && mainAccidental) {
-      // b or # immediately after letter: Ab--, Eb+, F#-, C# → use chromatic
-      if (mainAccidental === "b") {
-        referenceNoteName = getNoteName(baseNote, -1);
-        targetSemitone = (chromaticSemitones - 1 + 12) % 12;
-      } else {
-        referenceNoteName = getNoteName(baseNote, 1);
-        targetSemitone = (chromaticSemitones + 1) % 12;
-      }
-    } else {
-      // No accidental immediately after: E-b, F+#, C, C+, D- → use natural
-      referenceNoteName = baseNote;
-      targetSemitone = chromaticSemitones;
-    }
+    // The reference key is the letter plus the sharps/flats written IMMEDIATELY
+    // after it: Ab--, Eb+, F#-, C#, F## → chromatic (Ab, Eb, F#, C#, F##);
+    // E-b, F+#, C, C+, D- → natural (E, F, C, C, D). The letter is never
+    // simplified: Cb stays Cb, F## stays F##.
+    const leadingAccidental = currentNoteName.slice(1).match(/^(##|bb|#|b)?/)![1] ?? "";
+    const accidentalSemitones: { [accidental: string]: number } = { "##": 2, "#": 1, "": 0, b: -1, bb: -2 };
+    const referenceNoteName = baseNote + leadingAccidental;
+    // Semitones above the letter's C, not wrapped: Cb is -1 and B# is 12, so the
+    // reference stays in the octave the English name's letter belongs to.
+    const targetSemitone = chromaticSemitones + accidentalSemitones[leadingAccidental];
 
     // Extract octave from englishName to calculate reference MIDI note
     // This respects Arabic musicological logic where microtonal modifiers indicate
@@ -114,9 +100,10 @@ export function calculateCentsDeviationWithReferenceNote(
       const octave = parseInt(octaveMatch[1], 10);
       referenceMidiNumber = (octave + 1) * 12 + targetSemitone;
     } else {
-      // Fallback: use octave from current MIDI number
-      const currentOctave = Math.floor(currentMidiNumber / 12);
-      referenceMidiNumber = currentOctave * 12 + targetSemitone;
+      // No octave in the name: nearest MIDI note in the target slot
+      const slot = ((targetSemitone % 12) + 12) % 12;
+      const below = slot + 12 * Math.floor((currentMidiNumber - slot) / 12);
+      referenceMidiNumber = currentMidiNumber - below <= 6 ? below : below + 12;
     }
 
     // Calculate deviation from the determined reference using frequency ratios
@@ -139,41 +126,6 @@ export function calculateCentsDeviationWithReferenceNote(
   const deviation = 1200 * Math.log2(currentFrequency / referenceFrequency);
 
   return { deviation, referenceNoteName };
-}
-
-/**
- * Helper function to get note names with accidentals, handling enharmonic equivalents.
- *
- * This function generates the correct note name given a base note and an accidental
- * direction, taking into account enharmonic equivalents (e.g., E# = F, Cb = B).
- *
- * @param baseNote - The base note letter (A, B, C, D, E, F, G)
- * @param accidental - The accidental direction (-1 for flat, +1 for sharp, 0 for natural)
- * @returns The correct note name with appropriate accidental
- */
-function getNoteName(baseNote: string, accidental: number): string {
-  // Return natural note if no accidental
-  if (accidental === 0) return baseNote;
-
-  // Handle special cases where flat/sharp names result in enharmonic equivalents
-  // This mapping ensures we use the most common enharmonic spelling
-  const noteMap: { [key: string]: { flat: string; sharp: string } } = {
-    C: { flat: "B", sharp: "C#" }, // Cb = B, C# = C#
-    D: { flat: "Db", sharp: "D#" }, // Db = Db, D# = D#
-    E: { flat: "Eb", sharp: "F" }, // Eb = Eb, E# = F
-    F: { flat: "E", sharp: "F#" }, // Fb = E, F# = F#
-    G: { flat: "Gb", sharp: "G#" }, // Gb = Gb, G# = G#
-    A: { flat: "Ab", sharp: "A#" }, // Ab = Ab, A# = A#
-    B: { flat: "Bb", sharp: "C" }, // Bb = Bb, B# = C
-  };
-
-  if (accidental < 0) {
-    // Return the flat version (or enharmonic equivalent)
-    return noteMap[baseNote]?.flat || `${baseNote}b`;
-  } else {
-    // Return the sharp version (or enharmonic equivalent)
-    return noteMap[baseNote]?.sharp || `${baseNote}#`;
-  }
 }
 
 /**

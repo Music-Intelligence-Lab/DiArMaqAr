@@ -8,16 +8,18 @@
  * This function respects Arabic musicological logic where microtonal modifiers indicate
  * what the pitch is a variant OF, not mathematical proximity to 12-EDO semitones.
  *
- * **Simple Logic**:
- * 1. Primary: Extract from englishName (e.g., "A2" → A, octave 2)
- * 2. Fallback: Parse referenceNoteName (e.g., "E-b3" → E, octave 3, ignore microtonal "-b")
- * 3. Last resort: Round midiNoteDecimal to nearest semitone
+ * **Logic**:
+ * 1. Slot: the 12-EDO slot comes from referenceNoteName when present, else from
+ *    englishName — the letter plus a # or b only when it follows the letter
+ *    immediately ("Ab--3" → Ab, "E-b3" → E)
+ * 2. Octave: anchored on englishName's natural letter and octave number, so
+ *    "B#2" resolves to C3 (48) and "Cb4" to B3 (59)
+ * 3. Last resort: round midiNoteDecimal to the nearest semitone
  *
  * **Example**:
- * - Input: { englishName: "A2", midiNoteDecimal: 45.0 }
- * - Base note: "A" (chromatic position 9)
- * - Octave: 2
- * - Reference: A2 = (2+1) * 12 + 9 = 45
+ * - Input: { englishName: "Bb--3", referenceNoteName: "Bb", midiNoteDecimal: 57.9 }
+ * - Slot: Bb (10); anchor: B3 = 59
+ * - Reference: nearest Bb to 59 = 58
  *
  * @param pitchClass - Pitch class object with englishName, referenceNoteName, and midiNoteDecimal
  * @returns The 12-EDO reference MIDI note number
@@ -28,59 +30,33 @@ export function calculateIpnReferenceMidiNote(pitchClass: any): number {
     'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11
   };
 
-  // Strategy 1: Extract from englishName (e.g., "A2", "Bb3", "C#4")
-  // This is the primary source of truth for Arabic musicological logic
-  const englishName = pitchClass.englishName;
-  if (englishName) {
-    // Match pattern: Base note (A-G), optional accidental (#/b), octave number
-    const englishMatch = englishName.match(/^([A-G])(#|b)?(\d+)$/);
-    if (englishMatch) {
-      const baseNote = englishMatch[1];
-      const accidental = englishMatch[2] || '';
-      const octave = parseInt(englishMatch[3], 10);
+  // The 12-EDO slot (0-11) a name points to: the letter plus the sharps/flats only
+  // when they follow the letter immediately ("Ab--" → Ab, "E-b" → E, "B#" → C,
+  // "F##" → G).
+  const slotOf = (name: string | undefined): number | null => {
+    const match = name?.match(/^([A-G])(##|bb|#|b)?/);
+    if (!match) return null;
+    const accidentalSemitones: { [accidental: string]: number } = { '##': 2, '#': 1, b: -1, bb: -2 };
+    const chroma = noteToChroma[match[1]] + (accidentalSemitones[match[2] ?? ''] ?? 0);
+    return ((chroma % 12) + 12) % 12;
+  };
 
-      let chroma = noteToChroma[baseNote];
-      if (accidental === '#') chroma += 1;
-      if (accidental === 'b') chroma -= 1;
-      chroma = ((chroma % 12) + 12) % 12; // normalize to 0-11
-
-      // Calculate MIDI note: (octave + 1) * 12 + chroma
-      // (octave + 1 because MIDI octave -1 starts at note 0)
-      return (octave + 1) * 12 + chroma;
-    }
+  // referenceNoteName (maqām-context, may be collision-adjusted) takes precedence
+  // over the slot implied by englishName.
+  const slot = slotOf(pitchClass.referenceNoteName) ?? slotOf(pitchClass.englishName);
+  if (slot === null) {
+    return Math.round(pitchClass.midiNoteDecimal);
   }
 
-  // Strategy 2: Parse referenceNoteName (fallback for when englishName not available or doesn't match)
-  // Extract base note, accidental, and octave, ignoring microtonal modifiers
-  const referenceNoteName = pitchClass.referenceNoteName;
-  if (referenceNoteName) {
-    // Match pattern: Base note (A-G), optional accidental (#/b), optional microtonal modifier, optional octave
-    // Examples: "E-b3" → E, no accidental, octave 3 | "C#3" → C, #, octave 3
-    const baseNoteMatch = referenceNoteName.match(/^([A-G])(#|b)?[^0-9]*(\d+)?/);
-    if (baseNoteMatch) {
-      const baseNote = baseNoteMatch[1];
-      const accidental = baseNoteMatch[2] || '';
-      const octaveStr = baseNoteMatch[3];
+  // Anchor the octave on the English name's natural letter (the octave number
+  // belongs to the letter, so B#2 sits beside B2 and Cb4 beside C4); fall back to
+  // the pitch itself when the name has no octave.
+  const englishMatch = pitchClass.englishName?.match(/^([A-G])[^0-9]*(\d+)$/);
+  const centre = englishMatch
+    ? (parseInt(englishMatch[2], 10) + 1) * 12 + noteToChroma[englishMatch[1]]
+    : pitchClass.midiNoteDecimal;
 
-      let chroma = noteToChroma[baseNote];
-      if (accidental === '#') chroma += 1;
-      if (accidental === 'b') chroma -= 1;
-      chroma = ((chroma % 12) + 12) % 12; // normalize to 0-11
-
-      // Determine the octave: use from note name if available, otherwise from midiNoteDecimal
-      if (octaveStr !== undefined) {
-        // Octave in note name (e.g., "E-b3" → octave 3)
-        const octave = parseInt(octaveStr, 10);
-        return (octave + 1) * 12 + chroma;
-      } else {
-        // Use octave from midiNoteDecimal
-        const currentMidi = pitchClass.midiNoteDecimal;
-        const currentOctave = Math.floor(currentMidi / 12);
-        return currentOctave * 12 + chroma;
-      }
-    }
-  }
-
-  // Strategy 3: Last resort - round to nearest semitone
-  return Math.round(pitchClass.midiNoteDecimal);
+  // Nearest MIDI note in that slot
+  const below = slot + 12 * Math.floor((centre - slot) / 12);
+  return centre - below <= 6 ? below : below + 12;
 }
