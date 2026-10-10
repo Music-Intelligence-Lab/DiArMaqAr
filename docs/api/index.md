@@ -45,7 +45,7 @@ Documented modal frameworks with historical source attribution.
 - `GET /maqamat/{idName}/availability` - Check maqām availability across tuning systems → [Details](./endpoints-reference#getMaqamAvailability)
 - `GET /maqamat/{idName}/transpositions` - List transpositions for a maqām → [Details](./endpoints-reference#listMaqamTranspositions)
 - `GET /maqamat/{idName}/compare` - Compare maqām data across multiple tuning systems → [Details](./endpoints-reference#compareMaqam)
-- `GET /maqamat/classification/12-pitch-class-sets` - Classify maqāmāt by 12-pitch-class sets → [Details](./endpoints-reference#classifyMaqamat12PitchClassSets)
+- `GET /maqamat/classification/12-pitch-class-sets` - Classify maqāmāt by 12-pitch-class sets → [Details](./endpoints-reference#classifyMaqamat12PitchClassSets) · [Transpositions that do not fit](#transpositions-that-do-not-fit-a-12-pitch-class-set)
 - `GET /maqamat/classification/maqam-pitch-class-sets` - Classify maqāmāt by maqam-based pitch class sets → [Details](./endpoints-reference#classifyMaqamatByMaqamPitchClassSets)
 
 ### Ajnās
@@ -98,6 +98,79 @@ Modulation routes between maqāmāt using al-Shawwā's 1946 modulation guideline
 
 **Endpoints (1):**
 - `GET /modulation-routes` - Find modulation routes between maqāmāt → [Details](./endpoints-reference#findModulationRoutes)
+
+---
+
+## Transpositions that do not fit a 12-pitch-class set {#transpositions-that-do-not-fit-a-12-pitch-class-set}
+
+`GET /maqamat/classification/12-pitch-class-sets` groups maqām transpositions into 12-pitch-class sets. A few transpositions cannot form one. For what that means, see [Maqāmāt that cannot form a 12-pitch-class set](/guide/data-export#maqamat-that-cannot-form-a-12-pitch-class-set). The endpoint never skips these transpositions silently. It reports each one, with the key and the pitch classes that need it.
+
+### Counts and lists
+
+- Every response includes `statistics.incompatibleMaqamatCount`, the number of transpositions in this tuning system, from this starting note, that do not fit.
+- `includeIncompatible=true` adds the full list in `incompatibleMaqamat`, with its count in `incompatibleMaqamatCount`.
+
+### Each transposition that does not fit
+
+| Field | Description |
+|-------|-------------|
+| `compatible` | Always `false` |
+| `reason` | Always `"shared_key"`: two or more pitch classes need the same key, and the keys next to it are taken. This replaces the former `"duplicate_ipn_reference"`. |
+| `explanation` | One plain sentence, e.g. `"ʿirāq (B-b2) and nīm kawasht (B-2) both need the B key, and the keys next to it are taken."` |
+| `clashes` | One entry for each key that more than one pitch class needs |
+| `clashes[].key` | The key, e.g. `"B"` |
+| `clashes[].notes` | The notes that need that key. Each note has `noteName` (URL-safe), `displayName`, `englishName`, `cents` and `centsInOctave`. With `includeArabic=true`, each note also has `displayNameAr`. |
+
+`centsInOctave` is the note's position above the transposition's tonic, with the octave ignored. It is the value the 12-pitch-class set compares. Two notes in the same clash with different `centsInOctave` values are different pitch classes competing for one key.
+
+### Filtering by maqām (`maqamId`)
+
+- **Some transpositions fit:** the response has `compatible: true` and returns their sets as before. It adds `incompatibleTranspositions`, listing the transpositions that do not fit.
+- **No transposition fits:** the response is still `200`. It has `compatible: false`, `sets: []`, `incompatibleTranspositions`, and an `explanation` of the form `"No transposition of maqām X fits a 12-pitch-class set in <tuning system> from <starting note>."`
+- **The maqām cannot be built in this tuning system from this starting note** (the tuning system lacks some of its notes): the response is still `200`, with `compatible: false`, `sets: []`, an empty `incompatibleTranspositions` and an `explanation` saying so.
+- **The maqām does not exist:** the response is `404`.
+
+`maqamId` accepts a maqām's idName, its numeric id, or the idName of one of its transpositions. It matches exactly: `maqam_hijaz` does not also match `maqam_hijaz_kar`.
+
+### Example
+
+In al-Ṣabbāgh (1954) from rāst, maqām faraḥnāk (al-Ḥilū) on qarār segāh does not fit. ʿirāq (B-b2) and nīm kawasht (B-2) are 29.5 cents apart, and both need the B key. The keys next to it are taken: nīm ʿajam is on Bb and rāst is on C.
+
+```bash
+curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=alsabbagh_1954&startingNote=rast&maqamId=maqam_farahnak_alhilu"
+```
+
+The entry for that transposition in `incompatibleTranspositions`:
+
+```json
+{
+  "maqam": {
+    "id": "145",
+    "idName": "maqam_farahnak_alhilu",
+    "displayName": "maqām faraḥnāk (al-Ḥilū)"
+  },
+  "transposition": {
+    "idName": "maqam_farahnak_alhilu_alqarar_segah",
+    "displayName": "maqām faraḥnāk (al-Ḥilū) al-qarār segāh",
+    "isTransposed": true,
+    "isBaseForm": false
+  },
+  "compatible": false,
+  "reason": "shared_key",
+  "explanation": "ʿirāq (B-b2) and nīm kawasht (B-2) both need the B key, and the keys next to it are taken.",
+  "clashes": [
+    {
+      "key": "B",
+      "notes": [
+        { "noteName": "iraq", "displayName": "ʿirāq", "englishName": "B-b2", "cents": -141.2, "centsInOctave": 701.9 },
+        { "noteName": "nim_kawasht", "displayName": "nīm kawasht", "englishName": "B-2", "cents": -111.7, "centsInOctave": 731.4 }
+      ]
+    }
+  ]
+}
+```
+
+The two `centsInOctave` values, 701.9 and 731.4, differ by 29.5 cents. They are two pitch classes, and both need the B key.
 
 ---
 
