@@ -1333,31 +1333,18 @@ export async function GET(
       }),
     };
 
-    // Apply sequential reference note logic to maqam pitch classes.
-    //
-    // We always pass the combined ascending + descending pitch classes so the
-    // canonical pass inside renderPitchClassSpellings can detect diatonic-slot
-    // collisions across both directions — e.g., for asymmetric maqāmāt where
-    // ascending uses segāh (E-b) and descending uses nīm būselīk (E-3), both
-    // competing for the natural-E slot. The maqām-context rule (higher-cents
-    // stays on natural, lower-cents moves to the flat accidental) needs
-    // cross-direction visibility to fire.
+    // Spell each direction on its own: ascending and descending sequences are
+    // independent here, so an ascending degree and a descending degree may share
+    // a 12-EDO key. Only 12-pitch-class sets combine the two directions.
     const { renderPitchClassSpellings } = await import("@/functions/renderPitchClassIpnSpellings");
 
-    const allMaqamPitchClasses = [
-      ...selectedTransposition.ascendingPitchClasses,
-      ...selectedTransposition.descendingPitchClasses,
-    ];
-    
     const ascendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
       selectedTransposition.ascendingPitchClasses,
-      true,
-      allMaqamPitchClasses
+      true
     );
     const descendingPitchClassesWithSequentialRefs = renderPitchClassSpellings(
       selectedTransposition.descendingPitchClasses,
-      false,
-      allMaqamPitchClasses
+      false
     );
 
     // Always include pitch data

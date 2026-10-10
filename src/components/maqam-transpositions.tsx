@@ -756,18 +756,10 @@ const MaqamTranspositions: React.FC = () => {
     const openRowSpan = isSymmetric ? 1 + detailRowsPerBlock : 1 + detailRowsPerBlock * 2 + 1;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
-      // Always pass the combined ascending + descending pitch classes so cross-
-      // direction diatonic-slot collisions (e.g. segāh vs nīm būselīk both on E
-      // in asymmetric maqāmāt) are detected and the maqām-theory displacement
-      // rule fires in renderPitchClassSpellings.
-      const allMaqamPitchClasses = [
-        ...maqam.ascendingPitchClasses,
-        ...maqam.descendingPitchClasses,
-      ];
-
-      // Apply sequential English name spellings for melodic sequences
-      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true, allMaqamPitchClasses);
-      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false, allMaqamPitchClasses);
+      // Spell each direction on its own: ascending and descending sequences are
+      // independent here (only 12-pitch-class sets combine them).
+      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true);
+      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false);
 
       let ascendingIntervals = maqam.ascendingPitchClassIntervals;
       let descendingIntervals = maqam.descendingPitchClassIntervals;

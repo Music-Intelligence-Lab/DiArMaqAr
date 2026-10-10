@@ -293,24 +293,10 @@ export async function GET(
 
         if (includeMaqamDegrees) {
           if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-            // Always pass combined asc+desc so cross-direction diatonic-slot
-            // collisions (e.g. bayyātī ʿushayrān E-b vs E-3) trigger the
-            // maqām-theory displacement rule in renderPitchClassSpellings.
-            const allMaqamPitchClasses = [
-              ...tahlil.ascendingPitchClasses,
-              ...tahlil.descendingPitchClasses,
-            ];
-
-            const renderedAscending = renderPitchClassSpellings(
-              tahlil.ascendingPitchClasses,
-              true,
-              allMaqamPitchClasses
-            );
-            const renderedDescending = renderPitchClassSpellings(
-              tahlil.descendingPitchClasses,
-              false,
-              allMaqamPitchClasses
-            );
+            // Spell each direction on its own: ascending and descending are
+            // independent outside 12-pitch-class sets.
+            const renderedAscending = renderPitchClassSpellings(tahlil.ascendingPitchClasses, true);
+            const renderedDescending = renderPitchClassSpellings(tahlil.descendingPitchClasses, false);
 
             item.maqamDegrees = {
               ascending: renderedAscending.map((pc: any) => ({
@@ -338,23 +324,9 @@ export async function GET(
             const tonicNoteName = t.ascendingPitchClasses[0].noteName;
 
             if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-              // See comment on tahlil render above — always pass combined
-              // asc+desc so cross-direction collisions fire the maqām rule.
-              const allMaqamPitchClasses = [
-                ...t.ascendingPitchClasses,
-                ...t.descendingPitchClasses,
-              ];
-
-              const renderedAscending = renderPitchClassSpellings(
-                t.ascendingPitchClasses,
-                true,
-                allMaqamPitchClasses
-              );
-              const renderedDescending = renderPitchClassSpellings(
-                t.descendingPitchClasses,
-                false,
-                allMaqamPitchClasses
-              );
+              // Each direction on its own, as for the taḥlīl above.
+              const renderedAscending = renderPitchClassSpellings(t.ascendingPitchClasses, true);
+              const renderedDescending = renderPitchClassSpellings(t.descendingPitchClasses, false);
 
               return {
                 tonic: buildIdentifierNamespace(
