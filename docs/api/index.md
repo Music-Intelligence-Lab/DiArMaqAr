@@ -101,6 +101,51 @@ Modulation routes between maqāmāt using al-Shawwā's 1946 modulation guideline
 
 ---
 
+## Identifiers of transpositions {#identifiers-of-transpositions}
+
+A transposed maqām or jins has one `idName`, and every endpoint returns the same one. It is the base `idName`, then `_al_`, then the tonic's note-name `idName`:
+
+| Display name | `idName` |
+|---|---|
+| maqām rāst al-qarār chahārgāh | `maqam_rast_al_qarar_chahargah` |
+| jins segāh al-tīk ḥiṣār | `jins_segah_al_tik_hisar` |
+| maqām ḥijāz (al-Ṣabbāgh/ʿAbbās) al-saham/ramal tūtī | `maqam_hijaz_alsabbagh_abbas_al_saham_ramal_tuti` |
+
+The separator is always `_al_`. The "al" inside a base name is closed up, so it never looks like a separator: `maqam_hijaz_alsabbagh_abbas` and `jins_buselik_alhilu` are base names, not transpositions.
+
+The taḥlīl is its bare `idName` (`maqam_rast`). A rendering an octave away from the taḥlīl, such as maqām rāst on qarār rāst, is not a taṣwīr (`isTransposed: false`, `isBaseForm: false`), but it still names its tonic: `maqam_rast_al_qarar_rast`.
+
+So the `idName` in a maqām's `availableTranspositions` list is exactly the `maqam.idName` you get back when you request that transposition. The same `idName` appears in:
+
+- each entry of `GET /maqamat/{idName}/transpositions` and `GET /ajnas/{idName}/transpositions`;
+- each entry of the `transpositions` array that `includeTranspositions=true` adds to `GET /tuning-systems/{id}/{startingNote}/maqamat` and `.../ajnas`;
+- the 12-pitch-class-set and maqām-pitch-class-set classifications;
+- ajnās named inside maqām responses;
+- modulation routes.
+
+A classification set is named after its source transposition, so its `setIdName` is that transposition's `idName` plus `_set` (`maqam_hisar_al_qarar_dugah_set`).
+
+### Using a transposed `idName` in the path
+
+A transposed `idName` can go straight into the path. It means the same as the base `idName` with the tonic given separately:
+
+| Path | Same as |
+|---|---|
+| `/maqamat/maqam_rast_al_qarar_chahargah` | `/maqamat/maqam_rast?transposeTo=qarar_chahargah` |
+| `/maqamat/maqam_rast_al_nawa/compare` | `/maqamat/maqam_rast/compare?transposeTo=nawa` |
+| `/maqamat/maqam_rast_al_nawa/availability` | `/maqamat/maqam_rast/availability?transpositionNoteName=nawa` |
+| `/ajnas/jins_segah_al_tik_hisar` | `/ajnas/jins_segah?transposeTo=tik_hisar` |
+
+You still pass the usual tuning-system and starting-note parameters. Whether a tonic is reachable depends on the tuning system and starting note, so a transposed `idName` that cannot be built there gets the same 400 as the matching `transposeTo` would.
+
+Name the tonic once. A transposed `idName` together with a `transposeTo` (or `transpositionNoteName`) for a different tonic is a 400. Giving the same tonic both ways is fine.
+
+`/maqamat/{idName}/transpositions` and `/ajnas/{idName}/transpositions` list every transposition, so they take the base `idName` only. A transposed `idName` there is a 400 whose `hint` names the base `idName` to use.
+
+**Older spelling.** Until October 2026, some endpoints closed up the separator, spelling maqām rāst on qarār chahārgāh as `maqam_rast_alqarar_chahargah`. These were the base response's `availableTranspositions`, the compare endpoints, both classification endpoints (including set IDs), and modulation routes. Separately, a request with `transposeTo` set to a note an octave away from the taḥlīl (`transposeTo=qarar_rast` for maqām rāst) used to return the bare base `idName` and display name; it now returns `maqam_rast_al_qarar_rast`, matching the rest of the API. If you stored one of the closed-up IDs, it is still accepted wherever an `idName` is: in the path of every `/maqamat/{idName}` and `/ajnas/{idName}` route, and in the `maqamId` and `setId` filters on the classification endpoints. It is read as the current spelling. Responses use only the current spelling.
+
+---
+
 ## Transpositions that do not fit a 12-pitch-class set {#transpositions-that-do-not-fit-a-12-pitch-class-set}
 
 `GET /maqamat/classification/12-pitch-class-sets` groups maqām transpositions into 12-pitch-class sets. A few transpositions cannot form one. For what that means, see [Maqāmāt that cannot form a 12-pitch-class set](/guide/data-export#maqamat-that-cannot-form-a-12-pitch-class-set). The endpoint never skips these transpositions silently. It reports each one, with the key and the pitch classes that need it.
@@ -130,7 +175,7 @@ Modulation routes between maqāmāt using al-Shawwā's 1946 modulation guideline
 - **The maqām cannot be built in this tuning system from this starting note** (the tuning system lacks some of its notes): the response is still `200`, with `compatible: false`, `sets: []`, an empty `incompatibleTranspositions` and an `explanation` saying so.
 - **The maqām does not exist:** the response is `404`.
 
-`maqamId` accepts a maqām's idName, its numeric id, or the idName of one of its transpositions. It matches exactly: `maqam_hijaz` does not also match `maqam_hijaz_kar`.
+`maqamId` accepts a maqām's idName, its numeric id, or the idName of one of its transpositions. It matches exactly: `maqam_hijaz` does not also match `maqam_hijaz_kar`. The older closed-up spelling of a transposition (`maqam_rast_alqarar_chahargah`) is also accepted. See [Identifiers of transpositions](#identifiers-of-transpositions).
 
 ### Example
 
@@ -150,7 +195,7 @@ The entry for that transposition in `incompatibleTranspositions`:
     "displayName": "maqām faraḥnāk (al-Ḥilū)"
   },
   "transposition": {
-    "idName": "maqam_farahnak_alhilu_alqarar_segah",
+    "idName": "maqam_farahnak_alhilu_al_qarar_segah",
     "displayName": "maqām faraḥnāk (al-Ḥilū) al-qarār segāh",
     "isTransposed": true,
     "isBaseForm": false

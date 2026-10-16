@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { resolveEntityId, standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
@@ -33,7 +34,7 @@ export async function GET(
   try {
     const { id: maqamId } = await params;
     const { searchParams } = new URL(request.url);
-    const transpositionNoteName = searchParams.get("transpositionNoteName");
+    let transpositionNoteName = searchParams.get("transpositionNoteName");
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
@@ -75,9 +76,8 @@ export async function GET(
     const tuningSystems = getTuningSystems();
     
     // Find the maqām by ID or name
-    const maqam = maqamatData.find(
-      (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
-    );
+    const resolvedId = resolveEntityId(maqamId, maqamatData);
+    const maqam = resolvedId?.entity;
 
     if (!maqam) {
       return addCorsHeaders(
@@ -90,6 +90,11 @@ export async function GET(
         )
       );
     }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(maqamId, resolvedId?.tonicIdName, "transpositionNoteName", transpositionNoteName);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transpositionNoteName = pathTonic.tonic;
 
     // Validate transpositionNoteName if provided
     if (transpositionNoteName !== null && transpositionNoteName.trim() === "") {

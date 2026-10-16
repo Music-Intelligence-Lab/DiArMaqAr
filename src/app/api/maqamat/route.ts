@@ -231,7 +231,7 @@ export async function GET(request: Request) {
       const isOctaveRepeating = numberOfPitchClasses <= 7;
 
       // Generate idName (standardized URL-safe version - always transliterated)
-      const idName = standardizeText(maqam.getName());
+      const idName = maqam.getIdName();
       
       // Display name (always transliterated)
       const displayName = maqam.getName();

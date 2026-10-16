@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -198,7 +199,7 @@ export async function GET(
     const startingNotesParam = searchParams.get("startingNotes");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
-    const transposeToNote = searchParams.get("transposeTo");
+    let transposeToNote = searchParams.get("transposeTo");
 
     // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
     // default branch and silently returns the bare note-name shape instead of erroring.
@@ -311,7 +312,7 @@ export async function GET(
           const tonicNoteName = t.ascendingPitchClasses[0].noteName;
           const fullMaqamName = t.name;
           return {
-            idName: standardizeText(fullMaqamName),
+            idName: entityToken(t),
             displayName: fullMaqamName,
             ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
             tonic: {
@@ -461,6 +462,31 @@ export async function GET(
       );
     }
 
+    const maqamatData = getMaqamat();
+    const tuningSystems = getTuningSystems();
+    const ajnas = getAjnas();
+    
+    // Find the maqām
+    const resolvedId = resolveEntityId(maqamId, maqamatData);
+    const maqam = resolvedId?.entity;
+
+    if (!maqam) {
+      return addCorsHeaders(
+        NextResponse.json(
+          { 
+            error: `Maqām '${maqamId}' not found`,
+            hint: "Use /api/maqamat to see all available maqāmāt"
+          },
+          { status: 404 }
+        )
+      );
+    }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(maqamId, resolvedId?.tonicIdName, "transposeTo", transposeToNote);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transposeToNote = pathTonic.tonic;
+
     // Build Cartesian product of tuningSystems × startingNotes in user-supplied order.
     // Outer loop = tuningSystems, inner loop = startingNotes, so the result list is:
     //   TS1×SN1, TS1×SN2, …, TS1×SNm, TS2×SN1, …, TSn×SNm
@@ -477,27 +503,6 @@ export async function GET(
           ...(transposeToNote && { transposeTo: transposeToNote }),
         });
       }
-    }
-
-    const maqamatData = getMaqamat();
-    const tuningSystems = getTuningSystems();
-    const ajnas = getAjnas();
-    
-    // Find the maqām
-    const maqam = maqamatData.find(
-      (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
-    );
-
-    if (!maqam) {
-      return addCorsHeaders(
-        NextResponse.json(
-          { 
-            error: `Maqām '${maqamId}' not found`,
-            hint: "Use /api/maqamat to see all available maqāmāt"
-          },
-          { status: 404 }
-        )
-      );
     }
 
     // Process each comparison
@@ -632,14 +637,14 @@ export async function GET(
       const comparisonMaqamNamespace = buildEntityNamespace(
         {
           id: maqam.getId(),
-          idName: isTransposed ? entityToken(selectedTransposition) : maqam.getIdName(),
-          displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
+          idName: entityToken(selectedTransposition),
+          displayName: selectedTransposition.name,
         },
         {
           version: maqam.getVersion(),
           inArabic,
           displayNameAr: inArabic
-            ? getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName())
+            ? getMaqamNameDisplayAr(selectedTransposition.name)
             : undefined,
           extras: {
             // Distinct from isTransposed: an octave-register sibling of the

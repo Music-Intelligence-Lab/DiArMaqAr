@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -272,7 +273,7 @@ export async function GET(
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataTypeRaw = searchParams.get("pitchClassDataType");
     const includeIntervals = searchParams.get("includeIntervals") === "true";
-    const transposeToNote = searchParams.get("transposeTo");
+    let transposeToNote = searchParams.get("transposeTo");
     const showOptions = searchParams.get("options") === "true";
 
     // Get cents tolerance parameter
@@ -377,9 +378,8 @@ export async function GET(
       );
     }
     
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
 
     if (!jins) {
       return addCorsHeaders(
@@ -392,6 +392,11 @@ export async function GET(
         )
       );
     }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(jinsId, resolvedId?.tonicIdName, "transposeTo", transposeToNote);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transposeToNote = pathTonic.tonic;
 
     // Validate that required parameters are not empty strings
     if (tuningSystemId !== null && tuningSystemId.trim() === "") {
@@ -463,8 +468,8 @@ export async function GET(
             {
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
-              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
-              availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jinsId}/availability`)
+              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/ajnas/${jins.getIdName()}/availability to see available tuning systems`,
+              availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}/availability`)
             },
             { status: 400 }
           )
@@ -591,11 +596,11 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            getCanonicalApiUrl(`/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
+            getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
             ...(transposeOptions !== null && transposeOptions.length > 1
-              ? [getCanonicalApiUrl(`/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}`)]
+              ? [getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}`)]
               : []),
-            `/api/ajnas/${jinsId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all`
+            `/api/ajnas/${jins.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all`
           ]
         })
       );
@@ -607,8 +612,8 @@ export async function GET(
         NextResponse.json(
           {
             error: "tuningSystem parameter is required",
-            hint: `Use /api/ajnas/${jinsId}/availability to see available tuning systems`,
-            availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jinsId}/availability`)
+            hint: `Use /api/ajnas/${jins.getIdName()}/availability to see available tuning systems`,
+            availabilityUrl: getCanonicalApiUrl(`/api/ajnas/${jins.getIdName()}/availability`)
           },
           { status: 400 }
         )
@@ -684,7 +689,7 @@ export async function GET(
         NextResponse.json(
           {
             error: `Jins '${jins.getName()}' cannot be realized in tuning system '${tuningSystemId}' with starting note '${selectedStartingNote}'`,
-            hint: `Use /api/ajnas/${jinsId}/availability to see compatible tuning systems`
+            hint: `Use /api/ajnas/${jins.getIdName()}/availability to see compatible tuning systems`
           },
           { status: 422 }
         )
@@ -744,8 +749,8 @@ export async function GET(
     const jinsNamespace = buildEntityNamespace(
       {
         id: jins.getId(),
-        idName: isTransposed ? entityToken(selectedTransposition) : jins.getIdName(),
-        displayName: isTransposed ? selectedTransposition.name : jins.getName(),
+        idName: entityToken(selectedTransposition),
+        displayName: selectedTransposition.name,
       },
       {
         version: jins.getVersion(),
@@ -754,7 +759,7 @@ export async function GET(
         extras: { isBaseForm: selectedTransposition.isBaseForm },
         inArabic,
         displayNameAr: inArabic
-          ? getJinsNameDisplayAr(isTransposed ? selectedTransposition.name : jins.getName())
+          ? getJinsNameDisplayAr(selectedTransposition.name)
           : undefined,
       }
     );

@@ -1,4 +1,4 @@
-import NoteName from "@/models/NoteName";
+import NoteName, { allNotes } from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
 import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves, Sayr } from "@/models/Maqam";
@@ -142,11 +142,88 @@ export function createEntityTokenFromName(name: string, tonicNoteName: string): 
  * This is what every export, API response and URL names a transposed entity
  * by — call it rather than standardizing the display name, which would close up
  * the article and yield "maqam_rast_alnawa" instead of "maqam_rast_al_nawa".
+ *
+ * The taḥlīl is its bare idName. Every other rendering names its tonic — a
+ * taṣwīr (maqām rāst on nawā) and an octave-register sibling (maqām rāst on
+ * qarār rāst) alike, since both carry " al-<tonic>" in their display name.
  */
 export function entityToken(entity: { name: string; ascendingPitchClasses: PitchClass[] } | { name: string; jinsPitchClasses: PitchClass[] }): string {
   const tonic = "ascendingPitchClasses" in entity ? entity.ascendingPitchClasses[0]?.noteName : entity.jinsPitchClasses[0]?.noteName;
 
   return createEntityTokenFromName(entity.name, tonic ?? "");
+}
+
+const NOTE_NAME_ID_NAMES = new Set(allNotes.map((noteName) => standardizeText(noteName)));
+
+/**
+ * Reads a maqām or jins identifier sent by a client, accepting the closed-up
+ * spelling of a transposition as well as the canonical one.
+ *
+ * Some endpoints used to spell maqām rāst on chahārgāh "maqam_rast_alchahargah"
+ * rather than "maqam_rast_al_chahargah", and a client may have stored that.
+ * It is recognised only as an exact base idName, then "al", then an exact note
+ * name — so the article inside a base name (maqam_hijaz_alsabbagh_abbas,
+ * jins_buselik_alhilu) is never read as a tonic.
+ *
+ * Returns the canonical identifier, or the standardized input unchanged when it
+ * names no transposition of the given bases — the caller decides what an
+ * unknown id means.
+ */
+export function canonicalEntityIdName(idName: string, baseIdNames: readonly string[]): string {
+  const token = standardizeText(idName);
+  if (baseIdNames.includes(token)) return token;
+
+  // Longest first: maqam_hijaz_kar must be tried before maqam_hijaz.
+  const bases = [...baseIdNames].sort((a, b) => b.length - a.length);
+  for (const base of bases) {
+    const closedUpPrefix = `${base}_al`;
+    if (!token.startsWith(closedUpPrefix)) continue;
+
+    const rest = token.slice(closedUpPrefix.length);
+    const tonic = rest.startsWith("_") ? rest.slice(1) : rest;
+    if (NOTE_NAME_ID_NAMES.has(tonic)) return createEntityToken(base, tonic);
+  }
+
+  return token;
+}
+
+/**
+ * Resolves an identifier sent by a client to the maqām or jins it names, and to
+ * the tonic it is transposed to (absent for the taḥlīl).
+ *
+ *   "1", "maqam_rast"            → maqām rāst
+ *   "maqam_rast_al_nawa"         → maqām rāst, tonic "nawa"
+ *   "maqam_rast_alnawa"          → the same (older closed-up spelling)
+ *
+ * The tonic is returned as written, unchecked: whether the maqām can sit on it
+ * depends on the tuning system, which only the caller knows. Returns null when
+ * the identifier names no maqām or jins.
+ */
+export function resolveEntityId<T extends { getId(): string; getIdName(): string }>(
+  id: string,
+  entities: readonly T[]
+): { entity: T; tonicIdName?: string } | null {
+  const byId = entities.find((candidate) => candidate.getId() === id);
+  if (byId) return { entity: byId };
+
+  const token = canonicalEntityIdName(id, entities.map((candidate) => candidate.getIdName()));
+  const separatorIndex = token.indexOf(TONIC_SEPARATOR);
+  const idName = separatorIndex === -1 ? token : token.slice(0, separatorIndex);
+
+  const entity = entities.find((candidate) => candidate.getIdName() === idName);
+  if (!entity) return null;
+  if (separatorIndex === -1) return { entity };
+
+  return { entity, tonicIdName: token.slice(separatorIndex + TONIC_SEPARATOR.length) };
+}
+
+/**
+ * Whether a maqām transposition answers a maqām id query. The id names either
+ * the maqām (every transposition of it) or one transposition. Matched exactly,
+ * so maqam_hijaz does not also match maqam_hijaz_kar.
+ */
+export function matchesMaqamId(baseMaqamIdName: string, transpositionIdName: string | undefined, maqamIdName: string): boolean {
+  return baseMaqamIdName === maqamIdName || transpositionIdName === maqamIdName;
 }
 
 export interface MergedJins {

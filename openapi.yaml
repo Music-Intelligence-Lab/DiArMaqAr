@@ -21,6 +21,17 @@ info:
     `GET https://diarmaqar.net/api/maqamat`, `GET https://diarmaqar.net/api/ajnas`)
     or an `availability` endpoint.
 
+    Transposed maqāmāt and ajnās: the `idName` is the base `idName`, then
+    `_al_`, then the tonic's note-name `idName`. maqām rāst on qarār chahārgāh
+    is `maqam_rast_al_qarar_chahargah`, and jins segāh on tīk ḥiṣār is
+    `jins_segah_al_tik_hisar`. A rendering an octave away from the taḥlīl
+    (maqām rāst on qarār rāst) names its tonic the same way. Every endpoint
+    uses this one spelling, and a transposed `idName` also works as the path
+    segment of `/maqamat/{idName}` and `/ajnas/{idName}` (meaning the same as the
+    base `idName` with `transposeTo`). Some endpoints used to return a closed-up
+    spelling (`maqam_rast_alqarar_chahargah`); it is still accepted on input, in
+    those paths and in the classification `maqamId` and `setId` filters.
+
   contact:
     name: Khyam Allami
     email: ka109@aub.edu.lb
@@ -457,7 +468,7 @@ paths:
           in: path
           required: true
           description: |
-            URL-safe maqām identifier.
+            URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
             
             **Special value**: Use `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note. When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
           schema:
@@ -1270,7 +1281,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe maqām identifier
+          description: |
+            URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
           schema:
             type: string
           example: "maqam_bayyat"
@@ -1943,7 +1955,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe maqām identifier
+          description: |
+            URL-safe maqām identifier: A maqām's idName (`maqam_rast`) or its numeric id. This route lists every transposition of the maqām, so the idName of a single transposition (`maqam_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
           schema:
             type: string
           # Matches the response example and self link below. ḥijāz, the previous
@@ -2034,6 +2047,16 @@ paths:
                         items:
                           type: object
                           properties:
+                            idName:
+                              type: string
+                              description: This transposition's own identifier, also accepted as the path segment of /maqamat/{idName}
+                              example: "maqam_rast_al_chahargah"
+                            displayName:
+                              type: string
+                              example: "maqām rāst al-chahārgāh"
+                            displayNameAr:
+                              type: string
+                              description: Arabic display name (only with inArabic=true)
                             tonic:
                               $ref: '#/components/schemas/IdentifierReference'
                             pitchClass:
@@ -2106,6 +2129,8 @@ paths:
                     },
                     "detailed": [
                       {
+                        "idName": "maqam_rast_al_qarar_chahargah",
+                        "displayName": "maqām rāst al-qarār chahārgāh",
                         "tonic": {
                           "idName": "qarar_chahargah",
                           "displayName": "qarār chahārgāh"
@@ -2147,6 +2172,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "maqam_rast_al_chahargah",
+                        "displayName": "maqām rāst al-chahārgāh",
                         "tonic": {
                           "idName": "chahargah",
                           "displayName": "chahārgāh"
@@ -2188,6 +2215,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "maqam_rast_al_mahuran",
+                        "displayName": "maqām rāst al-māhūrān",
                         "tonic": {
                           "idName": "mahuran",
                           "displayName": "māhūrān"
@@ -2289,7 +2318,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe maqām identifier
+          description: |
+            URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
           schema:
             type: string
           example: "maqam_bayyat"
@@ -3588,13 +3618,13 @@ paths:
           example: "cents"
         - name: setId
           in: query
-          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
+          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). A set is named after its source transposition, so a set ID is that transposition's idName plus '_set' (e.g., 'maqam_hisar_al_qarar_dugah_set'); the older closed-up spelling ('maqam_hisar_alqarar_dugah_set') is also accepted"
           schema:
             type: string
           example: "maqam_rast_set"
         - name: maqamId
           in: query
-          description: "Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (URL-safe, diacritics-insensitive)"
+          description: "Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). URL-safe, diacritics-insensitive"
           schema:
             type: string
           example: "maqam_rast"
@@ -3923,7 +3953,7 @@ paths:
                           idName: "maqam_farahnak_alhilu"
                           displayName: "maqām faraḥnāk (al-Ḥilū)"
                         transposition:
-                          idName: "maqam_farahnak_alhilu_alqarar_segah"
+                          idName: "maqam_farahnak_alhilu_al_qarar_segah"
                           displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh"
                           isTransposed: true
                           isBaseForm: false
@@ -3962,7 +3992,7 @@ paths:
                       totalCompatibleMaqamat: 377
                       incompatibleMaqamatCount: 2
                     sets:
-                      - setIdName: "maqam_hisar_alqarar_dugah_set"
+                      - setIdName: "maqam_hisar_al_qarar_dugah_set"
                         setDisplayName: "maqām ḥiṣār al-qarār dūgāh set"
                     incompatibleTranspositions:
                       - maqam:
@@ -3970,7 +4000,7 @@ paths:
                           idName: "maqam_farahnak_alhilu"
                           displayName: "maqām faraḥnāk (al-Ḥilū)"
                         transposition:
-                          idName: "maqam_farahnak_alhilu_alqarar_tik_hisar_shuri"
+                          idName: "maqam_farahnak_alhilu_al_qarar_tik_hisar_shuri"
                           displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār tīk ḥiṣār/shūrī"
                           isTransposed: true
                           isBaseForm: false
@@ -3991,9 +4021,9 @@ paths:
                                 cents: 386.3
                                 centsInOctave: 731.4
                 maqamFitsNoSet:
-                  summary: Maqām filter, nothing fits (maqamId=maqam_farahnak_alhilu_alqarar_segah, trimmed)
+                  summary: Maqām filter, nothing fits (maqamId=maqam_farahnak_alhilu_al_qarar_segah, trimmed)
                   value:
-                    maqamId: "maqam_farahnak_alhilu_alqarar_segah"
+                    maqamId: "maqam_farahnak_alhilu_al_qarar_segah"
                     compatible: false
                     explanation: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh does not fit a 12-pitch-class set in al-Ṣabbāgh (1954) Contemporary Arabic Tuning 24-Tone from rāst."
                     statistics:
@@ -4007,7 +4037,7 @@ paths:
                           idName: "maqam_farahnak_alhilu"
                           displayName: "maqām faraḥnāk (al-Ḥilū)"
                         transposition:
-                          idName: "maqam_farahnak_alhilu_alqarar_segah"
+                          idName: "maqam_farahnak_alhilu_al_qarar_segah"
                           displayName: "maqām faraḥnāk (al-Ḥilū) al-qarār segāh"
                           isTransposed: true
                           isBaseForm: false
@@ -4193,13 +4223,13 @@ paths:
           example: "true"
         - name: setId
           in: query
-          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set')"
+          description: "Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). A set is named after its source transposition, so a set ID is that transposition's idName plus '_set' (e.g., 'maqam_hisar_al_qarar_dugah_set'); the older closed-up spelling ('maqam_hisar_alqarar_dugah_set') is also accepted"
           schema:
             type: string
           example: "maqam_rast_set"
         - name: maqamId
           in: query
-          description: "Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast')"
+          description: "Filter by maqām to find all sets containing it: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). Matched exactly, so 'maqam_hijaz' does not also match 'maqam_hijaz_kar'"
           schema:
             type: string
           example: "maqam_rast"
@@ -4580,8 +4610,10 @@ paths:
           required: false
           description: |
             When true, each maqām in data includes a `transpositions` array with the other transpositions
-            (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending
-            note name idNames for that transposed position.
+            (excluding the base tonic). Each transposition has its own `idName` and `displayName`
+            (`maqam_rast_al_chahargah`, "maqām rāst al-chahārgāh"; plus `displayNameAr` with `inArabic=true`),
+            its `tonic`, and `maqamDegrees` with ascending/descending note name idNames for that transposed
+            position. The `idName` works as a path segment: `/maqamat/maqam_rast_al_chahargah`.
           schema:
             type: string
             enum: ["true", "false"]
@@ -4901,8 +4933,10 @@ paths:
           required: false
           description: |
             When true, each jins in data includes a `transpositions` array with the other transpositions
-            (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has `tonic` and
-            `jinsDegrees` for that transposed position.
+            (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has its own
+            `idName` and `displayName` (`jins_rast_al_nawa`, "jins rāst al-nawā"; plus `displayNameAr` with
+            `inArabic=true`), its `tonic`, and `jinsDegrees` for that transposed position. The `idName` works
+            as a path segment: `/ajnas/jins_rast_al_nawa`.
           schema:
             type: string
             enum: ["true", "false"]
@@ -5692,7 +5726,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe jins identifier
+          description: |
+            URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
           schema:
             type: string
           examples:
@@ -6110,7 +6145,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe jins identifier
+          description: |
+            URL-safe jins identifier: A jins's idName (`jins_rast`), its numeric id, or the idName of one of its transpositions (`jins_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
           schema:
             type: string
           example: "jins_rast"
@@ -6270,7 +6306,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe jins identifier
+          description: |
+            URL-safe jins identifier: A jins's idName (`jins_rast`) or its numeric id. This route lists every transposition of the jins, so the idName of a single transposition (`jins_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
           schema:
             type: string
           example: "jins_bayyat"
@@ -6359,6 +6396,16 @@ paths:
                         items:
                           type: object
                           properties:
+                            idName:
+                              type: string
+                              description: This transposition's own identifier, also accepted as the path segment of /ajnas/{idName}
+                              example: "jins_rast_al_nawa"
+                            displayName:
+                              type: string
+                              example: "jins rāst al-nawā"
+                            displayNameAr:
+                              type: string
+                              description: Arabic display name (only with inArabic=true)
                             tonic:
                               $ref: '#/components/schemas/IdentifierReference'
                             pitchClass:
@@ -6427,6 +6474,8 @@ paths:
                     },
                     "detailed": [
                       {
+                        "idName": "jins_bayyat_al_qarar_yegah",
+                        "displayName": "jins bayyāt al-qarār yegāh",
                         "tonic": {
                           "idName": "qarar_yegah",
                           "displayName": "qarār yegāh"
@@ -6440,6 +6489,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "jins_bayyat_al_qarar_ushayran",
+                        "displayName": "jins bayyāt al-qarār ʿushayrān",
                         "tonic": {
                           "idName": "qarar_ushayran",
                           "displayName": "qarār ʿushayrān"
@@ -6453,6 +6504,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "jins_bayyat_al_qarar_rast",
+                        "displayName": "jins bayyāt al-qarār rāst",
                         "tonic": {
                           "idName": "qarar_rast",
                           "displayName": "qarār rāst"
@@ -6466,6 +6519,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "jins_bayyat_al_yegah",
+                        "displayName": "jins bayyāt al-yegāh",
                         "tonic": {
                           "idName": "yegah",
                           "displayName": "yegāh"
@@ -6479,6 +6534,8 @@ paths:
                         }
                       },
                       {
+                        "idName": "jins_bayyat_al_ushayran",
+                        "displayName": "jins bayyāt al-ʿushayrān",
                         "tonic": {
                           "idName": "ushayran",
                           "displayName": "ʿushayrān"
@@ -6588,7 +6645,8 @@ paths:
         - name: idName
           in: path
           required: true
-          description: URL-safe jins identifier
+          description: |
+            URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
           schema:
             type: string
           example: "jins_bayyat"
@@ -10909,7 +10967,7 @@ components:
             idName:
               type: string
               description: URL-safe transposition identifier
-              example: "maqam_farahnak_alhilu_alqarar_segah"
+              example: "maqam_farahnak_alhilu_al_qarar_segah"
             displayName:
               type: string
               description: Transposition name with diacritics

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -127,9 +128,8 @@ export async function GET(
     const tuningSystems = getTuningSystems();
 
     // Find the jins
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
 
     if (!jins) {
       return addCorsHeaders(
@@ -142,6 +142,9 @@ export async function GET(
         )
       );
     }
+
+    const transposedPathId = rejectPathTonic(jinsId, resolvedId?.tonicIdName, jins.getIdName(), "ajnas/{idName}/transpositions");
+    if (transposedPathId) return addCorsHeaders(transposedPathId);
 
     // Find the tuning system
     const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -249,6 +252,9 @@ export async function GET(
       };
 
       return {
+        idName: entityToken(t),
+        displayName: t.name,
+        ...(inArabic && { displayNameAr: getJinsNameDisplayAr(t.name) }),
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.

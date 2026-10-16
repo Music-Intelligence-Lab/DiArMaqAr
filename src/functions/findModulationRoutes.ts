@@ -167,7 +167,7 @@ function buildModulationGraph(
   // Use baseMaqamIdName:tonicId as the key for consistent lookups
   for (const maqam of availableMaqamat) {
     const baseIdName = getBaseIdName(maqam);
-    const node = createMaqamNode(maqam, baseIdName, standardizeText);
+    const node = createMaqamNode(maqam, baseIdName);
     const nodeKey = createNodeKey(node.baseMaqamIdName, node.tonicId);
     nodes.set(nodeKey, node);
     adjacencyList.set(nodeKey, []);
@@ -190,7 +190,7 @@ function buildModulationGraph(
   // Calculate modulation edges for each node
   for (const maqam of availableMaqamat) {
     const baseIdName = getBaseIdName(maqam);
-    const sourceNode = createMaqamNode(maqam, baseIdName, standardizeText);
+    const sourceNode = createMaqamNode(maqam, baseIdName);
     const sourceNodeKey = createNodeKey(sourceNode.baseMaqamIdName, sourceNode.tonicId);
 
     // Calculate modulations from this maqam (maqamat mode, not ajnas).
@@ -223,7 +223,7 @@ function buildModulationGraph(
     ) => {
       for (const targetMaqam of mods) {
         const targetBaseIdName = getBaseIdName(targetMaqam);
-        const targetNode = createMaqamNode(targetMaqam, targetBaseIdName, standardizeText);
+        const targetNode = createMaqamNode(targetMaqam, targetBaseIdName);
         const targetNodeKey = createNodeKey(targetNode.baseMaqamIdName, targetNode.tonicId);
 
         // Only add edge if target node exists in our graph
@@ -395,7 +395,7 @@ function validateNodeExists(
 
     // Check if any transposition has the requested tonic
     const hasTonic = transpositions.some((trans) => {
-      const node = createMaqamNode(trans, baseIdName, standardizeText);
+      const node = createMaqamNode(trans, baseIdName);
       return standardizeText(node.tonicId) === normalizedTonicId;
     });
 

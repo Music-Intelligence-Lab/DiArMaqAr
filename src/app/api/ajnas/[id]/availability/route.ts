@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { resolveEntityId, standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
@@ -33,7 +34,7 @@ export async function GET(
   try {
     const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
-    const transpositionNoteName = searchParams.get("transpositionNoteName");
+    let transpositionNoteName = searchParams.get("transpositionNoteName");
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
@@ -75,9 +76,8 @@ export async function GET(
     const tuningSystems = getTuningSystems();
     
     // Find the jins by ID or name
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
 
     if (!jins) {
       return addCorsHeaders(
@@ -90,6 +90,11 @@ export async function GET(
         )
       );
     }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(jinsId, resolvedId?.tonicIdName, "transpositionNoteName", transpositionNoteName);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transpositionNoteName = pathTonic.tonic;
 
     // Validate transpositionNoteName if provided
     if (transpositionNoteName !== null && transpositionNoteName.trim() === "") {

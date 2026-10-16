@@ -7,6 +7,7 @@
  */
 
 import { Maqam } from "./Maqam";
+import { entityToken, standardizeText } from "@/functions/export";
 
 /**
  * Represents a node in the modulation graph.
@@ -17,7 +18,7 @@ export interface MaqamNode {
   maqamId: string;
   /** Base URL-safe identifier for lookups (e.g., "maqam_nahawand") - stable across transpositions */
   baseMaqamIdName: string;
-  /** URL-safe identifier (e.g., "maqam_nahawand_al-kurdan") - includes transposition suffix */
+  /** URL-safe identifier (e.g., "maqam_nahawand_al_kurdan") - includes transposition suffix */
   maqamIdName: string;
   /** Display name (e.g., "Maqam Rast" or "Maqam Rast al-Nawa") */
   maqamDisplayName: string;
@@ -261,21 +262,19 @@ export function parseNodeKey(nodeKey: string): { maqamId: string; tonicId: strin
  *
  * @param maqam - The Maqam instance
  * @param baseMaqamIdName - The stable base idName (e.g., "maqam_nahawand") from MaqamData
- * @param standardizeTextFn - Function to create URL-safe identifiers
  * @returns A MaqamNode representation
  */
 export function createMaqamNode(
   maqam: Maqam,
-  baseMaqamIdName: string,
-  standardizeTextFn: (text: string) => string
+  baseMaqamIdName: string
 ): MaqamNode {
   const tonicNoteName = maqam.ascendingPitchClasses[0].noteName;
   return {
     maqamId: maqam.maqamId,
     baseMaqamIdName: baseMaqamIdName,
-    maqamIdName: standardizeTextFn(maqam.name),
+    maqamIdName: entityToken(maqam),
     maqamDisplayName: maqam.name,
-    tonicId: standardizeTextFn(tonicNoteName),
+    tonicId: standardizeText(tonicNoteName),
     tonicDisplay: tonicNoteName,
     isTransposition: maqam.transposition,
     isBaseForm: maqam.isBaseForm,

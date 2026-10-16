@@ -285,7 +285,7 @@ Requirements:
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier.
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
 
 **Special value**: Use `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note. When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
  (string) **(required)**
@@ -704,7 +704,8 @@ Return tuning-system availability for a maqām.
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
+ (string) **(required)**
   - Example: `maqam_bayyat`
 
 **Query Parameters:**
@@ -787,7 +788,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`) or its numeric id. This route lists every transposition of the maqām, so the idName of a single transposition (`maqam_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
+ (string) **(required)**
   - Example: `maqam_rast`
 
 **Query Parameters:**
@@ -851,6 +853,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
     },
     "detailed": [
       {
+        "idName": "maqam_rast_al_qarar_chahargah",
+        "displayName": "maqām rāst al-qarār chahārgāh",
         "tonic": {
           "idName": "qarar_chahargah",
           "displayName": "qarār chahārgāh"
@@ -892,6 +896,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
         }
       },
       {
+        "idName": "maqam_rast_al_chahargah",
+        "displayName": "maqām rāst al-chahārgāh",
         "tonic": {
           "idName": "chahargah",
           "displayName": "chahārgāh"
@@ -933,6 +939,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
         }
       },
       {
+        "idName": "maqam_rast_al_mahuran",
+        "displayName": "maqām rāst al-māhūrān",
         "tonic": {
           "idName": "mahuran",
           "displayName": "māhūrān"
@@ -1014,7 +1022,8 @@ systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
+ (string) **(required)**
   - Example: `maqam_bayyat`
 
 **Query Parameters:**
@@ -1363,9 +1372,9 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
   - `?pitchClassDataType=all` returns all available data fields
  - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (15 total)
   - Example: `cents`
-- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). - Type: `string`
   - Example: `maqam_rast_set`
-- `maqamId` (optional): Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (URL-safe, diacritics-insensitive). - Type: `string`
+- `maqamId` (optional): Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). - Type: `string`
   - Example: `maqam_rast`
 
 **Example:**
@@ -1551,9 +1560,9 @@ bayyāt on dūgāh and maqām segāh on segāh.
   When false: Omits pitch class data, returning only set metadata and compatible maqamat
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). - Type: `string`
   - Example: `maqam_rast_set`
-- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+- `maqamId` (optional): Filter by maqām to find all sets containing it: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). - Type: `string`
   - Example: `maqam_rast`
 
 **Example:**
@@ -1811,7 +1820,8 @@ Requirements:
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
+ (string) **(required)**
   - Example: `jins_rast` - Jins Rāst (representative example - with zalzalian intervals)
   - Example: `jins_kurd` - Jins Kurd (representative example - without zalzalian intervals)
   - Example: `jins_bayyat` - Jins Bayyāt (representative example - with zalzalian intervals)
@@ -1961,7 +1971,8 @@ Return tuning-system availability for a jins.
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_rast`), its numeric id, or the idName of one of its transpositions (`jins_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
+ (string) **(required)**
   - Example: `jins_rast`
 
 **Query Parameters:**
@@ -2044,7 +2055,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_rast`) or its numeric id. This route lists every transposition of the jins, so the idName of a single transposition (`jins_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
+ (string) **(required)**
   - Example: `jins_bayyat`
 
 **Query Parameters:**
@@ -2118,6 +2130,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
     },
     "detailed": [
       {
+        "idName": "jins_bayyat_al_qarar_yegah",
+        "displayName": "jins bayyāt al-qarār yegāh",
         "tonic": {
           "idName": "qarar_yegah",
           "displayName": "qarār yegāh"
@@ -2131,6 +2145,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_qarar_ushayran",
+        "displayName": "jins bayyāt al-qarār ʿushayrān",
         "tonic": {
           "idName": "qarar_ushayran",
           "displayName": "qarār ʿushayrān"
@@ -2144,6 +2160,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_qarar_rast",
+        "displayName": "jins bayyāt al-qarār rāst",
         "tonic": {
           "idName": "qarar_rast",
           "displayName": "qarār rāst"
@@ -2157,6 +2175,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_yegah",
+        "displayName": "jins bayyāt al-yegāh",
         "tonic": {
           "idName": "yegah",
           "displayName": "yegāh"
@@ -2170,6 +2190,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_ushayran",
+        "displayName": "jins bayyāt al-ʿushayrān",
         "tonic": {
           "idName": "ushayran",
           "displayName": "ʿushayrān"
@@ -2226,7 +2248,8 @@ across historical tuning systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
+ (string) **(required)**
   - Example: `jins_bayyat`
 
 **Query Parameters:**
@@ -2710,8 +2733,10 @@ The same transformation applies to `transpositions[].maqamDegrees`.
   - Example: `true`
 - `includeTranspositions` (optional): When true, each maqām in data includes a `transpositions` array with the other transpositions
 (excluding the base tonic).
-  (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending
-  note name idNames for that transposed position.
+  (excluding the base tonic). Each transposition has its own `idName` and `displayName`
+  (`maqam_rast_al_chahargah`, "maqām rāst al-chahārgāh"; plus `displayNameAr` with `inArabic=true`),
+  its `tonic`, and `maqamDegrees` with ascending/descending note name idNames for that transposed
+  position. The `idName` works as a path segment: `/maqamat/maqam_rast_al_chahargah`.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `sortBy` (optional): Sort order for results.
@@ -2952,8 +2977,10 @@ objects `{ noteName, englishName, solfege }` instead of note-name strings.
   - Example: `true`
 - `includeTranspositions` (optional): When true, each jins in data includes a `transpositions` array with the other transpositions
 (taṣwīr) available in this tuning system, excluding the base tonic.
-  (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has `tonic` and
-  `jinsDegrees` for that transposed position.
+  (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has its own
+  `idName` and `displayName` (`jins_rast_al_nawa`, "jins rāst al-nawā"; plus `displayNameAr` with
+  `inArabic=true`), its `tonic`, and `jinsDegrees` for that transposed position. The `idName` works
+  as a path segment: `/ajnas/jins_rast_al_nawa`.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `sortBy` (optional): Sort order for results.

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
@@ -337,6 +337,9 @@ export async function GET(
               const renderedDescending = renderPitchClassSpellings(t.descendingPitchClasses, false);
 
               return {
+                idName: entityToken(t),
+                displayName: t.name,
+                ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
                 tonic: buildIdentifierNamespace(
                   {
                     idName: standardizeText(tonicNoteName),
@@ -357,6 +360,9 @@ export async function GET(
             }
 
             return {
+              idName: entityToken(t),
+              displayName: t.name,
+              ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
               tonic: buildIdentifierNamespace(
                 {
                   idName: standardizeText(tonicNoteName),

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -128,9 +129,8 @@ export async function GET(
     const ajnas = getAjnas();
 
     // Find the maqām
-    const maqam = maqamatData.find(
-      (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
-    );
+    const resolvedId = resolveEntityId(maqamId, maqamatData);
+    const maqam = resolvedId?.entity;
 
     if (!maqam) {
       return addCorsHeaders(
@@ -143,6 +143,9 @@ export async function GET(
         )
       );
     }
+
+    const transposedPathId = rejectPathTonic(maqamId, resolvedId?.tonicIdName, maqam.getIdName(), "maqamat/{idName}/transpositions");
+    if (transposedPathId) return addCorsHeaders(transposedPathId);
 
     // Find the tuning system
     const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -308,6 +311,9 @@ export async function GET(
       };
 
       return {
+        idName: entityToken(t),
+        displayName: t.name,
+        ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.

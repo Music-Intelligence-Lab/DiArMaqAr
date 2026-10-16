@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -192,7 +193,7 @@ export async function GET(
     const startingNotesParam = searchParams.get("startingNotes");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const intervalsParam = searchParams.get("includeIntervals");
-    const transposeToNote = searchParams.get("transposeTo");
+    let transposeToNote = searchParams.get("transposeTo");
 
     // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
     // default branch and silently returns the bare note-name shape instead of erroring.
@@ -305,7 +306,7 @@ export async function GET(
           const tonicNoteName = t.jinsPitchClasses[0].noteName;
           const fullJinsName = t.name;
           return {
-            idName: standardizeText(fullJinsName),
+            idName: entityToken(t),
             displayName: fullJinsName,
             ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
             tonic: {
@@ -425,6 +426,30 @@ export async function GET(
       );
     }
 
+    const ajnasData = getAjnas();
+    const tuningSystems = getTuningSystems();
+    
+    // Find the jins
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
+
+    if (!jins) {
+      return addCorsHeaders(
+        NextResponse.json(
+          { 
+            error: `Jins '${jinsId}' not found`,
+            hint: "Use /api/ajnas to see all available ajnās"
+          },
+          { status: 404 }
+        )
+      );
+    }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(jinsId, resolvedId?.tonicIdName, "transposeTo", transposeToNote);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transposeToNote = pathTonic.tonic;
+
     // Build Cartesian product of tuningSystems × startingNotes in user-supplied order.
     // Outer loop = tuningSystems, inner loop = startingNotes, so the result list is:
     //   TS1×SN1, TS1×SN2, …, TS1×SNm, TS2×SN1, …, TSn×SNm
@@ -441,26 +466,6 @@ export async function GET(
           ...(transposeToNote && { transposeTo: transposeToNote }),
         });
       }
-    }
-
-    const ajnasData = getAjnas();
-    const tuningSystems = getTuningSystems();
-    
-    // Find the jins
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
-
-    if (!jins) {
-      return addCorsHeaders(
-        NextResponse.json(
-          { 
-            error: `Jins '${jinsId}' not found`,
-            hint: "Use /api/ajnas to see all available ajnās"
-          },
-          { status: 404 }
-        )
-      );
     }
 
     // Process each comparison
@@ -583,8 +588,8 @@ export async function GET(
       const comparisonJinsNamespace = buildEntityNamespace(
         {
           id: jins.getId(),
-          idName: isTransposed ? entityToken(selectedTransposition) : jins.getIdName(),
-          displayName: isTransposed ? selectedTransposition.name : jins.getName(),
+          idName: entityToken(selectedTransposition),
+          displayName: selectedTransposition.name,
         },
         {
           version: jins.getVersion(),
@@ -593,7 +598,7 @@ export async function GET(
           extras: { isBaseForm: selectedTransposition.isBaseForm },
           inArabic,
           displayNameAr: inArabic
-            ? getJinsNameDisplayAr(isTransposed ? selectedTransposition.name : jins.getName())
+            ? getJinsNameDisplayAr(selectedTransposition.name)
             : undefined,
         }
       );

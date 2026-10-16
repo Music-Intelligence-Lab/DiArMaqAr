@@ -19,33 +19,15 @@ import PitchClassBar from "@/components/pitch-class-bar";
 import Modulations from "@/components/modulations";
 import { Sayr } from "@/models/Maqam";
 import Footer from "@/components/footer";
-import { createEntityToken, standardizeText, TONIC_SEPARATOR } from "@/functions/export";
+import { createEntityToken, resolveEntityId, standardizeText } from "@/functions/export";
 
 // URL parameter helper functions
 //
 // Every identifier in the query string is a standardizeText() output — lowercase
 // [a-z0-9_], one double-clickable word — so nothing here percent-encodes and
-// nothing here needs to. The only structural characters are the ones this file
-// introduces: "__" between an entity and its tonic, "," between modulation hops
-// and "." before a hop flag.
-
-/**
- * Resolves an entity token back to the maqām or jins it names, and to the tonic
- * it was transposed to (absent for the taḥlīl).
- *
- * Returns null when the token names nothing — an unrecognized entity is left
- * unselected rather than resolved to something near it.
- */
-function parseEntityToken<T extends { getIdName(): string }>(token: string, entities: T[]): { entity: T; tonicIdName?: string } | null {
-  const separatorIndex = token.indexOf(TONIC_SEPARATOR);
-  const idName = separatorIndex === -1 ? token : token.slice(0, separatorIndex);
-  const tonicIdName = separatorIndex === -1 ? "" : token.slice(separatorIndex + TONIC_SEPARATOR.length);
-
-  const entity = entities.find((candidate) => candidate.getIdName() === idName);
-  if (!entity) return null;
-
-  return { entity, tonicIdName: tonicIdName || undefined };
-}
+// nothing here needs to. The only structural characters are "_al_" between an
+// entity and its tonic (read back by resolveEntityId), "," between modulation
+// hops and "." before a hop flag.
 
 /**
  * Builds the URL token for a sayr: the id of the source it is transcribed from
@@ -96,7 +78,7 @@ function parseModulationsParameter(param: string, maqamat: MaqamData[]): Modulat
   for (const rawToken of param.split(",")) {
     const [base, ...flags] = rawToken.trim().split(".");
 
-    const matched = parseEntityToken(base, maqamat);
+    const matched = resolveEntityId(base, maqamat);
     if (!matched) break;
 
     // A hop always names a tonic; a bare idName means the taḥlīl of that maqām.
@@ -185,7 +167,7 @@ export default function AppClient() {
     // Parse the maqam parameter if present
     const maqamParam = searchParams.get("maqam");
     if (maqamParam) {
-      const matched = parseEntityToken(maqamParam, maqamat);
+      const matched = resolveEntityId(maqamParam, maqamat);
       if (matched) {
         maqamId = matched.entity.getId();
         maqamFirstNote = matched.tonicIdName;
@@ -195,7 +177,7 @@ export default function AppClient() {
     // Parse the jins parameter if present
     const jinsParam = searchParams.get("jins");
     if (jinsParam) {
-      const matched = parseEntityToken(jinsParam, ajnas);
+      const matched = resolveEntityId(jinsParam, ajnas);
       if (matched) {
         jinsId = matched.entity.getId();
         jinsFirstNote = matched.tonicIdName;

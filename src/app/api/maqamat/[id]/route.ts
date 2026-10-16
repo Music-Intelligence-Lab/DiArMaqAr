@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
@@ -332,7 +333,7 @@ export async function GET(
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
     const includeIntervals = searchParams.get("includeIntervals") === "true";
-    const transposeToNote = searchParams.get("transposeTo");
+    let transposeToNote = searchParams.get("transposeTo");
     const includeModulations = searchParams.get("includeModulations") === "true";
     if (searchParams.has("includeLowerOctaveModulations")) {
       return addCorsHeaders(
@@ -670,9 +671,8 @@ export async function GET(
       );
     }
     
-    const maqam = maqamatData.find(
-      (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
-    );
+    const resolvedId = resolveEntityId(maqamId, maqamatData);
+    const maqam = resolvedId?.entity;
 
     if (!maqam) {
       return addCorsHeaders(
@@ -685,6 +685,11 @@ export async function GET(
         )
       );
     }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(maqamId, resolvedId?.tonicIdName, "transposeTo", transposeToNote);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transposeToNote = pathTonic.tonic;
 
     // Validate that required parameters are not empty strings (after maqām is validated)
     if (tuningSystemId !== null && tuningSystemId.trim() === "") {
@@ -760,8 +765,8 @@ export async function GET(
             {
               error: "tuningSystem parameter is required",
               message: "Tuning system is required for all requests (both data retrieval and discovery mode).",
-              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
-              availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqamId}/availability`)
+              hint: `Add &tuningSystem=ibnsina_1037 to your request. Use /api/maqamat/${maqam.getIdName()}/availability to see available tuning systems`,
+              availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}/availability`)
             },
             { status: 400 }
           )
@@ -920,11 +925,11 @@ export async function GET(
             formatOptions: "The 'pitchClassDataType' parameter controls which pitch class properties are returned. Use 'all' for comprehensive data or specific formats like 'cents', 'fraction', etc. for targeted data."
           },
           examples: [
-            getCanonicalApiUrl(`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
+            getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&includeIntervals=true`),
             ...(transposeOptions !== null && transposeOptions.length > 1
-              ? [getCanonicalApiUrl(`/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}&includeModulations=true`)]
+              ? [getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=cents&transposeTo=${transposeOptions[1]}&includeModulations=true`)]
               : []),
-            `/api/maqamat/${maqamId}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all&includeSuyur=true`
+            `/api/maqamat/${maqam.getIdName()}?tuningSystem=${tuningSystemId}&startingNote=${exampleStartingNote}&pitchClassDataType=all&includeSuyur=true`
           ]
         })
       );
@@ -938,8 +943,8 @@ export async function GET(
         NextResponse.json(
           {
             error: "tuningSystem parameter is required",
-            hint: `Use /api/maqamat/${maqamId}/availability to see available tuning systems`,
-            availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqamId}/availability`)
+            hint: `Use /api/maqamat/${maqam.getIdName()}/availability to see available tuning systems`,
+            availabilityUrl: getCanonicalApiUrl(`/api/maqamat/${maqam.getIdName()}/availability`)
           },
           { status: 400 }
         )
@@ -1015,7 +1020,7 @@ export async function GET(
         NextResponse.json(
           {
             error: `Maqām '${maqam.getName()}' cannot be realized in tuning system '${tuningSystemId}' with starting note '${selectedStartingNote}'`,
-            hint: `Use /api/maqamat/${maqamId}/availability to see compatible tuning systems`
+            hint: `Use /api/maqamat/${maqam.getIdName()}/availability to see compatible tuning systems`
           },
           { status: 422 }
         )
@@ -1097,8 +1102,8 @@ export async function GET(
     const maqamNamespace = buildEntityNamespace(
       {
         id: maqam.getId(),
-        idName: isTransposed ? entityToken(selectedTransposition) : maqam.getIdName(),
-        displayName: isTransposed ? selectedTransposition.name : maqam.getName(),
+        idName: entityToken(selectedTransposition),
+        displayName: selectedTransposition.name,
       },
       {
         version: maqam.getVersion(),
@@ -1106,7 +1111,7 @@ export async function GET(
         // base form is not a taswir, so both are false for it.
         extras: { isBaseForm: selectedTransposition.isBaseForm },
         inArabic,
-        displayNameAr: inArabic ? getMaqamNameDisplayAr(isTransposed ? selectedTransposition.name : maqam.getName()) : undefined,
+        displayNameAr: inArabic ? getMaqamNameDisplayAr(selectedTransposition.name) : undefined,
       }
     );
 
@@ -1290,7 +1295,7 @@ export async function GET(
       const tonicNoteName = t.ascendingPitchClasses[0].noteName;
       const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
       return {
-        idName: standardizeText(fullMaqamName),
+        idName: entityToken(t),
         displayName: fullMaqamName,
         ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
         tonic: {

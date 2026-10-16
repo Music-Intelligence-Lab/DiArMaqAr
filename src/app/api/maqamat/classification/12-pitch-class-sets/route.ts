@@ -8,22 +8,13 @@ import {
 } from "@/functions/classifyMaqamat12PitchClassSets";
 import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
 import { getNoteNameDisplayAr, parseInArabic } from "@/app/api/arabic-helpers";
-import { standardizeText } from "@/functions/export";
+import { canonicalEntityIdName, entityToken, matchesMaqamId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 
 export const OPTIONS = handleCorsPreflightRequest;
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
-
-/**
- * Whether a maqām transposition answers a maqām id query. The id names either
- * the maqām (every transposition of it) or one transposition. Matched exactly,
- * so maqam_hijaz does not also match maqam_hijaz_kar.
- */
-function matchesMaqamId(baseMaqamIdName: string, transpositionIdName: string | undefined, maqamIdName: string): boolean {
-  return baseMaqamIdName === maqamIdName || transpositionIdName === maqamIdName;
-}
 
 /**
  * Format pitch class data according to requested pitchClassDataType
@@ -410,7 +401,7 @@ export async function GET(request: Request) {
       const transpositionNamespace = incompatible.transposition
         ? buildIdentifierNamespace(
             {
-              idName: standardizeText(incompatible.transposition.name),
+              idName: entityToken(incompatible.transposition),
               displayName: incompatible.transposition.name
             },
             {
@@ -565,7 +556,7 @@ export async function GET(request: Request) {
       const compatibleMaqamatFormatted = set.compatibleMaqamat.map((info) => {
         const transpositionNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(info.maqam.name),
+            idName: entityToken(info.maqam),
             displayName: info.maqam.name
           },
           {
@@ -649,9 +640,8 @@ export async function GET(request: Request) {
         return aPosition - bPosition;
       });
 
-      const setNameStandardized = standardizeText(set.name);
       return {
-        setIdName: setNameStandardized,
+        setIdName: set.id,
         setDisplayName: set.name,
         sourceMaqam: sourceMaqamNamespace,
         pitchClassSet: pitchClassSetArray,
@@ -671,16 +661,17 @@ export async function GET(request: Request) {
     } | null = null;
 
     if (setIdParam) {
-      // Filter by specific set ID
-      const setIdStandardized = standardizeText(setIdParam);
+      // Filter by specific set ID. A set is named after its source transposition,
+      // so the older closed-up spelling of that transposition is accepted too.
+      const extractedMaqamId = standardizeText(setIdParam).replace(/_set$/, '');
+      const extractedMaqamIdStandardized = canonicalEntityIdName(extractedMaqamId, maqamat.map((m) => m.getIdName()));
+      const setIdStandardized = `${extractedMaqamIdStandardized}_set`;
       filteredSets = formattedSets.filter(set =>
         set.setIdName === setIdStandardized
       );
 
       if (filteredSets.length === 0) {
-        // Try to extract maqam ID from the set ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
-        const extractedMaqamId = setIdParam.replace(/_set$/, '');
-        const extractedMaqamIdStandardized = standardizeText(extractedMaqamId);
+        // Try the set ID as a maqām ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
 
         // Check if this maqam exists in any other sets
         const setsContainingMaqam = formattedSets.filter(set =>
@@ -745,7 +736,7 @@ export async function GET(request: Request) {
       const maqamData = maqamat.find(
         (m) => m.getId() === maqamIdParam || m.getIdName() === standardizeText(maqamIdParam)
       );
-      const maqamIdName = maqamData ? maqamData.getIdName() : standardizeText(maqamIdParam);
+      const maqamIdName = maqamData ? maqamData.getIdName() : canonicalEntityIdName(maqamIdParam, maqamat.map((m) => m.getIdName()));
 
       filteredSets = formattedSets.filter(set =>
         set.compatibleMaqamat.some(maqam => matchesMaqamId(maqam.baseMaqamIdName, maqam.maqamIdName, maqamIdName))

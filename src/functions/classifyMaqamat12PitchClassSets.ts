@@ -3,6 +3,7 @@ import MaqamData, { Maqam } from "@/models/Maqam";
 import PitchClass from "@/models/PitchClass";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { entityToken } from "@/functions/export";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 
@@ -29,6 +30,7 @@ export interface MaqamTranspositionInfo {
  * Represents a classification set grouping compatible maqamat
  */
 export interface ClassificationSet {
+  /** The source transposition's identifier plus "_set" — "maqam_hisar_al_qarar_dugah_set" */
   id: string;
   name: string;
   sourceMaqam: {
@@ -923,8 +925,8 @@ export function classifyMaqamat(
             }
           }
           
-          // Create set name from source maqam transposition
-          const setId = `maqam_${maqamData.getIdName()}_set`;
+          // Name the set after its source transposition
+          const setId = `${entityToken(transposition)}_set`;
           // Use the transposition name (which may include "maqām" prefix and transposition info)
           const setName = `${transposition.name} set`;
           
@@ -1133,8 +1135,8 @@ export function fitTwelvePitchClassSet(
     }
   }
 
-  // Create set name from source maqam
-  const setId = `maqam_${sourceMaqamData.getIdName()}_set`;
+  // Name the set after its source transposition
+  const setId = `${entityToken(sourceMaqam)}_set`;
   const setName = `${sourceMaqam.name} set`;
 
   const set: ClassificationSet = {

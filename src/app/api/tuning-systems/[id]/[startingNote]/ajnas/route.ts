@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, standardizeText } from "@/functions/export";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -280,6 +280,9 @@ export async function GET(
           const tonicNoteName = t.jinsPitchClasses[0].noteName;
 
           const entry: Record<string, unknown> = {
+            idName: entityToken(t),
+            displayName: t.name,
+            ...(inArabic && { displayNameAr: getJinsNameDisplayAr(t.name) }),
             tonic: buildIdentifierNamespace(
               {
                 idName: standardizeText(tonicNoteName),
