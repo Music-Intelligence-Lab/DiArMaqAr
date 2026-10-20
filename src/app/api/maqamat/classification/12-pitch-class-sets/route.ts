@@ -5,6 +5,7 @@ import {
   classifyMaqamat,
   ClassificationResult,
   IncompatibleMaqam,
+  keyHoldingPitch,
   listTwelvePitchClassSetFromC
 } from "@/functions/classifyMaqamat12PitchClassSets";
 import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
@@ -528,35 +529,22 @@ export async function GET(request: Request) {
         // Store base maqam ID for filtering
         const baseMaqamIdName = info.maqamData.getIdName();
 
-        // Get the tonic for this specific maqam from its ascending pitch classes
-        const maqamTonicPitchClass = info.maqam.ascendingPitchClasses?.[0];
-        const maqamTonicNoteName = maqamTonicPitchClass?.noteName || '';
+        // The tonic of this transposition and the key of the set that holds it,
+        // found by pitch: the set may hold it on a neighbouring key of its letter
+        // (tīk ḥiṣār on G# in the nairūz set)
+        const maqamTonicPitchClass = info.maqam.ascendingPitchClasses[0];
+        const maqamTonicIpnRef = keyHoldingPitch(maqamTonicPitchClass, listedPitchClassSet, centsTolerance);
+        const maqamTonicPositionInSet = orderedPitchClasses.findIndex(item => item.ipnRef === maqamTonicIpnRef);
 
-        // Get the IPN reference note name for the tonic (e.g., "D", "C#")
-        // This works even if the tonic is in a different octave (e.g., qarār dūgāh -> "D")
-        const tonicIpnRef = maqamTonicPitchClass?.referenceNoteName || '';
-
-        // Find the matching IPN in the 12-pitch-class set
-        // This finds the octave equivalent within the set
-        const maqamTonicPitchClassMatch = tonicIpnRef
-          ? orderedPitchClasses.find(item => item.ipnRef === tonicIpnRef)
-          : null;
-
-        const maqamTonicIpnRef = maqamTonicPitchClassMatch?.ipnRef || tonicIpnRef;
-        const maqamTonicPositionInSet = maqamTonicPitchClassMatch
-          ? orderedPitchClasses.findIndex(item => item.ipnRef === tonicIpnRef)
-          : -1;
-
-        // Build tonic namespace for this maqam
-        const tonicNamespace = maqamTonicNoteName ? buildIdentifierNamespace(
+        const tonicNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(maqamTonicNoteName),
-            displayName: maqamTonicNoteName
+            idName: standardizeText(maqamTonicPitchClass.noteName),
+            displayName: maqamTonicPitchClass.noteName
           },
           {
             inArabic
           }
-        ) : null;
+        );
 
         return {
           maqamIdName: transpositionNamespace.idName,
@@ -566,12 +554,12 @@ export async function GET(request: Request) {
           // Not the inverse of isTransposed: an octave-register sibling of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
-          tonic: tonicNamespace ? {
+          tonic: {
             ipnReferenceNoteName: maqamTonicIpnRef,
             noteNameIdName: tonicNamespace.idName,
             noteNameDisplayName: tonicNamespace.displayName,
             positionInSet: maqamTonicPositionInSet
-          } : null
+          }
         };
       });
 
@@ -583,9 +571,7 @@ export async function GET(request: Request) {
         }
 
         // PRIORITY 2: Sort by position in set
-        const aPosition = a.tonic?.positionInSet ?? 999;
-        const bPosition = b.tonic?.positionInSet ?? 999;
-        return aPosition - bPosition;
+        return a.tonic.positionInSet - b.tonic.positionInSet;
       });
 
       return {
@@ -640,8 +626,8 @@ export async function GET(request: Request) {
               );
               return maqamEntry ? {
                 maqamDisplayName: maqamEntry.maqamDisplayName,
-                tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
-                tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
+                tonicIpn: maqamEntry.tonic.ipnReferenceNoteName,
+                tonicNoteName: maqamEntry.tonic.noteNameDisplayName,
                 isTransposed: maqamEntry.isTransposed,
                 isBaseForm: maqamEntry.isBaseForm
               } : null;

@@ -123,7 +123,7 @@ So the `idName` in a maqām's `availableTranspositions` list is exactly the `maq
 - ajnās named inside maqām responses;
 - modulation routes.
 
-A classification set is named after one of its members, so its `setIdName` is that member's `idName` plus `_set`. A set that holds a base form is named after one (`maqam_lami_set`); a set that holds none is named after a transposition (`maqam_rast_al_dugah_set`). The rule is given in the [12-pitch-class sets endpoint](./endpoints-reference#classifyMaqamat12PitchClassSets) description.
+A classification set is named after one of its members, so its `setIdName` is that member's `idName` plus `_set`. A set that holds a base form is named after one (`maqam_hijaz_kar_kurd_set`); a set that holds none is named after a transposition (`maqam_rast_al_kawasht_set`). The rule is given in the [12-pitch-class sets endpoint](./endpoints-reference#classifyMaqamat12PitchClassSets) description.
 
 ### Using a transposed `idName` in the path
 

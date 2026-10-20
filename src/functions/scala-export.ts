@@ -5,7 +5,7 @@ import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
-import { fitTwelvePitchClassSet, KeyClash, listTwelvePitchClassSetFromC } from "./classifyMaqamat12PitchClassSets";
+import { fitTwelvePitchClassSet, KeyClash, keyHoldingPitch, listTwelvePitchClassSetFromC } from "./classifyMaqamat12PitchClassSets";
 import { getMaqamat, getAjnas } from "./import";
 import { createEntityTokenFromName, standardizeText } from "./export";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "./getIpnReferenceNoteName";
@@ -825,46 +825,17 @@ export function exportMaqamTo12ToneScala(
   // Calculate reference frequency for Middle C (the 1/1 note at position 0)
   // The C pitch class is at position 0 in orderedPitchClasses (after rotation)
   // The pitch class frequency field already contains the correct frequency based on the tuning system
-  const cPitchClass = orderedPitchClasses[0]?.pitchClass;
-  let referenceFrequency: number;
-  let referenceFrequencyNoteName: string = '';
-  
-  if (cPitchClass && cPitchClass.frequency) {
-    // Use the frequency directly from the pitch class (already calculated correctly)
-    referenceFrequency = parseFloat(cPitchClass.frequency);
-    // Get the English note name with octave (e.g., C4, A4)
-    referenceFrequencyNoteName = getIpnReferenceNoteNameWithOctave(cPitchClass);
-  } else {
-    // Fallback: calculate from tuning system reference frequency
-    // Formula: frequency = referenceFrequency * 2^(cents/1200)
-    const cCents = cPitchClass ? parseFloat(cPitchClass.cents) : 0;
-    const tuningSystemRefFreq = tuningSystem.getDefaultReferenceFrequency() || 440.0;
-    
-    // Get the starting note's pitch class to calculate C's frequency relative to it
-    const startingNotePitchClass = allTuningSystemPitchClasses.find(
-      pc => pc.noteName === startingNote
-    );
-    
-    if (startingNotePitchClass) {
-      // Calculate C's frequency relative to the starting note
-      // If starting note is at X cents and C is at Y cents, then:
-      // C_frequency = starting_note_frequency * 2^((Y - X)/1200)
-      const startingNoteCents = parseFloat(startingNotePitchClass.cents);
-      const startingNoteFreq = parseFloat(startingNotePitchClass.frequency);
-      const centsDiff = cCents - startingNoteCents;
-      referenceFrequency = startingNoteFreq * Math.pow(2, centsDiff / 1200);
-      if (cPitchClass) {
-        referenceFrequencyNoteName = getIpnReferenceNoteNameWithOctave(cPitchClass);
-      }
-    } else {
-      // Final fallback: use default reference frequency
-      referenceFrequency = tuningSystemRefFreq;
-    }
+  const cPitchClass = orderedPitchClasses[0].pitchClass;
+  if (!cPitchClass.frequency) {
+    throw new Error(`exportMaqamTo12ToneScala: ${cPitchClass.noteName} has no frequency to use as the 1/1 reference`);
   }
-  
-  // Get base maqam tonic note name from the source maqam transposition
-  const baseMaqamTonicPitchClass = matchingSet.sourceTransposition.ascendingPitchClasses?.[0];
-  const baseMaqamTonicNoteName = baseMaqamTonicPitchClass?.noteName || '';
+  const referenceFrequency = parseFloat(cPitchClass.frequency);
+  // The English note name with octave (e.g., C4, A4)
+  const referenceFrequencyNoteName = getIpnReferenceNoteNameWithOctave(cPitchClass);
+
+  // The tonic of the transposition exported, which the set is made from and named after
+  const baseMaqamTonicPitchClass = matchingSet.sourceTransposition.ascendingPitchClasses[0];
+  const baseMaqamTonicNoteName = baseMaqamTonicPitchClass.noteName;
 
   // Use compatible maqamat from the classification result
   // Enhanced with tonic note names, IPN sequences, and position numbers
@@ -881,7 +852,6 @@ export function exportMaqamTo12ToneScala(
     isSymmetrical: boolean;
     isTransposition: boolean;
   }> = [];
-  const seenMaqamatByTonic = new Set<string>(); // Track maqam:tonic combinations to avoid duplicates
 
   // Create a map of IPN reference to position in the ordered pitch classes for quick lookup
   const ipnToPositionMap = new Map<string, number>();
@@ -889,116 +859,42 @@ export function exportMaqamTo12ToneScala(
     ipnToPositionMap.set(item.ipnRef, index);
   });
 
+  // The position (from C) of the key that holds a pitch, found by pitch: the set
+  // may hold it on a neighbouring key of its letter
+  const positionOf = (pc: PitchClass) => ipnToPositionMap.get(keyHoldingPitch(pc, fromC))!;
+  const formatNote = (pc: PitchClass) => `${pc.noteName} (${pc.englishName})`;
+
   for (const maqamInfo of matchingSet.compatibleMaqamat) {
-    // Get the tonic for this specific maqam from its ascending pitch classes
-    // This matches the API endpoint logic exactly
-    const maqamTonicPitchClass = maqamInfo.maqam.ascendingPitchClasses?.[0];
-    
-    // Get the tonic note name (e.g., "dūgāh", "segāh")
-    const tonicNoteName = maqamTonicPitchClass?.noteName || '';
-    
-    // Get the IPN reference note name for the tonic (e.g., "D", "C#")
-    // This works even if the tonic is in a different octave (e.g., qarār dūgāh -> "D")
-    const tonicIpnRef = maqamTonicPitchClass?.referenceNoteName || '';
+    // The tonic of this transposition (e.g., "dūgāh", "segāh") and its position in the set
+    const maqamTonicPitchClass = maqamInfo.maqam.ascendingPitchClasses[0];
+    const tonicNoteName = maqamTonicPitchClass.noteName;
+    const maqamTonicPositionInSet = positionOf(maqamTonicPitchClass);
 
-    // Find the matching IPN in the 12-pitch-class set (after rotation to start from C)
-    // This finds the octave equivalent within the set
-    // This matches the API endpoint logic exactly
-    const maqamTonicPitchClassMatch = tonicIpnRef
-      ? orderedPitchClasses.find(item => item.ipnRef === tonicIpnRef)
-      : null;
+    // Every degree of each sequence, as "noteName (englishName)" (e.g., "rāst (C4)"), with its position
+    const ascendingIpnNames = maqamInfo.maqam.ascendingPitchClasses.map(formatNote);
+    const ascendingPositions = maqamInfo.maqam.ascendingPitchClasses.map(positionOf);
+    const descendingIpnNames = maqamInfo.maqam.descendingPitchClasses.map(formatNote);
+    const descendingPositions = maqamInfo.maqam.descendingPitchClasses.map(positionOf);
 
-    const maqamTonicIpnRef = maqamTonicPitchClassMatch?.ipnRef || tonicIpnRef;
-    const maqamTonicPositionInSet = maqamTonicPitchClassMatch
-      ? orderedPitchClasses.findIndex(item => item.ipnRef === tonicIpnRef)
-      : -1;
-
-    // Get pitch class details for ascending sequence
-    // Use the same approach as the API endpoint - get pitch classes directly from the maqam
-    // Format: Persian-Arab-Ottoman note name first, then English name in brackets (e.g., "rāst (C4)")
-    const ascendingIpnNames: string[] = [];
-    const ascendingPositions: number[] = [];
-    if (maqamInfo.maqam.ascendingPitchClasses) {
-      for (const pc of maqamInfo.maqam.ascendingPitchClasses) {
-        const ipnRef = getIpnReferenceNoteName(pc);
-        if (ipnRef) {
-          const position = ipnToPositionMap.get(ipnRef);
-          if (position !== undefined) {
-            // Get English note name (should already include octave, e.g., "C4", "D4")
-            const englishName = pc.englishName || '';
-            // Get Persian-Arab-Ottoman note name
-            const noteName = pc.noteName || '';
-            // Format: "noteName (englishName)" or just "englishName" if noteName is empty
-            const formattedName = noteName && englishName
-              ? `${noteName} (${englishName})`
-              : englishName || noteName || '';
-            
-            ascendingIpnNames.push(formattedName);
-            ascendingPositions.push(position);
-          }
-        }
-      }
-    }
-
-    // Get pitch class details for descending sequence
-    const descendingIpnNames: string[] = [];
-    const descendingPositions: number[] = [];
-    if (maqamInfo.maqam.descendingPitchClasses) {
-      for (const pc of maqamInfo.maqam.descendingPitchClasses) {
-        const ipnRef = getIpnReferenceNoteName(pc);
-        if (ipnRef) {
-          const position = ipnToPositionMap.get(ipnRef);
-          if (position !== undefined) {
-            // Get English note name (should already include octave, e.g., "C4", "D4")
-            const englishName = pc.englishName || '';
-            // Get Persian-Arab-Ottoman note name
-            const noteName = pc.noteName || '';
-            // Format: "noteName (englishName)" or just "englishName" if noteName is empty
-            const formattedName = noteName && englishName
-              ? `${noteName} (${englishName})`
-              : englishName || noteName || '';
-            
-            descendingIpnNames.push(formattedName);
-            descendingPositions.push(position);
-          }
-        }
-      }
-    }
-    
     // Check if maqam is symmetrical (ascending == descending when reversed)
     const isSymmetrical = ascendingIpnNames.length === descendingIpnNames.length &&
       ascendingIpnNames.length > 0 &&
       JSON.stringify(ascendingIpnNames) === JSON.stringify([...descendingIpnNames].reverse());
 
-    // Use transposition name + tonic IPN as key to avoid listing duplicates
-    // This matches the API endpoint which shows all transpositions separately
-    // Note: The classification result may contain duplicates, so we deduplicate here
-    // Use maqam.name (transposition name) instead of maqamData.getName() (base name)
-    // to show all transpositions separately, matching the API behavior
-    const transpositionName = maqamInfo.maqam.name;
-    const key = `${transpositionName}:${maqamTonicIpnRef}`;
-    if (!seenMaqamatByTonic.has(key)) {
-      // Get the full English name with octave for the tonic (e.g., "C4", "C2")
-      // ALWAYS use getIpnReferenceNoteNameWithOctave to ensure uppercase and correct format
-      const tonicIpnWithOctave = maqamTonicPitchClass
-        ? getIpnReferenceNoteNameWithOctave(maqamTonicPitchClass)
-        : 'Unknown';
-
-      compatibleMaqamatInfo.push({
-        name: transpositionName,
-        baseMaqamId: maqamInfo.maqamData.getId(),
-        tonicIpn: tonicIpnWithOctave,
-        tonicNoteName: tonicNoteName,
-        position: maqamTonicPositionInSet >= 0 ? maqamTonicPositionInSet : 0,
-        ascendingIpnNames: ascendingIpnNames,
-        descendingIpnNames: descendingIpnNames,
-        ascendingPositions: ascendingPositions,
-        descendingPositions: descendingPositions,
-        isSymmetrical: isSymmetrical,
-        isTransposition: !!maqamInfo.maqam.transposition,
-      });
-      seenMaqamatByTonic.add(key);
-    }
+    compatibleMaqamatInfo.push({
+      name: maqamInfo.maqam.name,
+      baseMaqamId: maqamInfo.maqamData.getId(),
+      // The full English name with octave for the tonic (e.g., "C4", "C2")
+      tonicIpn: getIpnReferenceNoteNameWithOctave(maqamTonicPitchClass),
+      tonicNoteName: tonicNoteName,
+      position: maqamTonicPositionInSet,
+      ascendingIpnNames: ascendingIpnNames,
+      descendingIpnNames: descendingIpnNames,
+      ascendingPositions: ascendingPositions,
+      descendingPositions: descendingPositions,
+      isSymmetrical: isSymmetrical,
+      isTransposition: !!maqamInfo.maqam.transposition,
+    });
   }
 
   // Store the total count BEFORE grouping (includes all octave equivalents)
@@ -1142,7 +1038,10 @@ export function exportMaqamTo12ToneScala(
   const validNoteSet = noteNameSets.find(
     (set) => standardizeText(set[0] || "") === standardizeText(startingNote)
   );
-  const actualStartingNoteName = validNoteSet?.[0] || startingNote;
+  if (!validNoteSet) {
+    throw new Error(`exportMaqamTo12ToneScala: ${startingNote} is not a starting note of ${tuningSystem.getId()}`);
+  }
+  const actualStartingNoteName = validNoteSet[0];
 
   // Get starting note's reference frequency
   // Use provided reference frequencies from context, otherwise get tuning system defaults
@@ -1151,12 +1050,11 @@ export function exportMaqamTo12ToneScala(
 
   // Calculate SOURCE maqam reference frequency
   const sourceMaqamName = matchingSet.sourceMaqam.name;
-  const sourceMaqamFrequency = baseMaqamTonicPitchClass?.frequency
-    ? parseFloat(baseMaqamTonicPitchClass.frequency)
-    : referenceFrequency;
-  const sourceMaqamIpnWithOctave = baseMaqamTonicPitchClass
-    ? getIpnReferenceNoteNameWithOctave(baseMaqamTonicPitchClass)
-    : 'Unknown';
+  if (!baseMaqamTonicPitchClass.frequency) {
+    throw new Error(`exportMaqamTo12ToneScala: ${baseMaqamTonicNoteName} has no frequency`);
+  }
+  const sourceMaqamFrequency = parseFloat(baseMaqamTonicPitchClass.frequency);
+  const sourceMaqamIpnWithOctave = getIpnReferenceNoteNameWithOctave(baseMaqamTonicPitchClass);
 
   // Find A4 in the pitch classes
   // A4 = MIDI note 69, frequency ~440 Hz
@@ -1167,20 +1065,11 @@ export function exportMaqamTo12ToneScala(
   const a4Frequency = a4PitchClass?.frequency ? parseFloat(a4PitchClass.frequency) : null;
   const a4NoteName = a4PitchClass?.noteName || '';
 
-  // Get EXPORTED maqam tonic frequency
-  // Find the exported maqam in compatibleMaqamat
-  const maqamIdStandardized = standardizeText(maqamData.getId());
-  const exportedMaqamInfo = matchingSet.compatibleMaqamat.find(cm =>
-    standardizeText(cm.maqamData.getId()) === maqamIdStandardized
-  );
-  const exportedMaqamTonicPitchClass = exportedMaqamInfo?.maqam.ascendingPitchClasses?.[0];
-  const exportedMaqamFrequency = exportedMaqamTonicPitchClass?.frequency
-    ? parseFloat(exportedMaqamTonicPitchClass.frequency)
-    : null;
-  const exportedMaqamIpnWithOctave = exportedMaqamTonicPitchClass
-    ? getIpnReferenceNoteNameWithOctave(exportedMaqamTonicPitchClass)
-    : 'Unknown';
-  const exportedMaqamTonicNoteName = exportedMaqamTonicPitchClass?.noteName || '';
+  // The EXPORTED transposition is the one the set is made from: the source
+  // transposition, never another transposition of the same maqām
+  const exportedMaqamFrequency = sourceMaqamFrequency;
+  const exportedMaqamIpnWithOctave = sourceMaqamIpnWithOctave;
+  const exportedMaqamTonicNoteName = baseMaqamTonicNoteName;
 
   // Build Scala file content with compatible maqāmāt listing
   const headerLines = buildScalaHeader(maqamData.getName(), {

@@ -1281,11 +1281,14 @@ note names.
    the same `startingNote`
 2. For each maqām transposition:
    - Extracts IPN reference note names from ascending and descending sequences
-   - Puts every pitch class of the maqām on its key, whether or not it is one of the
-     tuning system's 12 chromatic pitch classes; the base (those chromatic pitch classes,
-     else al-Kindi's) fills only the keys the maqām leaves empty
-   - Selects pitch classes from correct octaves to ensure ascending chromatic order
-   - Orders the 12 pitch classes chromatically starting from the maqām's tonic
+   - Puts every degree of the maqām on its key; each key the maqām leaves empty takes
+     al-Kindī's (alkindi_874) pitch on that key. Nothing else enters a set: maqām
+     nairūz's set holds tīk ḥiṣār on G#, its own degree; the set holding maqām lāmī
+     has ḥiṣār there.
+   - Places the tonic in the first octave above `startingNote` (0 to 1200 cents) and
+     each following key in the lowest octave above the key before, so every set ascends
+     from its tonic within both tuning systems. A set has no register: one made from
+     qarār dūgāh is listed from dūgāh.
 3. Groups compatible maqāmāt together: a transposition joins a set only when every pitch
    of its ascending and descending sequences is in the set
 4. Names each group after one of its members (see Set names) and lists the 12 pitch
@@ -1295,8 +1298,8 @@ note names.
 A set is named after one of its members, chosen by one rule. The name never changes
 which maqāmāt are in the set or which 12 pitches it holds.
 1. A set that holds one or more base forms is named after the base form whose maqām has
-   the lowest id. Maqām bayyāt al-nawā (allami_2022 from ʿushayrān) is in the maqām lāmī
-   set: that set holds the base forms of lāmī (id 9) and nairūz (id 18).
+   the lowest id. Maqām lāmī (allami_2022 from ʿushayrān) is in the maqām ḥijāz kār kurd
+   set: that set holds the base forms of ḥijāz kār kurd (id 4), lāmī (id 9) and others.
 2. A set with no base form is named after its commonest family (the jins on the first
    degree of each member's maqām, as `/maqamat/families` reads it; "no jins" is not
    counted). Of that family, the maqām with the lowest id names the set. Two families
@@ -1326,8 +1329,9 @@ The set ID is the chosen member's idName plus `_set`, and `sourceMaqam` and
 
 **Output Format:**
 - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-- Starting from the tonic of the member the set is named after (default) OR from IPN "C"
-  (if `startSetFromC=true`)
+- Starting from the tonic of the member the set is named after, in the first octave
+  above `startingNote` (default), OR from IPN "C" at or below that tonic (if
+  `startSetFromC=true`)
 - Relative cents from 0 (reference note) to ~1050-1200 (octave)
 - `maqamTonic` field indicates the actual maqām tonic position and note name
 - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
