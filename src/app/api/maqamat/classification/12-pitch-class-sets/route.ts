@@ -4,7 +4,8 @@ import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import {
   classifyMaqamat,
   ClassificationResult,
-  IncompatibleMaqam
+  IncompatibleMaqam,
+  listTwelvePitchClassSetFromC
 } from "@/functions/classifyMaqamat12PitchClassSets";
 import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
 import { getNoteNameDisplayAr, parseInArabic } from "@/app/api/arabic-helpers";
@@ -119,7 +120,7 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
  * - startSetFromC: boolean (default: false) - start pitch class set from IPN "C" (for Scala .scl export)
- * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
+ * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set"); a set is named after one of its members, see chooseSetNamesake
  * - maqamId: string (optional) - filter by maqam ID to find sets containing it (e.g., "maqam_rast").
  *   Also lists its transpositions that fit no set; a maqām with none that fit is
  *   still a 200 (compatible: false), only an unknown id is a 404.
@@ -437,6 +438,11 @@ export async function GET(request: Request) {
     };
     const incompatibleFormatted = result.incompatibleMaqamat.map(formatIncompatible);
 
+    // Every octave of both tuning systems, to list a set from C (startSetFromC)
+    const octaveSources = startSetFromC
+      ? [getTuningSystemPitchClasses(cairoTuningSystem, cairoStartingNote as any), getTuningSystemPitchClasses(alKindiTuningSystem, alKindiStartingNote as any)]
+      : [];
+
     // Format response
     const formattedSets = result.sets.map((set) => {
       const sourceMaqamNamespace = buildEntityNamespace(
@@ -450,58 +456,13 @@ export async function GET(request: Request) {
         }
       );
 
-      // Get all pitch classes from all octaves for octave shifting when needed
-      const allTuningSystemPitchClasses = startSetFromC ? getTuningSystemPitchClasses(
-        cairoTuningSystem,
-        cairoStartingNote as any
-      ) : null;
-
-      // Get all 12 pitch classes from the original set
       // CRITICAL: Pitch classes are already in chromatic ascending order from create12PitchClassSet
       // with correct octave selection. Do NOT re-sort them or the octave selection will break.
-      const allPitchClasses: Array<{ ipnRef: string; pitchClass: any }> = [];
-
-      // Get the maqam tonic IPN reference
-      const maqamTonicIpnRef = set.pitchClassSet.pitchClasses.entries().next().value?.[0] || 'C';
-
-      // Define chromatic order for comparison
-      const chromaticOrder = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      const tonicIndex = chromaticOrder.indexOf(maqamTonicIpnRef);
-
-      for (const [ipnRef, pc] of set.pitchClassSet.pitchClasses.entries()) {
-        let pitchClassToUse = pc;
-
-        // For Scala mode: shift octave 2 notes that come BEFORE the tonic to octave 1
-        // This handles cases where the maqam starts mid-octave (e.g., D)
-        // and we need C and C# from octave 1 instead of octave 2
-        if (startSetFromC && pc.octave === 2 && allTuningSystemPitchClasses) {
-          const currentIndex = chromaticOrder.indexOf(ipnRef);
-          // If this note comes before the tonic in chromatic order, get octave 1 equivalent
-          if (currentIndex < tonicIndex) {
-            const octave1Equivalent = allTuningSystemPitchClasses.find(
-              tpc => tpc.referenceNoteName === ipnRef && tpc.octave === 1
-            );
-
-            if (octave1Equivalent) {
-              pitchClassToUse = octave1Equivalent;
-            }
-          }
-        }
-
-        allPitchClasses.push({ ipnRef, pitchClass: pitchClassToUse });
-      }
-
-      // For Scala mode: rotate array to start from C
-      let orderedPitchClasses = allPitchClasses;
-      if (startSetFromC) {
-        const cIndex = allPitchClasses.findIndex(item => item.ipnRef === 'C');
-        if (cIndex !== -1 && cIndex > 0) {
-          orderedPitchClasses = [
-            ...allPitchClasses.slice(cIndex),
-            ...allPitchClasses.slice(0, cIndex)
-          ];
-        }
-      }
+      // For Scala mode the same 12 pitches are listed from C instead of the tonic.
+      const listedPitchClassSet = startSetFromC
+        ? listTwelvePitchClassSetFromC(set.pitchClassSet, octaveSources)
+        : set.pitchClassSet;
+      const orderedPitchClasses = [...listedPitchClassSet.pitchClasses.entries()].map(([ipnRef, pitchClass]) => ({ ipnRef, pitchClass }));
 
       // Get reference cents from the FIRST pitch class in the ordered array
       // This will be the maqam tonic (default) or C (if startSetFromC=true)
@@ -614,21 +575,8 @@ export async function GET(request: Request) {
         };
       });
 
-      // Deduplicate compatible maqamat before counting
-      // Use maqam name + tonic IPN as key to identify duplicates
-      const seenMaqamatByTonic = new Set<string>();
-      const deduplicatedMaqamat = compatibleMaqamatFormatted.filter((maqam) => {
-        const tonicIpn = maqam.tonic?.ipnReferenceNoteName || 'Unknown';
-        const key = `${maqam.maqamDisplayName}:${tonicIpn}`;
-        if (seenMaqamatByTonic.has(key)) {
-          return false; // Duplicate, filter it out
-        }
-        seenMaqamatByTonic.add(key);
-        return true; // Keep this entry
-      });
-
       // Sort compatible maqamat: tahlil (non-transposed) versions first, then by position in set
-      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
+      const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
         // PRIORITY 1: Tahlil (non-transposed) versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
@@ -646,7 +594,7 @@ export async function GET(request: Request) {
         sourceMaqam: sourceMaqamNamespace,
         pitchClassSet: pitchClassSetArray,
         compatibleMaqamat: sortedMaqamat,
-        compatibleMaqamatCount: deduplicatedMaqamat.length
+        compatibleMaqamatCount: sortedMaqamat.length
       };
     });
 
@@ -661,8 +609,8 @@ export async function GET(request: Request) {
     } | null = null;
 
     if (setIdParam) {
-      // Filter by specific set ID. A set is named after its source transposition,
-      // so the older closed-up spelling of that transposition is accepted too.
+      // Filter by specific set ID. A set is named after one of its members (see
+      // chooseSetNamesake), so the older closed-up spelling of that member is accepted too.
       const extractedMaqamId = standardizeText(setIdParam).replace(/_set$/, '');
       const extractedMaqamIdStandardized = canonicalEntityIdName(extractedMaqamId, maqamat.map((m) => m.getIdName()));
       const setIdStandardized = `${extractedMaqamIdStandardized}_set`;

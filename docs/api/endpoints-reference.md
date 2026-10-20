@@ -1281,11 +1281,31 @@ note names.
    the same `startingNote`
 2. For each maqām transposition:
    - Extracts IPN reference note names from ascending and descending sequences
-   - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
+   - Puts every pitch class of the maqām on its key, whether or not it is one of the
+     tuning system's 12 chromatic pitch classes; the base (those chromatic pitch classes,
+     else al-Kindi's) fills only the keys the maqām leaves empty
    - Selects pitch classes from correct octaves to ensure ascending chromatic order
    - Orders the 12 pitch classes chromatically starting from the maqām's tonic
-3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rāst set")
+3. Groups compatible maqāmāt together: a transposition joins a set only when every pitch
+   of its ascending and descending sequences is in the set
+4. Names each group after one of its members (see Set names) and lists the 12 pitch
+   classes from that member's tonic
+
+**Set names:**
+A set is named after one of its members, chosen by one rule. The name never changes
+which maqāmāt are in the set or which 12 pitches it holds.
+1. A set that holds one or more base forms is named after the base form whose maqām has
+   the lowest id. Maqām bayyāt al-nawā (allami_2022 from ʿushayrān) is in the maqām lāmī
+   set: that set holds the base forms of lāmī (id 9) and nairūz (id 18).
+2. A set with no base form is named after its commonest family (the jins on the first
+   degree of each member's maqām, as `/maqamat/families` reads it; "no jins" is not
+   counted). Of that family, the maqām with the lowest id names the set. Two families
+   with the same count: the one whose lowest maqām id is lower. When every member is
+   "no jins", the lowest maqām id of all names the set.
+3. When that maqām is in the set more than once, the form whose tonic has no qarār or
+   jawāb prefix is used, else any form; between several, the lowest tonic in pitch.
+The set ID is the chosen member's idName plus `_set`, and `sourceMaqam` and
+`sourceTransposition` are that member.
 
 **Compatibility:**
 - A 12-pitch-class set has one pitch class per key. Each pitch class of a maqām takes the key
@@ -1297,11 +1317,17 @@ note names.
   the same in one plain sentence (`explanation`).
 - The number of incompatible transpositions is always in `statistics.incompatibleMaqamatCount`;
   the full list is included on request.
+- A maqām transposition is compatible with a set when every one of its pitches, octave
+  ignored, is within `centsTolerance` of one of the set's 12 pitches. Only the pitch is
+  compared, not the key it sits on. Maqām chahārgāh (al-Ṣabbāgh) needs nīm ʿajam
+  (60.41 cents above the octave in allami_2022), so it is not in a set that has ʿajam
+  (90.22) instead.
 - Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
 
 **Output Format:**
 - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-- Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
+- Starting from the tonic of the member the set is named after (default) OR from IPN "C"
+  (if `startSetFromC=true`)
 - Relative cents from 0 (reference note) to ~1050-1200 (octave)
 - `maqamTonic` field indicates the actual maqām tonic position and note name
 - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
@@ -1489,7 +1515,7 @@ GET /maqamat/classification/maqam-pitch-class-sets
 ```
 
 Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
-classes from a single source maqam (union of ascending and descending), and identifies
+classes from a single maqām transposition (union of ascending and descending), and identifies
 which other maqāmāt can be performed using only those pitch classes.
 
 **Musicological Purpose:**
@@ -1522,14 +1548,25 @@ bayyāt on dūgāh and maqām segāh on segāh.
    - Compares cents values within tolerance (octave-normalized)
    - Marks candidate as compatible if all pitch classes match
 3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rāst set")
+4. Names each group after one of its members (see Set names)
+
+**Set names:**
+A set is named by the same rule as on `/maqamat/classification/12-pitch-class-sets`:
+after its lowest-id base form when it holds one, else after the lowest-id maqām of its
+commonest family, preferring a tonic with no qarār or jawāb prefix, then the lowest tonic.
+The set's pitch classes are those of the transposition that made it. The maqām the set
+is named after is a member, so its pitch classes are all in the set, but the set can
+hold more. The set ID is the chosen member's idName plus `_set`.
 
 **Compatibility:**
 - Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
   are marked as incompatible
 - Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
-- **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
-- Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+- **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible).
+  One maqām on one tonic key counts once however many octaves it appears in, so a set holding
+  only maqām rāst on rāst and on kurdān is not returned.
+- Every member is listed, octave equivalents included: maqām bayyāt on yegāh, on nawā and on
+  saham/ramal tūtī are three entries of one set
 
 **Output Format:**
 - Sets ordered by number of compatible maqāmāt (descending)

@@ -44,7 +44,7 @@ export const dynamic = "force-dynamic";
  * - startingNote: string (required) - starting note for tuning system
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
- * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
+ * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set"); a set is named after one of its members, see chooseSetNamesake
  * - maqamId: string (optional) - filter by maqam ID to find sets containing it
  * - centsTolerance: number (default: 5) - tolerance for cents comparison
  *
@@ -282,23 +282,10 @@ export async function GET(request: Request) {
         };
       });
 
-      // Deduplicate compatible maqamat before counting
-      // Use base maqam ID + tonic IPN as key to remove octave equivalents
-      // (e.g., maqam rast on rast and maqam rast on muhayyar rast are octave equivalents)
-      const seenMaqamatByTonic = new Set<string>();
-      const deduplicatedMaqamat = compatibleMaqamatFormatted
-        .filter((maqam) => {
-          const tonicIpn = maqam.tonic?.ipnReferenceNoteName || 'Unknown';
-          const key = `${maqam.baseMaqamIdName}:${tonicIpn}`;
-          if (seenMaqamatByTonic.has(key)) {
-            return false; // Duplicate (octave equivalent), filter it out
-          }
-          seenMaqamatByTonic.add(key);
-          return true; // Keep this entry
-        });
-
+      // Every member is listed, octave equivalents included: maqām bayyāt on
+      // yegāh and on nawā are two transpositions of the set, not one.
       // Sort compatible maqamat: tahlil (non-transposed) versions first, then by base maqam name
-      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
+      const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
         // PRIORITY 1: Tahlil (non-transposed) versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
@@ -328,16 +315,19 @@ export async function GET(request: Request) {
       return responseObj;
     });
 
-    // Filter out sets with only 1 maqam (source only, no compatible maqamat)
-    // A valid set must have at least 2 maqamat (source + at least one compatible)
-    const validSets = formattedSets.filter(set => set.compatibleMaqamatCount >= 2);
+    // Filter out sets with only 1 maqam (source only, no compatible maqamat).
+    // A valid set must have at least 2 maqamat (source + at least one compatible);
+    // one maqām on one tonic key in several octaves counts once here.
+    const validSets = formattedSets.filter(set =>
+      new Set(set.compatibleMaqamat.map((maqam: any) => `${maqam.baseMaqamIdName}:${maqam.tonic?.ipnReferenceNoteName}`)).size >= 2
+    );
 
     // Filter sets based on query parameters
     let filteredSets = validSets;
 
     if (setIdParam) {
-      // Filter by specific set ID. A set is named after its source transposition,
-      // so the older closed-up spelling of that transposition is accepted too.
+      // Filter by specific set ID. A set is named after one of its members (see
+      // chooseSetNamesake), so the older closed-up spelling of that member is accepted too.
       const extractedMaqamId = standardizeText(setIdParam).replace(/_set$/, '');
       const extractedMaqamIdStandardized = canonicalEntityIdName(extractedMaqamId, maqamat.map((m) => m.getIdName()));
       const setIdStandardized = `${extractedMaqamIdStandardized}_set`;

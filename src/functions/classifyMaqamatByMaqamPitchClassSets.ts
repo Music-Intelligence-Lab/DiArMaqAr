@@ -3,7 +3,7 @@ import MaqamData, { Maqam } from "@/models/Maqam";
 import PitchClass from "@/models/PitchClass";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
-import { entityToken } from "@/functions/export";
+import { chooseSetNamesake, maqamFamilyReader, setNamedAfter } from "@/functions/nameClassificationSet";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 
 /**
@@ -31,7 +31,7 @@ export interface MaqamTranspositionInfo {
  * Represents a classification set grouping compatible maqamat
  */
 export interface ClassificationSet {
-  /** The source transposition's identifier plus "_set" — "maqam_hisar_al_qarar_dugah_set" */
+  /** The identifier of the member the set is named after, plus "_set" — "maqam_nairuz_set" (see chooseSetNamesake) */
   id: string;
   name: string;
   sourceMaqam: {
@@ -297,7 +297,9 @@ export function arePitchClassSetsEqual(
 }
 
 /**
- * Main classification function that groups maqamat according to maqam-based pitch class sets.
+ * Groups maqamat according to maqam-based pitch class sets. Each set is named
+ * after the transposition that made it; classifyMaqamatByMaqamPitchClassSets
+ * then names it after the member chooseSetNamesake picks.
  *
  * This function answers the question: "Which maqamat can be performed using only the
  * pitch classes of a single maqam?"
@@ -324,13 +326,13 @@ export function arePitchClassSetsEqual(
  * @param centsTolerance - Tolerance for cents comparison (default: 5)
  * @returns ClassificationResult with sets and incompatible maqamat
  */
-export function classifyMaqamatByMaqamPitchClassSets(
+export function groupMaqamatByMaqamPitchClassSets(
   maqamat: MaqamData[],
   tuningSystem: TuningSystem,
   startingNote: string,
   ajnas: any[],
   centsTolerance: number = 5
-): ClassificationResult {
+): ClassificationResult & { transpositionsOf: (maqamData: MaqamData) => Maqam[] } {
   const sets: ClassificationSet[] = [];
   const incompatibleMaqamat: IncompatibleMaqam[] = [];
   const processedMaqamat = new Set<string>(); // Track processed maqam/transposition combinations
@@ -464,20 +466,9 @@ export function classifyMaqamatByMaqamPitchClassSets(
               }
             }
 
-            // Name the set after its source transposition
-            const setId = `${entityToken(transposition)}_set`;
-            // Use the transposition name (which may include "maqām" prefix and transposition info)
-            const setName = `${transposition.name} set`;
-
+            // Named after the transposition that made it until every set is made
             sets.push({
-              id: setId,
-              name: setName,
-              sourceMaqam: {
-                id: maqamData.getId(),
-                idName: maqamData.getIdName(),
-                name: maqamData.getName()
-              },
-              sourceTransposition: transposition,
+              ...setNamedAfter({ maqam: transposition, maqamData }),
               pitchClassSet: pitchClassSet,
               compatibleMaqamat: compatibleMaqamat,
               pitchClassCount: pitchClassSet.ipnReferenceNames.length
@@ -509,6 +500,29 @@ export function classifyMaqamatByMaqamPitchClassSets(
 
   return {
     sets,
-    incompatibleMaqamat
+    incompatibleMaqamat,
+    transpositionsOf: getCachedTranspositions
   };
+}
+
+/**
+ * Main classification function: groups maqamat by maqam pitch class sets
+ * (groupMaqamatByMaqamPitchClassSets), then names each set after the member
+ * chooseSetNamesake picks. Naming changes no set's members or pitches.
+ */
+export function classifyMaqamatByMaqamPitchClassSets(
+  maqamat: MaqamData[],
+  tuningSystem: TuningSystem,
+  startingNote: string,
+  ajnas: any[],
+  centsTolerance: number = 5
+): ClassificationResult {
+  const { sets, incompatibleMaqamat, transpositionsOf } = groupMaqamatByMaqamPitchClassSets(maqamat, tuningSystem, startingNote, ajnas, centsTolerance);
+
+  const familyOf = maqamFamilyReader(transpositionsOf);
+  for (const set of sets) {
+    Object.assign(set, setNamedAfter(chooseSetNamesake(set.compatibleMaqamat, familyOf)));
+  }
+
+  return { sets, incompatibleMaqamat };
 }

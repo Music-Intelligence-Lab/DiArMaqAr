@@ -5,7 +5,7 @@ import { Jins } from "@/models/Jins";
 import { Maqam } from "@/models/Maqam";
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
-import { fitTwelvePitchClassSet, KeyClash } from "./classifyMaqamat12PitchClassSets";
+import { fitTwelvePitchClassSet, KeyClash, listTwelvePitchClassSetFromC } from "./classifyMaqamat12PitchClassSets";
 import { getMaqamat, getAjnas } from "./import";
 import { createEntityTokenFromName, standardizeText } from "./export";
 import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "./getIpnReferenceNoteName";
@@ -782,53 +782,13 @@ export function exportMaqamTo12ToneScala(
     referenceFrequencies
   );
 
-  // Get all 12 pitch classes from the original set
-  const allPitchClasses: Array<{ ipnRef: string; pitchClass: PitchClass }> = [];
-
-  // Get the maqam tonic IPN reference (first entry in the Map, which is ordered from tonic)
-  // This matches the API endpoint logic exactly
-  const maqamTonicIpnRef = pitchClassSetResult.pitchClasses.entries().next().value?.[0] || 'C';
-
-  // Define chromatic order for comparison
-  const chromaticOrder = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-  const tonicIndex = chromaticOrder.indexOf(maqamTonicIpnRef);
-
-  // Build pitch class array with octave shifting for Scala mode
-  // This matches the API endpoint logic when startSetFromC=true
-  for (const [ipnRef, pc] of pitchClassSetResult.pitchClasses.entries()) {
-    let pitchClassToUse = pc;
-
-    // For Scala mode: shift octave 2 notes that come BEFORE the tonic to octave 1
-    // This handles cases where the maqam starts mid-octave (e.g., D)
-    // and we need C and C# from octave 1 instead of octave 2
-    // This matches the API endpoint logic exactly
-    if (pc.octave === 2 && allTuningSystemPitchClasses) {
-      const currentIndex = chromaticOrder.indexOf(ipnRef);
-      // If this note comes before the tonic in chromatic order, get octave 1 equivalent
-      if (currentIndex < tonicIndex) {
-        const octave1Equivalent = allTuningSystemPitchClasses.find(
-          tpc => tpc.referenceNoteName === ipnRef && tpc.octave === 1
-        );
-
-        if (octave1Equivalent) {
-          pitchClassToUse = octave1Equivalent;
-        }
-      }
-    }
-
-    allPitchClasses.push({ ipnRef, pitchClass: pitchClassToUse });
-  }
-
-  // For Scala mode: rotate array to start from C
-  // This matches the API endpoint logic when startSetFromC=true
-  let orderedPitchClasses = allPitchClasses;
-  const cIndex = allPitchClasses.findIndex(item => item.ipnRef === 'C');
-  if (cIndex !== -1 && cIndex > 0) {
-    orderedPitchClasses = [
-      ...allPitchClasses.slice(cIndex),
-      ...allPitchClasses.slice(0, cIndex)
-    ];
-  }
+  // The same 12 pitches listed from C, as the API endpoint lists them when
+  // startSetFromC=true: each pitch moves only to another octave of itself
+  const fromC = listTwelvePitchClassSetFromC(pitchClassSetResult, [
+    allTuningSystemPitchClasses,
+    getTuningSystemPitchClasses(alKindiTuningSystem, alKindiStartingNote as any),
+  ]);
+  const orderedPitchClasses = [...fromC.pitchClasses.entries()].map(([ipnRef, pitchClass]) => ({ ipnRef, pitchClass }));
 
   // Get reference cents from the FIRST pitch class in the ordered array
   // This will be C (since we're in Scala mode, always starting from C)
