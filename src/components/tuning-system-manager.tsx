@@ -33,6 +33,7 @@ import ExportModal from "./export-modal";
 import SelectedPitchClassesAnalysis from "./tuning-system-selected-pitch-classes-analysis";
 import Link from "next/link";
 import { canTransposeMaqamToNote } from "@/functions/transpose";
+import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import FrequencyKnob from "./frequency-knob";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
@@ -45,23 +46,23 @@ function isTuningSystemDisabled(
   selectedMaqam: Maqam | null,
   startingNoteName: NoteName = ""
 ): { disabled: boolean; noteName: string } {
-  const shiftedNoteNames = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
+  // Each starting note with the note names it offers, the same pitch space the
+  // maqām and jins lists check (see getPitchSpaceNoteNames)
+  const pitchSpaces = getStartingNotePitchSpaces(tuningSystem);
 
   if (!selectedJinsData && !selectedMaqamData)
     return { disabled: false, noteName: "" };
 
   if (selectedJinsData) {
-    for (const set of shiftedNoteNames) {
-      if (selectedJinsData.isJinsPossible(set)) {
-        const firstNoteName = set[set.length / 3];
+    for (const { startingNote: firstNoteName, noteNames } of pitchSpaces) {
+      if (selectedJinsData.isJinsPossible(noteNames)) {
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         return { disabled: false, noteName: firstNoteName };
       }
     }
   } else if (selectedMaqamData) {
-    for (const set of shiftedNoteNames) {
-      if (selectedMaqamData.isMaqamPossible(set)) {
-        const firstNoteName = set[set.length / 3];
+    for (const { startingNote: firstNoteName, noteNames } of pitchSpaces) {
+      if (selectedMaqamData.isMaqamPossible(noteNames)) {
         if (startingNoteName && firstNoteName !== startingNoteName) continue;
         if (selectedMaqam) {
           if (

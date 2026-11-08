@@ -1,5 +1,5 @@
 import { standardizeText } from "@/functions/export";
-import NoteName, { shiftNoteName } from "./NoteName";
+import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
 
 /**
@@ -356,24 +356,6 @@ export default class TuningSystem {
    */
   stringify(): string {
     return `${this.getCreatorEnglish()} (${this.getYear() ? this.getYear() : "NA"}) ${this.getTitleEnglish()}`;
-  }
-
-  /**
-   * Gets note name sets expanded to include octaves above and below.
-   * 
-   * This method is crucial for jins and maqam analysis as it provides access
-   * to pitch classes in multiple octaves. Each note name set is expanded to
-   * include the octave below (-1) and the octave above (+1) the primary octave,
-   * giving analysts access to a three-octave range for comprehensive modal analysis.
-   * 
-   * @returns Expanded note name sets with three octaves of coverage
-   */
-  getNoteNameSetsWithAdjacentOctaves(): NoteName[][] {
-    const usedNoteNames: NoteName[][] = [];
-    for (const set of this.noteNameSets) {
-      usedNoteNames.push([...set.map((noteName) => shiftNoteName(noteName, -1)), ...set, ...set.map((noteName) => shiftNoteName(noteName, 1))] as NoteName[]);
-    }
-    return usedNoteNames as NoteName[][];
   }
 
   /**

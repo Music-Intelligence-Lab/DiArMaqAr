@@ -153,9 +153,6 @@ export async function GET(
       return addCorsHeaders(response);
     }
 
-    // Get all note name sets with adjacent octaves for proper maqam checking
-    const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
     // The starting note requested in the path, in its display form (with
     // diacritics) — getTuningSystemPitchClasses matches note-name sets on the
     // exact string. Every maqām below is analysed in THIS set: the starting note
@@ -167,6 +164,9 @@ export async function GET(
     // Pitch classes depend only on (tuningSystem, startingNote), so compute them
     // once for the whole request rather than per maqām.
     const pitchClasses = getTuningSystemPitchClasses(tuningSystem, requestedStartingNoteDisplay);
+    // The pitch space every maqām is checked against: the same note names the
+    // transpositions below are calculated in (see getPitchSpaceNoteNames).
+    const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
 
     // Sequential spelling logic for degree detail objects (englishName + solfege).
     // We import lazily to keep the default list endpoint fast.
@@ -193,26 +193,7 @@ export async function GET(
     const availableMaqamat: any[] = [];
 
     for (const maqam of maqamatData) {
-      // Check if maqam is possible in any of the starting notes
-      let isPossible = false;
-      const availableStartingNotes: string[] = [];
-
-      for (const noteNameSet of shiftedSets) {
-        if (maqam.isMaqamPossible(noteNameSet)) {
-          isPossible = true;
-          // Get the tuning system starting note (first note of middle octave)
-          const tuningSystemStartingNote = noteNameSet[noteNameSet.length / 3];
-          const standardizedNote = standardizeText(tuningSystemStartingNote);
-          if (!availableStartingNotes.includes(standardizedNote)) {
-            availableStartingNotes.push(standardizedNote);
-          }
-        }
-      }
-
-      // Filter by the required startingNote parameter (from URL path)
-      isPossible = availableStartingNotes.includes(normalizedParam);
-
-      if (isPossible) {
+      if (maqam.isMaqamPossible(pitchSpaceNoteNames)) {
         // The maqām's own tonic, used for the `tonic` namespace below. It must not
         // be passed to getTuningSystemPitchClasses — a maqām tonic is rarely one of
         // a tuning system's starting notes, and doing so previously selected the

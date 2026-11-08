@@ -158,9 +158,6 @@ export async function GET(
       return addCorsHeaders(response);
     }
 
-    // Get all note name sets with adjacent octaves for proper jins checking
-    const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
     // The starting note requested in the path, in its display form (with
     // diacritics) — getTuningSystemPitchClasses matches note-name sets on the
     // exact string. A jins tonic must never be passed here: the starting note
@@ -172,6 +169,9 @@ export async function GET(
     // Pitch classes depend only on (tuningSystem, startingNote), so compute them
     // once for the whole request rather than per jins.
     const pitchClasses = getTuningSystemPitchClasses(tuningSystem, requestedStartingNoteDisplay);
+    // The pitch space every jins is checked against: the same note names the
+    // transpositions below are calculated in (see getPitchSpaceNoteNames).
+    const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
 
     // Sequential spelling logic for degree detail objects (englishName + solfege).
     // We import lazily to keep the default list endpoint fast.
@@ -184,22 +184,7 @@ export async function GET(
     const availableAjnas: any[] = [];
 
     for (const jins of ajnasData) {
-      // Check which tuning system starting notes this jins is possible under
-      const availableStartingNotes: string[] = [];
-
-      for (const noteNameSet of shiftedSets) {
-        if (jins.isJinsPossible(noteNameSet)) {
-          // Get the tuning system starting note (first note of middle octave)
-          const tuningSystemStartingNote = noteNameSet[noteNameSet.length / 3];
-          const standardizedNote = standardizeText(tuningSystemStartingNote);
-          if (!availableStartingNotes.includes(standardizedNote)) {
-            availableStartingNotes.push(standardizedNote);
-          }
-        }
-      }
-
-      // Filter by the required startingNote parameter (from URL path)
-      if (!availableStartingNotes.includes(normalizedParam)) continue;
+      if (!jins.isJinsPossible(pitchSpaceNoteNames)) continue;
 
       // Calculate transpositions and get tahlil
       const transpositions = calculateJinsTranspositions(

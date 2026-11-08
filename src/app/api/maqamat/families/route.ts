@@ -117,7 +117,6 @@ export async function GET(request: Request) {
     }
 
     const noteNameSets = tuningSystem.getNoteNameSets();
-    const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
 
     const startingNoteIndex = noteNameSets.findIndex(
       (set) => set[0] && standardizeText(set[0]) === standardizeText(startingNoteParam)
@@ -150,9 +149,11 @@ export async function GET(request: Request) {
       startingNote as any
     );
 
-    const availableMaqamat = maqamat.filter((maqam) =>
-      shiftedNoteNameSets.some((noteNameSet) => maqam.isMaqamPossible(noteNameSet))
-    );
+    // Checked in the requested starting note's pitch space, the same note names
+    // the transpositions below are calculated in (see getPitchSpaceNoteNames).
+    // Checking every starting note instead listed maqāmāt this one cannot build.
+    const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
+    const availableMaqamat = maqamat.filter((maqam) => maqam.isMaqamPossible(pitchSpaceNoteNames));
 
     const familyMap = new Map<
       string,

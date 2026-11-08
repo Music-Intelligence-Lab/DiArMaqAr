@@ -681,9 +681,10 @@ export async function GET(
     // Get pitch classes
     const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
 
-    // Check if jins is possible in this tuning
-    const noteNameSetsExpanded = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-    const isPossible = noteNameSetsExpanded.some(set => jins.isJinsPossible(set));
+    // Check if jins is possible in this starting note's pitch space (see
+    // getPitchSpaceNoteNames). Checking every starting note instead let a jins
+    // through that this one cannot build.
+    const isPossible = jins.isJinsPossible(pitchClasses.map((pc) => pc.noteName));
     if (!isPossible) {
       return addCorsHeaders(
         NextResponse.json(

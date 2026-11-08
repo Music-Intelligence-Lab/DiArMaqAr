@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
@@ -136,19 +137,9 @@ export async function GET(request: Request) {
       const availabilityEntries: AvailabilityAccumulator[] = [];
 
       for (const tuningSystem of tuningSystems) {
-        const noteNameSets = tuningSystem.getNoteNameSets();
-        const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
-        const validTuningSystemStartingNoteNames: string[] = [];
-
-        for (let i = 0; i < shiftedNoteNameSets.length; i++) {
-          if (maqam.isMaqamPossible(shiftedNoteNameSets[i])) {
-            const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
-            if (tuningSystemStartingNoteName) {
-              validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
-            }
-          }
-        }
+        const validTuningSystemStartingNoteNames: string[] = getStartingNotePitchSpaces(tuningSystem)
+          .filter(({ noteNames }) => maqam.isMaqamPossible(noteNames))
+          .map(({ startingNote }) => startingNote);
 
         if (validTuningSystemStartingNoteNames.length > 0) {
           availableInTuningSystems++;
