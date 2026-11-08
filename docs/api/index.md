@@ -41,7 +41,7 @@ Documented modal frameworks with historical source attribution.
 **Endpoints (8):**
 - `GET /maqamat` - List all maqāmāt → [Details](./endpoints-reference#listMaqamat)
 - `GET /maqamat/families` - List maqām families → [Details](./endpoints-reference#listMaqamFamilies)
-- `GET /maqamat/{idName}` - Get detailed maqām data → [Details](./endpoints-reference#getMaqam)
+- `GET /maqamat/{idName}` - Get detailed maqām data → [Details](./endpoints-reference#getMaqam) · [Every maqām form in one request](#every-maqam-form-in-one-request)
 - `GET /maqamat/{idName}/availability` - Check maqām availability across tuning systems → [Details](./endpoints-reference#getMaqamAvailability)
 - `GET /maqamat/{idName}/transpositions` - List transpositions for a maqām → [Details](./endpoints-reference#listMaqamTranspositions)
 - `GET /maqamat/{idName}/compare` - Compare maqām data across multiple tuning systems → [Details](./endpoints-reference#compareMaqam)
@@ -143,6 +143,34 @@ Name the tonic once. A transposed `idName` together with a `transposeTo` (or `tr
 `/maqamat/{idName}/transpositions` and `/ajnas/{idName}/transpositions` list every transposition, so they take the base `idName` only. A transposed `idName` there is a 400 whose `hint` names the base `idName` to use.
 
 **Older spelling.** Until October 2026, some endpoints closed up the separator, spelling maqām rāst on qarār chahārgāh as `maqam_rast_alqarar_chahargah`. These were the base response's `availableTranspositions`, the compare endpoints, both classification endpoints (including set IDs), and modulation routes. Separately, a request with `transposeTo` set to a note an octave away from the taḥlīl (`transposeTo=qarar_rast` for maqām rāst) used to return the bare base `idName` and display name; it now returns `maqam_rast_al_qarar_rast`, matching the rest of the API. If you stored one of the closed-up IDs, it is still accepted wherever an `idName` is: in the path of every `/maqamat/{idName}` and `/ajnas/{idName}` route, and in the `maqamId` and `setId` filters on the classification endpoints. It is read as the current spelling. Responses use only the current spelling.
+
+**Ajnās an octave from their own tonic.** Until November 2026, a jins found at a maqām degree an octave from its own tonic kept its bare base `idName`: jins yegāh on nawā came back as `jins_yegah` with `isBaseForm: false`. It now names its tonic like every other form, `jins_yegah_al_nawa`, the same `idName` the jins endpoints give it.
+
+---
+
+## Every maqām form in one request {#every-maqam-form-in-one-request}
+
+`GET /maqamat/all` describes every maqām a tuning system can build from a starting note, so a client does not need one `GET /maqamat/{idName}` call per form.
+
+Each item in `maqamat` is exactly the body `GET /maqamat/{idName}` returns for that form with the same options, minus the envelope (`parameters`, `context`, `links`). The response carries the envelope once. Code that reads one maqām response can read each item unchanged.
+
+| Parameter | Values | What it does |
+|---|---|---|
+| `forms` | `base` (default), `transpositions`, `all` | The taḥlīl of each maqām, its transpositions (taṣwīr), or both |
+| `includeOctaveRenderings` | `true` / `false` | Also returns each maqām an octave from its taḥlīl, such as `maqam_rast_al_qarar_rast`. These are neither the taḥlīl nor a taṣwīr, and they appear as modulation targets |
+| `fields` | e.g. `ajnas,primaryJins,modulations` | Keeps only these top-level fields in each item. `maqam` is always kept. A field left out is not computed, so leaving out `modulations`, `lowerOctaveModulations` and `stats` skips the modulation analysis |
+| `offset` | integer | Where a page starts. Leave it out and follow `next` |
+
+`includeModulations`, `includeModulations8vb`, `includeIntervals`, `includeSuyur`, `includeArabic`, `pitchClassDataType` and `centsTolerance` work as they do for one maqām.
+
+**Pages.** A full analysis is larger than one response can be. For al-Fārābī (950g) from ʿushayrān, all 440 forms (101 taḥlīl and 339 taṣwīr) with both kinds of modulation are about 25 MB. So the response is cut into pages of at most about 5 MB. `total` counts every selected form, `count` counts the forms on this page, and `next` is the URL of the next page, or `null` on the last one. Requests without modulations usually fit on one page.
+
+```bash
+# First page; then request each `next` URL until it is null
+curl "https://diarmaqar.net/api/maqamat/all?tuningSystem=alfarabi_950g&startingNote=ushayran&forms=all&includeModulations=true&includeModulations8vb=true&pitchClassDataType=cents&fields=pitchData,ajnas,primaryJins,secondaryJins,tertiaryJins,ghammaz,modulations,lowerOctaveModulations"
+```
+
+Every page is cached at the edge and carries an `ETag`, so a client can check for changes with `If-None-Match` and get a 304 when nothing changed.
 
 ---
 
