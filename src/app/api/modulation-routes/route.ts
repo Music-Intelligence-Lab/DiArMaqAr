@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { standardizeText } from "@/functions/export";
 import { findModulationRoutes } from "@/functions/findModulationRoutes";
 import { getTuningSystems } from "@/functions/import";
@@ -51,14 +52,10 @@ export async function GET(request: Request) {
     const toTonicId = searchParams.get("toTonic");
     const waypointsParam = searchParams.get("waypoints");
     const maxHopsParam = searchParams.get("maxHops");
-    const returnToStartingMaqam = searchParams.get("returnToStartingMaqam") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["returnToStartingMaqam", "limitToShortestHops", "allowOctaveJumps", "allowDownwardModulation"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { returnToStartingMaqam, limitToShortestHops, allowOctaveJumps, allowDownwardModulation } = booleanFlags.values;
     const maxRoutesParam = searchParams.get("maxRoutes");
-    const limitToShortestHopsParam = searchParams.get("limitToShortestHops");
-    const limitToShortestHops = limitToShortestHopsParam === null ? false : limitToShortestHopsParam === "true";
-    const allowOctaveJumpsParam = searchParams.get("allowOctaveJumps");
-    const allowOctaveJumps = allowOctaveJumpsParam === null ? false : allowOctaveJumpsParam === "true";
-    const allowDownwardModulationParam = searchParams.get("allowDownwardModulation");
-    const allowDownwardModulation = allowDownwardModulationParam === null ? false : allowDownwardModulationParam === "true";
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance

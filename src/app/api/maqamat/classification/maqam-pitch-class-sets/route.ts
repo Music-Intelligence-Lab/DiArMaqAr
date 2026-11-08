@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import {
   classifyMaqamatByMaqamPitchClassSets,
@@ -57,8 +58,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeIncompatible = searchParams.get("includeIncompatible") === "true";
-    const includePitchClassData = searchParams.get("includePitchClassData") === "true"; // Default false
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIncompatible", "includePitchClassData"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIncompatible, includePitchClassData } = booleanFlags.values;
     const setIdParam = searchParams.get("setId");
     const maqamIdParam = searchParams.get("maqamId");
 

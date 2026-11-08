@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
@@ -198,7 +199,6 @@ export async function GET(
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNotesParam = searchParams.get("startingNotes");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
-    const intervalsParam = searchParams.get("includeIntervals");
     let transposeToNote = searchParams.get("transposeTo");
 
     // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
@@ -353,36 +353,9 @@ export async function GET(
       return result;
     };
 
-    // Validate intervals parameter (3-step validation: null -> empty string -> invalid value)
-    let includeIntervals = false; // Default to false
-    if (intervalsParam !== null) {
-      if (intervalsParam === "") {
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "Invalid parameter: includeIntervals",
-              message: "The 'includeIntervals' parameter cannot be empty. Use 'true' or 'false'.",
-              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
-            },
-            { status: 400 }
-          )
-        );
-      }
-      if (intervalsParam !== "true" && intervalsParam !== "false") {
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "Invalid parameter: includeIntervals",
-              message: "The 'includeIntervals' parameter must be 'true' or 'false'.",
-              validOptions: ["true", "false"],
-              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
-            },
-            { status: 400 }
-          )
-        );
-      }
-      includeIntervals = intervalsParam === "true";
-    }
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIntervals } = booleanFlags.values;
 
     // Validate tuningSystems parameter
     if (!tuningSystemsParam) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -272,9 +273,10 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataTypeRaw = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("includeIntervals") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals", "options"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIntervals, options: showOptions } = booleanFlags.values;
     let transposeToNote = searchParams.get("transposeTo");
-    const showOptions = searchParams.get("options") === "true";
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance

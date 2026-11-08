@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
@@ -57,7 +58,9 @@ export async function GET(request: Request) {
       }
       throw err;
     }
-    const includeSources = searchParams.get("includeSources") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeSources"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeSources } = booleanFlags.values;
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance

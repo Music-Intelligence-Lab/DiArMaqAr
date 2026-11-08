@@ -8,6 +8,7 @@
  * - Persian and Turkish letters commonly used in maqam terminology
  * - Special characters and combinations unique to musical terms
  */
+import { parseBooleanFlag } from "@/functions/parseBooleanFlag";
 
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Hamza patterns (must come first - longest patterns first)
@@ -241,18 +242,7 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
  * Allows optional custom parameter name for future reuse.
  */
 export function parseInArabicFlag(value: string | null, fieldName: string = "includeArabic"): boolean {
-  if (value === null) return false; // Default to false
-
-  const trimmed = value.trim();
-  if (trimmed === "") {
-    throw new Error(`Invalid parameter: ${fieldName} cannot be empty. Use 'true' or 'false'.`);
-  }
-
-  const normalized = trimmed.toLowerCase();
-  if (normalized === "true") return true;
-  if (normalized === "false") return false;
-
-  throw new Error(`Invalid parameter: ${fieldName} must be 'true' or 'false', got '${value}'`);
+  return parseBooleanFlag(value, fieldName);
 }
 
 /**

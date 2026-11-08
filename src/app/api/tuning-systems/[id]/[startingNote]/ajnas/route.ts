@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { entityToken, standardizeText } from "@/functions/export";
 import { calculateJinsTranspositions } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -50,9 +51,9 @@ export async function GET(
     }
 
     // Parse optional include flags
-    const includeTranspositions = searchParams.get("includeTranspositions") === "true";
-    const includeJinsDegrees = searchParams.get("includeJinsDegrees") === "true";
-    const includeDegreeDetails = searchParams.get("includeDegreeDetails") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeJinsDegrees", "includeDegreeDetails"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeTranspositions, includeJinsDegrees, includeDegreeDetails } = booleanFlags.values;
     const shouldIncludeDegreeDetails = includeJinsDegrees && includeDegreeDetails;
 
     // Get cents tolerance parameter

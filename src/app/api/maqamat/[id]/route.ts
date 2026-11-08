@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -332,9 +333,10 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const includeIntervals = searchParams.get("includeIntervals") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals", "includeModulations", "includeModulations8vb", "includeSuyur", "options"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIntervals, includeModulations, includeModulations8vb: includeModulations8vbEnabled, includeSuyur, options: showOptions } = booleanFlags.values;
     let transposeToNote = searchParams.get("transposeTo");
-    const includeModulations = searchParams.get("includeModulations") === "true";
     if (searchParams.has("includeLowerOctaveModulations")) {
       return addCorsHeaders(
         NextResponse.json(
@@ -348,9 +350,6 @@ export async function GET(
         )
       );
     }
-    const includeModulations8vbEnabled = searchParams.get("includeModulations8vb") === "true";
-    const includeSuyur = searchParams.get("includeSuyur") === "true";
-    const showOptions = searchParams.get("options") === "true";
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
