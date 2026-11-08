@@ -10,7 +10,7 @@ import PitchClass from "@/models/PitchClass";
 import { Maqam } from "@/models/Maqam";
 import TuningSystem from "@/models/TuningSystem";
 import { parseInArabic, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
-import { buildMaqamDetail, MaqamDetailContext, validPitchClassDataTypes } from "@/app/api/maqamat/maqam-detail";
+import { buildMaqamDetail, MaqamDetailContext, MAQAM_DETAIL_FIELDS, validPitchClassDataTypes } from "@/app/api/maqamat/maqam-detail";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -26,31 +26,12 @@ export const OPTIONS = handleCorsPreflightRequest;
 const BULK_FORMS = ["base", "transpositions", "all"] as const;
 type BulkForms = (typeof BULK_FORMS)[number];
 
-/** The top-level fields of a maqām form that `fields` can select */
-const BULK_ITEM_FIELDS = [
-  "family",
-  "tonic",
-  "transposition",
-  "stats",
-  "characteristics",
-  "availableTranspositions",
-  "comments",
-  "sources",
-  "pitchData",
-  "intervals",
-  "ajnas",
-  "primaryJins",
-  "secondaryJins",
-  "tertiaryJins",
-  "ghammaz",
-  "suyur",
-  "modulations",
-  "lowerOctaveModulations",
-];
-
-function pickFields(detail: Record<string, any>, fields: string[]): Record<string, any> {
-  return Object.fromEntries(Object.entries(detail).filter(([key]) => fields.includes(key)));
-}
+/**
+ * The most bytes of items one /maqamat/all page holds. A serverless function
+ * can return at most 6 MB buffered (Netlify), so a page stops before this and
+ * names the next one in `next`. A page always holds at least one form.
+ */
+const BULK_PAGE_BYTES = 5_000_000;
 
 /**
  * `context.tuningSystem`: the tuning system and the starting note every maqām
@@ -331,7 +312,7 @@ export async function GET(
       let fields: string[] | null = null;
       if (fieldsParam !== null) {
         fields = fieldsParam.split(",").map((field) => field.trim()).filter(Boolean);
-        const unknown = fields.filter((field) => !BULK_ITEM_FIELDS.includes(field));
+        const unknown = fields.filter((field) => !MAQAM_DETAIL_FIELDS.includes(field));
         if (fields.length === 0 || unknown.length > 0) {
           return addCorsHeaders(
             NextResponse.json(
@@ -340,13 +321,29 @@ export async function GET(
                 message: fields.length === 0
                   ? "fields cannot be empty. Leave it out to return every field."
                   : `Unknown field(s): ${unknown.join(", ")}`,
-                validOptions: BULK_ITEM_FIELDS,
+                validOptions: MAQAM_DETAIL_FIELDS,
                 hint: "Use ?fields=ajnas,modulations (comma-separated); maqam is always returned"
               },
               { status: 400 }
             )
           );
         }
+      }
+
+      // Where this page starts in the full list of selected forms
+      const offsetParam = searchParams.get("offset");
+      const offset = offsetParam === null ? 0 : Number(offsetParam);
+      if (offsetParam !== null && (offsetParam.trim() === "" || !Number.isInteger(offset) || offset < 0)) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid parameter: offset",
+              message: `offset must be a non-negative integer, got '${offsetParam}'`,
+              hint: "Leave offset out for the first page, then follow `next`"
+            },
+            { status: 400 }
+          )
+        );
       }
 
       const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
@@ -373,13 +370,43 @@ export async function GET(
         (form.transposition && forms !== "base") ||
         (includeOctaveRenderings && !form.isBaseForm && !form.transposition);
 
-      const items: Record<string, any>[] = [];
-      for (const maqam of availableMaqamat) {
+      const selectedForms = availableMaqamat.flatMap((maqam) => {
         const transpositions = ctx.transpositionsOf(maqam);
-        for (const form of transpositions.filter(isSelected)) {
-          const detail = buildMaqamDetail(ctx, maqam, transpositions, form);
-          items.push(fields ? pickFields(detail, ["maqam", ...fields]) : detail);
-        }
+        return transpositions.filter(isSelected).map((form) => ({ maqam, transpositions, form }));
+      });
+      const total = selectedForms.length;
+      if (offset > 0 && offset >= total) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: "Invalid parameter: offset",
+              message: `offset ${offset} is past the last of the ${total} selected forms`,
+              hint: "Leave offset out for the first page, then follow `next`"
+            },
+            { status: 400 }
+          )
+        );
+      }
+
+      // Fill the page form by form until the next one would pass the byte budget
+      const fieldSet = fields ? new Set(fields) : undefined;
+      const items: Record<string, any>[] = [];
+      let pageBytes = 0;
+      let index = offset;
+      for (; index < total; index++) {
+        const { maqam, transpositions, form } = selectedForms[index];
+        const item = buildMaqamDetail(ctx, maqam, transpositions, form, {}, fieldSet);
+        const itemBytes = Buffer.byteLength(JSON.stringify(item));
+        if (items.length > 0 && pageBytes + itemBytes > BULK_PAGE_BYTES) break;
+        items.push(item);
+        pageBytes += itemBytes;
+      }
+
+      let next: string | null = null;
+      if (index < total) {
+        const nextUrl = new URL(getCanonicalSelfUrl(request));
+        nextUrl.searchParams.set("offset", String(index));
+        next = nextUrl.toString();
       }
 
       return addCorsHeaders(
@@ -395,8 +422,11 @@ export async function GET(
             forms,
             includeOctaveRenderings,
             fields,
+            offset,
           },
+          total,
           count: items.length,
+          next,
           maqamat: items
         })
       );

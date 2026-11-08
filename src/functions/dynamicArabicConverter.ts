@@ -219,22 +219,36 @@ function convertNoteNameToArabic(name: string): string {
   return transliterateToArabic(name);
 }
 
+const arabicNameCache = new Map<string, string>();
+
 /**
  * Generic dynamic Arabic converter that detects type and applies appropriate conversion
  */
 export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqam"): string {
   if (!name || typeof name !== "string") return name;
 
+  // The conversion depends on nothing but (type, name), and a bulk response
+  // asks for the same few hundred names tens of thousands of times — every
+  // modulation target of every maqām form. Converting each once took
+  // /maqamat/all?forms=all&includeArabic=true from about 9 s to 3 s.
+  const key = `${type}\u0000${name}`;
+  const cached = arabicNameCache.get(key);
+  if (cached !== undefined) return cached;
+
+  let arabic: string;
   switch (type) {
     case "note":
-      return convertNoteNameToArabic(name);
+      arabic = convertNoteNameToArabic(name);
+      break;
     case "jins":
-      return convertMaqamNameToArabic(name);
     case "maqam":
-      return convertMaqamNameToArabic(name);
+      arabic = convertMaqamNameToArabic(name);
+      break;
     default:
-      return transliterateToArabic(name);
+      arabic = transliterateToArabic(name);
   }
+  arabicNameCache.set(key, arabic);
+  return arabic;
 }
 
 /**

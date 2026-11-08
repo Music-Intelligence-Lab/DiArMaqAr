@@ -159,6 +159,28 @@ export function formatIntervalData(intervals: any[], format: string) {
   }
 }
 
+/** The top-level fields of a maqām form that `fields` can select; `maqam` is always present */
+export const MAQAM_DETAIL_FIELDS = [
+  "family",
+  "tonic",
+  "transposition",
+  "stats",
+  "characteristics",
+  "availableTranspositions",
+  "comments",
+  "sources",
+  "pitchData",
+  "intervals",
+  "ajnas",
+  "primaryJins",
+  "secondaryJins",
+  "tertiaryJins",
+  "ghammaz",
+  "suyur",
+  "modulations",
+  "lowerOctaveModulations",
+];
+
 export interface MaqamDetailOptions {
   pitchClassDataType: string | null;
   includeIntervals: boolean;
@@ -374,21 +396,25 @@ function serializeModulations(
  *
  * @param envelope - fields the caller places after `sources` (the single route's
  *   parameters, context and links), so its key order stays as documented
+ * @param fields - the top-level fields to build; all of them when omitted.
+ *   `maqam` is always built. A field left out is not computed at all, so a
+ *   client that skips modulations and stats skips the modulation analysis.
  */
 export function buildMaqamDetail(
   ctx: MaqamDetailContext,
   maqam: MaqamData,
   transpositions: Maqam[],
   form: Maqam,
-  envelope: Record<string, unknown> = {}
+  envelope: Record<string, unknown> = {},
+  fields?: ReadonlySet<string>
 ): Record<string, any> {
   const { inArabic, pitchClassDataType, includeIntervals, includeModulations, includeModulations8vb, includeSuyur } = ctx.options;
+  const wants = (field: string) => !fields || fields.has(field);
 
   // The taḥlīl, by flag rather than by position — transpose.ts happens to
   // return it first, but nothing states that as a contract.
   const tahlil = transpositions.find((t) => t.isBaseForm)!;
   const familyClassification = classifyMaqamFamily(tahlil);
-  const counts = ctx.tahlilCounts(maqam, tahlil);
 
   // A taṣwīr moves the tonic to another modal degree. An octave-register
   // sibling of the base form is not one, so it has no `transposition`
@@ -433,12 +459,14 @@ export function buildMaqamDetail(
           resolved: tonicNamespace,
         }
       : undefined,
-    stats: {
-      numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
-      numberOfPitchClasses: ascendingNoteNames.length,
-      numberOfMaqamModulations: counts.maqamat,
-      numberOfAjnasModulations: counts.ajnas,
-    },
+    stats: wants("stats")
+      ? {
+          numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
+          numberOfPitchClasses: ascendingNoteNames.length,
+          numberOfMaqamModulations: ctx.tahlilCounts(maqam, tahlil).maqamat,
+          numberOfAjnasModulations: ctx.tahlilCounts(maqam, tahlil).ajnas,
+        }
+      : undefined,
     characteristics: {
       isOctaveRepeating: ascendingNoteNames.length <= 7,
       hasAsymmetricDescending: JSON.stringify(ascendingNoteNames) !== JSON.stringify([...descendingNoteNames].reverse()),
@@ -468,41 +496,48 @@ export function buildMaqamDetail(
     sources: maqam.getSourcePageReferences().map((src) => ({ sourceId: src.sourceId, page: src.page })),
     ...envelope,
   };
+  if (fields) {
+    for (const key of Object.keys(detail)) if (key !== "maqam" && !(key in envelope) && !fields.has(key)) delete detail[key];
+  }
 
   // Maqām-context spellings, each direction on its own (shared with the
   // compare route so both read the same)
-  const spelled = spellMaqamDirections(form.ascendingPitchClasses, form.descendingPitchClasses);
-  detail.pitchData = {
-    ascending: formatPitchData(spelled.ascending, pitchClassDataType, false, inArabic),
-    descending: formatPitchData(spelled.descending, pitchClassDataType, true, inArabic),
-  };
+  if (wants("pitchData")) {
+    const spelled = spellMaqamDirections(form.ascendingPitchClasses, form.descendingPitchClasses);
+    detail.pitchData = {
+      ascending: formatPitchData(spelled.ascending, pitchClassDataType, false, inArabic),
+      descending: formatPitchData(spelled.descending, pitchClassDataType, true, inArabic),
+    };
+  }
 
-  if (includeIntervals) {
+  if (includeIntervals && wants("intervals")) {
     detail.intervals = {
       ascending: formatIntervalData(form.ascendingPitchClassIntervals, pitchClassDataType || "all"),
       descending: formatIntervalData(form.descendingPitchClassIntervals, pitchClassDataType || "all"),
     };
   }
 
-  detail.ajnas = {
-    ascending: ajnasByDegree(form.ascendingPitchClasses, form.ascendingMaqamAjnas, inArabic),
-    descending: ajnasByDegree(form.descendingPitchClasses, form.descendingMaqamAjnas, inArabic),
-  };
+  if (wants("ajnas")) {
+    detail.ajnas = {
+      ascending: ajnasByDegree(form.ascendingPitchClasses, form.ascendingMaqamAjnas, inArabic),
+      descending: ajnasByDegree(form.descendingPitchClasses, form.descendingMaqamAjnas, inArabic),
+    };
+  }
 
   // Transposed in step with the form: each entry names the form's own notes
   // and their degree in it. Arrays, to allow alternatives at a slot.
-  detail.primaryJins = jinsDegreeEntries(form, form.primaryJinsNoteName, true, inArabic);
-  detail.secondaryJins = jinsDegreeEntries(form, form.secondaryJinsNoteName, true, inArabic);
-  detail.tertiaryJins = jinsDegreeEntries(form, form.tertiaryJinsNoteName, true, inArabic);
-  detail.ghammaz = jinsDegreeEntries(form, form.ghammazNoteName, false, inArabic);
+  if (wants("primaryJins")) detail.primaryJins = jinsDegreeEntries(form, form.primaryJinsNoteName, true, inArabic);
+  if (wants("secondaryJins")) detail.secondaryJins = jinsDegreeEntries(form, form.secondaryJinsNoteName, true, inArabic);
+  if (wants("tertiaryJins")) detail.tertiaryJins = jinsDegreeEntries(form, form.tertiaryJinsNoteName, true, inArabic);
+  if (wants("ghammaz")) detail.ghammaz = jinsDegreeEntries(form, form.ghammazNoteName, false, inArabic);
 
-  if (includeSuyur) detail.suyur = maqam.getSuyur();
+  if (includeSuyur && wants("suyur")) detail.suyur = maqam.getSuyur();
 
-  if (includeModulations) {
+  if (includeModulations && (wants("modulations") || (includeModulations8vb && wants("lowerOctaveModulations")))) {
     const maqamatModulations = ctx.maqamatModulations(form);
     const ajnasModulations = ctx.ajnasModulations(form);
-    detail.modulations = serializeModulations(ctx, maqamatModulations, ajnasModulations, 0);
-    if (includeModulations8vb) {
+    if (wants("modulations")) detail.modulations = serializeModulations(ctx, maqamatModulations, ajnasModulations, 0);
+    if (includeModulations8vb && wants("lowerOctaveModulations")) {
       detail.lowerOctaveModulations = serializeModulations(ctx, maqamatModulations, ajnasModulations, -1);
     }
   }
