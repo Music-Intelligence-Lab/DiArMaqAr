@@ -404,7 +404,9 @@ export async function GET(
 
       let next: string | null = null;
       if (index < total) {
-        const nextUrl = new URL(getCanonicalSelfUrl(request));
+        // The host the request reached, not the canonical one: a client paging
+        // through a local or preview deployment must stay on it.
+        const nextUrl = new URL(request.url);
         nextUrl.searchParams.set("offset", String(index));
         next = nextUrl.toString();
       }
