@@ -293,16 +293,21 @@ export function calculateMaqamTranspositions(
           // Register/octave variants are equivalent for taṣwīr: a jins seated on
           // rāst is still that jins on kurdān.
           const isTransposed = !sameModalDegreeSlot(firstJinsNote, degreeNoteName);
+          // Same exact canonical-note test calculateJinsTranspositions uses to
+          // pick the tahlil, so an embedded jins agrees with its standalone entry.
+          const isBaseForm = firstJinsNote === degreeNoteName;
 
           matches.push({
             candidate: { jinsId: jins.getId(), firstNoteName: firstJinsNote, noteCount: jins.getNoteNames().length },
             jins: {
               jinsId: jins.getId(),
-              name: isTransposed ? `${jins.getName()} al-${degreeNoteName}` : jins.getName(),
+              // Every form but the tahlil names its tonic, an octave-register
+              // sibling (jins yegāh on nawā) as much as a taṣwīr — the same names
+              // calculateJinsTranspositions gives, so the jins at a maqām degree
+              // and its standalone entry share one identifier.
+              name: isBaseForm ? jins.getName() : `${jins.getName()} al-${degreeNoteName}`,
               transposition: isTransposed,
-              // Same exact canonical-note test calculateJinsTranspositions uses to
-              // pick the tahlil, so an embedded jins agrees with its standalone entry.
-              isBaseForm: firstJinsNote === degreeNoteName,
+              isBaseForm,
               jinsPitchClasses: extendedPitchClasses.slice(i, i + lengthOfInterval + 1),
               jinsPitchClassIntervals: extendedIntervals.slice(i, i + lengthOfInterval),
             },
