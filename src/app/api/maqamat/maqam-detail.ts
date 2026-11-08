@@ -289,7 +289,7 @@ function jinsReference(jins: Jins, inArabic: boolean) {
  * (the `noteName` of `pitchData`), in suyūr-attested order; an empty array
  * where nothing matches.
  */
-function ajnasByDegree(pitchClasses: PitchClass[], ajnasPerDegree: Jins[][] | undefined, inArabic: boolean) {
+export function ajnasByDegree(pitchClasses: PitchClass[], ajnasPerDegree: Jins[][] | undefined, inArabic: boolean) {
   const byDegree: Record<string, ReturnType<typeof jinsReference>[]> = {};
   if (!ajnasPerDegree) return byDegree;
   pitchClasses.forEach((pc, i) => {
@@ -303,7 +303,7 @@ function ajnasByDegree(pitchClasses: PitchClass[], ajnasPerDegree: Jins[][] | un
  * (roman numeral) and, for the three jins slots, the jins found there. Null
  * when the form has no entry for the slot (rāst has no tertiary jins).
  */
-function jinsDegreeEntries(form: Maqam, noteNames: string[] | null | undefined, resolveJins: boolean, inArabic: boolean): any[] | null {
+export function jinsDegreeEntries(form: Maqam, noteNames: string[] | null | undefined, resolveJins: boolean, inArabic: boolean): any[] | null {
   if (noteNames == null) return null;
   return noteNames.map((noteName) => {
     const idx = form.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);

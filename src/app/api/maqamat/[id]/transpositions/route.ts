@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { jinsDegreeEntries } from "@/app/api/maqamat/maqam-detail";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getJinsNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -236,60 +237,6 @@ export async function GET(
       );
     }
 
-    const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
-
-    // Given a specific Maqam transposition `t` and a source note-name array
-    // (one of `t.primaryJinsNoteName` etc.), produce an array of per-degree
-    // entries carrying note name, maqām degree (roman numeral), and — for
-    // jins slots — the resolved jins entity. Returns null when the source
-    // array is null (e.g. a maqām without a tertiary, or ghammāz explicitly
-    // suppressed).
-    const buildJinsDegreeEntries = (
-      t: typeof transpositionsListed[number],
-      noteNames: string[] | null | undefined,
-      { resolveJins }: { resolveJins: boolean }
-    ): any[] | null => {
-      if (noteNames == null) return null;
-      return noteNames.map((noteName) => {
-        const idx = t.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
-        const maqamDegree = idx >= 0
-          ? (romanNumerals[idx] || String(idx + 1))
-          : null;
-        const entry: any = {
-          noteName: standardizeText(noteName),
-          noteNameDisplay: noteName,
-          ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
-          maqamDegree,
-        };
-        if (!resolveJins) return entry;
-        // .flat() first: each degree is now an array of every jins matching
-        // there, so searching the degrees directly would test arrays, not ajnās.
-        // This endpoint keeps its flat single-jins fields; the head it reports is
-        // now suyūr-ordered rather than file-ordered.
-        const fromAsc = t.ascendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        if (jinsAtNote) {
-          entry.jinsId = jinsAtNote.jinsId;
-          entry.jinsIdName = entityToken(jinsAtNote);
-          entry.jinsDisplayName = jinsAtNote.name || '';
-          entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
-          if (inArabic) {
-            entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
-          }
-        } else {
-          entry.jinsId = null;
-          entry.jinsIdName = null;
-          entry.jinsDisplayName = null;
-          entry.jinsIsBaseForm = null;
-          if (inArabic) entry.jinsDisplayNameAr = null;
-        }
-        return entry;
-      });
-    };
 
     // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
     const transpositionItems = transpositionsListed.map((t) => {
@@ -318,10 +265,10 @@ export async function GET(
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.
         isBaseForm: t.isBaseForm,
-        primaryJins: buildJinsDegreeEntries(t, t.primaryJinsNoteName, { resolveJins: true }),
-        secondaryJins: buildJinsDegreeEntries(t, t.secondaryJinsNoteName, { resolveJins: true }),
-        tertiaryJins: buildJinsDegreeEntries(t, t.tertiaryJinsNoteName, { resolveJins: true }),
-        ghammaz: buildJinsDegreeEntries(t, t.ghammazNoteName, { resolveJins: false }),
+        primaryJins: jinsDegreeEntries(t, t.primaryJinsNoteName, true, inArabic),
+        secondaryJins: jinsDegreeEntries(t, t.secondaryJinsNoteName, true, inArabic),
+        tertiaryJins: jinsDegreeEntries(t, t.tertiaryJinsNoteName, true, inArabic),
+        ghammaz: jinsDegreeEntries(t, t.ghammazNoteName, false, inArabic),
         links: buildLinksNamespace({
           detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })

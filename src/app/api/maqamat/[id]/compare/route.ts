@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { ajnasByDegree } from "@/app/api/maqamat/maqam-detail";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
@@ -10,12 +11,10 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { spellMaqamDirections } from "@/app/api/pitch-spellings";
-import { parseInArabic, getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import type TuningSystem from "@/models/TuningSystem";
 import type { Maqam } from "@/models/Maqam";
-import type { Jins } from "@/models/Jins";
-import type PitchClass from "@/models/PitchClass";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -323,36 +322,6 @@ export async function GET(
           };
         });
 
-    // Build a {noteName → jinsObject[]} map for one direction of a maqām
-    // (ascending or descending). Each degree maps to EVERY jins matching
-    // there, in suyūr-attested order — an empty array where nothing
-    // matches. The two call sites differ only in their source pitch-class
-    // array and ajnās array, so this collapses 40+ lines of mirrored
-    // construction into one body.
-    const buildAjnasMap = (
-      pitchClasses: PitchClass[],
-      ajnasForDirection: Jins[][] | undefined
-    ): Record<string, unknown> => {
-      const result: Record<string, unknown> = {};
-      if (!ajnasForDirection) return result;
-      for (let i = 0; i < pitchClasses.length; i++) {
-        const noteName = pitchClasses[i].noteName;
-        result[noteName] = (ajnasForDirection[i] ?? []).map((jins) => {
-          const jinsObj: Record<string, unknown> = {
-            id: jins.jinsId,
-            idName: entityToken(jins),
-            displayName: jins.name || "",
-            isBaseForm: jins.isBaseForm,
-          };
-          if (inArabic) {
-            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || "");
-          }
-          return jinsObj;
-        });
-      }
-      return result;
-    };
-
     const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals"]);
     if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
     const { includeIntervals } = booleanFlags.values;
@@ -593,14 +562,16 @@ export async function GET(
         tuningSystem.getReferenceFrequencies()[selectedStartingNote] ??
         tuningSystem.getDefaultReferenceFrequency();
 
-      // Build ajnas objects (keyed by note name) for both directions
-      const ascendingAjnasObject = buildAjnasMap(
+      // Ajnās at each degree, keyed by its URL-safe noteName, as GET /maqamat/{idName} gives them
+      const ascendingAjnasObject = ajnasByDegree(
         selectedTransposition.ascendingPitchClasses,
-        selectedTransposition.ascendingMaqamAjnas
+        selectedTransposition.ascendingMaqamAjnas,
+        inArabic
       );
-      const descendingAjnasObject = buildAjnasMap(
+      const descendingAjnasObject = ajnasByDegree(
         selectedTransposition.descendingPitchClasses,
-        selectedTransposition.descendingMaqamAjnas
+        selectedTransposition.descendingMaqamAjnas,
+        inArabic
       );
 
       // Per-cell entity namespaces
