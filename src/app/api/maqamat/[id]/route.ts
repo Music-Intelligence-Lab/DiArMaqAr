@@ -1,20 +1,16 @@
 import { NextResponse } from "next/server";
-import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
-import { readBooleanFlags } from "@/app/api/boolean-flags";
+import { mergePathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
-import modulate from "@/functions/modulate";
+import { calculateMaqamTranspositions } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import PitchClass from "@/models/PitchClass";
-import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
-import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import { spellMaqamDirections } from "@/app/api/pitch-spellings";
-import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
-import { MaqamatModulations, shiftMaqamByOctaves } from "@/models/Maqam";
-import { AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
-import { parseInArabic, getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { Maqam } from "@/models/Maqam";
+import TuningSystem from "@/models/TuningSystem";
+import { parseInArabic, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { buildMaqamDetail, MaqamDetailContext, validPitchClassDataTypes } from "@/app/api/maqamat/maqam-detail";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -26,302 +22,120 @@ import {
 
 export const OPTIONS = handleCorsPreflightRequest;
 
-/**
- * Roman numeral conversion for scale degrees
- */
-const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
+/** The values of `forms` on GET /maqamat/all */
+const BULK_FORMS = ["base", "transpositions", "all"] as const;
+type BulkForms = (typeof BULK_FORMS)[number];
 
-/**
- * Format pitch data according to requested format
- * @param pitchClasses - Array of pitch classes to format
- * @param format - Output format type
- * @param isDescending - Whether this is descending data (reverses scale degrees)
- * @param inArabic - Whether to return Arabic script for note names
- */
-function formatPitchData(pitchClasses: PitchClass[], format: string | null | undefined, isDescending: boolean = false, inArabic: boolean = false) {
-  const length = pitchClasses.length;
-  
-  // Return minimal fields when pitchClassDataType is not provided
-  if (!format || format === "") {
-    return pitchClasses.map((pc, index) => ({
-      pitchClassIndex: pc.pitchClassIndex,
-      octave: pc.octave,
-      scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-      noteName: standardizeText(pc.noteName),
-      noteNameDisplay: pc.noteName,
-      ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) })
-    }));
-  }
-  
-  switch (format) {
-    case "all":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        englishName: pc.englishName,
-        solfege: pc.solfege,
-        abjadName: pc.abjadName,
-        fraction: pc.fraction,
-        cents: parseFloat(pc.cents),
-        decimalRatio: parseFloat(pc.decimalRatio),
-        stringLength: parseFloat(pc.stringLength),
-        frequency: parseFloat(pc.frequency),
-        fretDivision: pc.fretDivision,
-        midiNoteDecimal: pc.midiNoteDecimal,
-        midiNotePlusCentsDeviation: `${calculateIpnReferenceMidiNote(pc)} ${pc.centsDeviation >= 0 ? '+' : ''}${pc.centsDeviation.toFixed(1)}`,
-        centsDeviation: pc.centsDeviation,
-        ipnReferenceNoteName: pc.referenceNoteName
-      }));
-    case "englishName":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        englishName: pc.englishName
-      }));
-    case "solfege":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        solfege: pc.solfege
-      }));
-    case "fraction":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        fraction: pc.fraction
-      }));
-    case "cents":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        cents: parseFloat(pc.cents)
-      }));
-    case "decimalRatio":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        decimalRatio: parseFloat(pc.decimalRatio)
-      }));
-    case "stringLength":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        stringLength: parseFloat(pc.stringLength)
-      }));
-    case "frequency":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        frequency: parseFloat(pc.frequency)
-      }));
-    case "abjadName":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        abjadName: pc.abjadName
-      }));
-    case "fretDivision":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        fretDivision: pc.fretDivision
-      }));
-    case "midiNoteNumber":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        midiNoteDecimal: pc.midiNoteDecimal
-      }));
-    case "midiNoteDeviation":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        midiNotePlusCentsDeviation: `${calculateIpnReferenceMidiNote(pc)} ${pc.centsDeviation >= 0 ? '+' : ''}${pc.centsDeviation}`
-      }));
-    case "centsDeviation":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        centsDeviation: pc.centsDeviation
-      }));
-    case "referenceNoteName":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName,
-        ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(pc.noteName) }),
-        ipnReferenceNoteName: pc.referenceNoteName
-      }));
-    case "pitchClassIndex":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName
-      }));
-    case "scaleDegree":
-      return pitchClasses.map((pc, index) => ({
-        pitchClassIndex: pc.pitchClassIndex,
-        octave: pc.octave,
-        scaleDegree: isDescending ? (romanNumerals[length - 1 - index] || `${length - index}`) : (romanNumerals[index] || `${index + 1}`),
-        noteName: standardizeText(pc.noteName),
-        noteNameDisplay: pc.noteName
-      }));
-    default:
-      return pitchClasses; // Return full objects
-  }
+/** The top-level fields of a maqām form that `fields` can select */
+const BULK_ITEM_FIELDS = [
+  "family",
+  "tonic",
+  "transposition",
+  "stats",
+  "characteristics",
+  "availableTranspositions",
+  "comments",
+  "sources",
+  "pitchData",
+  "intervals",
+  "ajnas",
+  "primaryJins",
+  "secondaryJins",
+  "tertiaryJins",
+  "ghammaz",
+  "suyur",
+  "modulations",
+  "lowerOctaveModulations",
+];
+
+function pickFields(detail: Record<string, any>, fields: string[]): Record<string, any> {
+  return Object.fromEntries(Object.entries(detail).filter(([key]) => fields.includes(key)));
 }
 
 /**
- * Format interval data according to requested format
+ * `context.tuningSystem`: the tuning system and the starting note every maqām
+ * form in the response is calculated from. One shape for the single and the
+ * bulk route.
  */
-function formatIntervalData(intervals: any[], format: string) {
-  switch (format) {
-    case "all":
-      return intervals.map((interval) => ({
-        fraction: interval.fraction,
-        cents: interval.cents,
-        decimalRatio: interval.decimalRatio,
-        stringLength: interval.stringLength,
-        fretDivision: interval.fretDivision,
-        pitchClassIndex: interval.pitchClassIndex
-      }));
-    case "fraction":
-      return intervals.map((interval) => ({
-        fraction: interval.fraction
-      }));
-    case "cents":
-      return intervals.map((interval) => ({
-        cents: interval.cents
-      }));
-    case "decimalRatio":
-      return intervals.map((interval) => ({
-        decimalRatio: interval.decimalRatio
-      }));
-    case "stringLength":
-      return intervals.map((interval) => ({
-        stringLength: interval.stringLength
-      }));
-    case "fretDivision":
-      return intervals.map((interval) => ({
-        fretDivision: interval.fretDivision
-      }));
-    // Formats that don't apply to intervals
-    case "englishName":
-    case "abjadName":
-    case "frequency":
-    case "midiNoteNumber":
-    case "midiNoteDeviation":
-    case "centsDeviation":
-    case "referenceNoteName":
-      // For formats that don't make sense for intervals, return minimal info
-      return intervals.map((interval) => ({
-        cents: interval.cents
-      }));
-    default:
-      return intervals; // Return full objects
-  }
+function buildTuningSystemContext(tuningSystem: TuningSystem, selectedStartingNote: string, pitchClasses: PitchClass[], inArabic: boolean) {
+  const noteNameSets = tuningSystem.getNoteNameSets();
+  const tuningSystemStartingNoteNames = Array.from(
+    new Set(noteNameSets.map((set) => set[0]).filter((name): name is string => Boolean(name)))
+  );
+  const tuningSystemStartingNoteNamesIds = tuningSystemStartingNoteNames.map((name) => standardizeText(name));
+
+  return {
+    ...buildEntityNamespace(
+      {
+        id: tuningSystem.getId(),
+        idName: standardizeText(tuningSystem.getId()),
+        displayName: tuningSystem.stringify(),
+      },
+      {
+        version: tuningSystem.getVersion(),
+        inArabic,
+        displayNameAr: inArabic
+          ? getTuningSystemDisplayNameAr(
+              tuningSystem.getCreatorArabic() || "",
+              tuningSystem.getCreatorEnglish() || "",
+              tuningSystem.getYear(),
+              tuningSystem.getTitleArabic() || "",
+              tuningSystem.getTitleEnglish() || ""
+            )
+          : undefined,
+      }
+    ),
+    startingNotes: buildStringArrayNamespace(tuningSystemStartingNoteNamesIds, {
+      inArabic,
+      displayNames: tuningSystemStartingNoteNames,
+      displayNamesAr: inArabic ? tuningSystemStartingNoteNames.map((name) => getNoteNameDisplayAr(name)) : undefined,
+    }),
+    selectedStartingNote: buildIdentifierNamespace(
+      { idName: standardizeText(selectedStartingNote), displayName: selectedStartingNote },
+      { inArabic, displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined }
+    ),
+    pitchClassCounts: {
+      singleOctave: tuningSystem.getOriginalPitchClassValues().length,
+      allOctaves: pitchClasses.length,
+    },
+    originalValueType: pitchClasses[0]?.originalValueType || "unknown",
+    referenceFrequency: tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency(),
+  };
 }
 
 /**
  * GET /api/maqamat/[id]
- * 
- * Returns maqām data with flexible formatting options.
- * Use [id]="all" to get all available maqāmāt in alphabetical order.
- * 
- * REQUIRED Query Parameters:
- * - tuningSystem: ID of tuning system (required for all requests)
- * - startingNote: Starting note (URL-friendly) - MANDATORY for all pitch class calculations (required for all requests)
- * - pitchClassDataType: Pitch class data format - REQUIRED for data retrieval, optional for discovery mode (options=true)
- *   - all: All data types
- *   - englishName, fraction, cents, decimalRatio, stringLength, frequency,
- *     abjadName, fretDivision, midiNoteNumber, midiNoteDeviation, centsDeviation, referenceNoteName
- * - view: Output structure
- *   - simple: Pitch Class Data only (default)
- *   - intervals: Pitch Class and Intervals Data (filtered by format parameter)
- * - transpose: Transpose to specific tonic note (URL-friendly)
- * - includeIntervals: true|false (include interval data, default: false)
- * - includeModulations: true|false (returns URL-safe maqām/jins names, default: false)
- * - includeAjnas: true|false (returns URL-safe jins names, default: false)
- * - includeSuyur: true|false (default: false)
- * - includeArabic: true|false (include Arabic display names, default: true)
- * - options: true returns available parameters instead of data
- * 
- * Response includes:
- * - tonic: {idName, displayName} namespace for the resolved tonic
- * - maqam.isBaseForm: true only for the tahlil. An octave-register sibling of
- *   the base form is not a taswir, so it is false here while no top-level
- *   `transposition` namespace is emitted either
- * - transposition: {original, resolved} tonic namespaces, present only when
- *   the maqam was transposed to a different modal degree (taswir)
- * - family: Family classification based on first jins
- * - maqam.commentsEnglish / commentsArabic: Commentary strings (null if none)
- * - maqam.sources: Array of {sourceId, page} references
- * - context.tuningSystem.startingNoteName: URL-safe starting note name
- * - context.tuningSystem.tuningSystemStartingNoteNames: All available starting notes (display values)
- * - context.tuningSystem.referenceFrequency: Reference frequency in Hz for the selected starting note
- * - context.pitchClassDataType: The format parameter value
- * - context.includeIntervals: Boolean indicating if intervals are included
- * 
- * Pitch Class Data Type formats:
- * - midiNoteDecimal: MIDI note as decimal (e.g., 51.366)
- * - midiNotePlusCentsDeviation: "MIDI Note + Cents Deviation" format (e.g., "52 -63.4")
- * - ipnReferenceNoteName: IPN reference note name (e.g., "E-b")
+ *
+ * One maqām form in a tuning system from a starting note, or with [id]="all"
+ * every maqām the tuning system can build. Both describe each form with
+ * buildMaqamDetail (maqam-detail.ts), so a bulk item is exactly the single
+ * route's body without its envelope (parameters, context, links).
+ *
+ * Query parameters (both routes):
+ * - tuningSystem, startingNote: required
+ * - pitchClassDataType: optional; minimal note-name fields when omitted
+ * - includeIntervals, includeModulations, includeModulations8vb (needs
+ *   includeModulations), includeSuyur, includeArabic: true|false, default false
+ * - centsTolerance: non-negative number, default 5
+ *
+ * Single form only:
+ * - transposeTo: the tonic of a taṣwīr or octave rendering; a transposed idName
+ *   in the path (maqam_rast_al_nawa) names it too
+ * - options=true: parameter discovery instead of data
+ *
+ * [id]="all" only:
+ * - forms: base (default) | transpositions | all — the taḥlīl, its taṣwīr, or both
+ * - includeOctaveRenderings: true adds the octave-register renderings (maqām rāst
+ *   on qarār rāst), which are neither
+ * - fields: comma-separated top-level fields to keep in each item; `maqam`
+ *   always stays
+ *
+ * Each form carries maqam {id, idName, displayName, isBaseForm}, family, tonic,
+ * transposition (only for a taṣwīr), stats (counts describe the taḥlīl),
+ * characteristics, availableTranspositions, comments, sources, pitchData,
+ * ajnas (keyed by each degree's URL-safe noteName), primaryJins, secondaryJins,
+ * tertiaryJins, ghammaz, and the optional intervals, suyur, modulations and
+ * lowerOctaveModulations.
  */
 export async function GET(
   request: Request,
@@ -333,9 +147,9 @@ export async function GET(
     const tuningSystemId = searchParams.get("tuningSystem");
     const startingNote = searchParams.get("startingNote");
     const pitchClassDataType = searchParams.get("pitchClassDataType");
-    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals", "includeModulations", "includeModulations8vb", "includeSuyur", "options"]);
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals", "includeModulations", "includeModulations8vb", "includeSuyur", "options", "includeOctaveRenderings"]);
     if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
-    const { includeIntervals, includeModulations, includeModulations8vb: includeModulations8vbEnabled, includeSuyur, options: showOptions } = booleanFlags.values;
+    const { includeIntervals, includeModulations, includeModulations8vb: includeModulations8vbEnabled, includeSuyur, options: showOptions, includeOctaveRenderings } = booleanFlags.values;
     let transposeToNote = searchParams.get("transposeTo");
     if (searchParams.has("includeLowerOctaveModulations")) {
       return addCorsHeaders(
@@ -390,26 +204,6 @@ export async function GET(
     const maqamatData = getMaqamat();
     const tuningSystems = getTuningSystems();
     const ajnas = getAjnas();
-
-    // Define valid pitch class data types (used for validation)
-    const validPitchClassDataTypes = [
-      "all",
-      "englishName",
-      "solfege",
-      "fraction",
-      "cents",
-      "decimalRatio",
-      "stringLength",
-      "frequency",
-      "abjadName",
-      "fretDivision",
-      "midiNoteNumber",
-      "midiNoteDeviation",
-      "centsDeviation",
-      "referenceNoteName",
-      "pitchClassIndex",
-      "scaleDegree"
-    ];
 
     // Validate pitchClassDataType if provided (it's optional for discovery mode, required for data retrieval)
     if (pitchClassDataType !== null) {
@@ -514,148 +308,100 @@ export async function GET(
         );
       }
 
-      // Get pitch classes
-      const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
+      // Which forms of each maqām to describe: the taḥlīl, its taṣwīr, or both
+      const formsParam = searchParams.get("forms") ?? "base";
+      if (!BULK_FORMS.includes(formsParam as BulkForms)) {
+        return addCorsHeaders(
+          NextResponse.json(
+            {
+              error: `Invalid parameter: forms`,
+              message: `forms must be one of ${BULK_FORMS.join(", ")}, got '${formsParam}'`,
+              validOptions: BULK_FORMS,
+              hint: "Use ?forms=base (default), ?forms=transpositions or ?forms=all"
+            },
+            { status: 400 }
+          )
+        );
+      }
+      const forms = formsParam as BulkForms;
 
-      // Process all maqamat
+      // Top-level fields to keep in each item; `maqam` always stays, so every
+      // item says which form it is
+      const fieldsParam = searchParams.get("fields");
+      let fields: string[] | null = null;
+      if (fieldsParam !== null) {
+        fields = fieldsParam.split(",").map((field) => field.trim()).filter(Boolean);
+        const unknown = fields.filter((field) => !BULK_ITEM_FIELDS.includes(field));
+        if (fields.length === 0 || unknown.length > 0) {
+          return addCorsHeaders(
+            NextResponse.json(
+              {
+                error: "Invalid parameter: fields",
+                message: fields.length === 0
+                  ? "fields cannot be empty. Leave it out to return every field."
+                  : `Unknown field(s): ${unknown.join(", ")}`,
+                validOptions: BULK_ITEM_FIELDS,
+                hint: "Use ?fields=ajnas,modulations (comma-separated); maqam is always returned"
+              },
+              { status: 400 }
+            )
+          );
+        }
+      }
+
+      const pitchClasses = getTuningSystemPitchClasses(tuningSystem, selectedStartingNote);
+      const ctx = new MaqamDetailContext(pitchClasses, ajnas, maqamatData, {
+        pitchClassDataType,
+        includeIntervals,
+        includeModulations,
+        includeModulations8vb: includeModulations8vbEnabled,
+        includeSuyur,
+        inArabic,
+        centsTolerance,
+      });
+
+      const noteNames = pitchClasses.map((pc) => pc.noteName);
       const availableMaqamat = maqamatData
-        .filter((maqam) => maqam.isMaqamPossible(pitchClasses.map((pc) => pc.noteName)))
+        .filter((maqam) => maqam.isMaqamPossible(noteNames))
         .sort((a, b) => a.getName().localeCompare(b.getName()));
 
-      // Compute each maqam's transpositions once and keep them keyed by maqam id.
-      // Every modulate() call below scans the same maqamat and would otherwise
-      // recompute their transpositions itself, making this route O(maqamat^2) —
-      // the same hotspot buildModulationGraph documents in findModulationRoutes.
-      // The call here is identical to the one modulate() makes internally (same
-      // pitch classes, ajnas, centsTolerance) and runs over the same
-      // isMaqamPossible set, so the cache is exact rather than an approximation.
-      const transpositionsCache = new Map(
-        availableMaqamat.map((maqam) => [maqam.getId(), calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance)])
-      );
+      // Each maqām's forms in the order calculateMaqamTranspositions lists them.
+      // A taṣwīr has transposition=true; an octave-register rendering (rāst on
+      // qarār rāst) is neither the taḥlīl nor a taṣwīr.
+      const isSelected = (form: Maqam) =>
+        (form.isBaseForm && forms !== "transpositions") ||
+        (form.transposition && forms !== "base") ||
+        (includeOctaveRenderings && !form.isBaseForm && !form.transposition);
 
-      // Same reasoning for the ajnas pass, which scans every jins on every call.
-      const jinsTranspositionsCache = new Map(
-        ajnas.map((jins) => [jins.getId(), calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance)])
-      );
-
-      const allMaqamatData = availableMaqamat
-        .map((maqam) => {
-          const transpositions = transpositionsCache.get(maqam.getId())!;
-          // The tahlil, by flag rather than by position — transpose.ts happens
-          // to return it first, but nothing states that as a contract.
-          const tahlil = transpositions.find((t) => t.isBaseForm)!;
-          const familyClassification = classifyMaqamFamily(tahlil);
-          const sources = maqam.getSourcePageReferences();
-
-          // Calculate modulations for counts. Each pass consults only its own
-          // cache — modulate() iterates allMaqamat in maqamat mode and allAjnas
-          // in ajnas mode, so the other map is never reached.
-          const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance, transpositionsCache) as MaqamatModulations;
-          const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance, undefined, jinsTranspositionsCache) as AjnasModulations;
-          
-          const totalMaqamModulations = Object.values(maqamatModulations)
-            .filter(val => Array.isArray(val))
-            .reduce((sum, arr) => sum + arr.length, 0);
-          
-          const totalAjnasModulations = Object.values(ajnasModulations)
-            .filter(val => Array.isArray(val))
-            .reduce((sum, arr) => sum + arr.length, 0);
-
-          const maqamCommentsEnglish = getComments(maqam.getCommentsEnglish());
-          const maqamCommentsArabic = getCommentsAr(maqam.getCommentsArabic());
-          const optionFamilyId = standardizeText(familyClassification.familyName);
-          const optionFamilyDisplay = familyClassification.familyName;
-
-          const maqamData: any = {
-            id: maqam.getId(),
-            idName: maqam.getIdName(),
-            displayName: maqam.getName(),
-            version: maqam.getVersion(),
-            tonicId: standardizeText(tahlil.ascendingPitchClasses[0].noteName),
-            tonicDisplay: tahlil.ascendingPitchClasses[0].noteName,
-            transposition: tahlil.transposition,
-            isBaseForm: tahlil.isBaseForm,
-            familyId: optionFamilyId,
-            familyDisplay: optionFamilyDisplay,
-            numberOfTranspositions: transpositions.length,
-            numberOfMaqamModulations: totalMaqamModulations,
-            numberOfAjnasModulations: totalAjnasModulations,
-            commentsEnglish: maqamCommentsEnglish,
-            commentsArabic: maqamCommentsArabic,
-            ...(inArabic && {
-              displayNameAr: getMaqamNameDisplayAr(maqam.getName()),
-              tonicDisplayAr: getNoteNameDisplayAr(tahlil.ascendingPitchClasses[0].noteName),
-              familyDisplayAr: getMaqamNameDisplayAr(familyClassification.familyName)
-            }),
-            sources: sources.map((src) => ({
-              sourceId: src.sourceId,
-              page: src.page
-            }))
-          };
-
-          // Add pitch data according to pitchClassDataType
-          maqamData.pitchData = {
-            ascending: formatPitchData(tahlil.ascendingPitchClasses, pitchClassDataType, false, inArabic),
-            descending: formatPitchData(tahlil.descendingPitchClasses, pitchClassDataType, true, inArabic)
-          };
-
-          // Add intervals if requested
-          if (includeIntervals) {
-            maqamData.intervals = {
-              ascending: formatIntervalData(tahlil.ascendingPitchClassIntervals, pitchClassDataType || "all"),
-              descending: formatIntervalData(tahlil.descendingPitchClassIntervals, pitchClassDataType || "all")
-            };
-          }
-
-          return maqamData;
-        });
-
-      // Get tuning system info for context
-      const tuningSystemPitchClassCountAllOctaves = pitchClasses.length;
-      const tuningSystemPitchClassCountSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
-      const originalValueType = pitchClasses[0]?.originalValueType || "unknown";
-      const allNoteNameSets = tuningSystem.getNoteNameSets();
-      const tuningSystemStartingNoteNames = Array.from(
-        new Set(allNoteNameSets.map((set) => set[0]).filter((name): name is string => Boolean(name)))
-      );
-      const tuningSystemStartingNoteNamesIds = tuningSystemStartingNoteNames.map((name) => standardizeText(name));
-      const referenceFrequency = tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency();
+      const items: Record<string, any>[] = [];
+      for (const maqam of availableMaqamat) {
+        const transpositions = ctx.transpositionsOf(maqam);
+        for (const form of transpositions.filter(isSelected)) {
+          const detail = buildMaqamDetail(ctx, maqam, transpositions, form);
+          items.push(fields ? pickFields(detail, ["maqam", ...fields]) : detail);
+        }
+      }
 
       return addCorsHeaders(
         NextResponse.json({
-          context: {
-            tuningSystem: {
-              id: tuningSystemId,
-              displayName: tuningSystem.stringify(),
-              ...(inArabic && {
-                displayNameAr: getTuningSystemDisplayNameAr(
-                  tuningSystem.getCreatorArabic() || "",
-                  tuningSystem.getCreatorEnglish() || "",
-                  tuningSystem.getYear(),
-                  tuningSystem.getTitleArabic() || "",
-                  tuningSystem.getTitleEnglish() || ""
-                ),
-                tuningSystemStartingNoteNamesAr: tuningSystemStartingNoteNames.map((name) => getNoteNameDisplayAr(name)),
-                startingNoteNameAr: getNoteNameDisplayAr(selectedStartingNote)
-              }),
-              version: tuningSystem.getVersion(),
-              originalValueType: originalValueType,
-              numberOfPitchClassesSingleOctave: tuningSystemPitchClassCountSingleOctave,
-              numberOfPitchClassesAllOctaves: tuningSystemPitchClassCountAllOctaves,
-              tuningSystemStartingNoteNames,
-              tuningSystemStartingNoteNamesIds,
-              startingNoteName: standardizeText(selectedStartingNote),
-              referenceFrequency
-            },
-            pitchClassDataType: pitchClassDataType,
-            includeIntervals: includeIntervals
+          context: { tuningSystem: buildTuningSystemContext(tuningSystem, selectedStartingNote, pitchClasses, inArabic) },
+          parameters: {
+            pitchClassDataType,
+            includeIntervals,
+            includeModulations,
+            includeModulations8vb: includeModulations8vbEnabled,
+            includeSuyur,
+            centsTolerance,
+            forms,
+            includeOctaveRenderings,
+            fields,
           },
-          count: allMaqamatData.length,
-          maqamat: allMaqamatData
+          count: items.length,
+          maqamat: items
         })
       );
     }
-    
+
     // Check if maqamId is empty or invalid
     if (!maqamId || maqamId.trim() === "") {
       return addCorsHeaders(
@@ -983,10 +729,6 @@ export async function GET(
 
     // Determine starting note (support both with and without diacritics)
     const noteNameSets = tuningSystem.getNoteNameSets();
-    const tuningSystemStartingNoteNames = Array.from(
-      new Set(noteNameSets.map((set) => set[0]).filter((name): name is string => Boolean(name)))
-    );
-    const tuningSystemStartingNoteNamesIds = tuningSystemStartingNoteNames.map((name) => standardizeText(name));
     let selectedStartingNote: string;
     
     // Find matching note (with or without diacritics)
@@ -1026,11 +768,19 @@ export async function GET(
       );
     }
 
-    // Calculate transpositions
-    const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
+    const ctx = new MaqamDetailContext(pitchClasses, ajnas, maqamatData, {
+      pitchClassDataType,
+      includeIntervals,
+      includeModulations,
+      includeModulations8vb: includeModulations8vbEnabled,
+      includeSuyur,
+      inArabic,
+      centsTolerance,
+    });
+    const transpositions = ctx.transpositionsOf(maqam);
 
-    // Find specific transposition if requested
-    let selectedTransposition = transpositions[0]; // Default to first (tahlil)
+    // Find specific transposition if requested; the taḥlīl otherwise
+    let selectedTransposition = transpositions.find((t) => t.isBaseForm)!;
     if (transposeToNote) {
       const found = transpositions.find(
         (t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(transposeToNote)
@@ -1056,133 +806,6 @@ export async function GET(
       selectedTransposition = found;
     }
 
-    // Get maqam family classification from the tahlil, by flag rather than by
-    // position — transpose.ts happens to return it first, but nothing states
-    // that as a contract.
-    const tahlil = transpositions.find((t) => t.isBaseForm)!;
-    const familyClassification = classifyMaqamFamily(tahlil);
-
-    // Calculate modulations for the tahlil
-    const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, false, centsTolerance) as MaqamatModulations;
-    const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, tahlil, true, centsTolerance) as AjnasModulations;
-
-    // Count total modulations
-    const totalMaqamModulations = Object.values(maqamatModulations)
-      .filter(val => Array.isArray(val))
-      .reduce((sum, arr) => sum + arr.length, 0);
-    
-    const totalAjnasModulations = Object.values(ajnasModulations)
-      .filter(val => Array.isArray(val))
-      .reduce((sum, arr) => sum + arr.length, 0);
-
-    // Get sources
-    const sources = maqam.getSourcePageReferences();
-
-    // Get tuning system pitch class counts and original value type
-    const tuningSystemPitchClassCountAllOctaves = pitchClasses.length;
-    const tuningSystemPitchClassCountSingleOctave = tuningSystem.getOriginalPitchClassValues().length;
-    const originalValueType = pitchClasses[0]?.originalValueType || "unknown";
-
-    // Determine if this is a transposition (taṣwīr)
-    const originalMaqamTonic = maqam.getAscendingNoteNames()[0];
-    const transposedMaqamTonic = selectedTransposition.ascendingPitchClasses[0].noteName;
-    const isTransposed =
-      getNoteNameIndexAndOctave(originalMaqamTonic as NoteName).index !==
-      getNoteNameIndexAndOctave(transposedMaqamTonic as NoteName).index;
-
-    const commentsEnglish = getComments(maqam.getCommentsEnglish());
-    const commentsArabic = getCommentsAr(maqam.getCommentsArabic());
-    const familyId = standardizeText(familyClassification.familyName);
-    const familyDisplay = familyClassification.familyName;
-
-    // Build response based on view
-    const referenceFrequency = tuningSystem.getReferenceFrequencies()[selectedStartingNote] ?? tuningSystem.getDefaultReferenceFrequency();
-
-    const maqamNamespace = buildEntityNamespace(
-      {
-        id: maqam.getId(),
-        idName: entityToken(selectedTransposition),
-        displayName: selectedTransposition.name,
-      },
-      {
-        version: maqam.getVersion(),
-        // Distinct from isTransposed above: an octave-register sibling of the
-        // base form is not a taswir, so both are false for it.
-        extras: { isBaseForm: selectedTransposition.isBaseForm },
-        inArabic,
-        displayNameAr: inArabic ? getMaqamNameDisplayAr(selectedTransposition.name) : undefined,
-      }
-    );
-
-    const tonicNamespace = buildIdentifierNamespace(
-      {
-        idName: standardizeText(transposedMaqamTonic),
-        displayName: transposedMaqamTonic,
-      },
-      {
-        inArabic,
-        displayAr: inArabic ? getNoteNameDisplayAr(transposedMaqamTonic) : undefined,
-      }
-    );
-
-    const transpositionDetails = isTransposed
-      ? {
-          original: buildIdentifierNamespace(
-            {
-              idName: standardizeText(originalMaqamTonic),
-              displayName: originalMaqamTonic,
-            },
-            {
-              inArabic,
-              displayAr: inArabic ? getNoteNameDisplayAr(originalMaqamTonic) : undefined,
-            }
-          ),
-          resolved: tonicNamespace,
-        }
-      : undefined;
-
-    const familyNamespace = buildIdentifierNamespace(
-      {
-        idName: familyId,
-        displayName: familyDisplay,
-      },
-      {
-        inArabic,
-        displayAr: inArabic && familyDisplay !== "unknown" ? getMaqamNameDisplayAr(familyDisplay) : undefined,
-      }
-    );
-
-    const ascendingNoteNames = selectedTransposition.ascendingPitchClasses.map((pc) => pc.noteName);
-    const descendingNoteNames = selectedTransposition.descendingPitchClasses.map((pc) => pc.noteName);
-    const numberOfPitchClasses = ascendingNoteNames.length;
-    const isOctaveRepeating = numberOfPitchClasses <= 7;
-    const hasAsymmetricDescending = JSON.stringify(ascendingNoteNames) !== JSON.stringify([...descendingNoteNames].reverse());
-
-    const stats = {
-      numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
-      numberOfPitchClasses,
-      numberOfMaqamModulations: totalMaqamModulations,
-      numberOfAjnasModulations: totalAjnasModulations,
-    };
-
-    const hasSuyur = maqam.getSuyur().length > 0;
-
-    const characteristics = {
-      isOctaveRepeating,
-      hasAsymmetricDescending,
-      hasSuyur,
-    };
-
-    const comments = {
-      english: commentsEnglish,
-      arabic: commentsArabic,
-    };
-
-    const sourcesPayload = sources.map((src) => ({
-      sourceId: src.sourceId,
-      page: src.page,
-    }));
-
     const parameters = {
       pitchClassDataType,
       includeIntervals,
@@ -1193,428 +816,16 @@ export async function GET(
       centsTolerance,
     };
 
-    const tuningSystemNamespace = buildEntityNamespace(
-      {
-        id: tuningSystem.getId(),
-        idName: standardizeText(tuningSystem.getId()),
-        displayName: tuningSystem.stringify(),
-      },
-      {
-        version: tuningSystem.getVersion(),
-        inArabic,
-        displayNameAr: inArabic
-          ? getTuningSystemDisplayNameAr(
-              tuningSystem.getCreatorArabic() || "",
-              tuningSystem.getCreatorEnglish() || "",
-              tuningSystem.getYear(),
-              tuningSystem.getTitleArabic() || "",
-              tuningSystem.getTitleEnglish() || ""
-            )
-          : undefined,
-      }
-    );
-
-    const startingNotesNamespace = buildStringArrayNamespace(tuningSystemStartingNoteNamesIds, {
-      inArabic,
-      displayNames: tuningSystemStartingNoteNames,
-      displayNamesAr: inArabic
-        ? tuningSystemStartingNoteNames.map((name) => getNoteNameDisplayAr(name))
-        : undefined,
-    });
-
-    const selectedStartingNoteNamespace = buildIdentifierNamespace(
-      {
-        idName: standardizeText(selectedStartingNote),
-        displayName: selectedStartingNote,
-      },
-      {
-        inArabic,
-        displayAr: inArabic ? getNoteNameDisplayAr(selectedStartingNote) : undefined,
-      }
-    );
-
-    // Given a specific Maqam transposition `t` and a source note-name array
-    // (one of the transposed degree fields like `t.primaryJinsNoteName`),
-    // produce an array of per-degree entries carrying note name, roman-numeral
-    // maqam degree, and — for jins slots — the resolved jins entity. Returns
-    // null when the source array is null (e.g. a maqām without a tertiary).
-    //
-    // Used both for the selected transposition and for every entry in
-    // availableTranspositions / transpositions.detailed.
-    const buildJinsDegreeEntries = (
-      t: typeof transpositions[number],
-      noteNames: string[] | null | undefined,
-      { resolveJins }: { resolveJins: boolean }
-    ): any[] | null => {
-      if (noteNames == null) return null;
-      return noteNames.map((noteName) => {
-        const idx = t.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
-        const maqamDegree = idx >= 0
-          ? (romanNumerals[idx] || String(idx + 1))
-          : null;
-        const entry: any = {
-          noteName: standardizeText(noteName),
-          noteNameDisplay: noteName,
-          ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
-          maqamDegree,
-        };
-        if (!resolveJins) return entry;
-        // .flat() first: each degree is now an array of every jins matching
-        // there, so searching the degrees directly would test arrays, not ajnās.
-        const fromAsc = t.ascendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        if (jinsAtNote) {
-          entry.jinsId = jinsAtNote.jinsId;
-          entry.jinsIdName = entityToken(jinsAtNote);
-          entry.jinsDisplayName = jinsAtNote.name || '';
-          entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
-          if (inArabic) {
-            entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
-          }
-        } else {
-          entry.jinsId = null;
-          entry.jinsIdName = null;
-          entry.jinsDisplayName = null;
-          entry.jinsIsBaseForm = null;
-          if (inArabic) entry.jinsDisplayNameAr = null;
-        }
-        return entry;
-      });
-    };
-
-    // Build availableTranspositions with full maqam names (taswīr only).
-    // Intentionally minimal: consumers who want the transposed jins-degree /
-    // ghammāz data for a specific tonic follow the detail link and receive
-    // the full shape, or use /maqamat/{idName}/transpositions.
-    const availableTranspositionsData = transpositions.filter((t) => t.transposition).map((t) => {
-      const tonicNoteName = t.ascendingPitchClasses[0].noteName;
-      const fullMaqamName = t.name; // e.g., "maqām rāst al-chahārgāh" or "maqām rāst" for tahlil
-      return {
-        idName: entityToken(t),
-        displayName: fullMaqamName,
-        ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(fullMaqamName) }),
-        tonic: {
-          idName: standardizeText(tonicNoteName),
-          displayName: tonicNoteName,
-          ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonicNoteName) }),
-        },
-      };
-    });
-    const availableTranspositionsNamespace = availableTranspositionsData;
-
-    const responseData: any = {
-      maqam: maqamNamespace,
-      family: familyNamespace,
-      tonic: tonicNamespace,
-      transposition: transpositionDetails,
-      stats,
-      characteristics,
-      availableTranspositions: availableTranspositionsNamespace,
-      comments,
-      sources: sourcesPayload,
+    const responseData = buildMaqamDetail(ctx, maqam, transpositions, selectedTransposition, {
       parameters,
-      context: {
-        tuningSystem: {
-          ...tuningSystemNamespace,
-          startingNotes: startingNotesNamespace,
-          selectedStartingNote: selectedStartingNoteNamespace,
-          pitchClassCounts: {
-            singleOctave: tuningSystemPitchClassCountSingleOctave,
-            allOctaves: tuningSystemPitchClassCountAllOctaves,
-          },
-          originalValueType,
-          referenceFrequency,
-        },
-      },
+      context: { tuningSystem: buildTuningSystemContext(tuningSystem, selectedStartingNote, pitchClasses, inArabic) },
       links: buildLinksNamespace({
         self: getCanonicalSelfUrl(request),
         detail: `/api/maqamat/${maqam.getIdName()}`,
         availability: `/api/maqamat/${maqam.getIdName()}/availability`,
         compare: `/api/maqamat/${maqam.getIdName()}/compare`,
       }),
-    };
-
-    // Maqām-context spellings, each direction on its own (shared with the
-    // compare route so both read the same).
-    const spelled = spellMaqamDirections(
-      selectedTransposition.ascendingPitchClasses,
-      selectedTransposition.descendingPitchClasses
-    );
-
-    // Always include pitch data
-    responseData.pitchData = {
-      ascending: formatPitchData(spelled.ascending, pitchClassDataType, false, inArabic),
-      descending: formatPitchData(spelled.descending, pitchClassDataType, true, inArabic)
-    };
-
-    // Add intervals if requested
-    if (includeIntervals) {
-      responseData.intervals = {
-        ascending: formatIntervalData(selectedTransposition.ascendingPitchClassIntervals, pitchClassDataType || "all"),
-        descending: formatIntervalData(selectedTransposition.descendingPitchClassIntervals, pitchClassDataType || "all")
-      };
-    }
-
-    // Always include ajnās data for maqām analysis
-    // Return as object with note-to-jins mapping, values are ENTITY OBJECT ARRAYS.
-    // Each degree maps to EVERY jins matching there, in suyūr-attested order —
-    // an empty array where nothing matches.
-    // Keeps positional context while conforming to Entity Object Pattern
-    const ascendingAjnasObject: any = {};
-    const descendingAjnasObject: any = {};
-
-    // Build ascending ajnas object
-    if (selectedTransposition.ascendingMaqamAjnas) {
-      for (let i = 0; i < selectedTransposition.ascendingPitchClasses.length; i++) {
-        const noteName = selectedTransposition.ascendingPitchClasses[i].noteName;
-        ascendingAjnasObject[noteName] = (selectedTransposition.ascendingMaqamAjnas[i] ?? []).map((jins) => {
-          const jinsObj: any = {
-            id: jins.jinsId,
-            idName: entityToken(jins),
-            displayName: jins.name || '',
-            isBaseForm: jins.isBaseForm
-          };
-          if (inArabic) {
-            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || '');
-          }
-          return jinsObj;
-        });
-      }
-    }
-
-    // Build descending ajnas object
-    if (selectedTransposition.descendingMaqamAjnas) {
-      for (let i = 0; i < selectedTransposition.descendingPitchClasses.length; i++) {
-        const noteName = selectedTransposition.descendingPitchClasses[i].noteName;
-        descendingAjnasObject[noteName] = (selectedTransposition.descendingMaqamAjnas[i] ?? []).map((jins) => {
-          const jinsObj: any = {
-            id: jins.jinsId,
-            idName: entityToken(jins),
-            displayName: jins.name || '',
-            isBaseForm: jins.isBaseForm
-          };
-          if (inArabic) {
-            jinsObj.displayNameAr = getJinsNameDisplayAr(jins.name || '');
-          }
-          return jinsObj;
-        });
-      }
-    }
-
-    responseData.ajnas = {
-      ascending: ascendingAjnasObject,
-      descending: descendingAjnasObject
-    };
-
-    // Top-level jins-degree + ghammāz fields for the selected transposition.
-    // Each is an array of per-degree entries carrying note name, maqām degree
-    // (roman numeral), and — for the three jins slots — the resolved jins
-    // entity. `null` when the corresponding source field is `null` (e.g.
-    // `tertiaryJins` for a maqām without a tertiary, or `ghammaz` for maqām
-    // dilkeshīdah where the source explicitly suppresses it).
-    //
-    // The array shape accommodates multi-valued degrees (e.g. an either-or
-    // secondary jins). Every current family-rule entry is length 1, but the
-    // shape is honest to the underlying data.
-    responseData.primaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.primaryJinsNoteName, { resolveJins: true });
-    responseData.secondaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.secondaryJinsNoteName, { resolveJins: true });
-    responseData.tertiaryJins = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.tertiaryJinsNoteName, { resolveJins: true });
-    responseData.ghammaz = buildJinsDegreeEntries(selectedTransposition, selectedTransposition.ghammazNoteName, { resolveJins: false });
-
-    // Add optional includes
-    if (includeSuyur) {
-      responseData.suyur = maqam.getSuyur();
-    }
-
-    if (includeModulations) {
-      const maqamatModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, false, centsTolerance);
-      const ajnasModulations = modulate(pitchClasses, ajnas, maqamatData, selectedTransposition, true, centsTolerance);
-      
-      // Create lookup maps from numeric IDs to full entity data
-      const maqamIdToEntity = new Map<string, any>();
-      for (const maqamData of maqamatData) {
-        const maqamEntity: any = {
-          id: maqamData.getId(),
-          idName: maqamData.getIdName(),
-          displayName: maqamData.getName()
-        };
-        if (inArabic) {
-          maqamEntity.displayNameAr = getMaqamNameDisplayAr(maqamData.getName());
-        }
-        maqamIdToEntity.set(maqamData.getId(), maqamEntity);
-      }
-      
-      const jinsIdToEntity = new Map<string, any>();
-      for (const jins of ajnas) {
-        const jinsEntity: any = {
-          id: jins.getId(),
-          idName: jins.getIdName(),
-          displayName: jins.getName()
-        };
-        if (inArabic) {
-          jinsEntity.displayNameAr = getJinsNameDisplayAr(jins.getName());
-        }
-        jinsIdToEntity.set(jins.getId(), jinsEntity);
-      }
-      
-      // Helper function to serialize modulation arrays (simplified structure)
-      const serializeModulationArray = (
-        mods: any[],
-        entityMap: Map<string, any>,
-        isAjnas: boolean = false
-      ) => {
-        return mods.map((m: any) => {
-          const entity = entityMap.get(m.maqamId || m.jinsId);
-          if (!entity) return null;
-
-          const modObj: any = {
-            id: entity.id,
-            idName: entityToken(m),
-            displayName: m.name,
-            tonicIdName: standardizeText(m.ascendingPitchClasses?.[0]?.noteName || m.jinsPitchClasses?.[0]?.noteName || ''),
-            tonicDisplayName: m.ascendingPitchClasses?.[0]?.noteName || m.jinsPitchClasses?.[0]?.noteName || ''
-          };
-
-          if (!isAjnas) {
-            modObj.isTransposition = m.transposition || false;
-          }
-
-          // Both branches: an octave-register sibling of the base form is not a
-          // taswir, so isTransposition alone cannot identify the base form.
-          modObj.isBaseForm = m.isBaseForm || false;
-
-          if (inArabic) {
-            modObj.displayNameAr = isAjnas
-              ? getJinsNameDisplayAr(m.name)
-              : getMaqamNameDisplayAr(m.name);
-            modObj.tonicDisplayNameAr = getNoteNameDisplayAr(modObj.tonicDisplayName);
-          }
-
-          return modObj;
-        }).filter(Boolean);
-      };
-
-      // Create simplified property-based modulation structure
-      responseData.modulations = {
-        maqamat: {
-          firstDegree: serializeModulationArray(maqamatModulations.modulationsOnFirstDegree, maqamIdToEntity, false),
-          thirdDegree: serializeModulationArray(maqamatModulations.modulationsOnThirdDegree, maqamIdToEntity, false),
-          altThirdDegree: serializeModulationArray(maqamatModulations.modulationsOnAltThirdDegree, maqamIdToEntity, false),
-          fourthDegree: serializeModulationArray(maqamatModulations.modulationsOnFourthDegree, maqamIdToEntity, false),
-          fifthDegree: serializeModulationArray(maqamatModulations.modulationsOnFifthDegree, maqamIdToEntity, false),
-          sixthDegreeAsc: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeAsc, maqamIdToEntity, false),
-          sixthDegreeDesc: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeDesc, maqamIdToEntity, false),
-          sixthDegreeIfNoThird: serializeModulationArray(maqamatModulations.modulationsOnSixthDegreeIfNoThird, maqamIdToEntity, false),
-          noteNameNisfBelowThird: maqamatModulations.noteNameNisfBelowThird
-        },
-        ajnas: {
-          firstDegree: serializeModulationArray(ajnasModulations.modulationsOnFirstDegree, jinsIdToEntity, true),
-          thirdDegree: serializeModulationArray(ajnasModulations.modulationsOnThirdDegree, jinsIdToEntity, true),
-          altThirdDegree: serializeModulationArray(ajnasModulations.modulationsOnAltThirdDegree, jinsIdToEntity, true),
-          fourthDegree: serializeModulationArray(ajnasModulations.modulationsOnFourthDegree, jinsIdToEntity, true),
-          fifthDegree: serializeModulationArray(ajnasModulations.modulationsOnFifthDegree, jinsIdToEntity, true),
-          sixthDegreeAsc: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeAsc, jinsIdToEntity, true),
-          sixthDegreeDesc: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeDesc, jinsIdToEntity, true),
-          sixthDegreeIfNoThird: serializeModulationArray(ajnasModulations.modulationsOnSixthDegreeIfNoThird, jinsIdToEntity, true),
-          noteNameNisfBelowThird: ajnasModulations.noteNameNisfBelowThird
-        }
-      };
-      
-      // Add lower octave modulations if requested
-      if (includeModulations8vbEnabled) {
-        // Lower octave modulations - simplified property-based structure
-        responseData.lowerOctaveModulations = {
-          maqamat: {
-            firstDegree: serializeModulationArray(
-              maqamatModulations.modulationsOnFirstDegree.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            thirdDegree: serializeModulationArray(
-              maqamatModulations.modulationsOnThirdDegree.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            altThirdDegree: serializeModulationArray(
-              maqamatModulations.modulationsOnAltThirdDegree.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            fourthDegree: serializeModulationArray(
-              maqamatModulations.modulationsOnFourthDegree.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            fifthDegree: serializeModulationArray(
-              maqamatModulations.modulationsOnFifthDegree.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            sixthDegreeAsc: serializeModulationArray(
-              maqamatModulations.modulationsOnSixthDegreeAsc.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            sixthDegreeDesc: serializeModulationArray(
-              maqamatModulations.modulationsOnSixthDegreeDesc.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            ),
-            sixthDegreeIfNoThird: serializeModulationArray(
-              maqamatModulations.modulationsOnSixthDegreeIfNoThird.map((m: any) => shiftMaqamByOctaves(pitchClasses, m, -1)).filter(Boolean),
-              maqamIdToEntity,
-              false
-            )
-          },
-          ajnas: {
-            firstDegree: serializeModulationArray(
-              ajnasModulations.modulationsOnFirstDegree.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            thirdDegree: serializeModulationArray(
-              ajnasModulations.modulationsOnThirdDegree.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            altThirdDegree: serializeModulationArray(
-              ajnasModulations.modulationsOnAltThirdDegree.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            fourthDegree: serializeModulationArray(
-              ajnasModulations.modulationsOnFourthDegree.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            fifthDegree: serializeModulationArray(
-              ajnasModulations.modulationsOnFifthDegree.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            sixthDegreeAsc: serializeModulationArray(
-              ajnasModulations.modulationsOnSixthDegreeAsc.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            sixthDegreeDesc: serializeModulationArray(
-              ajnasModulations.modulationsOnSixthDegreeDesc.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            ),
-            sixthDegreeIfNoThird: serializeModulationArray(
-              ajnasModulations.modulationsOnSixthDegreeIfNoThird.map((j: any) => shiftJinsByOctaves(pitchClasses, j, -1)).filter(Boolean),
-              jinsIdToEntity,
-              true
-            )
-          }
-        };
-      }
-    }
+    });
 
     return addCorsHeaders(NextResponse.json(responseData));
   } catch (error) {
