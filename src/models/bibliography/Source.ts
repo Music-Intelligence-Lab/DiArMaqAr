@@ -98,6 +98,30 @@ export function stringifySource(source: Source, english: boolean, page: string |
 }
 
 /**
+ * A source's short citation label: its authors' family names and its year,
+ * original/edition when a book has both — "al-Shawwā 1946", "al-Khulaʿī
+ * 1904/2011", "Mokhtar and Mosharrafa 1937". Arabic joins the names with و and
+ * uses the same western digits ("الشوا 1946").
+ *
+ * Authors only: editors, translators and reviewers are not named. Three or more
+ * authors are "<first> et al." / "<first> وآخرون". The years come from the
+ * English date fields, which hold western digits.
+ */
+export function sourceCitationLabel(source: Source, english: boolean): string {
+  const authors = source.getContributors().filter((c) => c.type === "Author");
+  if (authors.length === 0) throw new Error(`Source ${source.getId()} has no author to cite it by.`);
+  const names = authors.map((c) => (english ? c.lastNameEnglish : c.lastNameArabic));
+  const and = english ? " and " : " و";
+  const nameText =
+    names.length === 1 ? names[0] : names.length === 2 ? names[0] + and + names[1] : english ? `${names[0]} et al.` : `${names[0]} وآخرون`;
+
+  const yearOf = (date: string | null | undefined) => (date ?? "").match(/^\d{4}/)?.[0] ?? (date ?? "");
+  const year = yearOf(source.getPublicationDateEnglish());
+  const originalYear = source.getSourceType() === "Book" ? yearOf((source as Book).getOriginalPublicationDateEnglish()) : "";
+  return `${nameText} ${originalYear ? `${originalYear}/${year}` : year}`;
+}
+
+/**
  * The text a source is filed under in an alphabetical picker: the first
  * contributor's last name, or the title when a source has no contributors.
  * Pass it through `compareNormalized` so that "ʿAbbās" files under A.
