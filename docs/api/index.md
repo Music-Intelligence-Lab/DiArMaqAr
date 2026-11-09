@@ -146,6 +146,8 @@ Name the tonic once. A transposed `idName` together with a `transposeTo` (or `tr
 
 **Ajnās an octave from their own tonic.** Until November 2026, a jins found at a maqām degree an octave from its own tonic kept its bare base `idName`: jins yegāh on nawā came back as `jins_yegah` with `isBaseForm: false`. It now names its tonic like every other form, `jins_yegah_al_nawa`, the same `idName` the jins endpoints give it.
 
+**Lower-octave modulation targets.** Until November 2026, a target in `lowerOctaveModulations` could carry a name no other endpoint used. Maqām yegāh on nawā, moved down an octave, came back as `maqam_yegah_al_yegah`, although it is maqām yegāh itself. Every lower-octave target is now the same form, with the same `idName`, that the listings and `GET /maqamat/all` give.
+
 ---
 
 ## Every maqām form in one request {#every-maqam-form-in-one-request}
@@ -171,6 +173,42 @@ curl "https://diarmaqar.net/api/maqamat/all?tuningSystem=alfarabi_950g&startingN
 ```
 
 Every page is cached at the edge and carries an `ETag`, so a client can check for changes with `If-None-Match` and get a 304 when nothing changed.
+
+---
+
+## Kinds of maqām and jins form {#kinds-of-form}
+
+Every maqām and jins form in a response carries `formType`, read from the form itself:
+
+| `formType` | Meaning | Example |
+|---|---|---|
+| `base` | The taḥlīl: the form on the tonic the sources give | maqām rāst on rāst, `maqam_rast` |
+| `transposition` | A taṣwīr: the form moved to another modal degree | maqām rāst on nawā, `maqam_rast_al_nawa` |
+| `octaveRendering` | The base form an octave or more away, on the same modal degree | maqām rāst on qarār rāst, `maqam_rast_al_qarar_rast` |
+
+A form's `idName` is its identifier. It is unique within a tuning system and starting note, and the same form has the same `idName` in every response. `formType` is on the `maqam` of a maqām response, on the `jins` of a jins response, on every entry of `ajnas`, on modulation targets, in the listings, and as `jinsFormType` on the structural jins entries.
+
+**Listing every form.** `GET /tuning-systems/{id}/{startingNote}/maqamat` and `/ajnas` take `includeOctaveRenderings=true`. Each entry then has an `octaveRenderings` array next to `transpositions`, with the same shape. The base forms, `transpositions` and `octaveRenderings` together are every form a maqām response can refer to. In al-Fārābī (950g) from ʿushayrān, the octave renderings add 206 maqām forms and 108 jins forms, such as maqām yegāh on nawā (`maqam_yegah_al_nawa`) and jins yegāh on nawā (`jins_yegah_al_nawa`). In a maqām response, `availableOctaveRenderings` lists them next to `availableTranspositions`. `GET /maqamat/all` with `includeOctaveRenderings=true` returns the full detail of each.
+
+## Structural ajnās and the ghammāz {#structural-ajnas-and-the-ghammaz}
+
+The sources give each structural jins as a degree: maqām rāst has its primary jins on rāst and its secondary jins on nawā. `primaryJins`, `secondaryJins` and `tertiaryJins` name that degree and the first jins the archive finds starting on it in the ascending form. `primaryJinsDescending`, `secondaryJinsDescending` and `tertiaryJinsDescending` read the same degree in the descending form. The sources give one degree per slot, not a separate descending one, so the descending jins is the archive's match, not a source statement.
+
+Each entry has a `jinsStatus`:
+
+| `jinsStatus` | Meaning |
+|---|---|
+| `matched` | A jins in the archive starts on this degree |
+| `noMatchingJins` | The degree is in the maqām, but no jins in the archive starts there in this tuning system. Maqām lāmī, degree IV (nawā), is one. The jins fields are `null` |
+| `degreeNotInMaqam` | The stored degree is not one of the notes of this direction. `maqamDegree` and the jins fields are `null` |
+
+Each direction is read on its own. Until November 2026, an ascending entry with no jins took the jins of the descending form instead.
+
+Each `ghammaz` entry has `intervalFromTonic`: the interval from the tonic up to the ghammāz, as `cents`, `fraction` and `decimalRatio`. For maqām rāst the ghammāz is nawā, at 3/2 (702 cents). `fraction` is exact in tuning systems defined by ratios and an approximation in the others.
+
+## Citing sources {#citing-sources}
+
+`GET /sources` and `GET /sources/{id}` give each source a `citation`: the authors' family names and the year, such as `al-Shawwā 1946`. A book with both an original and an edition year gives both: `al-Khulaʿī 1904/2011`. Two authors are joined with "and", three or more become "et al.". With `includeArabic=true`, `citationAr` gives the same in Arabic, with western digits: `الشوا 1946`. `displayName` is unchanged: it is an identifier, not a citation.
 
 ---
 
