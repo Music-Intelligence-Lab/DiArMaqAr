@@ -682,3 +682,30 @@ export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamDa
   };
 }
 
+
+/**
+ * Every rendering of each maqām and jins, computed on first request and kept.
+ * What shiftMaqamByOctaves and shiftJinsByOctaves look a shifted form up in.
+ */
+export function renderingsLookup(allPitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number = 5) {
+  const maqamRenderings = new Map<string, Maqam[]>();
+  const jinsRenderings = new Map<string, Jins[]>();
+  return {
+    maqam(maqamId: string): Maqam[] {
+      if (!maqamRenderings.has(maqamId)) {
+        const maqamData = allMaqamat.find((m) => m.getId() === maqamId);
+        if (!maqamData) throw new Error(`No maqām with id ${maqamId}`);
+        maqamRenderings.set(maqamId, calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamData, true, centsTolerance));
+      }
+      return maqamRenderings.get(maqamId)!;
+    },
+    jins(jinsId: string): Jins[] {
+      if (!jinsRenderings.has(jinsId)) {
+        const jinsData = allAjnas.find((j) => j.getId() === jinsId);
+        if (!jinsData) throw new Error(`No jins with id ${jinsId}`);
+        jinsRenderings.set(jinsId, calculateJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance));
+      }
+      return jinsRenderings.get(jinsId)!;
+    },
+  };
+}

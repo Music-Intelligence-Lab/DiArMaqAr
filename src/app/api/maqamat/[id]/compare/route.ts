@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { ajnasByDegree } from "@/app/api/maqamat/maqam-detail";
@@ -594,6 +595,7 @@ export async function GET(
             // Distinct from isTransposed: an octave-register sibling of the
             // base form is not a taswir, so both are false for it.
             isBaseForm: selectedTransposition.isBaseForm,
+            formType: formTypeOf(selectedTransposition),
             maqamFamilyId: standardizeText(familyClassification.familyName),
             maqamFamilyDisplayName: familyClassification.familyName,
             ...(inArabic && {

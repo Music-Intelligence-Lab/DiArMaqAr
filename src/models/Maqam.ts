@@ -699,68 +699,32 @@ export interface MaqamatModulations {
 }
 
 /**
- * Shifts a maqam to a different octave while maintaining intervallic relationships.
- * 
- * @param allPitchClasses - All available pitch classes in the tuning system
- * @param maqam - The maqam to shift
- * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
- * @returns New Maqam instance shifted by the specified number of octaves
+ * The same maqām form one or more octaves away.
+ *
+ * The result is taken from `renderings` — every rendering of this maqām in the
+ * pitch space, as calculateMaqamTranspositions returns them — rather than built
+ * here, so its name, idName, flags and embedded ajnās are the canonical ones.
+ * Building it here named maqām yegāh al-nawā shifted down "maqām yegāh
+ * al-yegāh", when it is the taḥlīl, maqām yegāh itself.
+ *
+ * @param allPitchClasses - The whole pitch space of the tuning system
+ * @param maqam - The form to shift
+ * @param octaveShift - Octaves to shift (positive = up, negative = down)
+ * @param renderings - Every rendering of the same maqām in that pitch space
+ * @returns The rendering on the shifted tonic, or null when a shifted note falls outside the pitch space
  */
-export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam | null {
-  // Defensive check for undefined maqam or pitch class arrays
-  if (!maqam || !maqam.ascendingPitchClasses || !maqam.descendingPitchClasses) {
-    console.warn('⚠️ shiftMaqamByOctaves: maqam or pitch class arrays are undefined', {
-      maqamExists: !!maqam,
-      maqamId: maqam?.maqamId,
-      maqamName: maqam?.name,
-      ascendingPitchClassesExists: !!maqam?.ascendingPitchClasses,
-      descendingPitchClassesExists: !!maqam?.descendingPitchClasses
-    });
-    return null;
-  }
-  
-  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
-  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
+export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number, renderings: Maqam[]): Maqam | null {
+  const shiftedNoteNames = [...maqam.ascendingPitchClasses, ...maqam.descendingPitchClasses].map(
+    (pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift).noteName
+  );
+  if (shiftedNoteNames.some((noteName) => noteName === "")) return null;
 
-  // Check if any pitch class shift failed (indicated by empty noteName)
-  const ascendingValid = shiftedAscendingPitchClasses.every(pc => pc.noteName !== "");
-  const descendingValid = shiftedDescendingPitchClasses.every(pc => pc.noteName !== "");
-  
-  if (!ascendingValid || !descendingValid) {
-    // Return null if octave shift would put any note out of bounds
-    return null;
+  const tonic = shiftedNoteNames[0];
+  const rendering = renderings.find((r) => r.maqamId === maqam.maqamId && r.ascendingPitchClasses[0]?.noteName === tonic);
+  if (!rendering) {
+    throw new Error(`${maqam.name} shifted by ${octaveShift} octave(s) lands on ${tonic}, but no rendering of the maqām starts there.`);
   }
-
-  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
-  const shiftedDescendingIntervals = getPitchClassIntervals(shiftedDescendingPitchClasses);
-
-  // Extract the base maqam name (remove any existing "al-" suffix and what follows)
-  let baseMaqamName = maqam.name;
-  const alIndex = baseMaqamName.indexOf(' al-');
-  if (alIndex !== -1) {
-    baseMaqamName = baseMaqamName.substring(0, alIndex);
-  }
-  
-  // Create new name with the shifted tonic
-  const newTonicName = shiftedAscendingPitchClasses[0].noteName;
-  const newName = `${baseMaqamName} al-${newTonicName}`;
-  
-  return {
-    maqamId: maqam.maqamId,
-    name: newName,
-    transposition: maqam.transposition,
-    // Shifting registers moves off the canonical first note, so the result is
-    // never the base form — even when the source maqam was.
-    isBaseForm: false,
-    ascendingPitchClasses: shiftedAscendingPitchClasses,
-    ascendingPitchClassIntervals: shiftedAscendingIntervals,
-    descendingPitchClasses: shiftedDescendingPitchClasses,
-    descendingPitchClassIntervals: shiftedDescendingIntervals,
-    ascendingMaqamAjnas: maqam.ascendingMaqamAjnas,
-    descendingMaqamAjnas: maqam.descendingMaqamAjnas,
-    modulations: maqam.modulations,
-    numberOfHops: maqam.numberOfHops,
-  };
+  return rendering;
 }
 
 /**

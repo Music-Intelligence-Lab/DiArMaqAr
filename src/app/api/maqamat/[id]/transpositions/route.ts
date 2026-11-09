@@ -1,6 +1,7 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
-import { jinsDegreeEntries } from "@/app/api/maqamat/maqam-detail";
+import { structuralJinsEntries, ghammazEntries } from "@/app/api/maqamat/maqam-detail";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -265,10 +266,14 @@ export async function GET(
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.
         isBaseForm: t.isBaseForm,
-        primaryJins: jinsDegreeEntries(t, t.primaryJinsNoteName, true, inArabic),
-        secondaryJins: jinsDegreeEntries(t, t.secondaryJinsNoteName, true, inArabic),
-        tertiaryJins: jinsDegreeEntries(t, t.tertiaryJinsNoteName, true, inArabic),
-        ghammaz: jinsDegreeEntries(t, t.ghammazNoteName, false, inArabic),
+        formType: formTypeOf(t),
+        primaryJins: structuralJinsEntries(t, t.primaryJinsNoteName, "ascending", inArabic),
+        secondaryJins: structuralJinsEntries(t, t.secondaryJinsNoteName, "ascending", inArabic),
+        tertiaryJins: structuralJinsEntries(t, t.tertiaryJinsNoteName, "ascending", inArabic),
+        primaryJinsDescending: structuralJinsEntries(t, t.primaryJinsNoteName, "descending", inArabic),
+        secondaryJinsDescending: structuralJinsEntries(t, t.secondaryJinsNoteName, "descending", inArabic),
+        tertiaryJinsDescending: structuralJinsEntries(t, t.tertiaryJinsNoteName, "descending", inArabic),
+        ghammaz: ghammazEntries(t, t.ghammazNoteName, inArabic),
         links: buildLinksNamespace({
           detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
@@ -288,7 +293,7 @@ export async function GET(
         version: maqam.getVersion(),
         // The header entity is the maqam itself, i.e. the tahlil — the taswir
         // are the list below. Derived, not hard-coded.
-        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,
         displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
       }

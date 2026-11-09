@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
@@ -259,6 +260,7 @@ export async function GET(
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.
         isBaseForm: t.isBaseForm,
+        formType: formTypeOf(t),
         links: buildLinksNamespace({
           detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
@@ -278,7 +280,7 @@ export async function GET(
         version: jins.getVersion(),
         // The header entity is the jins itself, i.e. the tahlil — the taswir
         // are the list below. Taken from the resolved tahlil, not hard-coded.
-        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,
         displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,
       }

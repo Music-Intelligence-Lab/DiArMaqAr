@@ -370,58 +370,24 @@ export interface AjnasModulations {
 }
 
 /**
- * Shifts a jins to a different octave while maintaining intervallic relationships.
- * 
- * @param allPitchClasses - All available pitch classes in the tuning system
- * @param jins - The jins to shift
- * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
- * @returns New Jins instance shifted by the specified number of octaves
+ * The same jins form one or more octaves away, taken from `renderings` (every
+ * rendering of this jins in the pitch space, as calculateJinsTranspositions
+ * returns them) so its name, idName and flags are the canonical ones. See
+ * shiftMaqamByOctaves.
+ *
+ * @returns The rendering on the shifted tonic, or null when a shifted note falls outside the pitch space
  */
-export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number): Jins | null {
-  // Defensive check for undefined jins or jinsPitchClasses
-  if (!jins || !jins.jinsPitchClasses) {
-    console.warn('⚠️ shiftJinsByOctaves: jins or jinsPitchClasses is undefined', {
-      jinsExists: !!jins,
-      jinsId: jins?.jinsId,
-      jinsName: jins?.name,
-      jinsPitchClassesExists: !!jins?.jinsPitchClasses
-    });
-    return null;
-  }
-  
-  const shiftedPitchClasses = jins.jinsPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
-  
-  // Check if any pitch class shift failed (indicated by empty noteName)
-  const allValid = shiftedPitchClasses.every(pc => pc.noteName !== "");
-  
-  if (!allValid) {
-    // Return null if octave shift would put any note out of bounds
-    return null;
-  }
+export function shiftJinsByOctaves(allPitchClasses: PitchClass[], jins: Jins, octaveShift: number, renderings: Jins[]): Jins | null {
+  const shiftedNoteNames = jins.jinsPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift).noteName);
+  if (shiftedNoteNames.some((noteName) => noteName === "")) return null;
 
-  const shiftedPitchClassIntervals = getPitchClassIntervals(shiftedPitchClasses);
-  
-  // Extract the base jins name (remove any existing "al-" suffix and what follows)
-  let baseJinsName = jins.name;
-  const alIndex = baseJinsName.indexOf(' al-');
-  if (alIndex !== -1) {
-    baseJinsName = baseJinsName.substring(0, alIndex);
+  const tonic = shiftedNoteNames[0];
+  const rendering = renderings.find((r) => r.jinsId === jins.jinsId && r.jinsPitchClasses[0]?.noteName === tonic);
+  if (!rendering) {
+    throw new Error(`${jins.name} shifted by ${octaveShift} octave(s) lands on ${tonic}, but no rendering of the jins starts there.`);
   }
-  
-  // Create new name with the shifted tonic
-  const newTonicName = shiftedPitchClasses[0].noteName;
-  const newName = `${baseJinsName} al-${newTonicName}`;
-  
-  return {
-    jinsId: jins.jinsId,
-    name: newName,
-    transposition: jins.transposition,
-    // Shifting registers moves off the canonical first note, so the result is
-    // never the base form — even when the source jins was.
-    isBaseForm: false,
-    jinsPitchClasses: shiftedPitchClasses,
-    jinsPitchClassIntervals: shiftedPitchClassIntervals,
-  };}
+  return rendering;
+}
 
 /**
  * Compares two jins instances for equality based on ID, length, and starting note.

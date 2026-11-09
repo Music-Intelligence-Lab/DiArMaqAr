@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -568,7 +569,7 @@ export async function GET(
           version: jins.getVersion(),
           // Distinct from isTransposed: an octave-register sibling of the base
           // form is not a taswir, so both are false for it.
-          extras: { isBaseForm: selectedTransposition.isBaseForm },
+          extras: { isBaseForm: selectedTransposition.isBaseForm, formType: formTypeOf(selectedTransposition) },
           inArabic,
           displayNameAr: inArabic
             ? getJinsNameDisplayAr(selectedTransposition.name)

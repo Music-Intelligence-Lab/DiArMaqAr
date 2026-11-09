@@ -4,7 +4,7 @@ import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves, Sayr } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
+import { calculateJinsTranspositions, calculateMaqamTranspositions, renderingsLookup } from "./transpose";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
@@ -847,61 +847,76 @@ function createMaqamToJinsModulations(modulations: AjnasModulations): MaqamToJin
 }
 
 /**
+ * One renderings lookup per export: each export builds its own pitch-space
+ * array, so keying on it shares the lookup across that export's whole loop.
+ */
+const renderingsByPitchSpace = new WeakMap<PitchClass[], ReturnType<typeof renderingsLookup>>();
+function pitchSpaceRenderings(pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number) {
+  let renderings = renderingsByPitchSpace.get(pitchClasses);
+  if (!renderings) {
+    renderings = renderingsLookup(pitchClasses, allAjnas, allMaqamat, centsTolerance);
+    renderingsByPitchSpace.set(pitchClasses, renderings);
+  }
+  return renderings;
+}
+
+/**
  * Helper function to create maqam-to-maqam lower octave modulations structure.
  * Creates proper 8vb (octave-below) data for maqam modulations.
  */
 function createMaqamToMaqamLowerOctaveModulations(
   modulations: MaqamatModulations,
-  allPitchClasses: PitchClass[]
+  allPitchClasses: PitchClass[],
+  renderings: ReturnType<typeof renderingsLookup>
 ): MaqamToMaqamLowerOctaveModulationsStructure {
   const maqamatMods = modulations as MaqamatModulations;
   
   return {
     maqamToMaqamModulationsOnFirstDegree8vb: (maqamatMods.modulationsOnFirstDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnThirdDegree8vb: (maqamatMods.modulationsOnThirdDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnAltThirdDegree8vb: (maqamatMods.modulationsOnAltThirdDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFourthDegree8vb: (maqamatMods.modulationsOnFourthDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFifthDegree8vb: (maqamatMods.modulationsOnFifthDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeAsc8vb: (maqamatMods.modulationsOnSixthDegreeAsc || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeDesc8vb: (maqamatMods.modulationsOnSixthDegreeDesc || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb: (maqamatMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
@@ -916,7 +931,8 @@ function createMaqamToMaqamLowerOctaveModulations(
  */
 function createMaqamToJinsLowerOctaveModulations(
   modulations: AjnasModulations,
-  allPitchClasses: PitchClass[]
+  allPitchClasses: PitchClass[],
+  renderings: ReturnType<typeof renderingsLookup>
 ): MaqamToJinsLowerOctaveModulationsStructure {
   const ajnasMods = modulations as AjnasModulations;
   
@@ -938,49 +954,49 @@ function createMaqamToJinsLowerOctaveModulations(
   return {
     maqamToJinsModulationsOnFirstDegree8vb: (ajnasMods.modulationsOnFirstDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnThirdDegree8vb: (ajnasMods.modulationsOnThirdDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnAltThirdDegree8vb: (ajnasMods.modulationsOnAltThirdDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFourthDegree8vb: (ajnasMods.modulationsOnFourthDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFifthDegree8vb: (ajnasMods.modulationsOnFifthDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeAsc8vb: (ajnasMods.modulationsOnSixthDegreeAsc || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeDesc8vb: (ajnasMods.modulationsOnSixthDegreeDesc || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: (ajnasMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
@@ -1341,7 +1357,8 @@ export async function exportTuningSystem(
                 ...(options.includeModulations8vb && {
                   maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
                     maqamatModulations, 
-                    fullRangeTuningSystemPitchClasses
+                    fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
                   )
                 })
               };
@@ -1373,7 +1390,8 @@ export async function exportTuningSystem(
                 ...(options.includeModulations8vb && {
                   maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
                     ajnasModulations, 
-                    fullRangeTuningSystemPitchClasses
+                    fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
                   )
                 })
               };
@@ -2066,7 +2084,8 @@ export async function exportMaqam(
         ...(options.includeModulations8vb && {
           maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
             maqamatModulations, 
-            fullRangeTuningSystemPitchClasses
+            fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
           )
         })
       };
@@ -2105,7 +2124,8 @@ export async function exportMaqam(
         ...(options.includeModulations8vb && {
           maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
             ajnasModulations, 
-            fullRangeTuningSystemPitchClasses
+            fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
           )
         })
       };

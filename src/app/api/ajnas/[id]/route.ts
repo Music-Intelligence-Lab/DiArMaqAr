@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -703,7 +704,8 @@ export async function GET(
     const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
 
     // Find specific transposition if requested
-    let selectedTransposition = transpositions[0]; // Default to first (tahlil)
+    // The taḥlīl unless another form is asked for: by flag, not by position
+    let selectedTransposition = transpositions.find((t) => t.isBaseForm)!;
     if (transposeToNote) {
       const found = transpositions.find(
         (t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(transposeToNote)
@@ -759,7 +761,7 @@ export async function GET(
         version: jins.getVersion(),
         // Distinct from isTransposed above: an octave-register sibling of the
         // base form is not a taswir, so both are false for it.
-        extras: { isBaseForm: selectedTransposition.isBaseForm },
+        extras: { isBaseForm: selectedTransposition.isBaseForm, formType: formTypeOf(selectedTransposition) },
         inArabic,
         displayNameAr: inArabic
           ? getJinsNameDisplayAr(selectedTransposition.name)

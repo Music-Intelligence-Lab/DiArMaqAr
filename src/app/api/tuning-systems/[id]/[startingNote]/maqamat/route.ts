@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -45,9 +46,9 @@ export async function GET(
     }
 
     // Parse optional include flags
-    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeMaqamDegrees", "includeDegreeDetails"]);
+    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeOctaveRenderings", "includeMaqamDegrees", "includeDegreeDetails"]);
     if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
-    const { includeTranspositions, includeMaqamDegrees, includeDegreeDetails } = booleanFlags.values;
+    const { includeTranspositions, includeOctaveRenderings, includeMaqamDegrees, includeDegreeDetails } = booleanFlags.values;
     const shouldIncludeDegreeDetails = includeMaqamDegrees && includeDegreeDetails;
 
     // Get cents tolerance parameter
@@ -243,7 +244,7 @@ export async function GET(
             // Every item on this listing is the tahlil; the taswir are listed
             // separately under `transpositions`. Taken from the resolved tahlil
             // rather than hard-coded true.
-            extras: { isBaseForm: tahlil.isBaseForm },
+            extras: { isBaseForm: tahlil.isBaseForm, formType: formTypeOf(tahlil) },
             inArabic,
             displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
           }
@@ -308,59 +309,39 @@ export async function GET(
           }
         }
 
-        if (includeTranspositions) {
-          const otherTranspositions = transpositions.filter((t: { transposition: boolean }) => t.transposition);
-          item.transpositions = otherTranspositions.map((t: any) => {
-            const tonicNoteName = t.ascendingPitchClasses[0].noteName;
-
-            if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-              // Each direction on its own, as for the taḥlīl above.
-              const renderedAscending = renderPitchClassSpellings(t.ascendingPitchClasses, true);
-              const renderedDescending = renderPitchClassSpellings(t.descendingPitchClasses, false);
-
-              return {
-                idName: entityToken(t),
-                displayName: t.name,
-                ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
-                tonic: buildIdentifierNamespace(
-                  {
-                    idName: standardizeText(tonicNoteName),
-                    displayName: tonicNoteName,
-                  },
-                  {
-                    inArabic,
-                    displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
-                  }
-                ),
-                // This array is filtered to taswir, so never the base form.
-                isBaseForm: t.isBaseForm,
-                maqamDegrees: {
-                  ascending: renderedAscending.map(toDegreeDetail),
-                  descending: renderedDescending.map(toDegreeDetail),
-                },
-              };
-            }
-
-            return {
-              idName: entityToken(t),
-              displayName: t.name,
-              ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
-              tonic: buildIdentifierNamespace(
-                {
-                  idName: standardizeText(tonicNoteName),
-                  displayName: tonicNoteName,
-                },
-                {
-                  inArabic,
-                  displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+        // One entry shape for every rendering listed: the taṣwīr under
+        // `transpositions`, the octave renderings under `octaveRenderings`.
+        const renderingEntry = (t: any) => {
+          const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+          // Each direction on its own, as for the taḥlīl above.
+          const maqamDegrees =
+            shouldIncludeDegreeDetails && renderPitchClassSpellings
+              ? {
+                  ascending: renderPitchClassSpellings(t.ascendingPitchClasses, true).map(toDegreeDetail),
+                  descending: renderPitchClassSpellings(t.descendingPitchClasses, false).map(toDegreeDetail),
                 }
-              ),
-              maqamDegrees: {
-                ascending: t.ascendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
-                descending: t.descendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
-              },
-            };
-          });
+              : {
+                  ascending: t.ascendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
+                  descending: t.descendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
+                };
+          return {
+            idName: entityToken(t),
+            displayName: t.name,
+            ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
+            tonic: buildIdentifierNamespace(
+              { idName: standardizeText(tonicNoteName), displayName: tonicNoteName },
+              { inArabic, displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined }
+            ),
+            isBaseForm: t.isBaseForm,
+            formType: formTypeOf(t),
+            maqamDegrees,
+          };
+        };
+        if (includeTranspositions) {
+          item.transpositions = transpositions.filter((t) => formTypeOf(t) === "transposition").map(renderingEntry);
+        }
+        if (includeOctaveRenderings) {
+          item.octaveRenderings = transpositions.filter((t) => formTypeOf(t) === "octaveRendering").map(renderingEntry);
         }
 
         availableMaqamat.push(item);

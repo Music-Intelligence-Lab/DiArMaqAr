@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -51,9 +52,9 @@ export async function GET(
     }
 
     // Parse optional include flags
-    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeJinsDegrees", "includeDegreeDetails"]);
+    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeOctaveRenderings", "includeJinsDegrees", "includeDegreeDetails"]);
     if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
-    const { includeTranspositions, includeJinsDegrees, includeDegreeDetails } = booleanFlags.values;
+    const { includeTranspositions, includeOctaveRenderings, includeJinsDegrees, includeDegreeDetails } = booleanFlags.values;
     const shouldIncludeDegreeDetails = includeJinsDegrees && includeDegreeDetails;
 
     // Get cents tolerance parameter
@@ -217,7 +218,7 @@ export async function GET(
           // Every item on this listing is the tahlil; the taswir are listed
           // separately under `transpositions`. Taken from the resolved tahlil
           // rather than hard-coded true.
-          extras: { isBaseForm: tahlil.isBaseForm },
+          extras: { isBaseForm: tahlil.isBaseForm, formType: formTypeOf(tahlil) },
           inArabic,
           displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,
         }
@@ -260,42 +261,47 @@ export async function GET(
         }
       }
 
+      // One entry shape for every rendering listed: the taṣwīr under
+      // `transpositions`, the octave renderings under `octaveRenderings`.
+      const renderingEntry = (t: any) => {
+        const tonicNoteName = t.jinsPitchClasses[0].noteName;
+
+        const entry: Record<string, unknown> = {
+          idName: entityToken(t),
+          displayName: t.name,
+          ...(inArabic && { displayNameAr: getJinsNameDisplayAr(t.name) }),
+          tonic: buildIdentifierNamespace(
+            {
+              idName: standardizeText(tonicNoteName),
+              displayName: tonicNoteName,
+            },
+            {
+              inArabic,
+              displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+            }
+          ),
+          isBaseForm: t.isBaseForm,
+          formType: formTypeOf(t),
+        };
+
+        if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
+          const rendered = renderPitchClassSpellings(t.jinsPitchClasses, true);
+          entry.jinsDegrees = rendered.map((pc: any) => ({
+            noteName: standardizeText(pc.noteName),
+            englishName: pc.englishName,
+            solfege: pc.solfege!,
+          }));
+        } else {
+          entry.jinsDegrees = t.jinsPitchClasses.map((pc: any) => standardizeText(pc.noteName));
+        }
+
+        return entry;
+      };
       if (includeTranspositions) {
-        const otherTranspositions = transpositions.filter((t: { transposition: boolean }) => t.transposition);
-        item.transpositions = otherTranspositions.map((t: any) => {
-          const tonicNoteName = t.jinsPitchClasses[0].noteName;
-
-          const entry: Record<string, unknown> = {
-            idName: entityToken(t),
-            displayName: t.name,
-            ...(inArabic && { displayNameAr: getJinsNameDisplayAr(t.name) }),
-            tonic: buildIdentifierNamespace(
-              {
-                idName: standardizeText(tonicNoteName),
-                displayName: tonicNoteName,
-              },
-              {
-                inArabic,
-                displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
-              }
-            ),
-            // This array is filtered to taswir, so never the base form.
-            isBaseForm: t.isBaseForm,
-          };
-
-          if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-            const rendered = renderPitchClassSpellings(t.jinsPitchClasses, true);
-            entry.jinsDegrees = rendered.map((pc: any) => ({
-              noteName: standardizeText(pc.noteName),
-              englishName: pc.englishName,
-              solfege: pc.solfege!,
-            }));
-          } else {
-            entry.jinsDegrees = t.jinsPitchClasses.map((pc: any) => standardizeText(pc.noteName));
-          }
-
-          return entry;
-        });
+        item.transpositions = transpositions.filter((t) => formTypeOf(t) === "transposition").map(renderingEntry);
+      }
+      if (includeOctaveRenderings) {
+        item.octaveRenderings = transpositions.filter((t) => formTypeOf(t) === "octaveRendering").map(renderingEntry);
       }
 
       availableAjnas.push(item);

@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -276,6 +277,7 @@ export async function GET(request: Request) {
           // Not the inverse of isTransposed: an octave-register sibling of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
+          formType: formTypeOf(info.maqam),
           tonic: tonicNamespace ? {
             ipnReferenceNoteName: tonicIpnRef,
             noteNameIdName: tonicNamespace.idName,
@@ -356,7 +358,8 @@ export async function GET(request: Request) {
                 tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
                 tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
                 isTransposed: maqamEntry.isTransposed,
-                isBaseForm: maqamEntry.isBaseForm
+                isBaseForm: maqamEntry.isBaseForm,
+                formType: maqamEntry.formType
               } : null;
             })()
           }));
@@ -490,7 +493,8 @@ export async function GET(request: Request) {
             ? {
                 ...transpositionNamespace,
                 isTransposed: incompatible.transposition.transposition,
-                isBaseForm: incompatible.transposition.isBaseForm
+                isBaseForm: incompatible.transposition.isBaseForm,
+              formType: formTypeOf(incompatible.transposition)
               }
             : null,
           reason: incompatible.reason

@@ -6,8 +6,9 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import { spellMaqamDirections } from "@/app/api/pitch-spellings";
 import { buildEntityNamespace, buildIdentifierNamespace } from "@/app/api/response-shapes";
 import { getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr } from "@/app/api/arabic-helpers";
-import PitchClass from "@/models/PitchClass";
+import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
+import { formTypeOf } from "@/functions/formType";
 import MaqamData, { Maqam, MaqamatModulations, shiftMaqamByOctaves } from "@/models/Maqam";
 import JinsData, { Jins, AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
 
@@ -167,6 +168,7 @@ export const MAQAM_DETAIL_FIELDS = [
   "stats",
   "characteristics",
   "availableTranspositions",
+  "availableOctaveRenderings",
   "comments",
   "sources",
   "pitchData",
@@ -175,6 +177,9 @@ export const MAQAM_DETAIL_FIELDS = [
   "primaryJins",
   "secondaryJins",
   "tertiaryJins",
+  "primaryJinsDescending",
+  "secondaryJinsDescending",
+  "tertiaryJinsDescending",
   "ghammaz",
   "suyur",
   "modulations",
@@ -219,6 +224,16 @@ export class MaqamDetailContext {
     const cached = this.maqamTranspositions().get(maqam.getId());
     if (cached) return cached;
     return calculateMaqamTranspositions(this.pitchClasses, this.ajnas, maqam, true, this.options.centsTolerance);
+  }
+
+  /** Every rendering of the maqām with this id in the pitch space (empty if it cannot be built) */
+  maqamRenderings(maqamId: string): Maqam[] {
+    return this.maqamTranspositions().get(maqamId) ?? [];
+  }
+
+  /** Every rendering of the jins with this id in the pitch space (empty if it cannot be built) */
+  jinsRenderings(jinsId: string): Jins[] {
+    return this.jinsTranspositions().get(jinsId) ?? [];
   }
 
   private maqamTranspositions(): Map<string, Maqam[]> {
@@ -280,6 +295,7 @@ function jinsReference(jins: Jins, inArabic: boolean) {
     idName: entityToken(jins),
     displayName: jins.name || '',
     isBaseForm: jins.isBaseForm,
+    formType: formTypeOf(jins),
     ...(inArabic && { displayNameAr: getJinsNameDisplayAr(jins.name || '') }),
   };
 }
@@ -299,32 +315,83 @@ export function ajnasByDegree(pitchClasses: PitchClass[], ajnasPerDegree: Jins[]
 }
 
 /**
- * The jins-degree and ghammāz entries of a form: note name, maqām degree
- * (roman numeral) and, for the three jins slots, the jins found there. Null
- * when the form has no entry for the slot (rāst has no tertiary jins).
+ * Why a structural jins entry has a jins or not:
+ *
+ * - "matched": the archive has a jins starting on this degree in this direction
+ * - "noMatchingJins": the degree is in the maqām, but no jins in the archive
+ *   starts there in this tuning system (maqām lāmī's degree IV, nawā)
+ * - "degreeNotInMaqam": the stored degree is not one of the notes this
+ *   direction of the maqām passes through
+ *
+ * The data stores each structural slot as a degree (a note name) from the
+ * sources; the jins on it is what the archive finds there.
  */
-export function jinsDegreeEntries(form: Maqam, noteNames: string[] | null | undefined, resolveJins: boolean, inArabic: boolean): any[] | null {
+export type StructuralJinsStatus = "matched" | "noMatchingJins" | "degreeNotInMaqam";
+
+/** The notes of one direction from the tonic upwards, with the ajnās found on each */
+function directionDegrees(form: Maqam, direction: "ascending" | "descending"): { pitchClasses: PitchClass[]; ajnas: Jins[][] } {
+  if (direction === "ascending") return { pitchClasses: form.ascendingPitchClasses, ajnas: form.ascendingMaqamAjnas ?? [] };
+  // Stored top-down; read upwards so a degree counts from the tonic
+  return { pitchClasses: [...form.descendingPitchClasses].reverse(), ajnas: [...(form.descendingMaqamAjnas ?? [])].reverse() };
+}
+
+function degreeEntry(noteName: string, index: number, inArabic: boolean) {
+  return {
+    noteName: standardizeText(noteName),
+    noteNameDisplay: noteName,
+    ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
+    maqamDegree: index >= 0 ? romanNumerals[index] || String(index + 1) : null,
+  };
+}
+
+/**
+ * The structural jins entries of one slot (primary, secondary or tertiary) in
+ * one direction: each source-given degree, its place in that direction of the
+ * form, and the jins the archive finds starting there. Null when the form has
+ * no entry for the slot (rāst has no tertiary jins). Arrays, to allow
+ * alternatives at a slot.
+ */
+export function structuralJinsEntries(
+  form: Maqam,
+  noteNames: string[] | null | undefined,
+  direction: "ascending" | "descending",
+  inArabic: boolean
+): any[] | null {
   if (noteNames == null) return null;
+  const { pitchClasses, ajnas } = directionDegrees(form, direction);
   return noteNames.map((noteName) => {
-    const idx = form.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
-    const entry: any = {
-      noteName: standardizeText(noteName),
-      noteNameDisplay: noteName,
-      ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
-      maqamDegree: idx >= 0 ? (romanNumerals[idx] || String(idx + 1)) : null,
+    const index = pitchClasses.findIndex((pc) => pc.noteName === noteName);
+    // The first of the ajnās on the degree, in suyūr-attested order (as `ajnas` lists them)
+    const jins = index >= 0 ? ajnas[index]?.[0] : undefined;
+    const jinsStatus: StructuralJinsStatus = index < 0 ? "degreeNotInMaqam" : jins ? "matched" : "noMatchingJins";
+    return {
+      ...degreeEntry(noteName, index, inArabic),
+      jinsStatus,
+      jinsId: jins ? jins.jinsId : null,
+      jinsIdName: jins ? entityToken(jins) : null,
+      jinsDisplayName: jins ? jins.name || "" : null,
+      jinsIsBaseForm: jins ? jins.isBaseForm : null,
+      jinsFormType: jins ? formTypeOf(jins) : null,
+      ...(inArabic && { jinsDisplayNameAr: jins ? getJinsNameDisplayAr(jins.name || "") : null }),
     };
-    if (!resolveJins) return entry;
-    // .flat() first: each degree is an array of every jins matching there, so
-    // searching the degrees directly would test arrays, not ajnās.
-    const atNote = (perDegree: Jins[][] | undefined) =>
-      perDegree?.flat().find((j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName);
-    const jinsAtNote = atNote(form.ascendingMaqamAjnas) ?? atNote(form.descendingMaqamAjnas);
-    entry.jinsId = jinsAtNote ? jinsAtNote.jinsId : null;
-    entry.jinsIdName = jinsAtNote ? entityToken(jinsAtNote) : null;
-    entry.jinsDisplayName = jinsAtNote ? jinsAtNote.name || '' : null;
-    entry.jinsIsBaseForm = jinsAtNote ? jinsAtNote.isBaseForm : null;
-    if (inArabic) entry.jinsDisplayNameAr = jinsAtNote ? getJinsNameDisplayAr(jinsAtNote.name || '') : null;
-    return entry;
+  });
+}
+
+/**
+ * The ghammāz entries of a form: each degree, its place in the ascending form,
+ * and the interval from the tonic up to it (cents and ratio). The interval is
+ * null when the ghammāz is not one of the ascending notes.
+ */
+export function ghammazEntries(form: Maqam, noteNames: string[] | null | undefined, inArabic: boolean): any[] | null {
+  if (noteNames == null) return null;
+  const tonic = form.ascendingPitchClasses[0];
+  return noteNames.map((noteName) => {
+    const index = form.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
+    const interval = index >= 0 ? calculateInterval(tonic, form.ascendingPitchClasses[index]) : null;
+    return {
+      ...degreeEntry(noteName, index, inArabic),
+      intervalFromTonic: interval && { cents: interval.cents, fraction: interval.fraction, decimalRatio: interval.decimalRatio },
+    };
   });
 }
 
@@ -364,6 +431,7 @@ function serializeModulations(
         // Both kinds: an octave-register sibling of the base form is not a
         // taṣwīr, so isTransposition alone cannot identify the base form.
         reference.isBaseForm = target.isBaseForm || false;
+        reference.formType = formTypeOf(target);
         if (inArabic) {
           reference.displayNameAr = isAjnas ? getJinsNameDisplayAr(target.name) : getMaqamNameDisplayAr(target.name);
           reference.tonicDisplayNameAr = getNoteNameDisplayAr(tonic);
@@ -373,9 +441,13 @@ function serializeModulations(
       .filter(Boolean);
 
   const shiftMaqam = (targets: Maqam[]) =>
-    octaveShift === 0 ? targets : (targets.map((m) => shiftMaqamByOctaves(ctx.pitchClasses, m, octaveShift)).filter(Boolean) as Maqam[]);
+    octaveShift === 0
+      ? targets
+      : (targets.map((m) => shiftMaqamByOctaves(ctx.pitchClasses, m, octaveShift, ctx.maqamRenderings(m.maqamId))).filter(Boolean) as Maqam[]);
   const shiftJins = (targets: Jins[]) =>
-    octaveShift === 0 ? targets : (targets.map((j) => shiftJinsByOctaves(ctx.pitchClasses, j, octaveShift)).filter(Boolean) as Jins[]);
+    octaveShift === 0
+      ? targets
+      : (targets.map((j) => shiftJinsByOctaves(ctx.pitchClasses, j, octaveShift, ctx.jinsRenderings(j.jinsId))).filter(Boolean) as Jins[]);
 
   const maqamat: any = {};
   const ajnas: any = {};
@@ -435,12 +507,27 @@ export function buildMaqamDetail(
   const ascendingNoteNames = form.ascendingPitchClasses.map((pc) => pc.noteName);
   const descendingNoteNames = form.descendingPitchClasses.map((pc) => pc.noteName);
 
+  const availableForm = (t: Maqam) => {
+    const tonic = t.ascendingPitchClasses[0].noteName;
+    return {
+      idName: entityToken(t),
+      displayName: t.name,
+      ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
+      formType: formTypeOf(t),
+      tonic: {
+        idName: standardizeText(tonic),
+        displayName: tonic,
+        ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonic) }),
+      },
+    };
+  };
+
   const detail: Record<string, any> = {
     maqam: buildEntityNamespace(
       { id: maqam.getId(), idName: entityToken(form), displayName: form.name },
       {
         version: maqam.getVersion(),
-        extras: { isBaseForm: form.isBaseForm },
+        extras: { isBaseForm: form.isBaseForm, formType: formTypeOf(form) },
         inArabic,
         displayNameAr: inArabic ? getMaqamNameDisplayAr(form.name) : undefined,
       }
@@ -472,23 +559,10 @@ export function buildMaqamDetail(
       hasAsymmetricDescending: JSON.stringify(ascendingNoteNames) !== JSON.stringify([...descendingNoteNames].reverse()),
       hasSuyur: maqam.getSuyur().length > 0,
     },
-    // Taṣwīr only. Intentionally minimal: a client wanting a transposition's
-    // own analysis asks for that form.
-    availableTranspositions: transpositions
-      .filter((t) => t.transposition)
-      .map((t) => {
-        const tonic = t.ascendingPitchClasses[0].noteName;
-        return {
-          idName: entityToken(t),
-          displayName: t.name,
-          ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
-          tonic: {
-            idName: standardizeText(tonic),
-            displayName: tonic,
-            ...(inArabic && { displayNameAr: getNoteNameDisplayAr(tonic) }),
-          },
-        };
-      }),
+    // Intentionally minimal: a client wanting a form's own analysis asks for
+    // that form. The taṣwīr, then the octave renderings, each its own list.
+    availableTranspositions: transpositions.filter((t) => formTypeOf(t) === "transposition").map(availableForm),
+    availableOctaveRenderings: transpositions.filter((t) => formTypeOf(t) === "octaveRendering").map(availableForm),
     comments: {
       english: getComments(maqam.getCommentsEnglish()),
       arabic: getCommentsAr(maqam.getCommentsArabic()),
@@ -526,10 +600,16 @@ export function buildMaqamDetail(
 
   // Transposed in step with the form: each entry names the form's own notes
   // and their degree in it. Arrays, to allow alternatives at a slot.
-  if (wants("primaryJins")) detail.primaryJins = jinsDegreeEntries(form, form.primaryJinsNoteName, true, inArabic);
-  if (wants("secondaryJins")) detail.secondaryJins = jinsDegreeEntries(form, form.secondaryJinsNoteName, true, inArabic);
-  if (wants("tertiaryJins")) detail.tertiaryJins = jinsDegreeEntries(form, form.tertiaryJinsNoteName, true, inArabic);
-  if (wants("ghammaz")) detail.ghammaz = jinsDegreeEntries(form, form.ghammazNoteName, false, inArabic);
+  for (const [field, noteNames] of [
+    ["primaryJins", form.primaryJinsNoteName],
+    ["secondaryJins", form.secondaryJinsNoteName],
+    ["tertiaryJins", form.tertiaryJinsNoteName],
+  ] as const) {
+    if (wants(field)) detail[field] = structuralJinsEntries(form, noteNames, "ascending", inArabic);
+    const descendingField = `${field}Descending`;
+    if (wants(descendingField)) detail[descendingField] = structuralJinsEntries(form, noteNames, "descending", inArabic);
+  }
+  if (wants("ghammaz")) detail.ghammaz = ghammazEntries(form, form.ghammazNoteName, inArabic);
 
   if (includeSuyur && wants("suyur")) detail.suyur = maqam.getSuyur();
 

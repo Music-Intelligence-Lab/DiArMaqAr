@@ -1,3 +1,4 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
@@ -440,6 +441,7 @@ function formatNode(node: MaqamNode, inArabic: boolean): any {
     // Not the inverse of isTransposition: an octave-register sibling of the
     // base form is not a taswir, so both are false for it.
     isBaseForm: node.isBaseForm,
+    formType: formTypeOf({ isBaseForm: node.isBaseForm, transposition: node.isTransposition }),
   };
 
   if (inArabic) {
