@@ -113,7 +113,7 @@ A transposed maqām or jins has one `idName`, and every endpoint returns the sam
 
 The separator is always `_al_`. The "al" inside a base name is closed up, so it never looks like a separator: `maqam_hijaz_alsabbagh_abbas` and `jins_buselik_alhilu` are base names, not transpositions.
 
-The taḥlīl is its bare `idName` (`maqam_rast`). A rendering an octave away from the taḥlīl, such as maqām rāst on qarār rāst, is not a taṣwīr (`isTransposed: false`, `isBaseForm: false`), but it still names its tonic: `maqam_rast_al_qarar_rast`.
+The base form is its bare `idName` (`maqam_rast`). A rendering an octave away from the base form, such as maqām rāst on qarār rāst, is not a taṣwīr (`isTransposed: false`, `isBaseForm: false`), but it still names its tonic: `maqam_rast_al_qarar_rast`.
 
 So the `idName` in a maqām's `availableTranspositions` list is exactly the `maqam.idName` you get back when you request that transposition. The same `idName` appears in:
 
@@ -142,7 +142,7 @@ Name the tonic once. A transposed `idName` together with a `transposeTo` (or `tr
 
 `/maqamat/{idName}/transpositions` and `/ajnas/{idName}/transpositions` list every transposition, so they take the base `idName` only. A transposed `idName` there is a 400 whose `hint` names the base `idName` to use.
 
-**Older spelling.** Until October 2026, some endpoints closed up the separator, spelling maqām rāst on qarār chahārgāh as `maqam_rast_alqarar_chahargah`. These were the base response's `availableTranspositions`, the compare endpoints, both classification endpoints (including set IDs), and modulation routes. Separately, a request with `transposeTo` set to a note an octave away from the taḥlīl (`transposeTo=qarar_rast` for maqām rāst) used to return the bare base `idName` and display name; it now returns `maqam_rast_al_qarar_rast`, matching the rest of the API. If you stored one of the closed-up IDs, it is still accepted wherever an `idName` is: in the path of every `/maqamat/{idName}` and `/ajnas/{idName}` route, and in the `maqamId` and `setId` filters on the classification endpoints. It is read as the current spelling. Responses use only the current spelling.
+**Older spelling.** Until October 2026, some endpoints closed up the separator, spelling maqām rāst on qarār chahārgāh as `maqam_rast_alqarar_chahargah`. These were the base response's `availableTranspositions`, the compare endpoints, both classification endpoints (including set IDs), and modulation routes. Separately, a request with `transposeTo` set to a note an octave away from the base form (`transposeTo=qarar_rast` for maqām rāst) used to return the bare base `idName` and display name; it now returns `maqam_rast_al_qarar_rast`, matching the rest of the API. If you stored one of the closed-up IDs, it is still accepted wherever an `idName` is: in the path of every `/maqamat/{idName}` and `/ajnas/{idName}` route, and in the `maqamId` and `setId` filters on the classification endpoints. It is read as the current spelling. Responses use only the current spelling.
 
 **Ajnās an octave from their own tonic.** Until November 2026, a jins found at a maqām degree an octave from its own tonic kept its bare base `idName`: jins yegāh on nawā came back as `jins_yegah` with `isBaseForm: false`. It now names its tonic like every other form, `jins_yegah_al_nawa`, the same `idName` the jins endpoints give it.
 
@@ -158,14 +158,14 @@ Each item in `maqamat` is exactly the body `GET /maqamat/{idName}` returns for t
 
 | Parameter | Values | What it does |
 |---|---|---|
-| `forms` | `base` (default), `transpositions`, `all` | The taḥlīl of each maqām, its transpositions (taṣwīr), or both |
-| `includeOctaveRenderings` | `true` / `false` | Also returns each maqām an octave from its taḥlīl, such as `maqam_rast_al_qarar_rast`. These are neither the taḥlīl nor a taṣwīr, and they appear as modulation targets |
+| `forms` | `base` (default), `transpositions`, `all` | The base form of each maqām, its transpositions (taṣwīr), or both |
+| `includeOctaveRenderings` | `true` / `false` | Also returns each maqām an octave from its base form, such as `maqam_rast_al_qarar_rast`. These are neither the base form nor a taṣwīr, and they appear as modulation targets |
 | `fields` | e.g. `ajnas,primaryJins,modulations` | Keeps only these top-level fields in each item. `maqam` is always kept. A field left out is not computed, so leaving out `modulations`, `lowerOctaveModulations` and `stats` skips the modulation analysis |
 | `offset` | integer | Where a page starts. Leave it out and follow `next` |
 
 `includeModulations`, `includeModulations8vb`, `includeIntervals`, `includeSuyur`, `includeArabic`, `pitchClassDataType` and `centsTolerance` work as they do for one maqām.
 
-**Pages.** A full analysis is larger than one response can be. For al-Fārābī (950g) from ʿushayrān, all 440 forms (101 taḥlīl and 339 taṣwīr) with both kinds of modulation are about 25 MB. So the response is cut into pages of at most about 5 MB. `total` counts every selected form, `count` counts the forms on this page, and `next` is the URL of the next page, or `null` on the last one. Requests without modulations usually fit on one page.
+**Pages.** A full analysis is larger than one response can be. For al-Fārābī (950g) from ʿushayrān, all 440 forms (101 base forms and 339 taṣwīr) with both kinds of modulation are about 25 MB. So the response is cut into pages of at most about 5 MB. `total` counts every selected form, `count` counts the forms on this page, and `next` is the URL of the next page, or `null` on the last one. Requests without modulations usually fit on one page.
 
 ```bash
 # First page; then request each `next` URL until it is null
@@ -182,7 +182,7 @@ Every maqām and jins form in a response carries `formType`, read from the form 
 
 | `formType` | Meaning | Example |
 |---|---|---|
-| `base` | The taḥlīl: the form on the tonic the sources give | maqām rāst on rāst, `maqam_rast` |
+| `base` | The base form: the form on the tonic the sources give | maqām rāst on rāst, `maqam_rast` |
 | `transposition` | A taṣwīr: the form moved to another modal degree | maqām rāst on nawā, `maqam_rast_al_nawa` |
 | `octaveRendering` | The base form an octave or more away, on the same modal degree | maqām rāst on qarār rāst, `maqam_rast_al_qarar_rast` |
 

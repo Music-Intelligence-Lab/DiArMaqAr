@@ -44,7 +44,7 @@ As building blocks, ajnās combine to form maqāmāt. The platform automatically
 
 - Which ajnās appear in the ascending sequence
 - Which ajnās appear in the descending sequence
-- Whether they are in their original form (taḥlīl) or transposed (taṣwīr)
+- Whether they are in their base form or transposed (taṣwīr)
 - Their precise intervallic structure within the maqām context
 
 **Analysis Algorithm:**

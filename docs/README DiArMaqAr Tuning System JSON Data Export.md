@@ -517,7 +517,7 @@ The `allAjnasData` section contains all melodic genera available in the tuning s
 | **`jinsPitchClasses[]`** | Array of pitch class keys in ascending order. Use these keys to look up `pitchClassReference` for fractions, cents, and string lengths | `["dugah", "segah", "chahargah", "nawa"]` |
 | **`jinsPitchClassIntervals[]`** | Array of interval objects between consecutive pitches (see Interval Properties table below) | Computed from pitch frequency ratios |
 | `transposition` | Boolean: `true` for taṣwīr (transposed to a different modal degree), `false` for the base form **and** for its octave/register siblings, since a register shift is not taṣwīr | Distinguishes original vs transposed structures |
-| `isBaseForm` | Boolean: `true` only for the taḥlīl — the canonical form of this jins, from which its transpositions are derived. Every transposition of one jins repeats that jins's `jinsId`, and exactly one entry has `isBaseForm: true`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave siblings |
+| `isBaseForm` | Boolean: `true` only for the base form — the canonical form of this jins, from which its transpositions are derived. Every transposition of one jins repeats that jins's `jinsId`, and exactly one entry has `isBaseForm: true`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave renderings |
 | `commentsEnglish` | Additional context, performance notes, or musicological context in English | May reference historical sources or performance practice |
 | `commentsArabic` | Same as above in Arabic | For preservation of original terminology |
 | `SourcePageReferences[]` | Array of academic citations (sourceId + page number) supporting this jins | Links to bibliographic sources |
@@ -655,7 +655,7 @@ The `allMaqamatData` section contains complete maqām information with pitch seq
 | **`descendingMaqamAjnas{}`** | Object mapping each descending pitch degree to an array of jins references, in suyūr-attested order | Same structure as ascending |
 | `suyur[]` | Array of sayr (plural: suyur) objects. Each contains documentation from a specific source about how a maqām is performed, including stops and structural notes | Links to documented performance practice |
 | `transposition` | Boolean: `true` for taṣwīr (transposed to a different modal degree), `false` for the base form **and** for its octave/register siblings, since a register shift is not taṣwīr | Distinguishes original vs transposed forms |
-| `isBaseForm` | Boolean: `true` only for the taḥlīl — the canonical form of this maqām, from which its transpositions are derived. Every transposition of one maqām repeats that maqām's `maqamId`, and exactly one entry has `isBaseForm: true`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave siblings |
+| `isBaseForm` | Boolean: `true` only for the base form — the canonical form of this maqām, from which its transpositions are derived. Every transposition of one maqām repeats that maqām's `maqamId`, and exactly one entry has `isBaseForm: true`. Use this, not `transposition`, to find base forms | Disambiguates the base form from its octave renderings |
 | `commentsEnglish` | Structural description and performance details from the source, including melodic context and usage information in English | From original bibliographic source |
 | `commentsArabic` | Same as above in Arabic | Preserves original terminology |
 | `SourcePageReferences[]` | Array of academic citations (sourceId + page) supporting this maqām | Links to bibliographic sources |
@@ -776,8 +776,8 @@ Ordered lists of elements:
 
 | `transposition` | `isBaseForm` | Meaning |
 |---|---|---|
-| `false` | `true` | taḥlīl — the base form |
-| `false` | `false` | octave/register sibling of the base form |
+| `false` | `true` | the base form |
+| `false` | `false` | octave rendering of the base form |
 | `true` | `false` | taṣwīr — a transposition to another modal degree |
 
 * Modulation arrays within maqāmāt and ajnās may include both base forms and transpositions, reflecting all possible modulation relationships in the system.

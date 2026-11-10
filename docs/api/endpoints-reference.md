@@ -1009,7 +1009,7 @@ GET /maqamat/{idName}/transpositions
 ```
 
 Lists distinct transpositions (taswīr) for a maqām within a specific tuning system and starting note.
-The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+The base form is excluded. Octave renderings of the same modal degree
 (e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
 If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
@@ -1890,10 +1890,10 @@ bayyāt on dūgāh and maqām segāh on segāh.
 - **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
 - **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
 - **Direct Values**: All cent values come directly from tuning system without calculation
-- **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+- **Base-form Priority**: Base forms create canonical sets first, then transpositions
 
 **The Algorithm:**
-1. For each maqām transposition (tahlil first, then transpositions):
+1. For each maqām form (base form first, then transpositions):
    - Extracts all unique pitch classes from ascending + descending sequences
    - Groups by IPN reference (octave-equivalent)
    - Validates no duplicate IPN references with different cents values
@@ -2439,7 +2439,7 @@ GET /ajnas/{idName}/transpositions
 ```
 
 Lists distinct transpositions (taswīr) for a jins within a specific tuning system and starting note.
-The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+The base form is excluded. Octave renderings of the same modal degree
 (e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
 If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
@@ -3678,9 +3678,7 @@ Combine with `fromTonic` to specify a particular transposition..
  - Type: `string`
   - Example: `maqam_rast`
 - `fromTonic` (optional): Optional specific tonic for the source maqam (URL-safe).
-If not specified, uses the canonical (taḥlīl) form..
-  If not specified, uses the canonical (taḥlīl) form.
- - Type: `string`
+If not specified, uses the base form. - Type: `string`
   - Example: `rast`
 - `toMaqam` **(required)**: Target maqam base ID (the destination of the journey).
 Use the base maqam identifier (e.g., "maqam_nahawand"), not the transposition display name.
@@ -3690,9 +3688,7 @@ Combine with `toTonic` to specify a particular transposition..
  - Type: `string`
   - Example: `maqam_segah`
 - `toTonic` (optional): Optional specific tonic for the target maqam (URL-safe).
-If not specified, uses the canonical (taḥlīl) form..
-  If not specified, uses the canonical (taḥlīl) form.
- - Type: `string`
+If not specified, uses the base form. - Type: `string`
   - Example: `segah`
 - `maxHops` **(required)**: Maximum number of modulation steps allowed (required safeguard).
 Prevents combinatorial explosion in route calculation.
