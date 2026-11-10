@@ -1,158 +1,132 @@
 @use "./variables" as *;
 
+// The page sits in the app's .main-content frame (as the bibliography does):
+// the page scrolls as a whole, footer last, and the table's header sticks to
+// the top of that frame.
 .statistics {
-  width: 100%;
-  height: calc(100vh - 120px); // Account for navbar height
-  padding: 0px;
-  background: $background;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  .admin-controls {
-    flex-shrink: 0;
-    padding: 12px;
-    background: $background;
-    border-bottom: 1px solid $grey;
-    z-index: 100;
+  // Totals and table share one column, as wide as the table, centred
+  .statistics__body {
+    width: fit-content;
+    max-width: 100%;
+    margin: $space-block 0;
   }
 
-  .status-message {
-    flex-shrink: 0;
-    padding: 12px;
+  // The archive's own totals: one row of cells on the table's grid, as wide
+  // as the table, each count over its label
+  .statistics__archive {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     margin: 0;
-    z-index: 100;
-    
-    &.error {
-      background: rgba(255, 0, 0, 0.1);
-      color: #ff6b6b;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-    }
-    
-    &.success {
-      background: rgba(0, 255, 0, 0.1);
-      color: #51cf66;
-      border: 1px solid rgba(0, 255, 0, 0.3);
-    }
-  }
-
-  .table-container {
-    flex: 1;
-    overflow: auto;
-    position: relative;
+    border: 1px solid $grey;
     background: $dark-grey;
-    padding-bottom: 100px;
   }
 
-  button {
-    font-size: $font-size-lg;
-    padding: 10px 20px;
-    border-radius: 0px;
-    border: none;
-    background: $primary;
+  .statistics__archive-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+
+    &:not(:first-child) {
+      border-left: 1px solid $grey;
+
+      [dir="rtl"] & {
+        border-left: none;
+        border-right: 1px solid $grey;
+      }
+    }
+  }
+
+  .statistics__archive-value {
+    @include type-data-value;
+    margin: 0;
+    font-size: $font-size-xl;
     color: $text;
-    cursor: pointer;
-    transition: background 0.2s;
-
-    &:hover:enabled {
-      background: $hovered-primary;
-    }
-
-    &:disabled {
-      @include interactive-disabled;
-    }
   }
 
+  .statistics__archive-label {
+    @include type-table-label;
+    color: $text-quiet;
+  }
+
+  // When the numbers were computed: a quiet caption under the totals
+  .statistics__generated {
+    @include type-table-label;
+    margin: 6px 0 $space-block;
+    color: $text-quiet;
+  }
+
+  // The app's table idiom (tuning-system and maqām/jins tables): $dark-grey
+  // cells on a 1px $grey grid, $medium-grey header cells, the reading edge for
+  // every cell, and only the hovered cell lights. The table is as wide as its
+  // content, never stretched to the page.
   .statistics-table {
-    width: 100%;
+    width: auto;
     border-collapse: collapse;
     background: $dark-grey;
-    margin: 0;
-    table-layout: auto;
-    min-width: 100%;
-  }
 
-  th,
-  td {
-    @include type-table-label;
-    padding: 12px 16px;
-    text-align: left;
-  }
-
-  td {
-    white-space: nowrap;
-    border-bottom: 1px solid $grey;
-  }
-
-  td[data-column-type="value"] {
-    @include type-data-value;
-  }
-
-  th {
-    background: $primary;
-    color: $text;
-    font-weight: $font-weight-semibold;
-    position: sticky;
-    top: 0;
-    z-index: 500; // Below navbar (1001) but above content
-    white-space: nowrap;
-    vertical-align: top;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    user-select: none;
-    border-bottom: 2px solid $grey;
-
-    &:hover {
-      background: $hovered-primary;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 500; // Below navbar (1001) but above content
     }
-  }
 
-  tbody tr {
-    cursor: pointer;
-    transition: background 0.15s ease;
+    th,
+    td {
+      @include type-table-label;
+      padding: 5px 10px;
+      border: 1px solid $grey;
+      text-align: left;
+      vertical-align: middle;
 
-    &:hover td {
-      background: rgba($primary, 0.3) !important;
+      [dir="rtl"] & {
+        text-align: right;
+      }
+    }
+
+    th {
+      background: $medium-grey;
       color: $text;
+      vertical-align: bottom;
+      cursor: pointer;
+      user-select: none;
+      @include table-cell-hover;
+    }
+
+    // A column group's label spans its columns and does not sort
+    .statistics-table__group {
+      cursor: default;
+      text-align: center;
+
+      [dir="rtl"] & {
+        text-align: center;
+      }
+
+      &:hover {
+        background: $medium-grey;
+      }
+    }
+
+    td {
+      @include table-cell-hover;
+    }
+
+    td[data-column-type="label"] {
+      min-width: 180px;
+      max-width: 260px;
+      vertical-align: top;
+    }
+
+    td[data-column-type="note"] {
+      white-space: nowrap;
+    }
+
+    td[data-column-type="value"] {
+      @include type-data-value;
+      white-space: nowrap;
     }
   }
 
-  tr.selected-row td {
-    background: $secondary !important;
-    color: $text;
-    font-weight: $font-weight-medium;
-  }
-
-  tbody tr:nth-child(even) td {
-    background: $medium-grey;
-  }
-
-  tbody tr:nth-child(odd) td {
-    background: $dark-grey;
-  }
-
-  tbody tr:last-child td {
-    border-bottom: none;
-  }
-
-  // Responsive adjustments — padding still tightens on narrower viewports;
-  // font-size stays at the 12px table reference (was 13px here, unified
-  // per the typography redesign)
-  @media (max-width: 1200px) {
-    th, td {
-      padding: 8px 12px;
-    }
-  }
-
-  @media (max-width: 900px) {
-    .table-container {
-      overflow-x: auto;
-    }
-    
-    .statistics-table {
-      min-width: 800px;
-    }
-  }
 }
 
 // Analytics page filter controls (statistics-client.tsx) — previously had no

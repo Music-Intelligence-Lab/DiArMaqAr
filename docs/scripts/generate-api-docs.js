@@ -103,7 +103,7 @@ Most endpoints support these optional parameters:
   }
 
   // Generate documentation for each tag
-  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Modulations', 'Pitch Classes', 'Intervals', 'Sources'];
+  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Modulations', 'Pitch Classes', 'Intervals', 'Sources', 'Statistics'];
   
   for (const tag of tagOrder) {
     if (!pathsByTag[tag]) continue;

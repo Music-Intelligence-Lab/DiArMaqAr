@@ -5368,3 +5368,113 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
 
 ---
 
+## Statistics
+
+### Get archive statistics {#getStatistics}
+
+```
+GET /statistics
+```
+
+Return the archive's totals and, for every tuning system on every
+starting note, how many ajnās and maqāmāt it can build, how many
+transpositions (taṣwīr) and octave renderings they have, and how many
+modulations their forms allow.
+
+Each maqām or jins has three kinds of form in a tuning system:
+- **base form**: the maqām on its own notes, e.g. maqām rāst on rāst
+- **transposition** (taṣwīr): moved onto another tonic, e.g. maqām rāst al-nawā
+- **octave rendering**: the base form or a taṣwīr one or more octaves
+  away, e.g. maqām rāst on qarār rāst. Not a taṣwīr, so never counted
+  in `transpositions`.
+
+Modulations follow al-Shawwā's 1946 guidelines. Each form's options are
+counted degree by degree, as GET /maqamat/{idName} lists them, then
+summed over the forms: a target on the sixth degree that qualifies both
+ascending and descending counts 2. They are kept apart by the kind of
+form they start from (`fromBaseForms`, `fromTranspositions`,
+`fromOctaveRenderings`); base forms plus transpositions is the headline
+figure the statistics page shows.
+
+The numbers are computed before a deploy whenever the data they count has
+changed, not per request. They carry a `dataFingerprint` of that data and
+the time they were computed (`generatedAt`).
+
+
+**Example:**
+```bash
+curl "https://diarmaqar.net/api/statistics"
+```
+
+**Response:** Archive statistics retrieved successfully
+
+**Example response — oneRow:**
+
+```json
+{
+  "dataFingerprint": "4f1c…",
+  "generatedAt": "2026-11-10T19:30:00.000Z",
+  "archive": {
+    "tuningSystems": 28,
+    "tuningSystemStartingNotes": 48,
+    "maqamat": 145,
+    "ajnas": 44,
+    "suyur": 193,
+    "sources": 19,
+    "patterns": 7
+  },
+  "count": 48,
+  "data": [
+    {
+      "tuningSystem": {
+        "id": "ronzevalle_1904",
+        "idName": "ronzevalle_1904",
+        "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+        "year": "1904"
+      },
+      "startingNote": {
+        "idName": "ushayran",
+        "displayName": "ʿushayrān"
+      },
+      "ajnas": {
+        "possible": 42,
+        "total": 44,
+        "transpositions": 3440,
+        "octaveRenderings": 118
+      },
+      "maqamat": {
+        "possible": 105,
+        "total": 145,
+        "transpositions": 7383,
+        "octaveRenderings": 212,
+        "suyur": 141
+      },
+      "modulations": {
+        "fromBaseForms": {
+          "maqamat": 50523,
+          "ajnas": 20286
+        },
+        "fromTranspositions": {
+          "maqamat": 1776759,
+          "ajnas": 815983
+        },
+        "fromOctaveRenderings": {
+          "maqamat": 91504,
+          "ajnas": 40647
+        }
+      },
+      "links": {
+        "maqamat": "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/maqamat",
+        "ajnas": "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/ajnas"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://diarmaqar.net/api/statistics"
+  }
+}
+```
+
+
+---
+

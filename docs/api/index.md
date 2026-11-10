@@ -99,6 +99,12 @@ Modulation routes between maqāmāt using al-Shawwā's 1946 modulation guideline
 **Endpoints (1):**
 - `GET /modulation-routes` - Find modulation routes between maqāmāt → [Details](./endpoints-reference#findModulationRoutes)
 
+### Statistics
+What the archive holds, and for every tuning system on every starting note: the ajnās and maqāmāt it can build, their transpositions (taṣwīr) and octave renderings, and the modulations from base forms, transpositions and octave renderings.
+
+**Endpoints (1):**
+- `GET /statistics` - Get archive statistics → [Details](./endpoints-reference#getStatistics)
+
 ---
 
 ## Identifiers of transpositions {#identifiers-of-transpositions}

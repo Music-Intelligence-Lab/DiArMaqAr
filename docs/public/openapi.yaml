@@ -89,6 +89,11 @@ tags:
       Intiqāl — modulation routes between maqāmāt, generated per al-Shawwā's
       1946 modulation guidelines. Modulations depend on the source maqām,
       tuning system, and starting note.
+  - name: Statistics
+    description: |
+      What the archive holds, and for every tuning system on every starting
+      note: the ajnās and maqāmāt it can build, their transpositions (taṣwīr)
+      and octave renderings, and the modulations from each kind of maqām form.
 paths:
   /maqamat:
     get:
@@ -10986,8 +10991,209 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /statistics:
+    get:
+      tags:
+        - Statistics
+      summary: Get archive statistics
+      description: |
+        Return the archive's totals and, for every tuning system on every
+        starting note, how many ajnās and maqāmāt it can build, how many
+        transpositions (taṣwīr) and octave renderings they have, and how many
+        modulations their forms allow.
+
+        Each maqām or jins has three kinds of form in a tuning system:
+        - **base form**: the maqām on its own notes, e.g. maqām rāst on rāst
+        - **transposition** (taṣwīr): moved onto another tonic, e.g. maqām rāst al-nawā
+        - **octave rendering**: the base form or a taṣwīr one or more octaves
+          away, e.g. maqām rāst on qarār rāst. Not a taṣwīr, so never counted
+          in `transpositions`.
+
+        Modulations follow al-Shawwā's 1946 guidelines. Each form's options are
+        counted degree by degree, as GET /maqamat/{idName} lists them, then
+        summed over the forms: a target on the sixth degree that qualifies both
+        ascending and descending counts 2. They are kept apart by the kind of
+        form they start from (`fromBaseForms`, `fromTranspositions`,
+        `fromOctaveRenderings`); base forms plus transpositions is the headline
+        figure the statistics page shows.
+
+        The numbers are computed before a deploy whenever the data they count has
+        changed, not per request. They carry a `dataFingerprint` of that data and
+        the time they were computed (`generatedAt`).
+      operationId: getStatistics
+      responses:
+        '200':
+          description: Archive statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - dataFingerprint
+                  - generatedAt
+                  - archive
+                  - count
+                  - data
+                  - links
+                properties:
+                  dataFingerprint:
+                    type: string
+                    description: |
+                      SHA-256 hash of the data the statistics were computed from. Edits that cannot
+                      change a count (comments, sources, structural ajnās, ghammāz) leave it unchanged.
+                  generatedAt:
+                    type: string
+                    format: date-time
+                    description: When the statistics were computed
+                  archive:
+                    type: object
+                    description: How many of each entity the archive holds
+                    required: [tuningSystems, tuningSystemStartingNotes, maqamat, ajnas, suyur, sources, patterns]
+                    properties:
+                      tuningSystems: { type: integer }
+                      tuningSystemStartingNotes:
+                        type: integer
+                        description: (tuning system, starting note) pairs, one item each in `data`
+                      maqamat: { type: integer }
+                      ajnas: { type: integer }
+                      suyur: { type: integer }
+                      sources: { type: integer }
+                      patterns: { type: integer }
+                  count:
+                    type: integer
+                    description: Number of (tuning system, starting note) pairs in `data`
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [tuningSystem, startingNote, ajnas, maqamat, modulations, links]
+                      properties:
+                        tuningSystem:
+                          type: object
+                          required: [id, idName, displayName, year]
+                          properties:
+                            id: { type: string }
+                            idName: { type: string }
+                            displayName: { type: string }
+                            year: { type: string }
+                        startingNote:
+                          type: object
+                          required: [idName, displayName]
+                          properties:
+                            idName: { type: string }
+                            displayName: { type: string }
+                        ajnas:
+                          $ref: '#/components/schemas/StatisticsFormCounts'
+                        maqamat:
+                          allOf:
+                            - $ref: '#/components/schemas/StatisticsFormCounts'
+                            - type: object
+                              required: [suyur]
+                              properties:
+                                suyur:
+                                  type: integer
+                                  description: Suyūr of the maqāmāt that can be built, as the app shows them
+                        modulations:
+                          type: object
+                          description: Modulation counts summed over every form of each kind
+                          required: [fromBaseForms, fromTranspositions, fromOctaveRenderings]
+                          properties:
+                            fromBaseForms:
+                              $ref: '#/components/schemas/StatisticsModulationCounts'
+                            fromTranspositions:
+                              $ref: '#/components/schemas/StatisticsModulationCounts'
+                            fromOctaveRenderings:
+                              $ref: '#/components/schemas/StatisticsModulationCounts'
+                        links:
+                          type: object
+                          properties:
+                            maqamat: { type: string, format: uri }
+                            ajnas: { type: string, format: uri }
+                  links:
+                    type: object
+                    properties:
+                      self: { type: string, format: uri }
+              examples:
+                oneRow:
+                  summary: Ronzevalle (1904) on ʿushayrān (other rows omitted)
+                  value:
+                    dataFingerprint: "4f1c…"
+                    generatedAt: "2026-11-10T19:30:00.000Z"
+                    archive:
+                      tuningSystems: 28
+                      tuningSystemStartingNotes: 48
+                      maqamat: 145
+                      ajnas: 44
+                      suyur: 193
+                      sources: 19
+                      patterns: 7
+                    count: 48
+                    data:
+                      - tuningSystem:
+                          id: "ronzevalle_1904"
+                          idName: "ronzevalle_1904"
+                          displayName: "Ronzevalle (1904) Modernist Arabic Tuning"
+                          year: "1904"
+                        startingNote:
+                          idName: "ushayran"
+                          displayName: "ʿushayrān"
+                        ajnas:
+                          possible: 42
+                          total: 44
+                          transpositions: 3440
+                          octaveRenderings: 118
+                        maqamat:
+                          possible: 105
+                          total: 145
+                          transpositions: 7383
+                          octaveRenderings: 212
+                          suyur: 141
+                        modulations:
+                          fromBaseForms: { maqamat: 50523, ajnas: 20286 }
+                          fromTranspositions: { maqamat: 1776759, ajnas: 815983 }
+                          fromOctaveRenderings: { maqamat: 91504, ajnas: 40647 }
+                        links:
+                          maqamat: "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/maqamat"
+                          ajnas: "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/ajnas"
+                    links:
+                      self: "https://diarmaqar.net/api/statistics"
+        '500':
+          description: Statistics could not be read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
 components:
   schemas:
+    StatisticsFormCounts:
+      type: object
+      description: How many of each kind of form a tuning system on a starting note allows
+      required: [possible, total, transpositions, octaveRenderings]
+      properties:
+        possible:
+          type: integer
+          description: Entries that can be built here. Each has exactly one base form.
+        total:
+          type: integer
+          description: Entries in the archive
+        transpositions:
+          type: integer
+          description: Transpositions (taṣwīr) of the entries that can be built
+        octaveRenderings:
+          type: integer
+          description: Octave renderings of the base forms and transpositions. Not taṣwīr.
+    StatisticsModulationCounts:
+      type: object
+      required: [maqamat, ajnas]
+      properties:
+        maqamat:
+          type: integer
+          description: Modulations to maqāmāt
+        ajnas:
+          type: integer
+          description: Modulations to ajnās
     FormType:
       type: string
       enum: [base, transposition, octaveRendering]

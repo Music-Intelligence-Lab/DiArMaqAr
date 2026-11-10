@@ -1,188 +1,41 @@
-import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
-import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
-import { formTypeOf } from "@/functions/formType";
-import modulate from "@/functions/modulate";
-import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
-import TuningSystem from "@/models/TuningSystem";
+/**
+ * Writes the archive statistics to src/generated/statistics.json, which the
+ * /statistics page and GET /api/statistics serve.
+ *
+ * Runs before every `npm run build` (the `prebuild` script), so each deploy
+ * publishes statistics computed from the data it ships. The file is not
+ * committed. When it already matches the data (same fingerprint) it is left
+ * alone, so a rebuild without data changes costs nothing.
+ *
+ *   npm run generate-statistics             # skip if up to date
+ *   npm run generate-statistics -- --force  # always recompute
+ */
 import fs from "fs";
 import path from "path";
+import { computeArchiveStatistics, dataFingerprint } from "@/functions/archiveStatistics";
 
-interface StatisticsRow {
-  id: string;
-  label: string;
-  possibleAjnasCount: number;
-  possibleAjnasTranspositionsCount: number;
-  totalAjnas: number;
-  possibleMaqamatCount: number;
-  possibleMaqamatTranspositionsCount: number;
-  totalMaqamat: number;
-  totalSuyur: number;
-  totalAjnasModulations: number;
-  totalMaqamatModulations: number;
+export const STATISTICS_FILE = path.join(process.cwd(), "src", "generated", "statistics.json");
+
+function isUpToDate(): boolean {
+  if (!fs.existsSync(STATISTICS_FILE)) return false;
+  try {
+    return JSON.parse(fs.readFileSync(STATISTICS_FILE, "utf-8")).dataFingerprint === dataFingerprint();
+  } catch {
+    return false;
+  }
 }
-
-/**
- * Computes comprehensive statistics for a specific tuning system.
- *
- * This function analyzes a tuning system to calculate various metrics including
- * the number of possible ajnas, maqamat, their transpositions, modulations, and
- * total suyur. The analysis is performed for each possible
- * starting note in the tuning system.
- *
- * @param tuningSystem - The tuning system to analyze
- * @param allAjnas - Array of all available ajnas (tetrachordal units)
- * @param allMaqamat - Array of all available maqamat (modal structures)
- * @param showProgress - Whether to show progress logging
- * @returns Array of statistics rows, one for each starting note in the tuning system
- */
-function computeStatisticsForSystem(tuningSystem: TuningSystem, allAjnas: ReturnType<typeof getAjnas>, allMaqamat: ReturnType<typeof getMaqamat>, showProgress: boolean = false): StatisticsRow[] {
-  const rows: StatisticsRow[] = [];
-  const totalNumberOfAjnas = allAjnas.length;
-  const totalNumberOfMaqamat = allMaqamat.length;
-  const allNoteNameLists = tuningSystem.getNoteNameSets();
-  if (showProgress) {
-    console.log(`    Processing ${allNoteNameLists.length} note sets for ${tuningSystem.stringify()}`);
-  }
-  for (const noteNames of allNoteNameLists) {
-    const starting = noteNames[0];
-    const rowId = tuningSystem.getId() + starting;
-    const label = `${tuningSystem.stringify()} ${starting}`;
-    const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, starting);
-    const possibleAjnas = [];
-    const possibleAjnasTrans = [];
-    for (const jinsData of allAjnas) {
-      if (jinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
-        possibleAjnas.push(jinsData);
-        // A transposition is a taṣwīr only: not the base form, not an octave rendering.
-        calculateJinsForms(allPitchClasses, jinsData)
-          .filter((form) => formTypeOf(form) === "transposition")
-          .forEach((tr) => possibleAjnasTrans.push(tr));
-      }
-    }
-    let totalSuyur = 0;
-    const possibleMaqamat = [];
-    const possibleMaqamatTrans = [];
-    let totalAjnasMod = 0;
-    let totalMaqamatMod = 0;
-    for (const maqamData of allMaqamat) {
-      if (maqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
-        possibleMaqamat.push(maqamData);
-        totalSuyur += maqamData.getSuyur().length;
-        const forms = calculateMaqamForms(allPitchClasses, allAjnas, maqamData);
-        // A transposition is a taṣwīr only: not the base form, not an octave rendering.
-        forms
-          .filter((form) => formTypeOf(form) === "transposition")
-          .forEach((transposition) => possibleMaqamatTrans.push(transposition));
-        // Modulations are summed over every form except the base form: taṣwīr and
-        // octave renderings alike. Which forms belong here is still to be decided.
-        forms
-          .filter((form) => formTypeOf(form) !== "base")
-          .forEach((form) => {
-            totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, form, true));
-            totalMaqamatMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, form, false));
-          });
-      }
-    }
-    rows.push({
-      id: rowId,
-      label,
-      possibleAjnasCount: possibleAjnas.length,
-      possibleAjnasTranspositionsCount: possibleAjnasTrans.length,
-      totalAjnas: totalNumberOfAjnas,
-      possibleMaqamatCount: possibleMaqamat.length,
-      possibleMaqamatTranspositionsCount: possibleMaqamatTrans.length,
-      totalMaqamat: totalNumberOfMaqamat,
-      totalSuyur,
-      totalAjnasModulations: totalAjnasMod,
-      totalMaqamatModulations: totalMaqamatMod,
-    });
-  }
-  return rows;
-}
-
-/**
- * Generates comprehensive statistics for all tuning systems and writes the results to a JSON file.
- *
- * This function computes statistics for every available tuning system, combining the results
- * into a single dataset that can be used for comparative analysis. The output is written
- * to 'public/data/statistics-[timestamp].json' for use by the web application.
- *
- * The statistics include metrics such as:
- * - Number of possible ajnas and maqamat per tuning system
- * - Transposition possibilities
- * - Modulation counts
- * - Total number of available suyur (melodic progressions)
- * 
- * @param useTimestamp - Whether to include timestamp in filename (default: true)
- * @param showProgress - Whether to show progress logging (default: true)
- * @returns The path of the created file
- */
-export function generateAndWriteStatistics(useTimestamp: boolean = true, showProgress: boolean = true): string {
-  if (showProgress) {
-    console.log("🎵 Starting maqam statistics generation...");
-    console.time("Total generation time");
-  }
-
-  const systems = getTuningSystems();
-  const allAjnas = getAjnas();
-  const allMaqamat = getMaqamat();
-
-  if (showProgress) {
-    console.log(`📊 Found ${systems.length} tuning systems, ${allAjnas.length} ajnas, ${allMaqamat.length} maqamat`);
-    console.log("🔄 Processing tuning systems...");
-  }
-
-  const statisticsRows: StatisticsRow[] = [];
-  
-  systems.forEach((ts, index) => {
-    if (showProgress) {
-      console.log(`  [${index + 1}/${systems.length}] ${ts.stringify()}`);
-    }
-    const systemRows = computeStatisticsForSystem(ts, allAjnas, allMaqamat, showProgress);
-    statisticsRows.push(...systemRows);
-  });
-
-  // Create output directory
-  const outputDir = path.join(process.cwd(), "public", "data");
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
-
-  // Generate filename with optional timestamp
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T');
-  const dateStr = timestamp[0]; // YYYY-MM-DD
-  const timeStr = timestamp[1].split('.')[0]; // HH-MM-SS
-  const filename = useTimestamp 
-    ? `statistics-${dateStr}-${timeStr}.json`
-    : "statistics.json";
-  
-  const outputPath = path.join(outputDir, filename);
-  
-  if (showProgress) {
-    console.log(`💾 Writing ${statisticsRows.length} statistics rows to ${filename}...`);
-  }
-
-  fs.writeFileSync(outputPath, JSON.stringify(statisticsRows, null, 2), "utf-8");
-
-  if (showProgress) {
-    console.log(`✅ Statistics file created: ${outputPath}`);
-    console.timeEnd("Total generation time");
-  }
-
-  return outputPath;
-}
-
-// To run this script from the command line:
-// npm run generate-statistics
-// or with custom options:
-// npm run generate-statistics -- --no-timestamp --no-progress
 
 if (require.main === module) {
-  // Parse command line arguments
-  const args = process.argv.slice(2);
-  const useTimestamp = !args.includes('--no-timestamp');
-  const showProgress = !args.includes('--no-progress');
-  
-  generateAndWriteStatistics(useTimestamp, showProgress);
+  const force = process.argv.includes("--force");
+  if (!force && isUpToDate()) {
+    console.log("Statistics are up to date with data/*.json");
+  } else {
+    const started = Date.now();
+    const statistics = computeArchiveStatistics((row) =>
+      console.log(`  ${row.tuningSystem.id} ${row.startingNote.displayName}`)
+    );
+    fs.mkdirSync(path.dirname(STATISTICS_FILE), { recursive: true });
+    fs.writeFileSync(STATISTICS_FILE, JSON.stringify(statistics, null, 2) + "\n", "utf-8");
+    console.log(`Wrote ${statistics.tuningSystems.length} rows to ${path.relative(process.cwd(), STATISTICS_FILE)} in ${((Date.now() - started) / 1000).toFixed(1)}s`);
+  }
 }
