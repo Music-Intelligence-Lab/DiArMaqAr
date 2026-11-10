@@ -70,7 +70,17 @@ export default function StatisticsTable({ rows }: { rows: TuningSystemStatistics
       setSortDir(key === null ? "asc" : "desc");
     }
   };
-  const arrow = (key: string | null) => (sortKey === key ? (sortDir === "asc" ? " ▲" : " ▼") : "");
+  // The arrow's space is always taken, hidden until its column sorts, so
+  // choosing a column never changes how wide it is
+  const arrow = (key: string | null) => (
+    <span className={`statistics-table__sort${sortKey === key ? " statistics-table__sort_active" : ""}`} aria-hidden={sortKey !== key}>
+      {sortKey === key && sortDir === "asc" ? "▲" : "▼"}
+    </span>
+  );
+
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const rowKey = (row: TuningSystemStatistics) => `${row.tuningSystem.id}/${row.startingNote.idName}`;
+  const select = (key: string) => setSelectedRow(selectedRow === key ? null : key);
 
   // A tuning system's name is shown once over its consecutive rows (its
   // starting notes), which is every row of it when sorted by tuning system
@@ -87,7 +97,7 @@ export default function StatisticsTable({ rows }: { rows: TuningSystemStatistics
       <thead>
         <tr>
           <th rowSpan={2} onClick={() => sortBy(null)}>
-            Tuning system{arrow(null)}
+            Tuning system&nbsp;{arrow(null)}
           </th>
           <th rowSpan={2} className="statistics-table__group">
             Starting note
@@ -101,17 +111,21 @@ export default function StatisticsTable({ rows }: { rows: TuningSystemStatistics
         <tr>
           {columns.map((column) => (
             <th key={column.key} onClick={() => sortBy(column.key)}>
-              {column.label}
-              {arrow(column.key)}
+              {column.label}&nbsp;{arrow(column.key)}
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
         {sortedRows.map((row, index) => (
-          <tr key={`${row.tuningSystem.id}/${row.startingNote.idName}`}>
+          <tr key={rowKey(row)} className={selectedRow === rowKey(row) ? "statistics-table__row_selected" : ""} onClick={() => select(rowKey(row))}>
             {nameSpans[index] > 0 && (
-              <td data-column-type="label" rowSpan={nameSpans[index]}>
+              <td
+                data-column-type="label"
+                rowSpan={nameSpans[index]}
+                // The shared name cell lights with any of its rows
+                className={sortedRows.slice(index, index + nameSpans[index]).some((r) => rowKey(r) === selectedRow) ? "statistics-table__cell_selected" : ""}
+              >
                 {row.tuningSystem.displayName}
               </td>
             )}

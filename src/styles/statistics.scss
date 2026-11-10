@@ -125,6 +125,29 @@
       @include type-data-value;
       white-space: nowrap;
     }
+
+    tbody tr {
+      cursor: pointer;
+    }
+
+    // The selected row: the app's one selected-item colour, held under hover
+    .statistics-table__row_selected td,
+    .statistics-table__cell_selected {
+      &,
+      &:hover {
+        background-color: $surface-selected;
+      }
+    }
+  }
+
+  // Space for the sort arrow is reserved in every sortable header
+  .statistics-table__sort {
+    display: inline-block;
+    visibility: hidden;
+
+    &_active {
+      visibility: visible;
+    }
   }
 
 }
