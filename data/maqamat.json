@@ -3086,13 +3086,30 @@
             "value": "nīm māhūr"
           },
           {
-            "type": "maqam",
-            "value": "10",
-            "startingNote": "kurdī"
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
           },
           {
             "type": "note",
-            "value": ""
+            "value": "rāst"
           }
         ],
         "version": "2026-07-20T10:12:09.875Z"
@@ -7776,13 +7793,30 @@
             "value": "nīm māhūr"
           },
           {
-            "type": "maqam",
-            "value": "10",
-            "startingNote": "kurdī"
+            "type": "jins",
+            "value": "6",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "ascending"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
+          },
+          {
+            "type": "jins",
+            "value": "12",
+            "startingNote": "kurdān"
+          },
+          {
+            "type": "direction",
+            "value": "descending"
           },
           {
             "type": "note",
-            "value": ""
+            "value": "rāst"
           }
         ],
         "version": "2026-07-20T10:12:09.875Z"
