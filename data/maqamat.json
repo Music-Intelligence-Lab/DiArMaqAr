@@ -1210,10 +1210,18 @@
       "ʿushayrān",
       "yegāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -1334,15 +1342,15 @@
         "version": "2026-07-25T14:29:46.732Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.62/70). He places it in the rāst family. He writes that \"it consists of two principal ajnās, the first jins rāst on the degree yegāh and the second jins rāst on the degree dūgāh, in the ascent\" (1986, p.70). In the descent his jins rāst on dūgāh becomes jins bayyāt on dūgāh, with chahārgāh taking the place of nīm ḥijāz and segāh the place of būselīk. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with jins bayyāt on dūgāh, jins rāst on rāst, jins bayyāt on ʿushayrān and jins segāh thulāthī on segāh (1986, p.70). The tertiary jins degree recorded here is rāst, the first after the descending jins bayyāt on dūgāh.\n\nIn a general note he counts yegāh among maqāmāt wrongly called transposed scales, since each has its own sayr and character (1986, p.61). He relates such maqāmāt to scales only to set out their degrees and ajnās.\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص62/70). يضعه في فصيلة الراست. ويكتب انه «يتألف من جنسين اساسيين الأول جنس رست على درجة اليكاه والثاني جنس رست على درجة الدوكاه في حالة الصعود» (1986، ص70). وفي الهبوط يصير جنس الراست على الدوكاه جنس بيات على الدوكاه، اذ يحل الجهاركاه محل النيم حجاز والسيكاه محل البوسليك. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس البيات على الدوكاه وجنس الراست على الراست وجنس البيات على العشيران وجنس السيكاه الثلاثي على السيكاه (1986، ص70). والجنس الثالث المثبت هنا على الراست، اول ما يلي جنس البيات على الدوكاه الهابط.\n\nويعد في ملاحظة عامة اليكاه من المقامات التي تُسمى خطأً سلالم مصورة، اذ لكل منها سيره وشخصيته (1986، ص61). وهو لا ينسب هذه المقامات الى سلالم الا لبيان درجاتها واجناسها.\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "62/70"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "9",
@@ -1691,20 +1699,26 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, p.85). He writes that \"it consists of two ajnās, the first jins athar kurd on the degree rāst and the second jins ḥijāz on the degree nawā\" (1986, p.85). He adds that jins ḥijāz is sometimes exchanged for jins kurd on nawā, with ʿajam taking the place of māhūr.\n\nHe names no other jins, so no tertiary jins degree is recorded.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص85). ويكتب انه «يتألف من جنسين الأول جنس أثر كرد على درجة الرست والثاني جنس حجاز على درجة النوى» (1986، ص85). ويضيف ان جنس الحجاز يُستبدل احياناً بجنس كرد على النوا، اذ يحل العجم محل الماهور.\n\nولا يسمي جنساً آخر، فلا يُثبت هنا جنس ثالث.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "85"
       }
     ],
-    "version": "2026-08-04T17:30:21.632Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "13",
@@ -1771,10 +1785,16 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -1916,15 +1936,15 @@
         "version": "2026-07-26T08:29:30.593Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.26-27).\n\nHe names no ajnās of its own construction. He lists the anghām \"that can be used temporarily when composing or improvising\", namely nahāwand, nawā athar, nikrīz, ṣabā ḥusaynī, ḥijāz nawā, bayyātī nawā and chahārgāh on rāst. He adds that \"the dominant nagham is nagham rāst\" (1954, p.27).\n\nIn the descent, he writes, \"the degree nīm ʿajam is usually used in place of awj\" (1954, p.27), and the descending note names recorded here follow him.\n\nThe primary jins degree recorded here is the tonic rāst. The secondary jins degree, nawā, is deduced as the seat of the assigned ghammāz. The degree nawā is assigned here as the ghammāz, as for maqām rāst.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص26-27).\n\nلا يسمي اجناساً لتكوين المقام. ويعدد الانغام «التي يمكن استعمالها موقتاً حين التلحين او التقسيم»، وهي النهاوند ونوأثر والنكريز وصبا حسيني وحجاز نوا وبياتي نوا وجهاركاه على درجة الراست. ويضيف ان «النغم المسيطر هو نغم الراست» (1954، ص27).\n\nويكتب ان «في الهبوط يستعمل غالباً درجة النيم عجم (سي بيمول وربع) بدلاً من الاوج» (1954، ص27)، وتتبعه اسماء النغمات الهابطة المثبتة هنا.\n\nالجنس الاول المثبت هنا على القرار الراست. والجنس الثاني على النوا مستنتج، فهو موضع الغماز المعتمد. واعتُمدت هنا درجة النوا غمازاً، كما في مقام الراست.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "26"
+        "page": "26-27"
       }
     ],
-    "version": "2026-08-11T19:41:37.031Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "15",
@@ -3194,10 +3214,16 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -3322,15 +3348,15 @@
         "version": "2026-07-26T08:58:50.162Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.28-29).\n\nHe describes it as \"the same as the European minor\" and names no ajnās of its own construction (1954, p.29). He adds that nīm ʿajam sometimes takes the place of māhūr, and that ḥiṣār is then lowered by one comma (1954, p.29).\n\nThe primary jins degree recorded here is the tonic rāst. The secondary jins degree, nawā, is deduced as the seat of the assigned ghammāz. The degree nawā is assigned here as the ghammāz.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص28-29).\n\nيصفه بانه «نفس نغم المينور الافرنجي» ولا يسمي اجناساً لتكوينه (1954، ص29). ويضيف ان النيم عجم يحل احياناً محل الماهور، فتنقص درجة الحصار حينئذ كوماً واحدة (1954، ص29).\n\nالجنس الاول المثبت هنا على القرار الراست. والجنس الثاني على النوا مستنتج، فهو موضع الغماز المعتمد. واعتُمدت هنا درجة النوا غمازاً.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "28"
+        "page": "28-29"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "25",
@@ -3760,10 +3786,18 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -3874,8 +3908,8 @@
         "version": "2026-07-26T09:00:42.939Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, p.29) and ʿAbbās (1986, pp.35/59/110).\n\nal-Ṣabbāgh gives nawā athar as a derived nagham of nahāwand and names no ajnās for it. It differs from nahāwand, he writes, in tīk ḥijāz \"in place of chahārgāh\" and a kurdī one comma higher (1954, p.29). In his account of nikrīz he calls \"nawā athar on the degree rāst\" its first ʿiqd (1954, p.30).\n\nʿAbbās places it in the ḥijāz family. He writes that \"it consists of two principal ajnās, the first an ʿiqd (a five-note unit) nikrīz on the degree rāst and the second ḥijāz on the degree nawā\" (1986, p.59). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins ḥijāz on dūgāh (1986, p.59). The tertiary jins degree recorded here is dūgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of ʿAbbās's second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص29) وعباس (1986، ص35/59/110).\n\nيورد الصباغ النوأثر نغماً فرعياً للنهاوند ولا يسمي له اجناساً. ويكتب انه يختلف عن النهاوند بدرجة التيك حجاز «بدلاً من الجهاركاه» وبكردي اعلى بكوما واحدة (1954، ص29). ويسمي في كلامه على النكريز «نوأثر على درجة الراست» عقده الاول (1954، ص30).\n\nيضعه عباس في فصيلة الحجاز. ويكتب انه «يتألف من جنسين اساسيين الاول عقد نكريز على درجة الرست والثاني حجاز على درجة النوى» (1986، ص59). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس الحجاز على الدوكاه (1986، ص59). والجنس الثالث المثبت هنا على الدوكاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنس عباس الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
@@ -3886,7 +3920,7 @@
         "page": "29"
       }
     ],
-    "version": "2026-08-11T19:23:42.789Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "29",
@@ -4543,7 +4577,7 @@
     ],
     "descendingNoteNames": [
       "chahārgāh",
-      "segāh",
+      "kurdī",
       "dūgāh",
       "rāst",
       "ʿajam ʿushayrān",
@@ -4557,7 +4591,9 @@
       "ḥusaynī"
     ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -4615,15 +4651,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Shawwā (1946, p.23). His qarār is yegāh. His analysis names a jins bayyātī on dūgāh and then an ʿiqd bayyātī on ḥusaynī, with a disjunct interval between them at the degree nawā (1946, p.23).\n\nThe note names recorded here take his degrees from yegāh up to the seventh, leaving out nawā, the octave of the qarār. He prints the seventh ascending degree as a choice, \"chahārgāh, or ḥijāz\". The ascending note names take ḥijāz, and the descending ones take chahārgāh, the degree his descending column prints, so both of his readings are carried.\n\nIn his descent kurdī takes the place of segāh. His descending column prints kurdī as the sixth degree, and his conditions for the maqām state that \"in the descent the segāh position is exchanged for the kurdī position\" (1946, p.23). His analysis likewise returns in the descent \"to render kurdī on the degree dūgāh\" (1946, p.23). The descending note names had carried segāh, and the degree is corrected to kurdī in the note names recorded here.\n\nHis ʿiqd bayyātī on ḥusaynī lies above his degree table, which closes on nawā.\n\nThe degree dūgāh is assigned here as the ghammāz. It is the seat of his jins bayyātī, and his sayr comes back to it, rendering bayyātī on dūgāh, then climbing again from dūgāh after the descent. His descent also renders kurdī on that degree before the qarār.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص23). قراره اليكاه. يسمي تحليله جنس بياتي على الدوكاه ثم عقد بياتي على الحسيني، يتخللهما بعد منفصل عند درجة النوا (1946، ص23).\n\nتأخذ اسماء النغمات المثبتة هنا درجاته من اليكاه حتى السابعة، دون النوا جواب القرار. ويطبع الدرجة السابعة صعوداً على الخيار «جهاركاه ، أو حجاز». فتأخذ اسماء النغمات صعوداً الحجاز، وتأخذ هبوطاً الجهاركاه التي يطبعها عموده الهابط، فتُحمل قراءتاه كلتاهما.\n\nفي هبوطه يحل الكردي محل السيكاه. يطبع عموده الهابط الكردي درجةً سادسة، وتقول شروطه للمقام ان «فى الهبوط تستبدل بردة الثيه كاه بعربة الـكوردى» (1946، ص23). ويعود تحليله كذلك هبوطاً «لعمل كوردى على صوت الدوكاه» (1946، ص23). وكانت اسماء النغمات هبوطاً تحمل السيكاه، وقد صُحّحت الدرجة الى الكردي في اسماء النغمات المثبتة هنا.\n\nيقع عقده البياتي على الحسيني فوق جدول درجاته الذي ينتهي على النوا.\n\nاعتُمدت هنا درجة الدوكاه غمازاً. فهي موضع جنسه البياتي، ويعود اليها سيره بعمل البياتي على الدوكاه، ثم يصعد من الدوكاه ثانية بعد الهبوط. ويعمل هبوطه الكردي على هذه الدرجة ايضاً قبل القرار.",
     "sourcePageReferences": [
       {
         "sourceId": "alshawwa_1946",
         "page": "23"
       }
     ],
-    "version": "2025-10-18T19:41:17.132Z"
+    "version": "2026-11-10T17:05:47.000Z"
   },
   {
     "id": "35",
@@ -6664,10 +6700,16 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -6774,15 +6816,15 @@
         "version": "2026-07-26T08:52:18.967Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.29-30).\n\nHe gives nikrīz as a derived nagham of nahāwand. \"Its first half is nawā athar, which is the first ʿiqd, and the upper half, that is the second ʿiqd, is nahāwand on the degree nawā\", and it rests on rāst (1954, p.29). The primary and secondary jins degrees recorded here are their seats, rāst and nawā.\n\nHe warns that players often show \"the second ʿiqd, that is nahāwand on nawā, more than the first ʿiqd, which is nawā athar on the degree rāst\" (1954, p.30). Nawā athar must instead be shown first \"with full clarity and dominance over the ear\" (1954, p.30). At the rest on rāst, he adds, the degree kawasht is touched.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second ʿiqd, as for maqām nikrīz.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص29-30).\n\nيورد النكريز نغماً فرعياً للنهاوند، ويكتب ان «نغم النكريز نصفه الاول نوأثر وهو العقد الاول ، والنصف الاعلى اي العقد الثاني نهاوند على درجة النوا»، وانه يستقر على الراست (1954، ص29). والجنسان الاول والثاني المثبتان هنا على موضعيهما، الراست والنوا.\n\nوينبه الى ان العازفين كثيراً ما «يظهرون العقد الثاني اي نهاوند على النوا اكثر من العقد الاول وهو نوأثر على درجة الراست» (1954، ص30). والصواب عنده ان يظهر النوأثر اولاً «بكل وضوح وسيطرة على الاذن» (1954، ص30). ويضيف ان درجة الكوشت تُلمس عند الاستقرار على الراست.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع عقده الثاني، كما في مقام النكريز.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "29"
+        "page": "29-30"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "51",
@@ -7000,10 +7042,14 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
     "secondaryJinsDegree": null,
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -7115,15 +7161,15 @@
         "version": "2026-07-26T09:20:11.576Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, p.31).\n\nHe names no ajnās for it. He notes that nagham kurdī \"is originally on the degree dūgāh\" and is written here on rāst \"because it is more used\" (1954, p.31).\n\nHis passage turns on intonation. \"The point of precision in it is in the two degrees zīrgūleh and kurdī\", and some players lower them so far that the listener recoils (1954, p.31). After experiment he prefers nine commas from zīrgūleh to kurdī and eight from kurdī to chahārgāh while the melody moves. For a rest on kurdī the degree keeps the value in his table (1954, p.31). The note names recorded here follow his table.\n\nThe primary jins degree recorded here is the tonic rāst. No secondary jins degree is recorded. The degree nawā is assigned here as the ghammāz, as for maqām ḥijāz kār kurd.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص31).\n\nلا يسمي له اجناساً. ويلاحظ ان «نغم الكردي هو في الاصل على درجة الدوكاه» وانه دُوّن هنا على الراست «لانه اكثر استعمالا» (1954، ص31).\n\nومدار كلامه على تسوية الدرجات. فهو يقول ان «نقطة الدقة فيه هي في درجتي الزيركوله والكردي»، وان بعضهم يخفضهما حتى ينفر السامع (1954، ص31). ويفضل بعد التجربة تسعة كومات من الزيركوله الى الكردي وثمانية من الكردي الى الجهاركاه اثناء السير بالنغم. اما عند الركوز على الكردي فتبقى الدرجة كما حددها جدوله (1954، ص31). وتتبع اسماء النغمات المثبتة هنا جدوله.\n\nالجنس الاول المثبت هنا على القرار الراست. ولا يُثبت هنا جنس ثانٍ. واعتُمدت هنا درجة النوا غمازاً، كما في مقام الحجاز كار كرد.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
         "page": "31"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "54",
@@ -7147,10 +7193,18 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -7283,19 +7337,19 @@
         "version": "2026-07-26T09:30:18.187Z"
       }
     ],
-    "commentsEnglish": "al-Ṣabbāgh gives only the ascending form whilst ʿAbbās gives both ascending and descending",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.32-33) and ʿAbbās (1986, pp.34/38/93).\n\nal-Ṣabbāgh gives only the ascending form and names no ajnās. He calls ḥijāz \"one of the most important Eastern anghām\", and notes that nīm ʿajam is often used in place of awj, \"especially in the descent\" (1954, p.33).\n\nʿAbbās writes that \"it consists of two principal ajnās, the first ḥijāz on the degree dūgāh and the second rāst on the degree nawā, in the ascent\" (1986, p.38). In the descent the jins rāst becomes jins nahāwand, with ʿajam taking the place of awj. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins bayyāt on ḥusaynī, jins kurd on ḥusaynī and jins nahāwand on nawā (1986, p.38). The tertiary jins degree recorded here is ḥusaynī, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of ʿAbbās's second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص32-33) وعباس (1986، ص34/38/93).\n\nيعطي الصباغ صيغة الصعود وحدها ولا يسمي اجناساً. ويعد الحجاز «من اهم الانغام الشرقية»، ويلاحظ ان النيم عجم يستعمل كثيراً بدلاً من الاوج «خصوصاً في الهبوط» (1954، ص33).\n\nيكتب عباس انه «يتألف من جنسين اساسيين الأول حجاز على درجة الدوكاه والثاني رست على درجة النوى صعوداً» (1986، ص38). وفي الهبوط يصير جنس الراست جنس نهاوند، اذ يحل العجم محل الاوج. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس البيات على الحسيني وجنس الكرد على الحسيني وجنس النهاوند على النوا (1986، ص38). والجنس الثالث المثبت هنا على الحسيني، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنس عباس الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "32"
+        "page": "32-33"
       },
       {
         "sourceId": "abbas_1986",
         "page": "34/38/93"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "55",
@@ -7695,10 +7749,18 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -7806,8 +7868,8 @@
         "version": "2026-07-26T08:56:24.471Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.33-34) and ʿAbbās (1986, pp.35/57/108).\n\nal-Ṣabbāgh names no ajnās for its construction. When nīm ʿajam takes the place of māhūr, he writes, ḥijāz kār sounds \"almost like an ordinary ḥijāz on the degree rāst\" (1954, p.33). He adds that it \"usually has nagham nahāwand on kurdān only, and descends to the qarār in nagham ḥijāz kār\" (1954, p.34).\n\nʿAbbās places it in the ḥijāz family. He writes that \"it consists of two principal ajnās, the first jins ḥijāz on the degree rāst and the second jins ḥijāz on the degree nawā\" (1986, p.57). Its degrees and ajnās are the same in both directions. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on chahārgāh and jins kurd on būselīk (1986, p.57). His descending staff names that last jins ṣabā zamzam on būselīk, the correct reading, since the jins has a flattened fourth. The tertiary jins degree recorded here is chahārgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of ʿAbbās's second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص33-34) وعباس (1986، ص35/57/108).\n\nلا يسمي الصباغ اجناساً لتكوينه. ويكتب انه اذا حل النيم عجم محل الماهور «يظهر حينئذ نغم الحجاز كار تقريباً كأنه حجاز عادي على درجة الراست» (1954، ص33). ويضيف ان «نغم الحجاز كار غالباً يكون فيه نغم النهاوند على الكردان فقط ويهبط الى القرار بنغم الحجاز كار» (1954، ص34).\n\nيضعه عباس في فصيلة الحجاز. ويكتب انه «يتكون من جنسين أساسيين الأول جنس حجاز على درجة الرست والثاني جنس حجاز على درجة النوى» (1986، ص57). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الجهاركاه وجنس الكرد على البوسليك (1986، ص57). ويسمي مدرجه الهابط هذا الجنس الاخير صبا زمزم على البوسليك، وهي القراءة الصحيحة لان رابعة الجنس مخفوضة. والجنس الثالث المثبت هنا على الجهاركاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنس عباس الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
@@ -7815,10 +7877,10 @@
       },
       {
         "sourceId": "alsabbagh_1954",
-        "page": "33"
+        "page": "33-34"
       }
     ],
-    "version": "2026-08-11T19:23:42.789Z"
+    "version": "2026-11-10T19:42:03.000Z"
   },
   {
     "id": "60",
@@ -7842,13 +7904,21 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, p.34) and ʿAbbās (1986, pp.60/111).\n\nThe two sources agree on jins ḥijāz on rāst and seat their second unit on chahārgāh, but they name it differently. al-Ṣabbāgh writes that it \"is composed of two anghām, the first jins ḥijāz on the degree rāst and the upper second ʿiqd nagham chahārgāh on the degree chahārgāh\" (1954, p.34). ʿAbbās names jins ʿajam there. al-Ṣabbāgh adds that ḥijāz must be shown first and keep its dominance over chahārgāh (1954, p.34).\n\nʿAbbās places it in the ḥijāz family. He writes that \"it consists of two principal ajnās, the first jins ḥijāz on the degree rāst and the second jins ʿajam on the degree chahārgāh\" (1986, p.60). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins nahāwand on nawā and jins kurd on būselīk (1986, p.60). The tertiary jins degree recorded here is nawā, the seat of the first of these.\n\nHe counts it among the little-used maqāmāt (1986, p.60).\n\nThe degree chahārgāh is assigned here as the ghammāz, the seat of the second unit in both sources.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص34) وعباس (1986، ص60/111).\n\nيتفق المصدران على جنس الحجاز على الراست ويضعان وحدتهما الثانية على الجهاركاه، لكنهما يسميانها تسميتين مختلفتين. يكتب الصباغ ان «هذا النغم يتركب من نغمين الجنس الاول حجاز على درجة الراست والعقد الثاني الاعلى نغم جهاركاه على درجة الجهاركاه» (1954، ص34). ويسمي عباس هناك جنس العجم. ويضيف الصباغ انه يجب اظهار الحجاز اولاً وان تبقى السيطرة له على الجهاركاه (1954، ص34).\n\nيضعه عباس في فصيلة الحجاز. ويكتب انه «يتالف من جنسين أساسيين الاول جنس حجاز على درجة الرست والثاني جنس عجم على درجة الجهاركاه» (1986، ص60). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس النهاوند على النوا وجنس الكرد على البوسليك (1986، ص60). والجنس الثالث المثبت هنا على النوا، موضع اولها.\n\nويعده من المقامات القليلة الاستعمال (1986، ص60).\n\nواعتُمدت هنا درجة الجهاركاه غمازاً، وهي موضع الوحدة الثانية في المصدرين.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
@@ -7859,7 +7929,7 @@
         "page": "60/111"
       }
     ],
-    "version": "2026-08-11T16:51:32.170Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "61",
@@ -7883,10 +7953,16 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -7999,15 +8075,15 @@
         "version": "2026-07-26T09:27:30.693Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.35-36).\n\nHe names no ajnās of its own construction. He calls bayyātī one of \"the prominent Eastern anghām\" that \"enters into all the anghām\", and advises raising chahārgāh very slightly to bring it out (1954, pp.35-36).\n\nThe primary jins degree recorded here is the tonic dūgāh. The secondary jins degree, nawā, is deduced as the seat of the assigned ghammāz. The degree nawā is assigned here as the ghammāz, as for maqām bayyāt.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص35-36).\n\nلا يسمي اجناساً لتكوينه. ويعد البياتي «من الانغام الشرقية البارزة وهو يدخل في كل الانغام»، وينصح برفع الجهاركاه قليلاً جداً لاظهاره (1954، ص35-36).\n\nالجنس الاول المثبت هنا على القرار الدوكاه. والجنس الثاني على النوا مستنتج، فهو موضع الغماز المعتمد. واعتُمدت هنا درجة النوا غمازاً، كما في مقام البيات.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "35"
+        "page": "35-36"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "62",
@@ -8031,20 +8107,26 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, p.36).\n\nHe states that \"this nagham is composed of two ajnās, bayyātī dūgāh and ḥijāz nawā\" (1954, p.36). The primary and secondary jins degrees recorded here are their seats, dūgāh and nawā.\n\nHe adds that ḥusaynī is often used, \"followed at once by the ḥiṣār position, so producing a strong effect\" (1954, p.36).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص36).\n\nيقول ان «هذا النغم يتركب من جنسين : بياتي دوكاه وحجاز نوا» (1954، ص36). والجنسان الاول والثاني المثبتان هنا على موضعيهما، الدوكاه والنوا.\n\nويضيف انه «تستعمل فيه كثيراً درجة الحسيني تتبعها حالاً عربة الحصار فتحدث تأثيراً قوياً» (1954، ص36).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
         "page": "36"
       }
     ],
-    "version": "2026-08-11T18:48:24.705Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "63",
@@ -10099,10 +10181,16 @@
       "segāh",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -10214,15 +10302,15 @@
         "version": "2026-07-26T09:32:50.270Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.37-38).\n\nHe states that in ṣabā \"the work is always with ḥijāz kār on the degree chahārgāh, and it rests as ṣabā on dūgāh\" (1954, p.38). The primary and secondary jins degrees recorded here are dūgāh and chahārgāh.\n\nWhen the melody reaches kurdān, he continues with ḥijāz on kurdān, using the upper degrees printed beside his table, and then descends in ṣabā to dūgāh (1954, p.38).\n\nThe degree ḥusaynī, the fifth, is assigned here as the ghammāz, as for maqām ṣabā.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص37-38).\n\nيقول ان «نغم الصبا دائماً يكون العمل به حجاز كار على درجة الجهاركاه ويستقر صبا على الدوكاه» (1954، ص38). والجنسان الاول والثاني المثبتان هنا على الدوكاه والجهاركاه.\n\nومتى بلغ النغم الكردان عمل فوقه حجازاً على الكردان بالدرجات المدونة بجانب جدوله، ثم هبط بنغم الصبا الى الدوكاه (1954، ص38).\n\nواعتُمدت هنا درجة الحسيني، الخامسة، غمازاً، كما في مقام الصبا.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "37"
+        "page": "37-38"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:44:02.000Z"
   },
   {
     "id": "84",
@@ -13461,10 +13549,16 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -13569,15 +13663,15 @@
         "version": "2026-07-26T09:58:06.402Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.39-40).\n\nHe gives it as nagham segāh ʿarabī, which the Turks call huzām. \"Arab segāh is ḥijāz nawā resting on the degree segāh, and the Turkish is rāst nawā, also resting on the degree segāh\" (1954, p.39). The primary and secondary jins degrees recorded here are segāh and nawā.\n\nAt the rest on segāh, he adds, the nīm kurdī position is usually used in place of dūgāh (1954, p.40).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his ḥijāz nawā, as for maqām huzām.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص39-40).\n\nيورده باسم نغم سيكاه عربي، ويسميه الاتراك هزاماً. ويكتب ان «نغم السيكاه العربي هو حجاز نوا ويستقر على درجة السيكاه ، والتركي راست نوا ويستقر ايضا على درجة السيكاه» (1954، ص39). والجنسان الاول والثاني المثبتان هنا على السيكاه والنوا.\n\nويضيف انه «عند الاستقرار على السيكاه تستعمل غالباً عربة النيم كردي ( ري بيز ) بدلاً من الدوكاه» (1954، ص40).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع حجاز النوا عنده، كما في مقام الهزام.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "39"
+        "page": "39-40"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "124",
@@ -13601,10 +13695,16 @@
       "nawā",
       "chahārgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "secondaryJinsDegree": [
+      "kurdān"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "kurdān"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -13711,15 +13811,15 @@
         "version": "2026-07-26T09:59:40.039Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.42-43).\n\nHe names no ajnās of its own construction. He writes that \"this nagham has no family\" and that the Turks do not use it (1954, p.42). He adds that būselīk sometimes takes the place of segāh, and that segāh must be used to keep it distinct from nagham ʿajam (1954, pp.42-43).\n\nThe primary jins degree recorded here is the tonic chahārgāh. The secondary jins degree, kurdān, is deduced as the seat of the assigned ghammāz. Rāst on kurdān is among the anghām he lists as brought in temporarily (1954, p.43). The degree kurdān is assigned here as the ghammāz.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص42-43).\n\nلا يسمي اجناساً لتكوينه. ويكتب ان «هذا النغم ليس له فصيلة والاتراك لا يستعملونه» (1954، ص42). ويضيف ان البوسليك يحل احياناً محل السيكاه، وانه يجب استعمال السيكاه ليتميز عن نغم العجم (1954، ص42-43).\n\nالجنس الاول المثبت هنا على القرار الجهاركاه. والجنس الثاني على الكردان مستنتج، فهو موضع الغماز المعتمد. والراست على الكردان من الانغام التي يعددها مما يدخل فيه موقتاً (1954، ص43). واعتُمدت هنا درجة الكردان غمازاً.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "42"
+        "page": "42-43"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "125",
@@ -13743,10 +13843,16 @@
       "rāst",
       "nīm ʿajam ʿushayrān"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "nīm ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -13841,15 +13947,15 @@
         "version": "2026-07-26T08:05:00.037Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.43-44).\n\nHe calls it \"the European major according to the Pythagorean scale\" and names no ajnās of its own construction (1954, p.43). Resting on nīm ʿajam, he adds, it is called nagham ʿajam (1954, p.44).\n\nThe primary jins degree recorded here is the tonic nīm ʿajam ʿushayrān. The secondary jins degree, chahārgāh, is deduced as the seat of the assigned ghammāz. The degree chahārgāh is assigned here as the ghammāz, as for maqām ʿajam ʿushayrān.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص43-44).\n\nيسميه «نغم الماجور الافرنجي حسب السلم الفيثاغوري» ولا يسمي اجناساً لتكوينه (1954، ص43). ويضيف انه اذا ارتكز على النيم عجم سُمّي نغم عجم (1954، ص44).\n\nالجنس الاول المثبت هنا على القرار النيم عجم عشيران. والجنس الثاني على الجهاركاه مستنتج، فهو موضع الغماز المعتمد. واعتُمدت هنا درجة الجهاركاه غمازاً، كما في مقام العجم عشيران.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "43"
+        "page": "43-44"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "126",
@@ -13873,10 +13979,16 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -13980,15 +14092,15 @@
         "version": "2026-07-26T08:17:32.275Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, pp.44-45).\n\nHe states that in this nagham \"one must show nagham bayyātī on dūgāh and then rest on the degree ʿirāq\" (1954, p.45). The primary and secondary jins degrees recorded here are ʿirāq and dūgāh.\n\nIn the descent, he writes, nīm ʿajam usually takes the place of awj, and sometimes of ḥusaynī or ʿushayrān, especially at the rest on ʿirāq (1954, p.45).\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his bayyātī on dūgāh.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص44-45).\n\nيقول انه «في هذا النغم يجب اظهار نغم البياتي على الدوكاه ثم الاستقرار على درجة العراق» (1954، ص45). والجنسان الاول والثاني المثبتان هنا على العراق والدوكاه.\n\nويكتب ان النيم عجم يحل غالباً محل الاوج في الهبوط، واحياناً محل الحسيني او العشيران، خصوصاً عند الاستقرار على العراق (1954، ص45).\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع البياتي على الدوكاه عنده.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
-        "page": "44"
+        "page": "44-45"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:44:02.000Z"
   },
   {
     "id": "127",
@@ -14012,10 +14124,16 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
     "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14140,15 +14258,15 @@
         "version": "2026-07-26T09:53:57.214Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ṣabbāgh (1954, p.41).\n\nHe gives it as nagham segāh turkī, \"rāst nawā with segāh\" (1954, p.41). Its degrees, he writes, have \"the intervals of nagham rāst, only it rests on the degree segāh instead of resting on the degree rāst\" (1954, p.41). The primary and secondary jins degrees recorded here are segāh and nawā.\n\nHe adds that he has written Turkish segāh on the degree of Arab segāh, although Turkish segāh lies one and a quarter commas higher (1954, p.41).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his rāst nawā, as for maqām segāh.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الصباغ (1954، ص41).\n\nيورده باسم نغم سيكاه تركي، اي «الراست نوا مع السيكاه» (1954، ص41). ويكتب ان «ابعاد درجات نغم السيكاه التركي كابعاد نغم الراست ، فقط يستقر على درجة السيكاه بدلا من الاستقرار على درجة الراست» (1954، ص41). والجنسان الاول والثاني المثبتان هنا على السيكاه والنوا.\n\nويضيف انه دوّن السيكاه التركي على درجة السيكاه العربي، مع ان درجة السيكاه التركي تزيد كوماً وربعاً (1954، ص41).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع الراست نوا عنده، كما في مقام السيكاه.",
     "sourcePageReferences": [
       {
         "sourceId": "alsabbagh_1954",
         "page": "41"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T18:50:06.000Z"
   },
   {
     "id": "128",
@@ -14172,10 +14290,18 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14283,15 +14409,15 @@
         "version": "2026-07-26T08:32:24.654Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.30/37/92). He places it in the rāst family. He writes that \"it consists of two principal ajnās, the first rāst on the degree rāst and the second ḥijāz on the degree nawā\" (1986, p.37). Its degrees and ajnās are the same in both directions. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on chahārgāh, jins segāh on segāh and jins bayyāt on dūgāh (1986, p.37). The tertiary jins degree recorded here is chahārgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص30/37/92). يضعه في فصيلة الراست. ويكتب انه «يتألف من جنسين اساسيين الأول رست على درجة الرست والثاني حجاز على درجة النوى» (1986، ص37). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الجهاركاه وجنس السيكاه على السيكاه وجنس البيات على الدوكاه (1986، ص37). والجنس الثالث المثبت هنا على الجهاركاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "30/37/92"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "129",
@@ -14315,10 +14441,18 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14423,15 +14557,15 @@
         "version": "2026-07-26T09:58:06.402Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.31/43/98). He places it in the segāh family. He writes that \"it consists of two principal ajnās, the first jins segāh thulāthī on the degree segāh and the second jins ḥijāz on the degree nawā\" (1986, p.43). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on chahārgāh (1986, p.43). The tertiary jins degree recorded here is chahārgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص31/43/98). يضعه في فصيلة السيكاه. ويكتب انه «يتألف من جنسين أساسيين الأول جنس سيكاه ثلاثي على درجة السيكاه والثاني جنس حجاز على درجة النوى» (1986، ص43). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الجهاركاه (1986، ص43). والجنس الثالث المثبت هنا على الجهاركاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "31/43/98"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "130",
@@ -14455,20 +14589,28 @@
       "chahārgāh",
       "segāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "segāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.32/45/112). He places it in the segāh family. He writes that \"it consists of two principal ajnās, the first segāh thulāthī on the degree segāh and the second nahāwand on the degree nawā\" (1986, p.45). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins ʿajam on chahārgāh and jins kurd on ḥusaynī (1986, p.45). The tertiary jins degree recorded here is chahārgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص32/45/112). يضعه في فصيلة السيكاه. ويكتب انه «يتالف من جنسين اساسيين الأول سيكاه ثلاثي على درجة السيكاه والثاني نهاوند على درجة النوى» (1986، ص45). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس العجم على الجهاركاه وجنس الكرد على الحسيني (1986، ص45). والجنس الثالث المثبت هنا على الجهاركاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "32/45/112"
       }
     ],
-    "version": "2026-08-11T16:51:32.170Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "131",
@@ -14492,10 +14634,18 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14578,15 +14728,15 @@
         "version": "2026-07-26T08:23:08.922Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.33/48/100). He places it in the segāh family. He writes that \"it consists of two principal ajnās, the first jins segāh thulāthī on the degree ʿirāq and the second jins ṣabā on the degree dūgāh\" (1986, p.48). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins rāst on rāst (1986, p.48). The tertiary jins degree recorded here is rāst, the seat of the first of these.\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص33/48/100). يضعه في فصيلة السيكاه. ويكتب انه «يتألف من جنسين اساسيين الاول جنس سيكاه ثلاثي على درجة العراق والثاني جنس صبا على درجة الدوكاه» (1986، ص48). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس الراست على الراست (1986، ص48). والجنس الثالث المثبت هنا على الراست، موضع اولها.\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "33/48/100"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "132",
@@ -14610,10 +14760,18 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14738,15 +14896,15 @@
         "version": "2026-07-26T08:58:50.162Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.35/55/106). He writes that \"it consists of two principal ajnās, the first jins nahāwand on the degree rāst and the second jins ḥijāz on the degree nawā, this in the ascent\" (1986, p.55). In the descent the jins ḥijāz becomes jins kurd on nawā, with ʿajam taking the place of māhūr. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on chahārgāh, jins kurd on nawā, jins nahāwand on chahārgāh, jins kurd on dūgāh and jins ʿajam on kurdī (1986, p.55). The tertiary jins degree recorded here is chahārgāh, the seat of the first of these.\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص35/55/106). ويكتب انه «يتألف من جنسين أساسيين الأول جنس نهاوند على درجة الرست والثاني جنس حجاز على درجة النوى، هذا في حالة الصعود» (1986، ص55). وفي الهبوط يصير جنس الحجاز جنس كرد على النوا، اذ يحل العجم محل الماهور. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الجهاركاه وجنس الكرد على النوا وجنس النهاوند على الجهاركاه وجنس الكرد على الدوكاه وجنس العجم على الكردي (1986، ص55). والجنس الثالث المثبت هنا على الجهاركاه، موضع اولها.\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "35/55/106"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:42:03.000Z"
   },
   {
     "id": "133",
@@ -14770,10 +14928,18 @@
       "qarār ḥiṣār",
       "yegāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "yegāh"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14883,15 +15049,15 @@
         "version": "2026-07-25T15:28:02.561Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.62/68). He places it in the ḥijāz family. He writes that \"it consists of two principal ajnās, the first jins ḥijāz on the degree yegāh and the second jins ḥijāz on the degree dūgāh\" (1986, p.68). Its degrees and ajnās are the same in both directions. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on rāst (1986, p.68). The tertiary jins degree recorded here is rāst, the seat of the first of these.\n\nHe notes that its intervals and ajnās are those of maqām ḥijāz kār, while its tonic, sayr and manner of performance differ (1986, p.68). In a general note he counts shat ʿarabān among maqāmāt wrongly called transposed scales, each having its own sayr and character (1986, p.61).\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص62/68). يضعه في فصيلة الحجاز. ويكتب انه «يتألف من جنسين اساسيين الاول جنس حجاز على درجة اليكاه والثاني جنس حجاز على درجة الدوكاه» (1986، ص68). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الراست (1986، ص68). والجنس الثالث المثبت هنا على الراست، موضع اولها.\n\nويلاحظ ان ابعاده واجناسه هي ابعاد مقام الحجاز كار واجناسه، بينما تختلف درجة استقراره وسيره اللحني واسلوب العمل فيه (1986، ص68). ويعد في ملاحظة عامة الشت عربان من المقامات التي تُسمى خطأً سلالم مصورة، ولكل منها سيره وشخصيته (1986، ص61).\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "62/68"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "134",
@@ -14915,10 +15081,18 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "dūgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -14955,15 +15129,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.62/75). He places it in the rāst family. He writes that \"it consists of two principal ajnās, the first rāst on the degree rāst and the second ʿajam on the degree nawā, in the ascent\" (1986, p.75). In the descent the jins ʿajam becomes jins nahāwand, with ʿajam taking the place of māhūr. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with jins bayyāt on dūgāh, jins segāh thulāthī on segāh, jins ʿajam on chahārgāh and jins nahāwand on nawā (1986, p.75). The tertiary jins degree recorded here is dūgāh, the seat of the first of these.\n\nHe reports a view that māhūr is a rāst whose third and seventh degrees are higher than those of rāst (1986, p.75).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص62/75). يضعه في فصيلة الراست. ويكتب انه «يتألف من جنسين أساسيين الأول رست على درجة الرست والثاني عجم على درجة النوى صعوداً» (1986، ص75). وفي الهبوط يصير جنس العجم جنس نهاوند، اذ يحل العجم محل الماهور. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس البيات على الدوكاه وجنس السيكاه الثلاثي على السيكاه وجنس العجم على الجهاركاه وجنس النهاوند على النوا (1986، ص75). والجنس الثالث المثبت هنا على الدوكاه، موضع اولها.\n\nوينقل رأياً يقول ان الماهور راست تكون درجتاه الثالثة والسابعة اعلى منهما في الراست (1986، ص75).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "62/75"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "135",
@@ -14987,10 +15161,18 @@
       "zīrgūleh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdī"
+    ],
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15093,15 +15275,15 @@
         "version": "2026-07-26T09:10:56.339Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.63/77). He places it in the kurd family. He writes that \"it consists of two principal ajnās, the first jins kurd on the degree rāst and the second ḥijāz on the degree chahārgāh\" (1986, p.77). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on kurdī and jins ʿajam on zīrgūleh (1986, p.77). The tertiary jins degree recorded here is kurdī, the seat of the first of these.\n\nThe degree chahārgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص63/77). يضعه في فصيلة الكرد. ويكتب انه «يتألف من جنسين أساسيين الجنس الأول كرد على درجة الرست والثاني حجاز على درجة الجهاركاه» (1986، ص77). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الكردي وجنس العجم على الزيركولاه (1986، ص77). والجنس الثالث المثبت هنا على الكردي، موضع اولها.\n\nواعتُمدت هنا درجة الجهاركاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "63/77"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "136",
@@ -15125,10 +15307,18 @@
       "būselīk/ʿushshāq",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15270,15 +15460,15 @@
         "version": "2026-07-26T09:49:29.606Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.63/80). He places it in the nahāwand family. He writes that \"it consists of two principal ajnās, the first nahāwand on the degree dūgāh and the second ḥijāz on the degree ḥusaynī\" (1986, p.80). For the descent his list gives jins kurd on ḥusaynī, jins nahāwand on nawā and jins ʿajam on chahārgāh. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on nawā (1986, p.80). The tertiary jins degree recorded here is nawā, the seat of the first of these.\n\nHe describes its degrees and ajnās as those of maqām nahāwand moved onto dūgāh, with a different sayr, manner of performance and tonic (1986, p.80).\n\nThe degree ḥusaynī is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص63/80). يضعه في فصيلة النهاوند. ويكتب انه «تتألف من جنسين اساسيين، الأول نهاوند على درجة الدوكاه والثاني حجاز على درجة الحسيني» (1986، ص80). وتعطي قائمته للهبوط جنس الكرد على الحسيني وجنس النهاوند على النوا وجنس العجم على الجهاركاه. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على النوا (1986، ص80). والجنس الثالث المثبت هنا على النوا، موضع اولها.\n\nويصف درجاته واجناسه بانها درجات مقام النهاوند واجناسه منقولة الى الدوكاه، مع اختلاف السير اللحني وطريقة العمل ودرجة الاستقرار (1986، ص80).\n\nواعتُمدت هنا درجة الحسيني غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "63/80"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "137",
@@ -15302,10 +15492,18 @@
       "rāst",
       "ʿajam ʿushayrān"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "ʿajam ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdī"
+    ],
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15395,15 +15593,15 @@
         "version": "2026-07-26T08:09:32.658Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.63/78). He places it in the ʿajam family. He writes that \"it consists of two principal ajnās, the first ʿajam on the degree ʿajam ʿushayrān and the second ḥijāz on the degree chahārgāh\" (1986, p.78). Its degrees and ajnās are the same in both directions. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on kurdī, jins nahāwand on rāst and jins ṣabā zamzam on dūgāh (1986, p.78). The tertiary jins degree recorded here is kurdī, the seat of the first of these.\n\nHe counts it among the little-used maqāmāt (1986, p.78).\n\nThe degree chahārgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص63/78). يضعه في فصيلة العجم. ويكتب انه «يتألف من جنسين أساسيين الأول عجم على درجة العجم عشيران والثاني حجاز على درجة الجهاركاه» (1986، ص78). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على الكردي وجنس النهاوند على الراست وجنس الصبا زمزم على الدوكاه (1986، ص78). والجنس الثالث المثبت هنا على الكردي، موضع اولها.\n\nويعده من المقامات القليلة الاستعمال (1986، ص78).\n\nواعتُمدت هنا درجة الجهاركاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "63/78"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "138",
@@ -15427,20 +15625,28 @@
       "būselīk/ʿushshāq",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "būselīk/ʿushshāq"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.64/71). He places it in the rāst family. He writes that \"it consists of two principal ajnās, the first jins rāst on the degree dūgāh and the second jins rāst on the degree nawā\" (1986, p.71). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins bayyāt on būselīk, jins bayyāt on ḥusaynī, jins segāh thulāthī on nīm ḥijāz and jins segāh thulāthī on awj (1986, p.71). The tertiary jins degree recorded here is būselīk, the seat of the first of these.\n\nHe adds that it is wrongly called rāst transposed onto dūgāh, since its intervals differ from those of rāst, and that transposed onto rāst it is called rāst maṣrī (1986, p.71).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص64/71). يضعه في فصيلة الراست. ويكتب انه «يتألف من جنسين اساسيين الأول جنس رست على درجة الدوكاه والثاني جنس رست على درجة النوى» (1986، ص71). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس البيات على البوسليك وجنس البيات على الحسيني وجنس السيكاه الثلاثي على النيم حجاز وجنس السيكاه الثلاثي على الاوج (1986، ص71). والجنس الثالث المثبت هنا على البوسليك، موضع اولها.\n\nويضيف انه يُسمى خطأً راست مصوراً على الدوكاه، لاختلاف ابعاده عن ابعاد الراست، وانه اذا صُوّر على الراست سُمّي راست مصري (1986، ص71).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "64/71"
       }
     ],
-    "version": "2026-08-10T21:11:54.386Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "139",
@@ -15464,10 +15670,18 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "būselīk/ʿushshāq"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15573,15 +15787,15 @@
         "version": "2026-07-26T09:06:58.608Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.64/79). He places it in the segāh family. He writes that \"it consists of two principal ajnās, the first segāh thulāthī on the degree ʿirāq and the second jins ʿajam on the degree dūgāh\" (1986, p.79). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins nahāwand on būselīk (1986, p.79). The tertiary jins degree recorded here is būselīk, the seat of the first of these.\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص64/79). يضعه في فصيلة السيكاه. ويكتب انه «يتكون من جنسين اساسيين، الجنس الأول سيكاه ثلاثي على درجة العراق والثاني جنس عجم على درجة الدوكاه» (1986، ص79). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس النهاوند على البوسليك (1986، ص79). والجنس الثالث المثبت هنا على البوسليك، موضع اولها.\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "64/79"
       }
     ],
-    "version": "2026-08-17T12:24:59.304Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "140",
@@ -15605,10 +15819,18 @@
       "būselīk/ʿushshāq",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "būselīk/ʿushshāq"
+    ],
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15738,15 +15960,15 @@
         "version": "2026-07-26T09:51:36.413Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.65/84). He places it in the ḥijāz family. He writes that \"it consists of an ʿiqd (a five-note unit) nikrīz on the degree dūgāh and a jins ḥijāz on the degree ḥusaynī\" (1986, p.84). Its degrees and ajnās are the same in both directions. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins ḥijāz on dūgāh (1986, p.84), while his descending staff brackets jins ḥijāz on būselīk. The staff reading is taken here, since ḥijāz cannot sit on dūgāh in these notes. The tertiary jins degree recorded here is būselīk.\n\nHe notes that its degrees are those of maqām ḥijāz kār, while its sayr differs (1986, p.84).\n\nThe degree ḥusaynī is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص65/84). يضعه في فصيلة الحجاز. ويكتب انه «يتألف من عقد نكريز على درجة الدوكاه وجنس حجاز على درجة الحسيني» (1986، ص84). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس الحجاز على الدوكاه (1986، ص84)، بينما يحصر مدرجه الهابط جنس حجاز على البوسليك. وتؤخذ هنا قراءة المدرج، اذ لا يقع الحجاز على الدوكاه في هذه الدرجات. والجنس الثالث المثبت هنا على البوسليك.\n\nويلاحظ ان درجاته هي درجات مقام الحجاز كار، بينما يختلف سيره اللحني (1986، ص84).\n\nواعتُمدت هنا درجة الحسيني غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "65/84"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "141",
@@ -15770,10 +15992,18 @@
       "kurdī",
       "dūgāh"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "dūgāh"
+    ],
+    "secondaryJinsDegree": [
+      "ḥusaynī"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "ḥusaynī"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15813,15 +16043,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.65/82). He places it in the ḥijāz family. He writes that \"it consists of two principal ajnās, the first jins ḥijāz on the degree dūgāh and the second jins ḥijāz on the degree ḥusaynī\" (1986, p.82). Its degrees and ajnās are the same in both directions. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with an ʿiqd (a five-note unit) nikrīz on nawā (1986, p.82). The tertiary jins degree recorded here is nawā, the seat of the first of these.\n\nHe notes that its degrees and ajnās are those of maqām ḥijāz kār, while its sayr and manner of performance differ (1986, p.82).\n\nThe degree ḥusaynī is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص65/82). يضعه في فصيلة الحجاز. ويكتب انه «يتألف من جنسين أساسيين، الاول جنس حجاز على درجة الدوكاه، والثاني جنس حجاز على درجة الحسيني» (1986، ص82). ولا تتغير درجاته واجناسه بين الصعود والهبوط. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بعقد النكريز على النوا (1986، ص82). والجنس الثالث المثبت هنا على النوا، موضع اولها.\n\nويلاحظ ان درجاته واجناسه هي درجات مقام الحجاز كار واجناسه، بينما يختلف سيره اللحني وطريقة العمل به (1986، ص82).\n\nواعتُمدت هنا درجة الحسيني غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "65/82"
       }
     ],
-    "version": "2026-08-11T19:16:28.764Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "142",
@@ -15847,10 +16077,18 @@
       "ʿirāq",
       "ʿushayrān"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "ʿushayrān"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "rāst"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [
       {
         "id": "sayr_alshawwa_1946",
@@ -15909,15 +16147,15 @@
         "version": "2026-07-19T19:12:36.330Z"
       }
     ],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.66/81). He places it in the bayyāt family. He writes that \"it consists of two principal ajnās, the first jins bayyāt on the degree ʿushayrān and the second jins ʿajam on the degree dūgāh, in the ascent\" (1986, p.81). In the descent his jins ʿajam on dūgāh becomes jins bayyāt, with chahārgāh taking the place of ḥijāz and segāh the place of būselīk. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins bayyāt on dūgāh, jins rāst on rāst and jins segāh thulāthī on ʿirāq (1986, p.81). The tertiary jins degree recorded here is rāst, the first after the descending jins bayyāt on dūgāh.\n\nThe degree dūgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص66/81). يضعه في فصيلة البيات. ويكتب انه «تتالف من جنسين اساسيين الاول جنس بيات على درجة العشيران والثاني جنس عجم على درجة الدوكاه صعوداً» (1986، ص81). وفي الهبوط يصير جنس العجم على الدوكاه جنس بيات، اذ يحل الجهاركاه محل الحجاز والسيكاه محل البوسليك. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس البيات على الدوكاه وجنس الراست على الراست وجنس السيكاه الثلاثي على العراق (1986، ص81). والجنس الثالث المثبت هنا على الراست، اول ما يلي جنس البيات على الدوكاه الهابط.\n\nواعتُمدت هنا درجة الدوكاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "66/81"
       }
     ],
-    "version": "2026-08-11T19:23:42.789Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "143",
@@ -15941,20 +16179,28 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "kurdī"
+    ],
+    "ghammaz": [
+      "chahārgāh"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.66/74). He places it in the nahāwand family. He writes that \"it consists of two principal ajnās, the first jins nahāwand on the degree rāst and the second jins ḥijāz on the degree chahārgāh, in the ascent\" (1986, p.74). In the descent his jins ḥijāz on chahārgāh becomes an ʿiqd (a five-note unit) nikrīz on chahārgāh. The two ajnās share a degree, a conjunct assembly.\n\nHis list of the maqām's ajnās continues with jins ḥijāz on nawā, jins ʿajam on kurdī and jins kurd on dūgāh (1986, p.74). The tertiary jins degree recorded here is kurdī, the first that sits on an ascending degree, since his jins ḥijāz on nawā lies inside the descending ʿiqd nikrīz.\n\nHis ascending staff names the fifth degree ṣabā, recorded here as tīk ḥijāz/ṣabā (1986, p.74).\n\nThe degree chahārgāh is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص66/74). يضعه في فصيلة النهاوند. ويكتب انه «يتألف من جنسين اساسيين الأول جنس نهاوند على درجة الرست والثاني جنس حجاز على درجة الجهاركاه صعوداً» (1986، ص74). وفي الهبوط يصير جنس الحجاز على الجهاركاه عقد نكريز على الجهاركاه. ويشترك الجنسان في درجة، بالجمع المتصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس الحجاز على النوا وجنس العجم على الكردي وجنس الكرد على الدوكاه (1986، ص74). والجنس الثالث المثبت هنا على الكردي، اول ما يقع منها على درجة صاعدة، اذ يقع جنس الحجاز على النوا داخل عقد النكريز الهابط.\n\nويسمي مدرجه الصاعد الدرجة الخامسة صبا، وهي المثبتة هنا تيك حجاز/صبا (1986، ص74).\n\nواعتُمدت هنا درجة الجهاركاه غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
         "page": "66/74"
       }
     ],
-    "version": "2026-08-11T16:14:16.601Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "144",
@@ -15978,20 +16224,28 @@
       "dūgāh",
       "rāst"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "rāst"
+    ],
+    "secondaryJinsDegree": [
+      "nawā"
+    ],
+    "tertiaryJinsDegree": [
+      "chahārgāh"
+    ],
+    "ghammaz": [
+      "nawā"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from ʿAbbās (1986, pp.66/76). He places it in the ʿajam family. He writes that \"it consists of two principal ajnās, the first jins ʿajam on the degree rāst and the second jins rāst on the degree nawā, in the ascent\" (1986, p.76). In the descent his jins rāst becomes jins nahāwand on nawā, with ʿajam taking the place of awj. A whole tone separates the two ajnās, a disjunct assembly.\n\nHis list of the maqām's ajnās continues with jins nahāwand on nawā, jins ʿajam on chahārgāh, jins bayyāt on dūgāh and jins segāh on segāh (1986, p.76). The tertiary jins degree recorded here is chahārgāh, the first after the descending jins nahāwand on nawā.\n\nHe notes that its intervals and ajnās are those of maqām chahārgāh, while its tonic and sayr differ (1986, p.76).\n\nThe degree nawā is assigned here as the ghammāz, the seat of his second principal jins.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من عباس (1986، ص66/76). يضعه في فصيلة العجم. ويكتب انه «يتألف من جنسين أساسيين الأول جنس عجم على درجة الرست والثاني جنس رست على درجة النوى صعوداً» (1986، ص76). وفي الهبوط يصير جنس الراست جنس نهاوند على النوا، اذ يحل العجم محل الاوج. ويفصل بين الجنسين بعد طنيني، بالجمع المنفصل.\n\nوتمضي قائمة اجناس المقام عنده بجنس النهاوند على النوا وجنس العجم على الجهاركاه وجنس البيات على الدوكاه وجنس السيكاه على السيكاه (1986، ص76). والجنس الثالث المثبت هنا على الجهاركاه، اول ما يلي جنس النهاوند على النوا الهابط.\n\nويلاحظ ان مسافاته واجناسه هي مسافات مقام الجهاركاه واجناسه، بينما تختلف درجة استقراره وسيره اللحني (1986، ص76).\n\nواعتُمدت هنا درجة النوا غمازاً، وهي موضع جنسه الاساسي الثاني.",
     "sourcePageReferences": [
       {
         "sourceId": "abbas_1986",
-        "page": "66"
+        "page": "66/76"
       }
     ],
-    "version": "2026-08-11T16:17:11.488Z"
+    "version": "2026-11-10T19:25:15.000Z"
   },
   {
     "id": "145",
@@ -16029,19 +16283,27 @@
       "rāst",
       "ʿirāq"
     ],
-    "primaryJinsDegree": null,
-    "secondaryJinsDegree": null,
-    "tertiaryJinsDegree": null,
-    "ghammaz": null,
+    "primaryJinsDegree": [
+      "ʿirāq"
+    ],
+    "secondaryJinsDegree": [
+      "dūgāh"
+    ],
+    "tertiaryJinsDegree": [
+      "nawā"
+    ],
+    "ghammaz": [
+      "dūgāh"
+    ],
     "suyur": [],
-    "commentsEnglish": "",
-    "commentsArabic": "",
+    "commentsEnglish": "This maqām's data is compiled from al-Ḥilū (1961, p.115). He places faraḥnāk in the ʿirāq family and counts it at 14 notes, with its qarār on ʿirāq. A footnote states that \"this maqām is composite in its formation, and it cannot be used in notating melodies and analysing them\" (1961, p.115).\n\nal-Shawwā's faraḥnāk is a separate entry, maqām faraḥnāk (al-Shawwā). His degree table rises through nīm būselīk and nīm ḥijāz and closes on awj, the octave of ʿirāq (1946, p.35). al-Ḥilū ascends through būselīk and ḥijāz instead.\n\nThe note names recorded here follow al-Ḥilū's degree table, from ʿirāq to jawāb ḥusaynī. His upper dīwān does not repeat the lower one. It takes buzurk and māhūrān where the lower dīwān has būselīk and ḥijāz, and it stops at jawāb ḥusaynī, one degree short of the octave of awj. Beside his descent he prints a second table for jins rāst on dūgāh, running dūgāh, būselīk, nīm ḥijāz, nawā and ḥusaynī. The descending note names take its nīm ḥijāz in place of ḥijāz.\n\nHe builds the ascent from four ʿuqūd (ajnās). The first is jins māyeh on ʿirāq, a tetrachord. The second, third and fourth are pentachords, jins chahārgāh on dūgāh, jins rāst on nawā and jins bayyātī on muḥayyar. In the descent his third ʿiqd becomes jins būselīk on nawā, and his second may be jins rāst or jins chahārgāh on dūgāh, now as a tetrachord. A printed note beside his fourth ʿiqd allows jins rāst on nawā in both directions. The primary, secondary and tertiary ajnās recorded here sit on the seats of his first three ʿuqūd, ʿirāq, dūgāh and nawā.\n\nHe gives the maqām's character as the presentation of jins rāst on the degree dūgāh (1961, p.115). He names neither a ghammāz nor a ẓahīr for this maqām. The degree dūgāh is assigned here as the ghammāz. It is the seat of his second ʿiqd in both directions and of the jins rāst his character statement names, and his performance procedure opens on that ʿiqd.",
+    "commentsArabic": "جُمعت بيانات هذا المقام من الحلو (1961، ص115). يضع الحلو الفرحناك في فصيلة العراق ويعد اصواته 14 صوتاً، وقراره العراق. وتقول حاشيته ان «هذا المقام في تكوينه ( مركّب ) ولا يمكن استعماله في تدوين الالحان وتحليلها» (1961، ص115).\n\nفرحناك الشوا مدونة مستقلة هي مقام فرحناك (الشوا). يصعد جدول درجاته عبر نيم بوسليك ونيم حجاز وينتهي على الاوج، جواب العراق (1946، ص35). اما الحلو فيصعد عبر البوسليك والحجاز.\n\nتتبع اسماء النغمات المثبتة هنا جدول درجات الحلو، من العراق الى جواب الحسيني. ولا يكرر ديوانه الاعلى الديوان الادنى. فهو يأخذ البزرك والماهوران حيث في الديوان الادنى البوسليك والحجاز، ويقف عند جواب الحسيني، دون جواب الاوج بدرجة واحدة. ويطبع بجانب الهبوط جدولاً ثانياً لجنس الراست على الدوكاه، يجري دوكاه، بوسليك، نيم حجاز، نوا، حسيني. وتأخذ اسماء النغمات هبوطاً نيم الحجاز منه بدلاً من الحجاز.\n\nيبني الحلو الصعود من اربعة عقود (اجناس). الاول جنس المايه على العراق، ذو اربع. والثاني والثالث والرابع ذوات خمس، جنس الجهاركاه على الدوكاه وجنس الراست على النوا وجنس البياتي على المحير. وفي الهبوط يصير عقده الثالث جنس البوسليك على النوا، ويجوز ان يكون الثاني جنس الراست او جنس الجهاركاه على الدوكاه، ذا اربع هذه المرة. وتجيز ملاحظة مطبوعة بجانب عقده الرابع عمل الراست على النوا في الاتجاهين. وتقع الاجناس الاول والثاني والثالث المثبتة هنا على مواضع عقوده الثلاثة الاولى، العراق والدوكاه والنوا.\n\nيعطي الحلو شخصية المقام باظهار جنس الراست على درجة الدوكاه (1961، ص115). ولا يسمي غمازاً ولا ظهيراً لهذا المقام. واعتُمدت هنا درجة الدوكاه غمازاً. فهي موضع عقده الثاني في الاتجاهين، وموضع جنس الراست الذي تسميه شخصيته، ويبدأ اجراء العمل عنده بذلك العقد.",
     "sourcePageReferences": [
       {
         "sourceId": "alhilu_1961",
         "page": "115"
       }
     ],
-    "version": "2026-08-17T12:27:58.611Z"
+    "version": "2026-11-10T17:05:47.000Z"
   }
 ]
