@@ -341,21 +341,43 @@ export function calculateMaqamForms(
     // like qarār dūgāh vs dūgāh vs muḥayyar (same modal degree slot in NoteName tables).
     const isTransposed = !sameModalDegreeSlot(firstMaqamNote, firstTransposedNote);
 
-    // Transpose the four degree fields using a tuning-system-wide shift
-    // (matches transposeSayr's pattern via the shared shiftNoteNameByTransposition).
-    const firstNoteInDataIndex = allPitchClasses.findIndex((p) => p.noteName === firstMaqamNote);
-    const firstNoteInMaqamIndex = allPitchClasses.findIndex((p) => p.noteName === firstTransposedNote);
-    const degreeShift = firstNoteInMaqamIndex - firstNoteInDataIndex;
+    // The four degree fields (primary, secondary and tertiary jins, ghammāz) are
+    // stored as note names of the base form. Each is carried to this form by its
+    // place in the maqām: the note at the same position of the structure. A
+    // fixed tuning-system shift (move every note as far as the tonic moved) is
+    // wrong wherever the steps are uneven: in Allami 2025, maqām rāst on qarār
+    // chahārgāh moved its ghammāz nawā to rahāwī, which is not in that form at
+    // all, instead of to its own degree V.
+    //
+    // A stored degree outside the structure is taken through the structure
+    // note an octave from it, then moved back by that octave (tarznwin's
+    // ghammāz nawā through its saham/ramal tūtī). On the base form both rules
+    // return the stored name unchanged.
+    const mapDegreeNote = (noteName: string): string | null => {
+      const position = structureCells.findIndex((cell) => cell.noteName === noteName);
+      if (position !== -1) return structure[position].noteName;
+
+      const source = allPitchClasses.find((pitchClass) => pitchClass.noteName === noteName);
+      if (!source) return null;
+      const octaveEquivalents = structureCells
+        .map((cell, index) => ({ index, octaves: cell.octave - source.octave, cell }))
+        .filter(({ cell, octaves }) => octaves !== 0 && cell.pitchClassIndex === source.pitchClassIndex)
+        .sort((a, b) => Math.abs(a.octaves) - Math.abs(b.octaves));
+      if (octaveEquivalents.length === 0) return null;
+      const { index, octaves } = octaveEquivalents[0];
+      const shifted = shiftPitchClassByOctave(allPitchClasses, structure[index], -octaves);
+      return shifted.noteName === "" ? null : shifted.noteName;
+    };
 
     const mapDegree = (source: string[] | null | undefined): string[] | null => {
       if (source == null) return null;
       const resolved: string[] = [];
       for (const n of source) {
-        const r = shiftNoteNameByTransposition(n, degreeShift, allPitchClasses);
-        // Any failure mode collapses the whole degree to null — mixing resolved
+        const mapped = mapDegreeNote(n);
+        // Any failure collapses the whole degree to null — mixing resolved
         // and unresolved notes in one degree is musicologically meaningless.
-        if (r.outOfBounds || r.notFound) return null;
-        resolved.push(r.noteName);
+        if (mapped == null) return null;
+        resolved.push(mapped);
       }
       return resolved;
     };

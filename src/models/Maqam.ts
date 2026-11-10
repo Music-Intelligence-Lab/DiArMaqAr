@@ -624,9 +624,11 @@ export interface Maqam {
 
   /**
    * Transposed primary jins degree as note names.
-   * Each element is mapped from the source MaqamData's primaryJinsDegree by
-   * applying the same tuning-system shift as the transposed scale.
-   * Null when the source is null OR when transposition pushes any element out of bounds.
+   * Each element is mapped from the source MaqamData's primaryJinsDegree to the
+   * note on the same degree of this form (the same position in the maqām's
+   * structure), not by a fixed tuning-system shift.
+   * Null when the source is null OR when any element cannot be placed in this
+   * form within the tuning system's range.
    */
   primaryJinsNoteName?: NoteName[] | null;
 
