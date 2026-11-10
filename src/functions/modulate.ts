@@ -261,6 +261,29 @@ export default function modulate(
     checkSixthNoThird = true;
   }
 
+  // Every rule below places the target's qarār on one of these notes. A form whose
+  // qarār is none of them can never be a modulation, so it is set aside before any
+  // other work. Without this, every call compared every form of every maqām in the
+  // pitch space note by note (7,700 forms in Ronzevalle on ʿushayrān), only for the
+  // rules to drop almost all of them.
+  const modulationTonics = new Set<string | undefined>();
+  if (tonicIsValid) modulationTonics.add(sourceAscendingNotes[0]);
+  if (thirdDegreeIsValid) modulationTonics.add(sourceAscendingNotes[2]);
+  if (checkNisfBelowThird) modulationTonics.add(noteNameNisfBelowThird);
+  for (const degree of [3, 4]) {
+    const shawwaClass = shawwaMapping(sourceAscendingNotes[degree]);
+    if (shawwaClass === "n" || shawwaClass === "h") modulationTonics.add(sourceAscendingNotes[degree]);
+  }
+  if (checkSixthNoThird || checkSixAscending) modulationTonics.add(sourceAscendingNotes[5]);
+  if (checkSixDescending) modulationTonics.add(sourceDescendingNotes[5]);
+
+  // The qarār of a base form: getBaseForm takes the pitch classes in pitch-space
+  // order, so its first is the lowest pitch class carrying one of the names
+  const baseFormTonic = (noteNames: string[]) => allPitchClasses.find((pitchClass) => noteNames.includes(pitchClass.noteName))?.noteName;
+
+  const availableNoteNames = allPitchClasses.map((pitchClass) => pitchClass.noteName);
+  const sameNotes = (a: string[], b: string[]) => a.length === b.length && a.every((noteName, index) => noteName === b[index]);
+
   // MODULATION ANALYSIS: Iterate through all available maqamat/ajnas
   for (const maqamOrJins of ajnasModulationsMode ? allAjnas : allMaqamat) {
     let transpositions: (Maqam | Jins)[] = [];
@@ -268,25 +291,29 @@ export default function modulate(
     // Process Jins (ajnas) modulations
     if (maqamOrJins instanceof JinsData) {
       // Skip if jins is not selectable in current tuning system
-      if (!maqamOrJins.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+      if (!maqamOrJins.isJinsPossible(availableNoteNames)) continue;
 
       const currentNotes = maqamOrJins.getNoteNames();
 
       // Add original jins if different from source
-      transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getBaseForm(allPitchClasses)] : [];
+      transpositions =
+        !sameNotes(currentNotes, sourceAscendingNotes) && modulationTonics.has(baseFormTonic(currentNotes))
+          ? [maqamOrJins.getBaseForm(allPitchClasses)]
+          : [];
 
       // Add all valid transpositions of this jins (from cache if provided)
       const jinsTranspositions = jinsTranspositionsCache?.get(maqamOrJins.getId())
         ?? calculateJinsForms(allPitchClasses, maqamOrJins, centsTolerance);
       jinsTranspositions.forEach((jinsTransposition: Jins) => {
-        if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
+        if (!modulationTonics.has(jinsTransposition.jinsPitchClasses[0]?.noteName)) return;
+        if (sameNotes(currentNotes, jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(jinsTransposition);
       });
     }
     // Process Maqam modulations
     else {
       // Skip if maqam is not selectable in current tuning system
-      if (!maqamOrJins.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) continue;
+      if (!maqamOrJins.isMaqamPossible(availableNoteNames)) continue;
 
       const currentAscendingNotes = maqamOrJins.getAscendingNoteNames();
 
@@ -298,7 +325,9 @@ export default function modulate(
 
       // Add original maqam if different from source
       transpositions =
-        JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) && !isSourceMaqamOnSourceTonic(currentAscendingNotes[0])
+        !sameNotes(currentAscendingNotes, sourceAscendingNotes) &&
+        !isSourceMaqamOnSourceTonic(currentAscendingNotes[0]) &&
+        modulationTonics.has(baseFormTonic(currentAscendingNotes))
           ? [maqamOrJins.getBaseForm(allPitchClasses)]
           : [];
 
@@ -306,7 +335,8 @@ export default function modulate(
       const maqamTranspositions = maqamTranspositionsCache?.get(maqamOrJins.getId())
         ?? calculateMaqamForms(allPitchClasses, allAjnas, maqamOrJins, centsTolerance);
       maqamTranspositions.forEach((maqamTransposition: Maqam) => {
-        if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
+        if (!modulationTonics.has(maqamTransposition.ascendingPitchClasses[0]?.noteName)) return;
+        if (sameNotes(currentAscendingNotes, maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         if (isSourceMaqamOnSourceTonic(maqamTransposition.ascendingPitchClasses[0]?.noteName)) return;
         transpositions.push(maqamTransposition);
       });
