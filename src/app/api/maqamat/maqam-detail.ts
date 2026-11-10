@@ -1,6 +1,5 @@
 import { entityToken, standardizeText } from "@/functions/export";
-import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
-import modulate from "@/functions/modulate";
+import { PitchSpaceForms } from "@/functions/pitchSpaceForms";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { spellMaqamDirections } from "@/app/api/pitch-spellings";
@@ -198,83 +197,20 @@ export interface MaqamDetailOptions {
 
 /**
  * Everything one (tuning system, starting note, options) request shares across
- * the maqām forms it describes. The transposition caches are built once, on
- * first use: every modulate() call scans every maqām and jins and would
- * otherwise recompute their transpositions itself (see
- * project_modulate-batch-caller-caches). They hold exactly what modulate()
- * would compute — same pitch classes, ajnās and centsTolerance — so the
- * analysis is identical with or without them.
+ * the maqām forms it describes: the forms and modulations of PitchSpaceForms,
+ * plus the request's options and entity lookups.
  */
-export class MaqamDetailContext {
-  private maqamTranspositionsCache?: Map<string, Maqam[]>;
-  private jinsTranspositionsCache?: Map<string, Jins[]>;
-  private readonly baseFormModulationCounts = new Map<string, { maqamat: number; ajnas: number }>();
+export class MaqamDetailContext extends PitchSpaceForms {
   private maqamEntities?: Map<string, { id: string }>;
   private jinsEntities?: Map<string, { id: string }>;
 
   constructor(
-    readonly pitchClasses: PitchClass[],
-    readonly ajnas: JinsData[],
-    readonly maqamatData: MaqamData[],
+    pitchClasses: PitchClass[],
+    ajnas: JinsData[],
+    maqamatData: MaqamData[],
     readonly options: MaqamDetailOptions
-  ) {}
-
-  /** Every maqām form of this maqām in this pitch space, the base form included */
-  transpositionsOf(maqam: MaqamData): Maqam[] {
-    const cached = this.maqamTranspositions().get(maqam.getId());
-    if (cached) return cached;
-    return calculateMaqamForms(this.pitchClasses, this.ajnas, maqam, this.options.centsTolerance);
-  }
-
-  /** Every rendering of the maqām with this id in the pitch space (empty if it cannot be built) */
-  maqamRenderings(maqamId: string): Maqam[] {
-    return this.maqamTranspositions().get(maqamId) ?? [];
-  }
-
-  /** Every rendering of the jins with this id in the pitch space (empty if it cannot be built) */
-  jinsRenderings(jinsId: string): Jins[] {
-    return this.jinsTranspositions().get(jinsId) ?? [];
-  }
-
-  private maqamTranspositions(): Map<string, Maqam[]> {
-    if (!this.maqamTranspositionsCache) {
-      const noteNames = this.pitchClasses.map((pc) => pc.noteName);
-      this.maqamTranspositionsCache = new Map(
-        this.maqamatData
-          .filter((maqam) => maqam.isMaqamPossible(noteNames))
-          .map((maqam) => [maqam.getId(), calculateMaqamForms(this.pitchClasses, this.ajnas, maqam, this.options.centsTolerance)])
-      );
-    }
-    return this.maqamTranspositionsCache;
-  }
-
-  private jinsTranspositions(): Map<string, Jins[]> {
-    if (!this.jinsTranspositionsCache) {
-      this.jinsTranspositionsCache = new Map(
-        this.ajnas.map((jins) => [jins.getId(), calculateJinsForms(this.pitchClasses, jins, this.options.centsTolerance)])
-      );
-    }
-    return this.jinsTranspositionsCache;
-  }
-
-  maqamatModulations(form: Maqam): MaqamatModulations {
-    return modulate(this.pitchClasses, this.ajnas, this.maqamatData, form, false, this.options.centsTolerance, this.maqamTranspositions()) as MaqamatModulations;
-  }
-
-  ajnasModulations(form: Maqam): AjnasModulations {
-    return modulate(this.pitchClasses, this.ajnas, this.maqamatData, form, true, this.options.centsTolerance, undefined, this.jinsTranspositions()) as AjnasModulations;
-  }
-
-  /** The modulation counts in `stats`, which describe the base form whatever form is shown */
-  baseFormCounts(maqam: MaqamData, baseForm: Maqam): { maqamat: number; ajnas: number } {
-    let counts = this.baseFormModulationCounts.get(maqam.getId());
-    if (!counts) {
-      const total = (modulations: object) =>
-        Object.values(modulations).filter((value) => Array.isArray(value)).reduce((sum, list) => sum + list.length, 0);
-      counts = { maqamat: total(this.maqamatModulations(baseForm)), ajnas: total(this.ajnasModulations(baseForm)) };
-      this.baseFormModulationCounts.set(maqam.getId(), counts);
-    }
-    return counts;
+  ) {
+    super(pitchClasses, ajnas, maqamatData, options.centsTolerance);
   }
 
   maqamEntity(id: string): { id: string } | undefined {
