@@ -1260,8 +1260,9 @@ export async function exportTuningSystem(
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
 
-        // Store base form for family classification (original form only)
-        if (!maqamTransposition.transposition) {
+        // Store the base form for family classification. Not `!transposition`:
+        // that also matches the octave renderings, and the last one would win.
+        if (maqamTransposition.isBaseForm) {
           maqamBaseFormMap.set(maqamTransposition.maqamId, maqamTransposition);
         }
 
