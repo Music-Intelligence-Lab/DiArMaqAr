@@ -677,7 +677,7 @@ export function canTransposeMaqamToNote(
  * @param maqam - Target maqām for calculating shift amount
  * @returns Object containing the transposed sayr and out-of-bounds flag
  */
-export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamData: MaqamData, maqam: Maqam): { transposedSayr: Sayr; hasOutOfBoundsNotes: boolean } {
+export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamData: MaqamData, maqam: Pick<Maqam, "ascendingPitchClasses">): { transposedSayr: Sayr; hasOutOfBoundsNotes: boolean } {
   const firstNoteInData = maqamData.getAscendingNoteNames()[0];
   const firstNoteInMaqam = maqam.ascendingPitchClasses[0].noteName;
 
@@ -695,10 +695,12 @@ export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamDa
 
   const originalStops = sayr.stops;
 
+  // A stop keeps the fields it has: only a note's value and a jins or maqām
+  // stop's starting note move
   const newStops = originalStops.map((stop) => {
-    const newNoteName = stop.type === "note" ? shiftOne(stop.value) : stop.value;
-    const newStartingNote = (stop.type === "jins" || stop.type === "maqam") && stop.startingNote ? shiftOne(stop.startingNote) : stop.startingNote;
-    return { ...stop, value: newNoteName, startingNote: newStartingNote };
+    if (stop.type === "note") return { ...stop, value: shiftOne(stop.value) };
+    if ((stop.type === "jins" || stop.type === "maqam") && stop.startingNote) return { ...stop, startingNote: shiftOne(stop.startingNote) };
+    return { ...stop };
   });
 
   return {

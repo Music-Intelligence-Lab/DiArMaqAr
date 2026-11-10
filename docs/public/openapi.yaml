@@ -613,7 +613,9 @@ paths:
           example: "true"
         - name: includeSuyur
           in: query
-          description: Include suyūr (melodic paths) data
+          description: |
+            Include the suyūr (melodic paths) that can be played on the maqām form requested,
+            each moved onto that form. See `suyur` in the response.
           schema:
             type: string
             enum: ["true", "false"]
@@ -5317,6 +5319,7 @@ paths:
         Return all maqāmāt that can be realized in a given tuning system beginning on a specific starting note name.
         
         - Feasibility is determined by comparing maqām note names to every pitch class the tuning system builds from that starting note, in all its octaves (the same pitch space transpositions and modulations are calculated in)
+        - `characteristics.hasSuyur` is true when at least one sayr can be played on the maqām's base form in this pitch space (the suyūr `GET /maqamat/{idName}?includeSuyur=true` returns)
       operationId: listTuningSystemMaqamat
       parameters:
         - name: id
@@ -11056,7 +11059,9 @@ paths:
                         description: (tuning system, starting note) pairs, one item each in `data`
                       maqamat: { type: integer }
                       ajnas: { type: integer }
-                      suyur: { type: integer }
+                      suyur:
+                        type: integer
+                        description: Every sayr in the archive, whether or not any tuning system can play it
                       sources: { type: integer }
                       patterns: { type: integer }
                   count:
@@ -11092,7 +11097,12 @@ paths:
                               properties:
                                 suyur:
                                   type: integer
-                                  description: Suyūr of the maqāmāt that can be built, as the app shows them
+                                  description: |
+                                    Suyūr that can be played on the base forms of the maqāmāt this pair can
+                                    build: the suyūr `GET /maqamat/{idName}?includeSuyur=true` returns for those
+                                    base forms, and the app's Suyūr tab shows. A sayr that names a missing note,
+                                    or a jins or maqām the pair does not list on that note, is not counted
+                                    (see `suyur` in the maqām detail response).
                         modulations:
                           type: object
                           description: Modulation counts summed over every form of each kind
@@ -11147,7 +11157,7 @@ paths:
                           total: 145
                           transpositions: 7383
                           octaveRenderings: 212
-                          suyur: 141
+                          suyur: 129
                         modulations:
                           fromBaseForms: { maqamat: 50523, ajnas: 20286 }
                           fromTranspositions: { maqamat: 1776759, ajnas: 815983 }
@@ -11302,7 +11312,7 @@ components:
               description: Descending scale differs from ascending
             hasSuyur:
               type: boolean
-              description: Has at least one documented sayr
+              description: Has at least one documented sayr in the archive, whether or not a given tuning system can play it
         availability:
           type: object
           required:
@@ -11547,7 +11557,9 @@ components:
           properties:
             isOctaveRepeating: { type: boolean }
             hasAsymmetricDescending: { type: boolean }
-            hasSuyur: { type: boolean }
+            hasSuyur:
+              type: boolean
+              description: At least one sayr can be played on this form (the suyūr `suyur` returns)
         comments:
           type: object
           properties:
@@ -11562,7 +11574,24 @@ components:
               page: { type: string }
         suyur:
           type: array
-          description: Optional - included when includeSuyur=true
+          description: |
+            Optional - included when includeSuyur=true.
+
+            Only the suyūr that can be played on this form, in this tuning system on this starting
+            note. A sayr is playable when every stop is:
+            - a note that the pitch space has, still inside it once the sayr is moved;
+            - a jins or maqām that the pitch space lists on that stop's note, as a base form,
+              taṣwīr or octave rendering, with its intervals within `centsTolerance`. Having its
+              notes is not enough: Cairo Congress (1929) on yegāh has nawā, ḥusaynī, awj and
+              kurdān, but no jins rāst on nawā, because its steps there (200, 149, 149 cents)
+              are not those of jins rāst (204, 149, 159);
+            - a direction.
+
+            On a taṣwīr or an octave rendering, each sayr is moved onto the form's tonic, and its
+            notes and starting notes name the moved pitches. A jins or maqām stop that names no
+            starting note sits on that jins's or maqām's own first note and moves with the sayr.
+            The Suyūr tab of the app shows the same suyūr, and the `/statistics` counts are made
+            from them.
           items:
             $ref: '#/components/schemas/Sayr'
 

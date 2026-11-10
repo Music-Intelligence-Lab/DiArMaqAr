@@ -5,6 +5,7 @@ import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByO
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
 import { calculateJinsForms, calculateMaqamForms, renderingsLookup } from "./transpose";
+import { playableSuyur } from "./playableSuyur";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
@@ -861,6 +862,18 @@ function pitchSpaceRenderings(pitchClasses: PitchClass[], allAjnas: JinsData[], 
 }
 
 /**
+ * The suyūr an export carries for one maqām form: those playable on it, moved
+ * onto it, as the app and the API show them (see playableSuyur).
+ */
+function exportedSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses">, pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number): Sayr[] {
+  const renderings = pitchSpaceRenderings(pitchClasses, allAjnas, allMaqamat, centsTolerance);
+  return playableSuyur(maqam, form, { pitchClasses, ajnas: allAjnas, maqamat: allMaqamat, renderings }).map((sayr) => ({
+    ...sayr,
+    version: sayr.version || maqam.getVersion(),
+  }));
+}
+
+/**
  * Helper function to create maqam-to-maqam lower octave modulations structure.
  * Creates proper 8vb (octave-below) data for maqam modulations.
  */
@@ -1458,10 +1471,7 @@ export async function exportTuningSystem(
                 ])
               )
             : undefined,
-          suyur: maqamOverview.getSuyur().map(sayr => ({
-            ...sayr,
-            version: sayr.version || maqamOverview.getVersion()
-          })),
+          suyur: exportedSuyur(maqamOverview, possibleMaqam, fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance),
           transposition: possibleMaqam.transposition,
           isBaseForm: possibleMaqam.isBaseForm,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
@@ -2035,10 +2045,7 @@ export async function exportMaqam(
             ])
           )
         : undefined,
-      suyur: maqamData.getSuyur().map(sayr => ({
-        ...sayr,
-        version: sayr.version || maqamData.getVersion()
-      })),
+      suyur: exportedSuyur(maqamData, maqamToExport, fullRangeTuningSystemPitchClasses, getAjnas(), getMaqamat(), centsTolerance),
       transposition: maqamToExport.transposition,
       isBaseForm: maqamToExport.isBaseForm,
       commentsEnglish: maqamData.getCommentsEnglish(),

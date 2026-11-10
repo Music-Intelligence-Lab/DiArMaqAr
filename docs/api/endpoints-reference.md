@@ -332,7 +332,10 @@ Requirements:
   - Example: `true`
 - `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeSuyur` (optional): Include the suyūr (melodic paths) that can be played on the maqām form requested,
+each moved onto that form.
+  each moved onto that form. See `suyur` in the response.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -3087,6 +3090,7 @@ GET /tuning-systems/{id}/{startingNote}/maqamat
 Return all maqāmāt that can be realized in a given tuning system beginning on a specific starting note name.
 
 - Feasibility is determined by comparing maqām note names to every pitch class the tuning system builds from that starting note, in all its octaves (the same pitch space transpositions and modulations are calculated in)
+- `characteristics.hasSuyur` is true when at least one sayr can be played on the maqām's base form in this pitch space (the suyūr `GET /maqamat/{idName}?includeSuyur=true` returns)
 
 
 **Path Parameters:**
@@ -5447,7 +5451,7 @@ curl "https://diarmaqar.net/api/statistics"
         "total": 145,
         "transpositions": 7383,
         "octaveRenderings": 212,
-        "suyur": 141
+        "suyur": 129
       },
       "modulations": {
         "fromBaseForms": {

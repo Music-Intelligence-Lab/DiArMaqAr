@@ -8,7 +8,7 @@ import { getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getC
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { formTypeOf } from "@/functions/formType";
-import MaqamData, { Maqam, MaqamatModulations, shiftMaqamByOctaves } from "@/models/Maqam";
+import MaqamData, { Maqam, MaqamatModulations, Sayr, shiftMaqamByOctaves } from "@/models/Maqam";
 import JinsData, { Jins, AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
 
 /**
@@ -443,6 +443,11 @@ export function buildMaqamDetail(
   const ascendingNoteNames = form.ascendingPitchClasses.map((pc) => pc.noteName);
   const descendingNoteNames = form.descendingPitchClasses.map((pc) => pc.noteName);
 
+  // The suyūr playable on this form, moved onto it: what the Suyūr tab shows
+  // and the statistics count. Judged only when a field asks for them.
+  let suyur: Sayr[] | undefined;
+  const playableSuyur = () => (suyur ??= ctx.playableSuyur(maqam, form));
+
   const availableForm = (t: Maqam) => {
     const tonic = t.ascendingPitchClasses[0].noteName;
     return {
@@ -493,7 +498,7 @@ export function buildMaqamDetail(
     characteristics: {
       isOctaveRepeating: ascendingNoteNames.length <= 7,
       hasAsymmetricDescending: JSON.stringify(ascendingNoteNames) !== JSON.stringify([...descendingNoteNames].reverse()),
-      hasSuyur: maqam.getSuyur().length > 0,
+      hasSuyur: playableSuyur().length > 0,
     },
     // Intentionally minimal: a client wanting a form's own analysis asks for
     // that form. The taṣwīr, then the octave renderings, each its own list.
@@ -547,7 +552,7 @@ export function buildMaqamDetail(
   }
   if (wants("ghammaz")) detail.ghammaz = ghammazEntries(form, form.ghammazNoteName, inArabic);
 
-  if (includeSuyur && wants("suyur")) detail.suyur = maqam.getSuyur();
+  if (includeSuyur && wants("suyur")) detail.suyur = playableSuyur();
 
   if (includeModulations && (wants("modulations") || (includeModulations8vb && wants("lowerOctaveModulations")))) {
     const maqamatModulations = ctx.maqamatModulations(form);

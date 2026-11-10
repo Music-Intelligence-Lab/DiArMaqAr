@@ -9,6 +9,10 @@ import { standardizeText } from "@/functions/export";
 import { formTypeOf, FormType } from "@/functions/formType";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { PitchSpaceForms } from "@/functions/pitchSpaceForms";
+import TuningSystem from "@/models/TuningSystem";
+import JinsData from "@/models/Jins";
+import MaqamData from "@/models/Maqam";
+import NoteName from "@/models/NoteName";
 
 /** How many of each kind of form a pitch space allows */
 export interface FormCounts {
@@ -34,7 +38,10 @@ export interface TuningSystemStatistics {
   startingNote: { idName: string; displayName: string };
   ajnas: FormCounts;
   maqamat: FormCounts & {
-    /** Suyūr of the maqāmāt that can be built: the suyūr the app shows for them */
+    /**
+     * Suyūr playable on the base forms of the maqāmāt that can be built: the
+     * suyūr the app and the API show for those base forms (see playableSuyur)
+     */
     suyur: number;
   };
   /** Modulations kept apart by the kind of form they start from */
@@ -56,6 +63,7 @@ export interface ArchiveStatistics {
     tuningSystemStartingNotes: number;
     maqamat: number;
     ajnas: number;
+    /** Every sayr in the archive, playable or not */
     suyur: number;
     sources: number;
     patterns: number;
@@ -83,13 +91,17 @@ const IGNORED_FIELDS = new Set([
   "ghammaz",
 ]);
 
+const sayrStops = (sayr: { stops: { type: string; value: string; startingNote?: string }[] }) =>
+  sayr.stops.map(({ type, value, startingNote }) => ({ type, value, startingNote }));
+
 const countedFields = (entries: object[]) =>
   entries.map((entry) =>
     Object.fromEntries(
       Object.entries(entry)
         .filter(([key]) => !IGNORED_FIELDS.has(key))
-        // Only how many suyūr a maqām has is counted, not what they say
-        .map(([key, value]) => (key === "suyur" && Array.isArray(value) ? [key, value.length] : [key, value]))
+        // Whether a sayr is playable depends only on its stops, so each sayr is
+        // hashed as its stops alone, not its source, comments or version
+        .map(([key, value]) => (key === "suyur" && Array.isArray(value) ? [key, value.map(sayrStops)] : [key, value]))
     )
   );
 
@@ -115,6 +127,65 @@ const modulationBucket: Record<FormType, keyof TuningSystemStatistics["modulatio
   octaveRendering: "fromOctaveRenderings",
 };
 
+/** Statistics for one tuning system on one starting note: one row of ArchiveStatistics */
+export function pitchSpaceStatistics(
+  tuningSystem: TuningSystem,
+  startingNote: NoteName,
+  allAjnas: JinsData[],
+  allMaqamat: MaqamData[]
+): TuningSystemStatistics {
+  const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
+  const forms = new PitchSpaceForms(pitchClasses, allAjnas, allMaqamat);
+
+  const ajnas: FormCounts = { possible: 0, total: allAjnas.length, transpositions: 0, octaveRenderings: 0 };
+  const availableNoteNames = pitchClasses.map((pitchClass) => pitchClass.noteName);
+  for (const jins of allAjnas) {
+    if (!jins.isJinsPossible(availableNoteNames)) continue;
+    ajnas.possible++;
+    for (const form of forms.jinsRenderings(jins.getId())) {
+      const formType = formTypeOf(form);
+      if (formType === "transposition") ajnas.transpositions++;
+      if (formType === "octaveRendering") ajnas.octaveRenderings++;
+    }
+  }
+
+  const maqamat: TuningSystemStatistics["maqamat"] = { possible: 0, total: allMaqamat.length, transpositions: 0, octaveRenderings: 0, suyur: 0 };
+  const modulations: TuningSystemStatistics["modulations"] = {
+    fromBaseForms: { maqamat: 0, ajnas: 0 },
+    fromTranspositions: { maqamat: 0, ajnas: 0 },
+    fromOctaveRenderings: { maqamat: 0, ajnas: 0 },
+  };
+  for (const maqam of allMaqamat) {
+    const maqamForms = forms.maqamRenderings(maqam.getId());
+    if (maqamForms.length === 0) continue;
+    maqamat.possible++;
+    const baseForm = maqamForms.find((form) => form.isBaseForm);
+    if (!baseForm) throw new Error(`Maqām ${maqam.getName()} (id ${maqam.getId()}) has forms in ${tuningSystem.getId()} on ${startingNote} but no base form`);
+    maqamat.suyur += forms.playableSuyur(maqam, baseForm).length;
+    for (const form of maqamForms) {
+      const formType = formTypeOf(form);
+      if (formType === "transposition") maqamat.transpositions++;
+      if (formType === "octaveRendering") maqamat.octaveRenderings++;
+      const counts = forms.modulationCounts(form);
+      modulations[modulationBucket[formType]].maqamat += counts.maqamat;
+      modulations[modulationBucket[formType]].ajnas += counts.ajnas;
+    }
+  }
+
+  return {
+    tuningSystem: {
+      id: tuningSystem.getId(),
+      idName: standardizeText(tuningSystem.getId()),
+      displayName: tuningSystem.stringify(),
+      year: tuningSystem.getYear(),
+    },
+    startingNote: { idName: standardizeText(startingNote), displayName: startingNote },
+    ajnas,
+    maqamat,
+    modulations,
+  };
+}
+
 /**
  * Statistics for every tuning system on every starting note. Takes about a
  * minute: it runs modulate() twice for each of some 80,000 maqām forms.
@@ -129,56 +200,7 @@ export function computeArchiveStatistics(onProgress?: (row: TuningSystemStatisti
 
   for (const tuningSystem of tuningSystems) {
     for (const noteNames of tuningSystem.getNoteNameSets()) {
-      const startingNote = noteNames[0];
-      const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
-      const forms = new PitchSpaceForms(pitchClasses, allAjnas, allMaqamat);
-
-      const ajnas: FormCounts = { possible: 0, total: allAjnas.length, transpositions: 0, octaveRenderings: 0 };
-      const availableNoteNames = pitchClasses.map((pitchClass) => pitchClass.noteName);
-      for (const jins of allAjnas) {
-        if (!jins.isJinsPossible(availableNoteNames)) continue;
-        ajnas.possible++;
-        for (const form of forms.jinsRenderings(jins.getId())) {
-          const formType = formTypeOf(form);
-          if (formType === "transposition") ajnas.transpositions++;
-          if (formType === "octaveRendering") ajnas.octaveRenderings++;
-        }
-      }
-
-      const maqamat: TuningSystemStatistics["maqamat"] = { possible: 0, total: allMaqamat.length, transpositions: 0, octaveRenderings: 0, suyur: 0 };
-      const modulations: TuningSystemStatistics["modulations"] = {
-        fromBaseForms: { maqamat: 0, ajnas: 0 },
-        fromTranspositions: { maqamat: 0, ajnas: 0 },
-        fromOctaveRenderings: { maqamat: 0, ajnas: 0 },
-      };
-      for (const maqam of allMaqamat) {
-        const maqamForms = forms.maqamRenderings(maqam.getId());
-        if (maqamForms.length === 0) continue;
-        maqamat.possible++;
-        // Every sayr of a maqām the app can show, as the app shows them
-        maqamat.suyur += maqam.getSuyur().length;
-        for (const form of maqamForms) {
-          const formType = formTypeOf(form);
-          if (formType === "transposition") maqamat.transpositions++;
-          if (formType === "octaveRendering") maqamat.octaveRenderings++;
-          const counts = forms.modulationCounts(form);
-          modulations[modulationBucket[formType]].maqamat += counts.maqamat;
-          modulations[modulationBucket[formType]].ajnas += counts.ajnas;
-        }
-      }
-
-      const row: TuningSystemStatistics = {
-        tuningSystem: {
-          id: tuningSystem.getId(),
-          idName: standardizeText(tuningSystem.getId()),
-          displayName: tuningSystem.stringify(),
-          year: tuningSystem.getYear(),
-        },
-        startingNote: { idName: standardizeText(startingNote), displayName: startingNote },
-        ajnas,
-        maqamat,
-        modulations,
-      };
+      const row = pitchSpaceStatistics(tuningSystem, noteNames[0], allAjnas, allMaqamat);
       rows.push(row);
       onProgress?.(row);
     }

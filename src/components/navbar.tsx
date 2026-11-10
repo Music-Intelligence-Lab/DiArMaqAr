@@ -7,6 +7,7 @@ import useAppContext from "@/contexts/app-context";
 import useMenuContext from "@/contexts/menu-context";
 import useLanguageContext from "@/contexts/language-context";
 import useSoundContext from "@/contexts/sound-context";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 import { Sayr } from "@/models/Maqam";
 import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NavigationMenu from "./navigation-menu";
@@ -37,12 +38,10 @@ export default function Navbar() {
     allPitchClasses,
   } = useAppContext();
 
-  const selectedSayr: Sayr | null =
-    selectedMaqamData && maqamSayrId
-      ? selectedMaqamData
-          .getSuyur()
-          .find((sayr) => sayr.id === maqamSayrId) || null
-      : null;
+  // The Suyūr tab lists only the suyūr playable on the form shown, so its count
+  // and the selected sayr are read from that same list
+  const { playableSuyur } = useTranspositionsContext();
+  const selectedSayr: Sayr | null = maqamSayrId ? playableSuyur.find((sayr) => sayr.id === maqamSayrId) ?? null : null;
 
   const selectedSayrSource = selectedSayr
     ? sources.find((source) => source.getId() === selectedSayr.sourceId)
@@ -282,7 +281,7 @@ export default function Navbar() {
               {t('tabs.suyur')}
               {selectedMaqamData && (
                 <span className="navbar__bottom-bar-item_tab-count">
-                  {selectedMaqamData.getSuyur().length}
+                  {playableSuyur.length}
                 </span>
               )}
             </span>

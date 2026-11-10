@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { entityToken, standardizeText } from "@/functions/export";
-import { calculateMaqamForms } from "@/functions/transpose";
+import { PitchSpaceForms } from "@/functions/pitchSpaceForms";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import PitchClass from "@/models/PitchClass";
@@ -169,6 +169,7 @@ export async function GET(
     // The pitch space every maqām is checked against: the same note names the
     // transpositions below are calculated in (see getPitchSpaceNoteNames).
     const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
+    const forms = new PitchSpaceForms(pitchClasses, ajnas, maqamatData, centsTolerance);
 
     // Sequential spelling logic for degree detail objects (englishName + solfege).
     // We import lazily to keep the default list endpoint fast.
@@ -204,12 +205,7 @@ export async function GET(
         const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
 
         // Calculate transpositions and get the base form
-        const transpositions = calculateMaqamForms(
-          pitchClasses,
-          ajnas,
-          maqam,
-          centsTolerance
-        );
+        const transpositions = forms.transpositionsOf(maqam);
         // The base form. Not `!t.transposition` — that is also false
         // for the base form's octave renderings.
         const baseForm = transpositions.find((t: any) => t.isBaseForm);
@@ -228,9 +224,8 @@ export async function GET(
         const hasAsymmetricDescending =
           JSON.stringify(ascendingNotes) !== JSON.stringify(descendingNotes);
 
-        // Check for suyur
-        const suyur = maqam.getSuyur();
-        const hasSuyur = suyur && suyur.length > 0;
+        // Whether the base form has a sayr playable in this pitch space
+        const hasSuyur = forms.playableSuyur(maqam, baseForm).length > 0;
 
         const maqamNamespace = buildEntityNamespace(
           {

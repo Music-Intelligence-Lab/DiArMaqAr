@@ -17,8 +17,9 @@
 import React, { createContext, useContext, useMemo } from "react";
 import useAppContext from "./app-context";
 import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
+import { playableSuyur } from "@/functions/playableSuyur";
 import { Jins } from "@/models/Jins";
-import { Maqam } from "@/models/Maqam";
+import { Maqam, Sayr } from "@/models/Maqam";
 
 /**
  * Interface defining the structure of the Transpositions Context.
@@ -35,6 +36,12 @@ interface TranspositionsContextInterface {
   allJinsTranspositionsMap: Map<string, Jins[]>;
   /** Map of all maqam IDs to their complete transposition sets */
   allMaqamTranspositionsMap: Map<string, Maqam[]>;
+  /**
+   * The suyūr of the selected maqām that can be played on the form shown (the
+   * selected transposition, else the base form), each moved onto that form.
+   * The one rule the API and the statistics also use (see playableSuyur).
+   */
+  playableSuyur: Sayr[];
 }
 
 /** React context for transposition calculations */
@@ -50,7 +57,7 @@ const TranspositionsContext = createContext<TranspositionsContextInterface | nul
  * @returns JSX element providing the transpositions context
  */
 export function TranspositionsContextProvider({ children }: { children: React.ReactNode }) {
-  const { selectedJinsData, selectedMaqamData, ajnas, maqamat, allPitchClasses, centsTolerance } = useAppContext();
+  const { selectedJinsData, selectedMaqamData, selectedMaqam, ajnas, maqamat, allPitchClasses, centsTolerance } = useAppContext();
 
   // ==================== SELECTED ITEM TRANSPOSITIONS ====================
   
@@ -102,6 +109,24 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
     return map;
   }, [maqamat, ajnas, allPitchClasses, centsTolerance]);
 
+  const playableSuyurOfShownForm = useMemo(() => {
+    if (!selectedMaqamData) return [];
+    // No base form means no tuning system is loaded yet: nothing can be played
+    const form = selectedMaqam ?? maqamTranspositions.find((transposition) => transposition.isBaseForm);
+    if (!form) return [];
+    const formsOf = <T,>(map: Map<string, T[]>, kind: string) => (id: string) => {
+      const forms = map.get(id);
+      if (!forms) throw new Error(`No ${kind} with id ${id} in the transpositions map`);
+      return forms;
+    };
+    return playableSuyur(selectedMaqamData, form, {
+      pitchClasses: allPitchClasses,
+      ajnas,
+      maqamat,
+      renderings: { maqam: formsOf(allMaqamTranspositionsMap, "maqām"), jins: formsOf(allJinsTranspositionsMap, "jins") },
+    });
+  }, [selectedMaqamData, selectedMaqam, maqamTranspositions, allPitchClasses, ajnas, maqamat, allMaqamTranspositionsMap, allJinsTranspositionsMap]);
+
   return (
     <TranspositionsContext.Provider
       value={{
@@ -109,6 +134,7 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
         maqamTranspositions,
         allJinsTranspositionsMap,
         allMaqamTranspositionsMap,
+        playableSuyur: playableSuyurOfShownForm,
       }}
     >
       {children}
