@@ -81,7 +81,7 @@ function parseModulationsParameter(param: string, maqamat: MaqamData[]): Modulat
     const matched = resolveEntityId(base, maqamat);
     if (!matched) break;
 
-    // A hop always names a tonic; a bare idName means the taḥlīl of that maqām.
+    // A hop always names a tonic; a bare idName means the base form of that maqām.
     const tonicIdName = matched.tonicIdName ?? standardizeText(matched.entity.getAscendingNoteNames()[0] ?? "");
     if (!tonicIdName) break;
 
@@ -263,7 +263,7 @@ export default function AppClient() {
       params.push(`centsTolerance=${centsTolerance}`);
     }
 
-    // A selected transposition contributes its tonic to the token; the taḥlīl is
+    // A selected transposition contributes its tonic to the token; the base form is
     // the bare idName.
     if (selectedJinsData) {
       params.push(`jins=${createEntityToken(selectedJinsData.getIdName(), selectedJins?.jinsPitchClasses[0].noteName)}`);

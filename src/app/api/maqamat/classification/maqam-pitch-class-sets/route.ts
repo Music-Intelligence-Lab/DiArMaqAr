@@ -274,7 +274,7 @@ export async function GET(request: Request) {
           maqamDisplayName: transpositionNamespace.displayName,
           baseMaqamIdName: baseMaqamIdName, // Used for filtering, removed before response
           isTransposed: info.maqam.transposition,
-          // Not the inverse of isTransposed: an octave-register sibling of the
+          // Not the inverse of isTransposed: an octave rendering of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
           formType: formTypeOf(info.maqam),
@@ -288,9 +288,9 @@ export async function GET(request: Request) {
 
       // Every member is listed, octave equivalents included: maqām bayyāt on
       // yegāh and on nawā are two transpositions of the set, not one.
-      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by base maqam name
+      // Sort compatible maqamat: base-form versions first, then by base maqam name
       const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
-        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        // PRIORITY 1: Base-form versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
         }

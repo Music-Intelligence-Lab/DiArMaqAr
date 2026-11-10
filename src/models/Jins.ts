@@ -32,7 +32,7 @@ export interface JinsDataInterface {
  * This class represents the "template" or "blueprint" of a jins as it would appear
  * in theoretical texts or JSON data files. To create an actual playable jins with
  * specific pitches, this data must be combined with a tuning system through the
- * getTahlil() method to produce a Jins interface instance.
+ * getBaseForm() method to produce a Jins interface instance.
  * 
  * **Key Distinction**: JinsData contains only note names (cultural/theoretical
  * identifiers), while the Jins interface contains actual pitch classes with
@@ -128,7 +128,7 @@ export default class JinsData {
    * Gets the array of note names that define this jins.
    * 
    * These are abstract cultural identifiers without connection to specific
-   * pitch frequencies. To get actual playable pitches, use getTahlil() with
+   * pitch frequencies. To get actual playable pitches, use getBaseForm() with
    * a specific tuning system.
    * 
    * @returns Array of note names
@@ -212,7 +212,7 @@ export default class JinsData {
   }
 
   /**
-   * Converts this abstract jins into a concrete, playable tahlil (original form).
+   * Converts this abstract jins into a concrete, playable base form.
    * 
    * This is the crucial method that bridges the gap between abstract note names
    * and actual musical pitch classes. It takes the jins's note names and matches them
@@ -223,14 +223,14 @@ export default class JinsData {
    * - Intervallic relationships between pitches
    * - Playable musical content
    * 
-   * The resulting Jins represents the "tahlil" (original/root form) of the jins,
+   * The resulting Jins represents the base form of the jins,
    * as opposed to "taswir" (transpositions) which would start from different
    * pitch classes but maintain the same intervallic patterns.
    * 
    * @param allPitchClasses - All pitch classes available in the tuning system
    * @returns Jins interface instance with concrete pitches and intervals
    */
-  getTahlil(allPitchClasses: PitchClass[]): Jins {
+  getBaseForm(allPitchClasses: PitchClass[]): Jins {
       const pitchClasses = allPitchClasses.filter((pitchClass) => this.noteNames.includes(pitchClass.noteName));
       const pitchClassIntervals: PitchClassInterval[] = getPitchClassIntervals(pitchClasses);
       return {
@@ -270,12 +270,16 @@ export default class JinsData {
  * relationships. Unlike JinsData (which contains only abstract note names),
  * a Jins interface instance is playable and can be used for audio synthesis.
  * 
- * **Tahlil vs Taswir**:
- * - **Tahlil** (transposition: false): The original form of the jins starting
- *   from its traditional root note (e.g., Jins Kurd starting on dūgāh)
- * - **Taswir** (transposition: true): A transposition of the jins starting
- *   from a different pitch class while preserving intervallic relationships
- *   (e.g., Jins Kurd al-Muhayyar starting on muhayyar/octave of dūgāh)
+ * **The three kinds of form** (read with formTypeOf in @/functions/formType):
+ * - **Base form** (isBaseForm: true): the jins on its traditional
+ *   tonic (jins kurd on dūgāh)
+ * - **Octave rendering** (transposition: false, isBaseForm: false): the base form
+ *   one or more octaves away, on the same modal degree (jins kurd al-muḥayyar,
+ *   muḥayyar being the octave of dūgāh). Not a taṣwīr: only the register moves.
+ * - **Taṣwīr**, a transposition (transposition: true): the jins moved to
+ *   another modal degree, keeping its intervals (jins kurd al-ḥusaynī)
+ *
+ * Only a taṣwīr is a transposition.
  * 
  * The transposition algorithm uses pattern matching to find all valid starting
  * positions within the tuning system where the complete interval pattern can
@@ -287,32 +291,33 @@ export interface Jins {
   
   /** 
    * Name of this jins instance.
-   * For tahlil: original name (e.g., "Jins Kurd")
-   * For taswir: includes transposition info (e.g., "Jins Kurd al-Muhayyar")
+   * For the base form: the jins's own name (e.g., "Jins Kurd")
+   * For every other form: names its tonic (e.g., "Jins Kurd al-Husayni")
    */
   name: string;
   
   /**
-   * Whether this is a transposition (taswir) or original form (tahlil).
-   * false = tahlil (original), true = taswir (transposition)
+   * Whether this form is a taṣwīr (transposition).
+   * true = taṣwīr; false = the base form OR one of its octave renderings.
+   * False alone does not identify the base form — use isBaseForm, or formTypeOf.
    */
   transposition: boolean;
 
   /**
-   * Whether this is the base form (tahlil): the canonical form of this jins,
-   * from which its transpositions are derived. Every transposition of one jins
+   * Whether this is the base form: the canonical form of this jins,
+   * from which its other forms are derived. Every transposition of one jins
    * repeats that jins's jinsId, and exactly one entry is the base form.
    *
-   * Distinct from `transposition`, which stays false for octave/register
-   * siblings of the tahlil (e.g. jins bayyāt al-muḥayyar) because a register
+   * Distinct from `transposition`, which stays false for octave renderings
+   * of the base form (e.g. jins bayyāt al-muḥayyar) because a register
    * shift is not taṣwīr. The base form is the one on the jins's canonical
    * first note. A jins the tuning system cannot build yields nothing at all,
    * so the guarantee reads: exactly one base form whenever the list is
    * non-empty.
    *
-   * - transposition false + isBaseForm true  = tahlil (base form)
-   * - transposition false + isBaseForm false = octave/register sibling
-   * - transposition true  + isBaseForm false = taswir (transposition)
+   * - transposition false + isBaseForm true  = base form
+   * - transposition false + isBaseForm false = octave rendering
+   * - transposition true  + isBaseForm false = taṣwīr (transposition)
    */
   isBaseForm: boolean;
 
@@ -324,7 +329,7 @@ export interface Jins {
   
   /** 
    * Intervallic relationships between consecutive pitch classes.
-   * These intervals remain consistent between tahlil and taswir forms.
+   * These intervals remain consistent between the base form and its transpositions.
    */
   jinsPitchClassIntervals: PitchClassInterval[];
 }
@@ -371,7 +376,7 @@ export interface AjnasModulations {
 
 /**
  * The same jins form one or more octaves away, taken from `renderings` (every
- * rendering of this jins in the pitch space, as calculateJinsTranspositions
+ * rendering of this jins in the pitch space, as calculateJinsForms
  * returns them) so its name, idName and flags are the canonical ones. See
  * shiftMaqamByOctaves.
  *

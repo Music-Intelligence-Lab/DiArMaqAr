@@ -2,7 +2,8 @@ import TuningSystem from "@/models/TuningSystem";
 import MaqamData, { Maqam } from "@/models/Maqam";
 import PitchClass from "@/models/PitchClass";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
+import { formTypeOf } from "@/functions/formType";
 import { chooseSetNamesake, maqamFamilyReader, setNamedAfter } from "@/functions/nameClassificationSet";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 
@@ -63,16 +64,17 @@ export interface ClassificationResult {
 }
 
 /**
- * Gets all transpositions of a maqam in the specified tuning system
+ * Gets every form of a maqam in the specified tuning system: the base form, its
+ * octave renderings and every taṣwīr (see formTypeOf)
  */
-export function getMaqamTranspositions(
+export function getMaqamForms(
   maqamData: MaqamData,
   tuningSystem: TuningSystem,
   startingNote: string,
   ajnas: any[]
 ): Maqam[] {
   const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
-  return calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, 5);
+  return calculateMaqamForms(allPitchClasses, ajnas, maqamData, 5);
 }
 
 /**
@@ -305,7 +307,7 @@ export function arePitchClassSetsEqual(
  * pitch classes of a single maqam?"
  *
  * Algorithm:
- * 1. Two-pass processing: tahlil (base) versions first, then transpositions
+ * 1. Two-pass processing: base-form versions first, then transpositions
  * 2. For each unprocessed maqam transposition:
  *    a. Extract all unique pitch classes (ascending + descending, octave-equivalent)
  *    b. Create a maqam-based pitch class set
@@ -337,7 +339,7 @@ export function groupMaqamatByMaqamPitchClassSets(
   const incompatibleMaqamat: IncompatibleMaqam[] = [];
   const processedMaqamat = new Set<string>(); // Track processed maqam/transposition combinations
 
-  // Cache transpositions per maqam. getMaqamTranspositions is deterministic for
+  // Cache transpositions per maqam. getMaqamForms is deterministic for
   // a fixed (maqamData, tuningSystem, startingNote, ajnas) tuple — the only
   // variable across the nested loops is maqamData — yet it runs thousands of
   // times with identical inputs. Without this cache, the Netlify function
@@ -347,7 +349,7 @@ export function groupMaqamatByMaqamPitchClassSets(
     const key = maqamData.getId();
     let cached = transpositionsCache.get(key);
     if (!cached) {
-      cached = getMaqamTranspositions(maqamData, tuningSystem, startingNote, ajnas);
+      cached = getMaqamForms(maqamData, tuningSystem, startingNote, ajnas);
       transpositionsCache.set(key, cached);
     }
     return cached;
@@ -363,21 +365,21 @@ export function groupMaqamatByMaqamPitchClassSets(
     hasUnprocessed = false;
     let foundNewSet = false;
 
-    // IMPORTANT: Two-pass approach to prioritize tahlil versions globally
-    // Pass 1: Process ALL tahlil (non-transposed) versions first
-    // Pass 2: Process ALL transposed versions
+    // IMPORTANT: Two-pass approach to prioritize untransposed forms globally
+    // Pass 1: every form that is not a taṣwīr — the base form and its octave renderings
+    // Pass 2: every taṣwīr
 
     for (let pass = 1; pass <= 2; pass++) {
-      const processingTahlil = (pass === 1);
+      const processingBaseForms = (pass === 1);
 
       for (const maqamData of maqamat) {
         // Get all transpositions of this maqam (cached)
         const transpositions = getCachedTranspositions(maqamData);
 
         // Filter based on current pass
-        const transpositionsToProcess = processingTahlil
-          ? transpositions.filter(t => !t.transposition)  // Pass 1: Only tahlil
-          : transpositions.filter(t => t.transposition);   // Pass 2: Only transpositions
+        const transpositionsToProcess = processingBaseForms
+          ? transpositions.filter(t => formTypeOf(t) !== "transposition")  // Pass 1: the base form and its octave renderings
+          : transpositions.filter(t => formTypeOf(t) === "transposition");  // Pass 2: every taṣwīr
 
         for (const transposition of transpositionsToProcess) {
           // Create unique key for this maqam/transposition combination

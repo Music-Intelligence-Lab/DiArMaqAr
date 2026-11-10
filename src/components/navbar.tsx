@@ -50,7 +50,7 @@ export default function Navbar() {
 
   const totalModulations = useMemo(() => {
     if (!selectedMaqamData) return null;
-    const transposition = selectedMaqamData.getTahlil(allPitchClasses);
+    const transposition = selectedMaqamData.getBaseForm(allPitchClasses);
     const modulations = getModulations(transposition);
     return calculateNumberOfModulations(modulations);
   }, [selectedMaqamData, getModulations]);

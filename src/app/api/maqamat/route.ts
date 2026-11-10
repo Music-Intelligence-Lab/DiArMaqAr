@@ -7,7 +7,7 @@ import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
 import fs from "fs";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
@@ -178,21 +178,20 @@ export async function GET(request: Request) {
             );
             
             // Calculate transpositions to get ajnas analysis
-            const transpositions = calculateMaqamTranspositions(
+            const transpositions = calculateMaqamForms(
               pitchClasses,
               ajnas,
               maqam,
-              true, // withTahlil
               centsTolerance
             );
             
-            // Get the tahlil (base form). Not `!t.transposition` — that is also
-            // false for the tahlil's octave-register siblings.
-            const tahlil = transpositions.find(t => t.isBaseForm);
+            // Get the base form. Not `!t.transposition` — that is also
+            // false for the base form's octave renderings.
+            const baseForm = transpositions.find(t => t.isBaseForm);
             
-            if (tahlil) {
+            if (baseForm) {
               // Use proper classification function
-              const classification = classifyMaqamFamily(tahlil);
+              const classification = classifyMaqamFamily(baseForm);
               familyDisplay = classification.familyName;
               familyId = standardizeText(familyDisplay);
             }

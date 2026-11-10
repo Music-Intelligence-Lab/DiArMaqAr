@@ -175,10 +175,10 @@ const MaqamTranspositions: React.FC = () => {
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
-    // Always open tahlil (first element) on load
+    // Always open the base form (first element) on load
     if (maqamTranspositions && maqamTranspositions.length > 0) {
-      const tahlilName = maqamTranspositions[0].name;
-      setOpenTranspositions([tahlilName]);
+      const baseFormName = maqamTranspositions[0].name;
+      setOpenTranspositions([baseFormName]);
     }
   }, [selectedMaqamData, selectedTuningSystem, maqamTranspositions]);
 
@@ -241,14 +241,14 @@ const MaqamTranspositions: React.FC = () => {
           }
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
-        // Case 2: No maqam is selected (tahlil case) — same immediate open
-        const tahlilName = maqamTranspositions[0].name;
-        setOpenTranspositions([tahlilName]);
+        // Case 2: No maqam is selected (base-form case) — same immediate open
+        const baseFormName = maqamTranspositions[0].name;
+        setOpenTranspositions([baseFormName]);
 
         // Ensure first batch is visible
         setVisibleCount(BATCH_SIZE);
 
-        // Scroll to tahlil (same shared debounced slot as above)
+        // Scroll to the base form (same shared debounced slot as above)
         if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = window.setTimeout(() => {
           if (maqamTranspositions[0].ascendingPitchClasses?.length > 0) {
@@ -397,7 +397,7 @@ const MaqamTranspositions: React.FC = () => {
             // Only the pitch class moves. The name is inherited verbatim from the
             // tonic's jins: a register shift is not taṣwīr, so the octave-completion
             // cell keeps the base form (jins nahāwand, not jins nahāwand al-kurdān),
-            // matching how calculateMaqamTranspositions names ajnās that land on an
+            // matching how calculateMaqamForms names ajnās that land on an
             // octave sibling in maqāmāt long enough to reach one on their own.
             octaveTransposition = octaveTransposition.map((jins) => ({
               ...jins,
@@ -794,8 +794,8 @@ const MaqamTranspositions: React.FC = () => {
 
       const transposition = maqam.transposition;
       const pitchClasses = ascending ? ascendingTranspositionPitchClasses : descendingTranspositionPitchClasses;
-      // Octave-register siblings share transposition=false but only the canonical
-      // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
+      // Octave renderings share transposition=false but only the canonical
+      // tonic in its proper octave gets the base-form-style title (PAO name + badge)
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedMaqamData?.getAscendingNoteNames()[0];
       const oppositePitchClasses = ascending ? descendingTranspositionPitchClasses : ascendingTranspositionPitchClasses;
       const intervals = ascending ? ascendingIntervals : descendingIntervals;
@@ -1555,7 +1555,7 @@ const MaqamTranspositions: React.FC = () => {
               // on the octave registers of the tonic: they carry
               // transposition=false, so loading one sets selectedMaqam to null
               // (see the select-and-load handler) AND satisfies isAnalysis —
-              // which lit the taḥlīl instead of the register the reader chose.
+              // which lit the base form instead of the register the reader chose.
               // The tonic and its octave differ in octave alone, so both parts
               // of the key are needed.
               const loadedTonic = selectedPitchClasses[0];

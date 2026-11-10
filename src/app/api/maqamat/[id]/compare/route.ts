@@ -7,7 +7,7 @@ import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
@@ -522,15 +522,15 @@ export async function GET(
       }
 
       // Calculate transpositions
-      const transpositions = calculateMaqamTranspositions(pitchClasses, ajnas, maqam, true, centsTolerance);
+      const transpositions = calculateMaqamForms(pitchClasses, ajnas, maqam, centsTolerance);
 
-      // The base form, i.e. the canonical-octave tahlil. `isBaseForm` is set on
+      // The base form, i.e. the form in the canonical octave. `isBaseForm` is set on
       // exactly the entry whose tonic is the canonical note name, so it already
-      // excludes octave-register siblings such as `qarār dūgāh` beside `dūgāh`.
-      const canonicalTahlil = transpositions.find((t) => t.isBaseForm);
+      // excludes octave renderings such as `qarār dūgāh` beside `dūgāh`.
+      const canonicalBaseForm = transpositions.find((t) => t.isBaseForm);
 
       // Find specific transposition if requested
-      let selectedTransposition = canonicalTahlil ?? transpositions[0];
+      let selectedTransposition = canonicalBaseForm ?? transpositions[0];
       if (cellTransposeTo) {
         const found = transpositions.find(
           (t) => standardizeText(t.ascendingPitchClasses[0].noteName) === standardizeText(cellTransposeTo)
@@ -548,9 +548,9 @@ export async function GET(
         selectedTransposition = found;
       }
 
-      // Get family classification from tahlil (first transposition)
-      const tahlil = transpositions[0];
-      const familyClassification = classifyMaqamFamily(tahlil);
+      // Get family classification from the base form (first form)
+      const baseForm = transpositions[0];
+      const familyClassification = classifyMaqamFamily(baseForm);
 
       // Determine if transposed
       const originalTonic = maqam.getAscendingNoteNames()[0];
@@ -592,7 +592,7 @@ export async function GET(
             ? getMaqamNameDisplayAr(selectedTransposition.name)
             : undefined,
           extras: {
-            // Distinct from isTransposed: an octave-register sibling of the
+            // Distinct from isTransposed: an octave rendering of the
             // base form is not a taswir, so both are false for it.
             isBaseForm: selectedTransposition.isBaseForm,
             formType: formTypeOf(selectedTransposition),

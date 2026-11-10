@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { entityToken, standardizeText } from "@/functions/export";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
@@ -188,19 +188,18 @@ export async function GET(
     for (const jins of ajnasData) {
       if (!jins.isJinsPossible(pitchSpaceNoteNames)) continue;
 
-      // Calculate transpositions and get tahlil
-      const transpositions = calculateJinsTranspositions(
+      // Calculate transpositions and get the base form
+      const transpositions = calculateJinsForms(
         pitchClasses,
         jins,
-        true,
         centsTolerance
       );
-      // The tahlil (base form). Not `!t.transposition` — that is also false for
-      // the tahlil's octave-register siblings.
-      const tahlil = transpositions.find((t: any) => t.isBaseForm);
+      // The base form. Not `!t.transposition` — that is also false for
+      // the base form's octave renderings.
+      const baseForm = transpositions.find((t: any) => t.isBaseForm);
 
-      // Skip if no tahlil found (shouldn't happen but TypeScript safety)
-      if (!tahlil) {
+      // Skip if no base form is found (shouldn't happen but TypeScript safety)
+      if (!baseForm) {
         continue;
       }
 
@@ -215,10 +214,10 @@ export async function GET(
         },
         {
           version: jins.getVersion(),
-          // Every item on this listing is the tahlil; the taswir are listed
-          // separately under `transpositions`. Taken from the resolved tahlil
+          // Every item on this listing is the base form; the taswir are listed
+          // separately under `transpositions`. Taken from the resolved base form
           // rather than hard-coded true.
-          extras: { isBaseForm: tahlil.isBaseForm, formType: formTypeOf(tahlil) },
+          extras: { isBaseForm: baseForm.isBaseForm, formType: formTypeOf(baseForm) },
           inArabic,
           displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,
         }
@@ -250,7 +249,7 @@ export async function GET(
         if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
           // A jins is a single ascending run, so there is no descending
           // counterpart to cross-check for diatonic-slot collisions.
-          const rendered = renderPitchClassSpellings(tahlil.jinsPitchClasses, true);
+          const rendered = renderPitchClassSpellings(baseForm.jinsPitchClasses, true);
           item.jinsDegrees = rendered.map((pc: any) => ({
             noteName: standardizeText(pc.noteName),
             englishName: pc.englishName,

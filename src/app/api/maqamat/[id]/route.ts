@@ -3,7 +3,7 @@ import { mergePathTonic } from "@/app/api/path-tonic";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import PitchClass from "@/models/PitchClass";
@@ -105,14 +105,14 @@ function buildTuningSystemContext(tuningSystem: TuningSystem, selectedStartingNo
  * - options=true: parameter discovery instead of data
  *
  * [id]="all" only:
- * - forms: base (default) | transpositions | all — the taḥlīl, its taṣwīr, or both
+ * - forms: base (default) | transpositions | all — the base form, its taṣwīr, or both
  * - includeOctaveRenderings: true adds the octave-register renderings (maqām rāst
  *   on qarār rāst), which are neither
  * - fields: comma-separated top-level fields to keep in each item; `maqam`
  *   always stays
  *
  * Each form carries maqam {id, idName, displayName, isBaseForm}, family, tonic,
- * transposition (only for a taṣwīr), stats (counts describe the taḥlīl),
+ * transposition (only for a taṣwīr), stats (counts describe the base form),
  * characteristics, availableTranspositions, comments, sources, pitchData,
  * ajnas (keyed by each degree's URL-safe noteName), primaryJins, secondaryJins,
  * tertiaryJins, ghammaz, and the optional intervals, suyur, modulations and
@@ -289,7 +289,7 @@ export async function GET(
         );
       }
 
-      // Which forms of each maqām to describe: the taḥlīl, its taṣwīr, or both
+      // Which forms of each maqām to describe: the base form, its taṣwīr, or both
       const formsParam = searchParams.get("forms") ?? "base";
       if (!BULK_FORMS.includes(formsParam as BulkForms)) {
         return addCorsHeaders(
@@ -362,9 +362,9 @@ export async function GET(
         .filter((maqam) => maqam.isMaqamPossible(noteNames))
         .sort((a, b) => a.getName().localeCompare(b.getName()));
 
-      // Each maqām's forms in the order calculateMaqamTranspositions lists them.
+      // Each maqām's forms in the order calculateMaqamForms lists them.
       // A taṣwīr has transposition=true; an octave-register rendering (rāst on
-      // qarār rāst) is neither the taḥlīl nor a taṣwīr.
+      // qarār rāst) is neither the base form nor a taṣwīr.
       const isSelected = (form: Maqam) =>
         (form.isBaseForm && forms !== "transpositions") ||
         (form.transposition && forms !== "base") ||
@@ -622,11 +622,10 @@ export async function GET(
       // Transpositions require a starting note; null = not computed
       const transposeOptions =
         selectedStartingNote !== null
-          ? calculateMaqamTranspositions(
+          ? calculateMaqamForms(
               getTuningSystemPitchClasses(selectedTuningSystem, selectedStartingNote),
               ajnas,
               maqam,
-              true,
               centsTolerance
             ).map((t) => standardizeText(t.ascendingPitchClasses[0].noteName))
           : null;
@@ -811,7 +810,7 @@ export async function GET(
     });
     const transpositions = ctx.transpositionsOf(maqam);
 
-    // Find specific transposition if requested; the taḥlīl otherwise
+    // Find specific transposition if requested; the base form otherwise
     let selectedTransposition = transpositions.find((t) => t.isBaseForm)!;
     if (transposeToNote) {
       const found = transpositions.find(

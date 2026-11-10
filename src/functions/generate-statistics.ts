@@ -1,5 +1,6 @@
 import { getTuningSystems, getAjnas, getMaqamat } from "@/functions/import";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
+import { formTypeOf } from "@/functions/formType";
 import modulate from "@/functions/modulate";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import calculateNumberOfModulations from "@/functions/calculateNumberOfModulations";
@@ -53,7 +54,10 @@ function computeStatisticsForSystem(tuningSystem: TuningSystem, allAjnas: Return
     for (const jinsData of allAjnas) {
       if (jinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
         possibleAjnas.push(jinsData);
-        calculateJinsTranspositions(allPitchClasses, jinsData, false).forEach((tr) => possibleAjnasTrans.push(tr));
+        // A transposition is a taṣwīr only: not the base form, not an octave rendering.
+        calculateJinsForms(allPitchClasses, jinsData)
+          .filter((form) => formTypeOf(form) === "transposition")
+          .forEach((tr) => possibleAjnasTrans.push(tr));
       }
     }
     let totalSuyur = 0;
@@ -65,11 +69,19 @@ function computeStatisticsForSystem(tuningSystem: TuningSystem, allAjnas: Return
       if (maqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
         possibleMaqamat.push(maqamData);
         totalSuyur += maqamData.getSuyur().length;
-        calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamData, false).forEach((transposition) => {
-          possibleMaqamatTrans.push(transposition);
-          totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, true));
-          totalMaqamatMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, transposition, false));
-        });
+        const forms = calculateMaqamForms(allPitchClasses, allAjnas, maqamData);
+        // A transposition is a taṣwīr only: not the base form, not an octave rendering.
+        forms
+          .filter((form) => formTypeOf(form) === "transposition")
+          .forEach((transposition) => possibleMaqamatTrans.push(transposition));
+        // Modulations are summed over every form except the base form: taṣwīr and
+        // octave renderings alike. Which forms belong here is still to be decided.
+        forms
+          .filter((form) => formTypeOf(form) !== "base")
+          .forEach((form) => {
+            totalAjnasMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, form, true));
+            totalMaqamatMod += calculateNumberOfModulations(modulate(allPitchClasses, allAjnas, allMaqamat, form, false));
+          });
       }
     }
     rows.push({

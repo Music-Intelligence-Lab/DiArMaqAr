@@ -6,7 +6,7 @@ import { getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { spellJinsPitchClasses } from "@/app/api/pitch-spellings";
@@ -521,15 +521,15 @@ export async function GET(
       }
 
       // Calculate transpositions
-      const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
+      const transpositions = calculateJinsForms(pitchClasses, jins, centsTolerance);
 
-      // The base form, i.e. the canonical-octave tahlil. `isBaseForm` is set on
+      // The base form, i.e. the form in the canonical octave. `isBaseForm` is set on
       // exactly the entry whose tonic is the canonical note name, so it already
-      // excludes octave-register siblings such as `qarār dūgāh` beside `dūgāh`.
-      const canonicalTahlil = transpositions.find((t) => t.isBaseForm);
+      // excludes octave renderings such as `qarār dūgāh` beside `dūgāh`.
+      const canonicalBaseForm = transpositions.find((t) => t.isBaseForm);
 
       // Find specific transposition if requested
-      let selectedTransposition = canonicalTahlil ?? transpositions[0];
+      let selectedTransposition = canonicalBaseForm ?? transpositions[0];
       if (cellTransposeTo) {
         const found = transpositions.find(
           (t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(cellTransposeTo)
@@ -567,7 +567,7 @@ export async function GET(
         },
         {
           version: jins.getVersion(),
-          // Distinct from isTransposed: an octave-register sibling of the base
+          // Distinct from isTransposed: an octave rendering of the base
           // form is not a taswir, so both are false for it.
           extras: { isBaseForm: selectedTransposition.isBaseForm, formType: formTypeOf(selectedTransposition) },
           inArabic,

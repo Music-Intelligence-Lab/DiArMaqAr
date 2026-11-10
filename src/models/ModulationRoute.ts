@@ -18,7 +18,7 @@ export interface MaqamNode {
   maqamId: string;
   /** Base URL-safe identifier for lookups (e.g., "maqam_nahawand") - stable across transpositions */
   baseMaqamIdName: string;
-  /** URL-safe identifier (e.g., "maqam_nahawand_al_kurdan") - includes transposition suffix */
+  /** URL-safe identifier (e.g., "maqam_nahawand_al_nawa") - every form but the base form carries the tonic suffix */
   maqamIdName: string;
   /** Display name (e.g., "Maqam Rast" or "Maqam Rast al-Nawa") */
   maqamDisplayName: string;
@@ -26,11 +26,11 @@ export interface MaqamNode {
   tonicId: string;
   /** Display name for the tonic note */
   tonicDisplay: string;
-  /** Whether this is a transposition (taswir) or original form (tahlil) */
+  /** Whether this is a transposition (taṣwīr) */
   isTransposition: boolean;
   /**
-   * Whether this node is the base form (tahlil). Not the inverse of
-   * isTransposition: an octave-register sibling of the base form is not a
+   * Whether this node is the base form. Not the inverse of
+   * isTransposition: an octave rendering of the base form is not a
    * taswir, so both flags are false for it.
    */
   isBaseForm: boolean;

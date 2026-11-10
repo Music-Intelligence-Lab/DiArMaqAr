@@ -555,7 +555,7 @@ export async function GET(request: Request) {
           maqamDisplayName: transpositionNamespace.displayName,
           baseMaqamIdName: baseMaqamIdName, // Store for filtering
           isTransposed: info.maqam.transposition,
-          // Not the inverse of isTransposed: an octave-register sibling of the
+          // Not the inverse of isTransposed: an octave rendering of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
           formType: formTypeOf(info.maqam),
@@ -568,9 +568,9 @@ export async function GET(request: Request) {
         };
       });
 
-      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by position in set
+      // Sort compatible maqamat: base-form versions first, then by position in set
       const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
-        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        // PRIORITY 1: Base-form versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
         }

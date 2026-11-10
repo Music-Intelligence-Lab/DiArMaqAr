@@ -5,7 +5,7 @@ import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import PitchClass from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
@@ -251,7 +251,7 @@ function formatIntervalData(intervals: any[], format: string) {
  * 
  * Response includes:
  * - tonic: {idName, displayName} namespace for the resolved tonic
- * - jins.isBaseForm: true only for the tahlil. An octave-register sibling of
+ * - jins.isBaseForm: true only for the base form. An octave rendering of
  *   the base form is not a taswir, so it is false here while no top-level
  *   `transposition` namespace is emitted either
  * - transposition: {original, resolved} tonic namespaces, present only when
@@ -549,10 +549,9 @@ export async function GET(
       // Transpositions require a starting note; null = not computed
       const transposeOptions =
         selectedStartingNote !== null
-          ? calculateJinsTranspositions(
+          ? calculateJinsForms(
               getTuningSystemPitchClasses(selectedTuningSystem, selectedStartingNote),
               jins,
-              true,
               centsTolerance
             ).map((t) => standardizeText(t.jinsPitchClasses[0].noteName))
           : null;
@@ -701,10 +700,10 @@ export async function GET(
     }
 
     // Calculate transpositions
-    const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
+    const transpositions = calculateJinsForms(pitchClasses, jins, centsTolerance);
 
     // Find specific transposition if requested
-    // The taḥlīl unless another form is asked for: by flag, not by position
+    // The base form unless another form is asked for: by flag, not by position
     let selectedTransposition = transpositions.find((t) => t.isBaseForm)!;
     if (transposeToNote) {
       const found = transpositions.find(
@@ -759,7 +758,7 @@ export async function GET(
       },
       {
         version: jins.getVersion(),
-        // Distinct from isTransposed above: an octave-register sibling of the
+        // Distinct from isTransposed above: an octave rendering of the
         // base form is not a taswir, so both are false for it.
         extras: { isBaseForm: selectedTransposition.isBaseForm, formType: formTypeOf(selectedTransposition) },
         inArabic,

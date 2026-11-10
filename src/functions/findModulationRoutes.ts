@@ -12,7 +12,7 @@
 
 import { standardizeText } from "@/functions/export";
 import modulate from "@/functions/modulate";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
@@ -151,11 +151,10 @@ function buildModulationGraph(
     if (!maqamData.isMaqamPossible(allNoteNames)) continue;
 
     // Get all transpositions of this maqam
-    const transpositions = calculateMaqamTranspositions(
+    const transpositions = calculateMaqamForms(
       pitchClasses,
       allAjnas,
       maqamData,
-      true,
       centsTolerance
     );
 
@@ -195,7 +194,7 @@ function buildModulationGraph(
 
     // Calculate modulations from this maqam (maqamat mode, not ajnas).
     // Pass the prebuilt transpositionsCache so modulate() skips the inner
-    // calculateMaqamTranspositions loop.
+    // calculateMaqamForms loop.
     const modulations = modulate(
       pitchClasses,
       allAjnas,
@@ -287,7 +286,7 @@ function buildModulationGraph(
 
   // Add octave-shift edges between register-equivalent siblings — nodes that
   // share the same (baseMaqamIdName, modal-degree slot) but live in different
-  // octaves. Register siblings can be tahlil variants (e.g. ḥijāz on qarār
+  // octaves. Register siblings can be base-form variants (e.g. ḥijāz on qarār
   // dūgāh / dūgāh / muḥayyar, all transposition=false) or transposition
   // variants (e.g. ḥijāz al-yegāh / al-nawā, both transposition=true, shared
   // G slot). Emitting these as real edges lets BFS:
@@ -385,11 +384,10 @@ function validateNodeExists(
     const baseIdName = maqamData.getIdName();
 
     // Calculate transpositions for this maqam
-    const transpositions = calculateMaqamTranspositions(
+    const transpositions = calculateMaqamForms(
       pitchClasses,
       allAjnas,
       maqamData,
-      true, // withTahlil
       centsTolerance
     );
 
@@ -409,7 +407,7 @@ function validateNodeExists(
 
 /**
  * Finds the node key for a maqam by baseMaqamIdName and optional tonic.
- * If tonic is not specified, returns the canonical (tahlil) form.
+ * If tonic is not specified, returns the base form.
  *
  * @param graph - The modulation graph
  * @param maqamIdName - The maqam idName (URL-safe, e.g., "maqam_rast")
@@ -435,7 +433,7 @@ function findNodeKey(
   }
 
   // Otherwise, find the base form by baseMaqamIdName. Not `!isTransposition` —
-  // that is also false for octave-register siblings, so the winner would depend
+  // that is also false for octave renderings, so the winner would depend
   // on graph insertion order.
   for (const [key, node] of graph.nodes) {
     if (node.baseMaqamIdName === normalizedMaqamIdName && node.isBaseForm) {

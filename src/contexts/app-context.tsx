@@ -9,7 +9,7 @@ import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
 import { Source } from "@/models/bibliography/Source";
 import Pattern from "@/models/Pattern";
 import getFirstNoteName from "@/functions/getFirstNoteName";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
 import PitchClass from "@/models/PitchClass";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
@@ -184,7 +184,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           let foundJins: Jins | null = null;
 
           if (selectedJins) {
-            const jinsTranspositions = calculateJinsTranspositions(allThePitchClasses, selectedJinsData, true, centsTolerance);
+            const jinsTranspositions = calculateJinsForms(allThePitchClasses, selectedJinsData, centsTolerance);
             foundJins = jinsTranspositions.find((j) => j.jinsPitchClasses[0].noteName === selectedJins.jinsPitchClasses[0].noteName) || null;
           }
 
@@ -195,7 +195,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
           let foundMaqam: Maqam | null = null;
 
           if (selectedMaqam) {
-            const maqamTranspositions = calculateMaqamTranspositions(allThePitchClasses, ajnas, selectedMaqamData, true, centsTolerance);
+            const maqamTranspositions = calculateMaqamForms(allThePitchClasses, ajnas, selectedMaqamData, centsTolerance);
             foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === selectedMaqam.ascendingPitchClasses[0].noteName) || null;
           }
 
@@ -330,7 +330,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
         const maqamData = maqamat.find((m) => m.getId() === maqamId);
         if (!maqamData) return;
         // Find the correct transposition for the tonic
-        const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+        const maqamTranspositions = calculateMaqamForms(allPitchClasses, ajnas, maqamData, centsTolerance);
         const foundMaqam = maqamTranspositions.find((m) => m.ascendingPitchClasses[0].noteName === tonic);
         // Call the original logic with the looked-up MaqamData and transposed Maqam
         handleClickMaqam(maqamData, allPitchClasses, foundMaqam || null);
@@ -457,7 +457,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             if (jinsDataId) {
               const foundJinsData = ajnas.find((j) => j.getId() === jinsDataId);
               if (foundJinsData && foundJinsData.isJinsPossible(allPitchClasses.map((pc) => pc.noteName))) {
-                const JinsTranspositions = calculateJinsTranspositions(allPitchClasses, foundJinsData, true, effectiveCentsTolerance);
+                const JinsTranspositions = calculateJinsForms(allPitchClasses, foundJinsData, effectiveCentsTolerance);
                 let foundJins: Jins | null = null;
                 if (jinsFirstNote) {
                   foundJins = JinsTranspositions.find((j) => standardizeText(j.jinsPitchClasses[0].noteName) === standardizeText(jinsFirstNote)) || null;
@@ -468,7 +468,7 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
             } else if (maqamDataId) {
               const foundMaqamData = maqamat.find((m) => m.getId() === maqamDataId);
               if (foundMaqamData && foundMaqamData.isMaqamPossible(allPitchClasses.map((pc) => pc.noteName))) {
-                const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, foundMaqamData, true, effectiveCentsTolerance);
+                const maqamTranspositions = calculateMaqamForms(allPitchClasses, ajnas, foundMaqamData, effectiveCentsTolerance);
                 let foundMaqam: Maqam | null = null;
                 if (maqamFirstNote) {
                   foundMaqam = maqamTranspositions.find((m) => standardizeText(m.ascendingPitchClasses[0].noteName) === standardizeText(maqamFirstNote)) || null;

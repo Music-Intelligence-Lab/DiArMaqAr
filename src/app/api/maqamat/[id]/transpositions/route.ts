@@ -5,7 +5,7 @@ import { structuralJinsEntries, ghammazEntries } from "@/app/api/maqamat/maqam-d
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
@@ -214,16 +214,15 @@ export async function GET(
       );
     }
 
-    const transpositions = calculateMaqamTranspositions(
+    const transpositions = calculateMaqamForms(
       pitchClasses,
       ajnas,
       maqam,
-      true,
       centsTolerance
     );
 
     // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
-    // that is handled at the source in calculateMaqamTranspositions().
+    // that is handled at the source in calculateMaqamForms().
     const transpositionsListed = transpositions.filter((t) => t.transposition);
 
     if (transpositionsListed.length === 0) {
@@ -291,7 +290,7 @@ export async function GET(
       },
       {
         version: maqam.getVersion(),
-        // The header entity is the maqam itself, i.e. the tahlil — the taswir
+        // The header entity is the maqam itself, i.e. the base form — the taswir
         // are the list below. Derived, not hard-coded.
         extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,

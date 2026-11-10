@@ -1,4 +1,4 @@
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
+import { calculateJinsForms, calculateMaqamForms } from "./transpose";
 import PitchClass from "@/models/PitchClass";
 import JinsData, { Jins, AjnasModulations } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations } from "@/models/Maqam";
@@ -141,7 +141,7 @@ export default function modulate(
   // Optional precomputed transpositions keyed by maqam id. When a batch caller
   // (e.g. buildModulationGraph) will invoke modulate many times against the
   // same (allPitchClasses, allAjnas, centsTolerance), pass a prebuilt map to
-  // skip redundant calculateMaqamTranspositions calls. Only consulted in
+  // skip redundant calculateMaqamForms calls. Only consulted in
   // maqamat mode.
   maqamTranspositionsCache?: Map<string, Maqam[]>,
   // The ajnas-mode equivalent, keyed by jins id. A batch caller that invokes
@@ -273,11 +273,11 @@ export default function modulate(
       const currentNotes = maqamOrJins.getNoteNames();
 
       // Add original jins if different from source
-      transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getTahlil(allPitchClasses)] : [];
+      transpositions = JSON.stringify(currentNotes) !== JSON.stringify(sourceAscendingNotes) ? [maqamOrJins.getBaseForm(allPitchClasses)] : [];
 
       // Add all valid transpositions of this jins (from cache if provided)
       const jinsTranspositions = jinsTranspositionsCache?.get(maqamOrJins.getId())
-        ?? calculateJinsTranspositions(allPitchClasses, maqamOrJins, true, centsTolerance);
+        ?? calculateJinsForms(allPitchClasses, maqamOrJins, centsTolerance);
       jinsTranspositions.forEach((jinsTransposition: Jins) => {
         if (JSON.stringify(currentNotes) === JSON.stringify(jinsTransposition.jinsPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         transpositions.push(jinsTransposition);
@@ -299,12 +299,12 @@ export default function modulate(
       // Add original maqam if different from source
       transpositions =
         JSON.stringify(currentAscendingNotes) !== JSON.stringify(sourceAscendingNotes) && !isSourceMaqamOnSourceTonic(currentAscendingNotes[0])
-          ? [maqamOrJins.getTahlil(allPitchClasses)]
+          ? [maqamOrJins.getBaseForm(allPitchClasses)]
           : [];
 
       // Add all valid transpositions of this maqam (from cache if provided)
       const maqamTranspositions = maqamTranspositionsCache?.get(maqamOrJins.getId())
-        ?? calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamOrJins, true, centsTolerance);
+        ?? calculateMaqamForms(allPitchClasses, allAjnas, maqamOrJins, centsTolerance);
       maqamTranspositions.forEach((maqamTransposition: Maqam) => {
         if (JSON.stringify(currentAscendingNotes) === JSON.stringify(maqamTransposition.ascendingPitchClasses.map((pitchClass: PitchClass) => pitchClass.noteName))) return;
         if (isSourceMaqamOnSourceTonic(maqamTransposition.ascendingPitchClasses[0]?.noteName)) return;

@@ -4,7 +4,7 @@ import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves, Sayr } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
-import { calculateJinsTranspositions, calculateMaqamTranspositions, renderingsLookup } from "./transpose";
+import { calculateJinsForms, calculateMaqamForms, renderingsLookup } from "./transpose";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
@@ -105,9 +105,9 @@ export const TONIC_SEPARATOR = "_al_";
 
 /**
  * Builds the canonical identifier for a maqām or jins: its idName, with the
- * tonic appended when this is a transposition rather than the taḥlīl.
+ * tonic appended when this is a transposition rather than the base form.
  *
- *   maqam_rast                                     — the taḥlīl
+ *   maqam_rast                                     — the base form
  *   maqam_rast_al_nawa                             — transposed to nawā
  *   maqam_hijaz_kar_alsabbagh_abbas_al_qarar_dugah — attributed, transposed
  *
@@ -143,8 +143,8 @@ export function createEntityTokenFromName(name: string, tonicNoteName: string): 
  * by — call it rather than standardizing the display name, which would close up
  * the article and yield "maqam_rast_alnawa" instead of "maqam_rast_al_nawa".
  *
- * The taḥlīl is its bare idName. Every other rendering names its tonic — a
- * taṣwīr (maqām rāst on nawā) and an octave-register sibling (maqām rāst on
+ * The base form is its bare idName. Every other rendering names its tonic — a
+ * taṣwīr (maqām rāst on nawā) and an octave rendering (maqām rāst on
  * qarār rāst) alike, since both carry " al-<tonic>" in their display name.
  */
 export function entityToken(entity: { name: string; ascendingPitchClasses: PitchClass[] } | { name: string; jinsPitchClasses: PitchClass[] }): string {
@@ -189,7 +189,7 @@ export function canonicalEntityIdName(idName: string, baseIdNames: readonly stri
 
 /**
  * Resolves an identifier sent by a client to the maqām or jins it names, and to
- * the tonic it is transposed to (absent for the taḥlīl).
+ * the tonic it is transposed to (absent for the base form).
  *
  *   "1", "maqam_rast"            → maqām rāst
  *   "maqam_rast_al_nawa"         → maqām rāst, tonic "nawa"
@@ -1171,8 +1171,8 @@ export async function exportTuningSystem(
   let totalMaqamModulations = 0;
   let totalAjnasModulations = 0;
 
-  // Store tahlil (original maqam) for classification
-  const maqamTahlilMap = new Map<string, Maqam>();
+  // Store base form for classification
+  const maqamBaseFormMap = new Map<string, Maqam>();
 
   // Include ajnas details if requested
   if (options.includeAjnasDetails || options.includeMaqamatDetails) {
@@ -1196,7 +1196,7 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      for (const jinsTransposition of calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
+      for (const jinsTransposition of calculateJinsForms(fullRangeTuningSystemPitchClasses, jins, centsTolerance)) {
         possibleAjnas.push(jinsTransposition);
         numberOfTranspositions++;
       }
@@ -1255,14 +1255,14 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      const maqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqam, centsTolerance);
 
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
 
-        // Store tahlil for family classification (original form only)
+        // Store base form for family classification (original form only)
         if (!maqamTransposition.transposition) {
-          maqamTahlilMap.set(maqamTransposition.maqamId, maqamTransposition);
+          maqamBaseFormMap.set(maqamTransposition.maqamId, maqamTransposition);
         }
 
         // Yield control every few transpositions to allow UI updates
@@ -1467,12 +1467,12 @@ export async function exportTuningSystem(
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
           version: maqamOverview.getVersion(),
-          // Family classification - always included, inherited from tahlil
+          // Family classification - always included, inherited from the base form
           maqamFamilyClassification: (() => {
-            const tahlil = maqamTahlilMap.get(possibleMaqam.maqamId);
-            if (tahlil) {
+            const baseForm = maqamBaseFormMap.get(possibleMaqam.maqamId);
+            if (baseForm) {
               try {
-                const classification = classifyMaqamFamily(tahlil);
+                const classification = classifyMaqamFamily(baseForm);
                 const normalizedFamilyName = standardizeText(classification.familyName);
                 
                 // Add to family reference dictionary if not already present
@@ -1642,9 +1642,9 @@ export async function exportJins(
     // Find the jinsData for creating MergedJins
     jinsData = allAjnas.find((j) => j.getId() === jinsInput.jinsId);
   } else {
-    // It's a JinsData instance - convert to Jins using getTahlil
+    // It's a JinsData instance - convert to Jins using getBaseForm
     jinsData = jinsInput;
-    jinsToExport = jinsData.getTahlil(fullRangeTuningSystemPitchClasses);
+    jinsToExport = jinsData.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -1715,7 +1715,7 @@ export async function exportJins(
     const transpositionNames: string[] = [];
     let numberOfTranspositions = 0;
 
-    const jinsTranspositions = Array.from(calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance));
+    const jinsTranspositions = Array.from(calculateJinsForms(fullRangeTuningSystemPitchClasses, jinsData, centsTolerance));
 
     for (let i = 0; i < jinsTranspositions.length; i++) {
       const jinsTransposition = jinsTranspositions[i];
@@ -1881,9 +1881,9 @@ export async function exportMaqam(
     const allMaqamat = getMaqamat();
     maqamData = allMaqamat.find((m) => m.getId() === maqamInput.maqamId);
   } else {
-    // It's a MaqamData instance - convert to Maqam using getTahlil
+    // It's a MaqamData instance - convert to Maqam using getBaseForm
     maqamData = maqamInput;
-    maqamToExport = maqamData.getTahlil(fullRangeTuningSystemPitchClasses);
+    maqamToExport = maqamData.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -1944,9 +1944,9 @@ export async function exportMaqam(
   if (maqamData) {
     const convertedMaqam = convertMaqamAjnasToObjects(maqamToExport);
     
-    // Get classification - calculate once from tahlil
+    // Get classification - calculate once from the base form
     if (!maqamToExport.transposition) {
-      // This IS the tahlil, classify it directly
+      // This IS the base form, classify it directly
       try {
         const result = classifyMaqamFamily(maqamToExport);
         const normalizedFamilyName = standardizeText(result.familyName);
@@ -1972,14 +1972,14 @@ export async function exportMaqam(
         };
       }
     } else {
-      // This is a transposition - need to get tahlil and classify that
+      // This is a transposition - need to get the base form and classify that
       const allAjnas = getAjnas();
-      const allMaqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
-      const tahlil = allMaqamTranspositions.find(m => !m.transposition);
+      const allMaqamTranspositions = calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, centsTolerance);
+      const baseForm = allMaqamTranspositions.find(m => m.isBaseForm);
       
-      if (tahlil) {
+      if (baseForm) {
         try {
-          const result = classifyMaqamFamily(tahlil);
+          const result = classifyMaqamFamily(baseForm);
           const normalizedFamilyName = standardizeText(result.familyName);
           
           // Add to family reference dictionary
@@ -2143,19 +2143,19 @@ export async function exportMaqam(
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
-    const maqamTranspositions = Array.from(calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
+    const maqamTranspositions = Array.from(calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, centsTolerance));
 
     // Reuse classification calculated above, or calculate it now if not done yet
     let sharedClassification: ExportMaqamFamilyClassification;
     if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no_jins") {
       sharedClassification = maqamClassification;
     } else {
-      // Calculate classification ONCE from the tahlil - all transpositions inherit it
-      const tahlil = maqamTranspositions.find(m => !m.transposition);
+      // Calculate classification ONCE from the base form - all transpositions inherit it
+      const baseForm = maqamTranspositions.find(m => m.isBaseForm);
       
-      if (tahlil) {
+      if (baseForm) {
         try {
-          const result = classifyMaqamFamily(tahlil);
+          const result = classifyMaqamFamily(baseForm);
           const normalizedFamilyName = standardizeText(result.familyName);
           
           // Add to family reference dictionary
@@ -2171,7 +2171,7 @@ export async function exportMaqam(
             }
           };
         } catch (error) {
-          console.warn(`⚠️ Could not classify maqam ${tahlil.name}:`, error);
+          console.warn(`⚠️ Could not classify maqam ${baseForm.name}:`, error);
           sharedClassification = {
             firstJins: {
               familyName: "no_jins",
@@ -2233,7 +2233,7 @@ export async function exportMaqam(
       if (maqamOverview) {
         const convertedMaqam = convertMaqamAjnasToObjects(maqamTransposition);
         
-        // Use the shared classification calculated once from the tahlil
+        // Use the shared classification calculated once from the base form
         const mergedMaqam: MergedMaqam = {
           maqamId: maqamTransposition.maqamId,
           name: maqamTransposition.name,

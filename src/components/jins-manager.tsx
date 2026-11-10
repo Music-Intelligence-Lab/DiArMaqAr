@@ -8,7 +8,7 @@ import JinsData from "@/models/Jins";
 import CarouselFilterRail from "./carousel-filter-rail";
 import React, { useState, useEffect, useMemo } from "react";
 // Transpositions now provided via TranspositionsContext
-// import { calculateJinsTranspositions } from "@/functions/transpose";
+// import { calculateJinsForms } from "@/functions/transpose";
 import { updateAjnas } from "@/functions/update";
 import { SourcePageReference, sourceSortKey } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";

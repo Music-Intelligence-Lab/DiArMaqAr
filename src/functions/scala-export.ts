@@ -411,9 +411,9 @@ export function exportJinsToScala(jinsInput: Jins | JinsData, tuningSystem: Tuni
     // It's a Jins instance - use directly
     jins = jinsInput;
   } else {
-    // It's a JinsData instance - convert to Jins using getTahlil
+    // It's a JinsData instance - convert to Jins using getBaseForm
     const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
-    jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    jins = jinsInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   const pitchClasses = jins.jinsPitchClasses;
@@ -491,9 +491,9 @@ export function exportJinsToScalaKeymap(
     // It's a Jins instance - use directly
     jins = jinsInput;
   } else {
-    // It's a JinsData instance - convert to Jins using getTahlil
+    // It's a JinsData instance - convert to Jins using getBaseForm
     const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
-    jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    jins = jinsInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   const pitchClasses = jins.jinsPitchClasses;
@@ -554,9 +554,9 @@ export function exportMaqamToScala(maqamInput: Maqam | MaqamData, tuningSystem: 
     // It's a Maqam instance - use directly
     maqam = maqamInput;
   } else {
-    // It's a MaqamData instance - convert to Maqam using getTahlil
+    // It's a MaqamData instance - convert to Maqam using getBaseForm
     const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
-    maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    maqam = maqamInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   const pitchClasses = useAscending ? maqam.ascendingPitchClasses : maqam.descendingPitchClasses;
@@ -636,9 +636,9 @@ export function exportMaqamToScalaKeymap(
     // It's a Maqam instance - use directly
     maqam = maqamInput;
   } else {
-    // It's a MaqamData instance - convert to Maqam using getTahlil
+    // It's a MaqamData instance - convert to Maqam using getBaseForm
     const fullRangeTuningSystemPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote || tuningSystem.getNoteNameSets()[0]?.[0] || "");
-    maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    maqam = maqamInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   const pitchClasses = useAscending ? maqam.ascendingPitchClasses : maqam.descendingPitchClasses;
@@ -929,10 +929,10 @@ export function exportMaqamTo12ToneScala(
         totalCount: totalCompatibleMaqamatCount
       });
     } else {
-      // Multiple maqamat - prioritize tahlil (non-transposed) version first
+      // Multiple maqamat - prioritize base-form version first
       // Then sort remaining transpositions by MIDI note (ascending pitch order)
       maqamat.sort((a, b) => {
-        // PRIORITY 1: Tahlil (non-transposed) versions come first
+        // PRIORITY 1: Base-form versions come first
         if (a.isTransposition !== b.isTransposition) {
           return a.isTransposition ? 1 : -1; // Non-transposed (false) comes before transposed (true)
         }
@@ -1489,7 +1489,7 @@ export function exportMaqamWithTuningSystemOctave(
       tuningSystem,
       startingNote as any
     );
-    maqam = maqamInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    maqam = maqamInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Get tuning system octave 1 pitch classes
@@ -1590,7 +1590,7 @@ export function exportJinsWithTuningSystemOctave(
       tuningSystem,
       startingNote as any
     );
-    jins = jinsInput.getTahlil(fullRangeTuningSystemPitchClasses);
+    jins = jinsInput.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Get tuning system octave 1 pitch classes

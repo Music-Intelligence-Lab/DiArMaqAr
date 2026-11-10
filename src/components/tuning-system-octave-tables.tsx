@@ -249,7 +249,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     return selectedMaqam
       ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
       : selectedMaqamData
-          ?.getTahlil(allPitchClasses)
+          ?.getBaseForm(allPitchClasses)
           .descendingPitchClasses.map((pitchClass) => pitchClass.originalValue)
           .includes(originalValue) ?? false;
   };

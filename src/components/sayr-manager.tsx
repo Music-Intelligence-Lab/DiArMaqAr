@@ -19,7 +19,7 @@ import { transposeSayr } from "@/functions/transpose";
 import JinsData from "@/models/Jins";
 import Link from "next/link";
 import CommentText from "./comment-text";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import { stringifySource, sourceSortKey } from "@/models/bibliography/Source";
 import { compareNormalized } from "@/functions/normalizeForSort";
@@ -145,7 +145,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const jinsTranspositions = calculateJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance);
+      const jinsTranspositions = calculateJinsForms(allPitchClasses, jinsData, centsTolerance);
       const targetTransposition = jinsTranspositions.find(jins => jins.jinsPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -153,7 +153,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the jins
+    // Fallback to default behavior (base form) - get all notes of the jins
     if (pitchClasses.length === 0) {
       const jinsNoteNames = jinsData.getNoteNames();
       for (const pitchClass of allPitchClasses) {
@@ -178,7 +178,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamForms(allPitchClasses, ajnas, maqamData, centsTolerance);
       const targetTransposition = maqamTranspositions.find(m => m.ascendingPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -186,7 +186,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the maqam
+    // Fallback to default behavior (base form) - get all notes of the maqam
     if (pitchClasses.length === 0) {
       const maqamNoteNames = maqamData.getAscendingNoteNames();
       for (const pitchClass of allPitchClasses) {

@@ -10,7 +10,7 @@ import calculateNumberOfModulations from "@/functions/calculateNumberOfModulatio
 import { AjnasModulations, shiftJinsByOctaves, Jins } from "@/models/Jins";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import modulate from "@/functions/modulate";
-import { calculateMaqamTranspositions, renderingsLookup } from "@/functions/transpose";
+import { calculateMaqamForms, renderingsLookup } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
@@ -128,11 +128,11 @@ export default function Modulations() {
     const maqamData = maqamat.find((m) => m.getId() === chain[0].maqamId);
     if (!maqamData) return null;
 
-    const transpositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+    const transpositions = calculateMaqamForms(allPitchClasses, ajnas, maqamData, centsTolerance);
     let first = transpositions.find((m) => standardizeText(m.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) || null;
     if (!first) {
-      const tahlil = maqamData.getTahlil(allPitchClasses);
-      if (standardizeText(tahlil.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) first = tahlil;
+      const baseForm = maqamData.getBaseForm(allPitchClasses);
+      if (standardizeText(baseForm.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) first = baseForm;
     }
     if (!first) return null;
 
@@ -155,7 +155,7 @@ export default function Modulations() {
     if (sourceMaqamStack.length === 0 && selectedMaqamData) {
       let transposition: Maqam;
       if (selectedMaqam) transposition = selectedMaqam;
-      else transposition = selectedMaqamData.getTahlil(allPitchClasses);
+      else transposition = selectedMaqamData.getBaseForm(allPitchClasses);
 
       // If a chain descriptor whose last hop matches the current selection exists,
       // replay the whole chain instead of seeding a fresh single-hop stack

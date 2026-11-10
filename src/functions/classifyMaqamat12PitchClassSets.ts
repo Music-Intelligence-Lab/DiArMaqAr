@@ -2,7 +2,8 @@ import TuningSystem from "@/models/TuningSystem";
 import MaqamData, { Maqam } from "@/models/Maqam";
 import PitchClass from "@/models/PitchClass";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
+import { formTypeOf } from "@/functions/formType";
 import { chooseSetNamesake, maqamFamilyReader, setNamedAfter } from "@/functions/nameClassificationSet";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
@@ -146,16 +147,17 @@ export interface ClassificationResult {
 const CHROMATIC_ORDER = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 /**
- * Gets all transpositions of a maqam in the specified tuning system
+ * Gets every form of a maqam in the specified tuning system: the base form, its
+ * octave renderings and every taṣwīr (see formTypeOf)
  */
-export function getMaqamTranspositions(
+export function getMaqamForms(
   maqamData: MaqamData,
   tuningSystem: TuningSystem,
   startingNote: string,
   ajnas: any[]
 ): Maqam[] {
   const allPitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
-  return calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, 5);
+  return calculateMaqamForms(allPitchClasses, ajnas, maqamData, 5);
 }
 
 /** The same pitch in every octave of a tuning system, lowest first. */
@@ -543,7 +545,7 @@ export function groupMaqamatIn12PitchClassSets(
   const incompatibleMaqamat: IncompatibleMaqam[] = [];
   const processedMaqamat = new Set<string>(); // Track processed maqam/transposition combinations
 
-  // Cache transpositions per maqam. getMaqamTranspositions is deterministic for
+  // Cache transpositions per maqam. getMaqamForms is deterministic for
   // a fixed (maqamData, tuningSystem, startingNote, ajnas) tuple — the only
   // variable across the nested loops is maqamData — yet it runs thousands of
   // times with identical inputs when many maqamāt survive create12PitchClassSet.
@@ -553,7 +555,7 @@ export function groupMaqamatIn12PitchClassSets(
     const key = maqamData.getId();
     let cached = transpositionsCache.get(key);
     if (!cached) {
-      cached = getMaqamTranspositions(maqamData, cairoTuningSystem, cairoStartingNote, ajnas);
+      cached = getMaqamForms(maqamData, cairoTuningSystem, cairoStartingNote, ajnas);
       transpositionsCache.set(key, cached);
     }
     return cached;
@@ -569,21 +571,21 @@ export function groupMaqamatIn12PitchClassSets(
     hasUnprocessed = false;
     let foundNewSet = false;
 
-    // IMPORTANT: Two-pass approach to prioritize tahlil versions globally
-    // Pass 1: Process ALL tahlil (non-transposed) versions first
-    // Pass 2: Process ALL transposed versions
+    // IMPORTANT: Two-pass approach to prioritize untransposed forms globally
+    // Pass 1: every form that is not a taṣwīr — the base form and its octave renderings
+    // Pass 2: every taṣwīr
 
     for (let pass = 1; pass <= 2; pass++) {
-      const processingTahlil = (pass === 1);
+      const processingBaseForms = (pass === 1);
 
       for (const maqamData of maqamat) {
         // Get all transpositions of this maqam (cached)
         const transpositions = getCachedTranspositions(maqamData);
 
         // Filter based on current pass
-        const transpositionsToProcess = processingTahlil
-          ? transpositions.filter(t => !t.transposition)  // Pass 1: Only tahlil
-          : transpositions.filter(t => t.transposition);   // Pass 2: Only transpositions
+        const transpositionsToProcess = processingBaseForms
+          ? transpositions.filter(t => formTypeOf(t) !== "transposition")  // Pass 1: the base form and its octave renderings
+          : transpositions.filter(t => formTypeOf(t) === "transposition");  // Pass 2: every taṣwīr
 
         for (const transposition of transpositionsToProcess) {
         // Create unique key for this maqam/transposition combination
@@ -752,7 +754,7 @@ export function checkTwelvePitchClassFit(
 ):
   | { fits: true; transposition: Maqam; pitchClassSet: PitchClassSet }
   | { fits: false; transposition: Maqam; clashes: KeyClash[]; explanation: string; fittingTonics: string[] } {
-  const transpositions = getMaqamTranspositions(sourceMaqamData, cairoTuningSystem, cairoStartingNote, ajnas);
+  const transpositions = getMaqamForms(sourceMaqamData, cairoTuningSystem, cairoStartingNote, ajnas);
   const transposition =
     tonicNoteName === null
       ? transpositions.find((candidate) => candidate.isBaseForm)
@@ -860,7 +862,7 @@ export function fitTwelvePitchClassSet(
     // Skip the source maqam (already added)
     if (otherMaqamData.getId() === sourceMaqamData.getId()) {
       // But check if other transpositions of the source maqam are compatible
-      const otherTranspositions = getMaqamTranspositions(
+      const otherTranspositions = getMaqamForms(
         otherMaqamData,
         cairoTuningSystem,
         cairoStartingNote,
@@ -883,7 +885,7 @@ export function fitTwelvePitchClassSet(
       }
     } else {
       // Check all transpositions of other maqamat
-      const otherTranspositions = getMaqamTranspositions(
+      const otherTranspositions = getMaqamForms(
         otherMaqamData,
         cairoTuningSystem,
         cairoStartingNote,

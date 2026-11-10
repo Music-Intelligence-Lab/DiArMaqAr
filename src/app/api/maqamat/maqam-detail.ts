@@ -1,5 +1,5 @@
 import { entityToken, standardizeText } from "@/functions/export";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
 import modulate from "@/functions/modulate";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
@@ -13,7 +13,7 @@ import MaqamData, { Maqam, MaqamatModulations, shiftMaqamByOctaves } from "@/mod
 import JinsData, { Jins, AjnasModulations, shiftJinsByOctaves } from "@/models/Jins";
 
 /**
- * The analysis of one maqām form — its taḥlīl, a taṣwīr or an octave-register
+ * The analysis of one maqām form — its base form, a taṣwīr or an octave
  * rendering — as GET /maqamat/{idName} returns it.
  *
  * Both that route and the bulk GET /maqamat/all build their maqām objects here,
@@ -208,7 +208,7 @@ export interface MaqamDetailOptions {
 export class MaqamDetailContext {
   private maqamTranspositionsCache?: Map<string, Maqam[]>;
   private jinsTranspositionsCache?: Map<string, Jins[]>;
-  private readonly tahlilModulationCounts = new Map<string, { maqamat: number; ajnas: number }>();
+  private readonly baseFormModulationCounts = new Map<string, { maqamat: number; ajnas: number }>();
   private maqamEntities?: Map<string, { id: string }>;
   private jinsEntities?: Map<string, { id: string }>;
 
@@ -219,11 +219,11 @@ export class MaqamDetailContext {
     readonly options: MaqamDetailOptions
   ) {}
 
-  /** Every maqām form of this maqām in this pitch space, the taḥlīl included */
+  /** Every maqām form of this maqām in this pitch space, the base form included */
   transpositionsOf(maqam: MaqamData): Maqam[] {
     const cached = this.maqamTranspositions().get(maqam.getId());
     if (cached) return cached;
-    return calculateMaqamTranspositions(this.pitchClasses, this.ajnas, maqam, true, this.options.centsTolerance);
+    return calculateMaqamForms(this.pitchClasses, this.ajnas, maqam, this.options.centsTolerance);
   }
 
   /** Every rendering of the maqām with this id in the pitch space (empty if it cannot be built) */
@@ -242,7 +242,7 @@ export class MaqamDetailContext {
       this.maqamTranspositionsCache = new Map(
         this.maqamatData
           .filter((maqam) => maqam.isMaqamPossible(noteNames))
-          .map((maqam) => [maqam.getId(), calculateMaqamTranspositions(this.pitchClasses, this.ajnas, maqam, true, this.options.centsTolerance)])
+          .map((maqam) => [maqam.getId(), calculateMaqamForms(this.pitchClasses, this.ajnas, maqam, this.options.centsTolerance)])
       );
     }
     return this.maqamTranspositionsCache;
@@ -251,7 +251,7 @@ export class MaqamDetailContext {
   private jinsTranspositions(): Map<string, Jins[]> {
     if (!this.jinsTranspositionsCache) {
       this.jinsTranspositionsCache = new Map(
-        this.ajnas.map((jins) => [jins.getId(), calculateJinsTranspositions(this.pitchClasses, jins, true, this.options.centsTolerance)])
+        this.ajnas.map((jins) => [jins.getId(), calculateJinsForms(this.pitchClasses, jins, this.options.centsTolerance)])
       );
     }
     return this.jinsTranspositionsCache;
@@ -265,14 +265,14 @@ export class MaqamDetailContext {
     return modulate(this.pitchClasses, this.ajnas, this.maqamatData, form, true, this.options.centsTolerance, undefined, this.jinsTranspositions()) as AjnasModulations;
   }
 
-  /** The modulation counts in `stats`, which describe the taḥlīl whatever form is shown */
-  tahlilCounts(maqam: MaqamData, tahlil: Maqam): { maqamat: number; ajnas: number } {
-    let counts = this.tahlilModulationCounts.get(maqam.getId());
+  /** The modulation counts in `stats`, which describe the base form whatever form is shown */
+  baseFormCounts(maqam: MaqamData, baseForm: Maqam): { maqamat: number; ajnas: number } {
+    let counts = this.baseFormModulationCounts.get(maqam.getId());
     if (!counts) {
       const total = (modulations: object) =>
         Object.values(modulations).filter((value) => Array.isArray(value)).reduce((sum, list) => sum + list.length, 0);
-      counts = { maqamat: total(this.maqamatModulations(tahlil)), ajnas: total(this.ajnasModulations(tahlil)) };
-      this.tahlilModulationCounts.set(maqam.getId(), counts);
+      counts = { maqamat: total(this.maqamatModulations(baseForm)), ajnas: total(this.ajnasModulations(baseForm)) };
+      this.baseFormModulationCounts.set(maqam.getId(), counts);
     }
     return counts;
   }
@@ -428,7 +428,7 @@ function serializeModulations(
           tonicDisplayName: tonic,
         };
         if (!isAjnas) reference.isTransposition = target.transposition || false;
-        // Both kinds: an octave-register sibling of the base form is not a
+        // Both kinds: an octave rendering of the base form is not a
         // taṣwīr, so isTransposition alone cannot identify the base form.
         reference.isBaseForm = target.isBaseForm || false;
         reference.formType = formTypeOf(target);
@@ -483,10 +483,10 @@ export function buildMaqamDetail(
   const { inArabic, pitchClassDataType, includeIntervals, includeModulations, includeModulations8vb, includeSuyur } = ctx.options;
   const wants = (field: string) => !fields || fields.has(field);
 
-  // The taḥlīl, by flag rather than by position — transpose.ts happens to
+  // The base form, by flag rather than by position — transpose.ts happens to
   // return it first, but nothing states that as a contract.
-  const tahlil = transpositions.find((t) => t.isBaseForm)!;
-  const familyClassification = classifyMaqamFamily(tahlil);
+  const baseForm = transpositions.find((t) => t.isBaseForm)!;
+  const familyClassification = classifyMaqamFamily(baseForm);
 
   // A taṣwīr moves the tonic to another modal degree. An octave-register
   // sibling of the base form is not one, so it has no `transposition`
@@ -550,8 +550,8 @@ export function buildMaqamDetail(
       ? {
           numberOfTranspositions: transpositions.filter((t) => t.transposition).length,
           numberOfPitchClasses: ascendingNoteNames.length,
-          numberOfMaqamModulations: ctx.tahlilCounts(maqam, tahlil).maqamat,
-          numberOfAjnasModulations: ctx.tahlilCounts(maqam, tahlil).ajnas,
+          numberOfMaqamModulations: ctx.baseFormCounts(maqam, baseForm).maqamat,
+          numberOfAjnasModulations: ctx.baseFormCounts(maqam, baseForm).ajnas,
         }
       : undefined,
     characteristics: {

@@ -91,9 +91,9 @@ export function maqamFamilyReader(transpositionsOf: (maqamData: MaqamData) => Ma
   return (maqamData) => {
     let family = familyByMaqamId.get(maqamData.getId());
     if (family === undefined) {
-      const untransposed = transpositionsOf(maqamData).find((t) => !t.transposition);
-      if (!untransposed) throw new Error(`${maqamData.getName()} has no untransposed form to read its family from`);
-      family = classifyMaqamFamily(untransposed).familyName;
+      const baseForm = transpositionsOf(maqamData).find((t) => t.isBaseForm);
+      if (!baseForm) throw new Error(`${maqamData.getName()} has no base form to read its family from`);
+      family = classifyMaqamFamily(baseForm).familyName;
       familyByMaqamId.set(maqamData.getId(), family);
     }
     return family;

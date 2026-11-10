@@ -447,10 +447,10 @@ export default function JinsTranspositions() {
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
-    // Always open tahlil (first element) on load
+    // Always open the base form (first element) on load
     if (jinsTranspositions && jinsTranspositions.length > 0) {
-      const tahlilName = jinsTranspositions[0].name;
-      setOpenTranspositions([tahlilName]);
+      const baseFormName = jinsTranspositions[0].name;
+      setOpenTranspositions([baseFormName]);
     }
   }, [selectedJinsData, selectedTuningSystem, jinsTranspositions]);
 
@@ -484,14 +484,14 @@ export default function JinsTranspositions() {
           }
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
-        // Case 2: No jins is selected (tahlil case)
-        // Open the tahlil — first element of the unsorted list. Octave-register
+        // Case 2: No jins is selected (base-form case)
+        // Open the base form — first element of the unsorted list. Octave-register
         // siblings also have transposition=false, so match by its exact name
         // (mirrors maqam-transpositions)
-        const tahlilName = jinsTranspositions[0]?.name;
-        const analysisTable = sortedTables.find((t) => t.jins.name === tahlilName);
+        const baseFormName = jinsTranspositions[0]?.name;
+        const analysisTable = sortedTables.find((t) => t.jins.name === baseFormName);
         if (analysisTable) {
-          const analysisIndex = sortedTables.findIndex((t) => t.jins.name === tahlilName);
+          const analysisIndex = sortedTables.findIndex((t) => t.jins.name === baseFormName);
           // Same immediate open as Case 1
           setOpenTranspositions([analysisTable.jins.name]);
 
@@ -569,8 +569,8 @@ export default function JinsTranspositions() {
         if (pitchClass.octave !== lowestOctave) return false;
         return unmatchedActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
       };
-      // Octave-register siblings share transposition=false but only the canonical
-      // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
+      // Octave renderings share transposition=false but only the canonical
+      // tonic in its proper octave gets the base-form-style title (PAO name + badge)
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedJinsData?.getNoteNames()[0];
       const intervals = jins.jinsPitchClassIntervals;
       const open = openTranspositions.includes(jins.name);

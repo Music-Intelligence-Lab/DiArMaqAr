@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { parseInArabic, getMaqamNameDisplayAr } from "@/app/api/arabic-helpers";
@@ -162,17 +162,16 @@ export async function GET(request: Request) {
 
     for (const maqam of availableMaqamat) {
       try {
-        const transpositions = calculateMaqamTranspositions(
+        const transpositions = calculateMaqamForms(
           pitchClasses,
           ajnas,
           maqam,
-          true,
           centsTolerance
         );
-        const tahlil = transpositions.find((t) => !t.transposition);
-        if (!tahlil) continue;
+        const baseForm = transpositions.find((t) => t.isBaseForm);
+        if (!baseForm) continue;
 
-        const classification = classifyMaqamFamily(tahlil);
+        const classification = classifyMaqamFamily(baseForm);
         const idName = standardizeText(classification.familyName);
         if (!familyMap.has(idName)) {
           familyMap.set(idName, {

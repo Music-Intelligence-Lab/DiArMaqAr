@@ -4,7 +4,7 @@ import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
@@ -210,15 +210,14 @@ export async function GET(
       );
     }
 
-    const transpositions = calculateJinsTranspositions(
+    const transpositions = calculateJinsForms(
       pitchClasses,
       jins,
-      true,
       centsTolerance
     );
 
     // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
-    // that is handled at the source in calculateJinsTranspositions().
+    // that is handled at the source in calculateJinsForms().
     const transpositionsListed = transpositions.filter((t) => t.transposition);
 
     if (transpositionsListed.length === 0) {
@@ -278,8 +277,8 @@ export async function GET(
       },
       {
         version: jins.getVersion(),
-        // The header entity is the jins itself, i.e. the tahlil — the taswir
-        // are the list below. Taken from the resolved tahlil, not hard-coded.
+        // The header entity is the jins itself, i.e. the base form — the taswir
+        // are the list below. Taken from the resolved base form, not hard-coded.
         extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,
         displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,

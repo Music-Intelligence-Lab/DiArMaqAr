@@ -120,45 +120,11 @@ function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitc
 }
 
 /**
- * Maqām Transposition Analysis
- * 
- * 
- * Comprehensive Maqām Analysis:
- * 1. **Bidirectional Processing**: Analyzes ascending and descending sequences separately,
- *    accounting for maqāmāt that employ different intervallic patterns in each direction
- * 
- * 2. **Embedded Jins Recognition**: Automatically identifies and transposes all constituent
- *    ajnās within each maqām transposition, creating complete analytical structures
- * 
- * 3. **Octave Extension**: Accurately extends sequences across octave boundaries to
- *    ensure complete jins recognition and proper intervallic analysis
- * 
- * 4. **Tahlil vs Taswir**: Distinguishes between analytical (tahlil) and transposed (taswir)
- *    positions, following traditional Arabic music theory terminology
- * 
- * Algorithmic Precision:
- * - **Pattern Matching**: Extracts intervallic fingerprints from original maqām structure
- * - **Systematic Search**: Tests all possible starting positions within tuning system
- * - **Tolerance Handling**: Uses appropriate matching criteria (exact ratios vs fuzzy cents)
- * - **Bounds Checking**: Ensures transpositions remain within practical octave limits
- * 
- * Naming Conventions:
- * Follows traditional Arabic nomenclature: "maqām [name] al-[starting note]"
- * Example: "maqām bayyātī al-nawā" for bayyātī transposed to start on nawā
- * 
- * @param allPitchClasses - Complete tuning system pitch classes to search within
- * @param allAjnas - Available ajnās for embedded jins recognition
- * @param maqamData - Source maqām to find transpositions for
- * @param withTahlil - Include analytical (original) position in results
- * @param centsTolerance - Tolerance for fuzzy matching (default: ±5 cents JND)
- * @returns Array of all possible maqām transpositions with embedded jins analysis,
- *   or an empty array if the tuning system cannot build the maqām at all
- */
-
-/**
- * Shifts a note name by `shift` positions within `allPitchClasses`. Used by both
- * sayr transposition and maqam-degree transposition to resolve "the note that
- * sits in the same scale-degree slot in the transposed tuning system".
+ * Shifts a note name by `shift` positions within `allPitchClasses`. Used by
+ * sayr transposition. This is a fixed shift across the tuning system, not a
+ * scale-degree mapping: where the steps are uneven, moving the tonic by N
+ * positions does not move every degree by N. The maqām degree fields are
+ * mapped by structure position instead (see calculateMaqamForms).
  *
  * @param noteName Source note name to shift.
  * @param shift Positive = upward, negative = downward, in tuning-system positions.
@@ -186,11 +152,46 @@ function shiftNoteNameByTransposition(
   return { noteName: allPitchClasses[newIndex].noteName, outOfBounds: false, notFound: false };
 }
 
-export function calculateMaqamTranspositions(
+/**
+ * Every form of a maqām that a tuning system can play.
+ *
+ * A form is one rendering of the maqām in the tuning system's pitch space. There
+ * are three kinds, and only the last is a transposition (see formTypeOf in
+ * ./formType):
+ * - the base form: the maqām on the tonic the sources give
+ *   (maqām rāst on rāst)
+ * - an octave rendering: the base form one or more octaves away, on the same modal
+ *   degree (maqām rāst on qarār rāst or kirdān). Neither the base form nor a taṣwīr: the
+ *   darajat al-istiqrār has not moved, only its register.
+ * - a taṣwīr (transposition): the maqām moved to another modal degree
+ *   (maqām rāst al-nawā)
+ *
+ * To count or pick out one kind, use formTypeOf. Never test
+ * `transposition === false`: that matches the base form and every octave
+ * rendering of it alike.
+ *
+ * How the forms are found: the maqām's whole stored structure (every distinct
+ * note of either direction, in pitch order) is reduced to its interval pattern,
+ * and every starting position in the tuning system that reproduces that pattern
+ * within the cents tolerance is a form. The ascending and descending sequences
+ * are read back out of each match, and the ajnās on every degree are identified.
+ *
+ * Naming: the base form keeps the maqām's own name; every other form names its
+ * tonic, "maqām [name] al-[starting note]" (maqām bayyātī al-nawā).
+ *
+ * @param allPitchClasses - Complete tuning system pitch classes to search within
+ * @param allAjnas - Available ajnās for embedded jins recognition
+ * @param maqamData - The maqām whose forms to find
+ * @param centsTolerance - Tolerance for fuzzy matching (default: ±5 cents JND)
+ * @returns Every form, base form first, or an empty array if the tuning system
+ *   cannot build the maqām at all
+ * @throws If the tuning system can build the maqām but no form starts on its
+ *   canonical first note, i.e. the base form cannot be resolved
+ */
+export function calculateMaqamForms(
   allPitchClasses: PitchClass[],
   allAjnas: JinsData[],
   maqamData: MaqamData | null,
-  withTahlil: boolean,
   centsTolerance: number = 5
 ): Maqam[] {
   if (allPitchClasses.length === 0 || !maqamData) return [];
@@ -200,14 +201,14 @@ export function calculateMaqamTranspositions(
 
   if (ascendingNoteNames.length < 2 || descendingNoteNames.length < 2) return [];
 
-  // A maqām the tuning system cannot build has no transpositions. Without this
+  // A maqām the tuning system cannot build has no forms. Without this
   // the filters below would silently drop the missing notes and derive an
-  // interval pattern from the surviving ones — transpositions of a maqām that
+  // interval pattern from the surviving ones — forms of a maqām that
   // does not exist here. Mirrors the embedded-ajnās check further down.
   if (!maqamData.isMaqamPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) return [];
 
   // The stored form is one structure: every distinct note the maqām uses going
-  // up or coming down, in pitch order. A transposition moves that whole
+  // up or coming down, in pitch order. Each form places that whole
   // structure, and its ascending and descending sequences are read back out of
   // it at the positions the stored form gives. The descending sequence is never
   // searched for on its own, so a symmetric maqām stays symmetric and an
@@ -239,7 +240,7 @@ export function calculateMaqamTranspositions(
   // Fetched once per call rather than once per transposition or per degree.
   const suyurAttestation = getSuyurAttestation();
 
-  const maqamTranspositions: Maqam[] = structureSequences.map((structure) => {
+  const candidateForms: Maqam[] = structureSequences.map((structure) => {
     const ascendingPitchClasses = ascendingPositions.map((position) => structure[position]);
     let sliceIndex = 0;
     const lastAscendingPitchClass = ascendingPitchClasses[ascendingPitchClasses.length - 1];
@@ -293,17 +294,17 @@ export function calculateMaqamTranspositions(
           // Register/octave variants are equivalent for taṣwīr: a jins seated on
           // rāst is still that jins on kurdān.
           const isTransposed = !sameModalDegreeSlot(firstJinsNote, degreeNoteName);
-          // Same exact canonical-note test calculateJinsTranspositions uses to
-          // pick the tahlil, so an embedded jins agrees with its standalone entry.
+          // Same exact canonical-note test calculateJinsForms uses to
+          // pick the base form, so an embedded jins agrees with its standalone entry.
           const isBaseForm = firstJinsNote === degreeNoteName;
 
           matches.push({
             candidate: { jinsId: jins.getId(), firstNoteName: firstJinsNote, noteCount: jins.getNoteNames().length },
             jins: {
               jinsId: jins.getId(),
-              // Every form but the tahlil names its tonic, an octave-register
-              // sibling (jins yegāh on nawā) as much as a taṣwīr — the same names
-              // calculateJinsTranspositions gives, so the jins at a maqām degree
+              // Every form but the base form names its tonic, an octave rendering
+              // (jins yegāh on nawā) as much as a taṣwīr — the same names
+              // calculateJinsForms gives, so the jins at a maqām degree
               // and its standalone entry share one identifier.
               name: isBaseForm ? jins.getName() : `${jins.getName()} al-${degreeNoteName}`,
               transposition: isTransposed,
@@ -390,7 +391,7 @@ export function calculateMaqamTranspositions(
       maqamId: maqamData.getId(),
       name: isTransposed ? `${maqamData.getName()} al-${firstTransposedNote}` : maqamData.getName(),
       transposition: isTransposed,
-      // Provisional: the tahlil is picked out below and re-stamped true.
+      // Provisional: the base form is picked out below and re-stamped true.
       isBaseForm: false,
       ascendingPitchClasses,
       ascendingPitchClassIntervals,
@@ -408,93 +409,97 @@ export function calculateMaqamTranspositions(
     };
   });
 
-  // The tahlil is the transposition on the EXACT canonical first note (rāst →
-  // rāst/C3), never an octave sibling (qarār rāst/C2, kirdān/C4). The guard at
+  // The base form is the form on the EXACT canonical first note (rāst →
+  // rāst/C3), never an octave rendering (qarār rāst/C2, kirdān/C4). The guard at
   // the top of this function guarantees that note is in the tuning system, and
   // a sequence starting there matches the maqām's own interval pattern at zero
   // deviation, so the match always exists.
   const canonicalFirstNote = ascendingNoteNames[0];
-  const tahlilTransposition = maqamTranspositions.find(
-    (transposition) => transposition.ascendingPitchClasses[0].noteName === canonicalFirstNote
+  const baseForm = candidateForms.find(
+    (form) => form.ascendingPitchClasses[0].noteName === canonicalFirstNote
   );
-  // Octave-register siblings of the tahlil (same modal degree slot, different
+  // Octave renderings of the base form (same modal degree slot, different
   // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
   // by design (register shift is not taṣwīr), but give them a distinguishing
   // name suffix so name-based lookups in the UI are unambiguous.
-  const maqamTranspositionsWithoutTahlil = maqamTranspositions
-    .filter((transposition) => transposition !== tahlilTransposition)
-    .map((transposition) => {
+  const otherForms = candidateForms
+    .filter((form) => form !== baseForm)
+    .map((form) => {
       if (
-        !transposition.transposition &&
-        transposition.ascendingPitchClasses[0].noteName !== canonicalFirstNote
+        !form.transposition &&
+        form.ascendingPitchClasses[0].noteName !== canonicalFirstNote
       ) {
         return {
-          ...transposition,
-          name: `${maqamData.getName()} al-${transposition.ascendingPitchClasses[0].noteName}`,
+          ...form,
+          name: `${maqamData.getName()} al-${form.ascendingPitchClasses[0].noteName}`,
         };
       }
-      return transposition;
+      return form;
     });
 
-  if (!withTahlil) return maqamTranspositionsWithoutTahlil;
-
-  if (!tahlilTransposition) {
+  if (!baseForm) {
     throw new Error(
-      `Could not resolve the tahlil of maqām ${maqamData.getName()}: no transposition starts on its canonical first note '${canonicalFirstNote}', ` +
-        `even though the tuning system contains every note of the maqām. This means the transposition search failed to return the maqām's own position.`
+      `Could not resolve the base form of maqām ${maqamData.getName()}: no form starts on its canonical first note '${canonicalFirstNote}', ` +
+        `even though the tuning system contains every note of the maqām. This means the form search failed to return the maqām's own position.`
     );
   }
 
-  return [{ ...tahlilTransposition, name: maqamData.getName(), transposition: false, isBaseForm: true }, ...maqamTranspositionsWithoutTahlil];
+  return [{ ...baseForm, name: maqamData.getName(), transposition: false, isBaseForm: true }, ...otherForms];
 }
 
 /**
- * Jins Transposition Analysis
- * 
- * Finds all possible transpositions of a jins within available pitch classes. This function
- * analyzes a jins interval pattern and systematically searches for all valid starting positions
- * where the complete sequence can be realized within the tuning system.
- * 
- * Algorithmic Operation:
- * 1. **Pattern Extraction**: Extracts intervallic fingerprint from the source jins
- * 2. **Systematic Search**: Tests all possible starting positions within tuning system
- * 3. **Interval Matching**: Uses appropriate matching criteria (exact ratios vs fuzzy cents)
- * 4. **Octave Filtering**: Ensures transpositions remain within valid octave bounds
- * 5. **Tahlil Handling**: Optionally includes or excludes the original analytical position
- * 
- * Naming Conventions:
- * Follows traditional Arabic nomenclature: "[jins name] al-[starting note]"
- * Example: "jins kurd al-muhayyar" for kurd jins transposed to start on muhayyar
- * 
- * Unlike maqām transpositions, ajnās have only a single non-directional sequence,
- * so no bidirectional merging is required.
- * 
+ * Every form of a jins that a tuning system can play.
+ *
+ * A form is one rendering of the jins in the tuning system's pitch space. There
+ * are three kinds, and only the last is a transposition (see formTypeOf in
+ * ./formType):
+ * - the base form: the jins on the tonic the sources give
+ *   (jins bayyāt on dūgāh)
+ * - an octave rendering: the base form one or more octaves away, on the same modal
+ *   degree (jins bayyāt on muḥayyar). Neither the base form nor a taṣwīr: the
+ *   darajat al-istiqrār has not moved, only its register.
+ * - a taṣwīr (transposition): the jins moved to another modal degree
+ *   (jins bayyāt al-ʿushayrān)
+ *
+ * To count or pick out one kind, use formTypeOf. Never test
+ * `transposition === false`: that matches the base form and every octave
+ * rendering of it alike.
+ *
+ * How the forms are found: the jins's notes are reduced to their interval
+ * pattern, and every starting position in the tuning system that reproduces
+ * that pattern within the cents tolerance is a form. A jins has one
+ * non-directional sequence, so unlike a maqām there is nothing to merge.
+ *
+ * Naming: the base form keeps the jins's own name; every other form names its
+ * tonic, "[jins name] al-[starting note]" (jins kurd al-ḥusaynī).
+ *
  * @param allPitchClasses - Complete tuning system to search within
- * @param jinsData - Source jins data to find transpositions for
- * @param withTahlil - Include original analytical position in results
+ * @param jinsData - The jins whose forms to find
  * @param centsTolerance - Tolerance for interval matching (default: ±5 cents JND)
- * @returns Array of all possible jins transpositions following traditional naming,
- *   or an empty array if the tuning system cannot build the jins at all
+ * @returns Every form, base form first, or an empty array if the tuning system
+ *   cannot build the jins at all
+ * @throws If the tuning system can build the jins but no form starts on its
+ *   canonical first note, i.e. the base form cannot be resolved
  */
-export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsData: JinsData | null, withTahlil: boolean, centsTolerance: number = 5): Jins[] {
+export function calculateJinsForms(allPitchClasses: PitchClass[], jinsData: JinsData | null, centsTolerance: number = 5): Jins[] {
   if (allPitchClasses.length === 0 || !jinsData) return [];
 
   const jinsNoteNames = jinsData.getNoteNames();
 
   if (jinsNoteNames.length < 2) return [];
 
-  // A jins the tuning system cannot build has no transpositions. Without this
+  // A jins the tuning system cannot build has no forms. Without this
   // the filter below would silently drop the missing notes and derive an
-  // interval pattern from the surviving ones — transpositions of a jins that
+  // interval pattern from the surviving ones — forms of a jins that
   // does not exist here. Mirrors the embedded-ajnās check in
-  // calculateMaqamTranspositions.
+  // calculateMaqamForms.
   if (!jinsData.isJinsPossible(allPitchClasses.map((pitchClass) => pitchClass.noteName))) return [];
 
   const jinsCells = allPitchClasses.filter((pitchClass) => jinsNoteNames.includes(pitchClass.noteName));
 
   const intervalPattern: PitchClassInterval[] = getPitchClassIntervals(jinsCells);
 
-  const jinsTranspositions: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, centsTolerance)
+  const candidateForms: Jins[] = calculatePitchClassTranspositions(allPitchClasses, intervalPattern, true, centsTolerance)
     .map((sequence) => {
       const tonic = sequence[0].noteName;
       const isTransposed = !sameModalDegreeSlot(jinsNoteNames[0], tonic);
@@ -502,52 +507,50 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
         jinsId: jinsData.getId(),
         name: isTransposed ? `${jinsData.getName()} al-${tonic}` : jinsData.getName(),
         transposition: isTransposed,
-        // Provisional: the tahlil is picked out below and re-stamped true.
+        // Provisional: the base form is picked out below and re-stamped true.
         isBaseForm: false,
         jinsPitchClasses: sequence,
         jinsPitchClassIntervals: getPitchClassIntervals(sequence),
       };
     });
 
-  // The tahlil is the transposition on the EXACT canonical first note (rāst →
-  // rāst/C3), never an octave sibling (qarār rāst/C2, kirdān/C4). The guard at
+  // The base form is the form on the EXACT canonical first note (rāst →
+  // rāst/C3), never an octave rendering (qarār rāst/C2, kirdān/C4). The guard at
   // the top of this function guarantees that note is in the tuning system, and
   // a sequence starting there matches the jins's own interval pattern at zero
   // deviation, so the match always exists.
   const canonicalFirstNote = jinsNoteNames[0];
-  const tahlilTransposition = jinsTranspositions.find(
-    (transposition) => transposition.jinsPitchClasses[0].noteName === canonicalFirstNote
+  const baseForm = candidateForms.find(
+    (form) => form.jinsPitchClasses[0].noteName === canonicalFirstNote
   );
-  // Octave-register siblings of the tahlil (same modal degree slot, different
+  // Octave renderings of the base form (same modal degree slot, different
   // register — e.g. qarār rāst vs rāst vs kirdān) keep transposition=false
   // by design (register shift is not taṣwīr), but give them a distinguishing
   // name suffix so name-based lookups in the UI (open/collapse state, scroll
-  // targets) are unambiguous — mirrors calculateMaqamTranspositions.
-  const jinsTranspositionsWithoutTahlil = jinsTranspositions
-    .filter((transposition) => transposition !== tahlilTransposition)
-    .map((transposition) => {
+  // targets) are unambiguous — mirrors calculateMaqamForms.
+  const otherForms = candidateForms
+    .filter((form) => form !== baseForm)
+    .map((form) => {
       if (
-        !transposition.transposition &&
-        transposition.jinsPitchClasses[0].noteName !== canonicalFirstNote
+        !form.transposition &&
+        form.jinsPitchClasses[0].noteName !== canonicalFirstNote
       ) {
         return {
-          ...transposition,
-          name: `${jinsData.getName()} al-${transposition.jinsPitchClasses[0].noteName}`,
+          ...form,
+          name: `${jinsData.getName()} al-${form.jinsPitchClasses[0].noteName}`,
         };
       }
-      return transposition;
+      return form;
     });
 
-  if (!withTahlil) return jinsTranspositionsWithoutTahlil;
-
-  if (!tahlilTransposition) {
+  if (!baseForm) {
     throw new Error(
-      `Could not resolve the tahlil of jins ${jinsData.getName()}: no transposition starts on its canonical first note '${canonicalFirstNote}', ` +
-        `even though the tuning system contains every note of the jins. This means the transposition search failed to return the jins's own position.`
+      `Could not resolve the base form of jins ${jinsData.getName()}: no form starts on its canonical first note '${canonicalFirstNote}', ` +
+        `even though the tuning system contains every note of the jins. This means the form search failed to return the jins's own position.`
     );
   }
 
-  return [{ ...tahlilTransposition, name: jinsData.getName(), transposition: false, isBaseForm: true }, ...jinsTranspositionsWithoutTahlil];
+  return [{ ...baseForm, name: jinsData.getName(), transposition: false, isBaseForm: true }, ...otherForms];
 }
 
 /**
@@ -559,13 +562,13 @@ export function calculateJinsTranspositions(allPitchClasses: PitchClass[], jinsD
  * recursive sequence building to ensure all required intervals can be matched within the
  * specified cents tolerance.
  * 
- * The algorithm extracts the source maqām's tahlīl (analysis), derives its interval pattern,
+ * The algorithm extracts the source maqām's base form, derives its interval pattern,
  * and attempts to rebuild the sequence starting from the target note. This validation is
  * essential for preventing incomplete or invalid transpositions in the user interface.
  * 
  * @param tuningSystem - The tuning system containing the available pitch classes
  * @param startingNote - The original starting note of the maqām in its current position
- * @param maqamData - The maqām object containing the tahlīl and structural information
+ * @param maqamData - The maqām object containing the base form and structural information
  * @param targetFirstNote - The desired starting note for the transposed maqām
  * @param centsTolerance - Maximum allowed deviation in cents for interval matching (default: 5)
  * @returns true if the maqām can be completely transposed to the target note, false otherwise
@@ -592,8 +595,8 @@ export function canTransposeMaqamToNote(
   const ascendingNoteNames = maqamData.getAscendingNoteNames();
   if (ascendingNoteNames.length < 2) return false;
 
-  // Get the tahlil (source) maqam pitch classes
-  const sourceMaqam = maqamData.getTahlil(allPitchClasses);
+  // Get the base-form (source) maqam pitch classes
+  const sourceMaqam = maqamData.getBaseForm(allPitchClasses);
   if (!sourceMaqam || sourceMaqam.ascendingPitchClasses.length === 0) return false;
 
   // Get the interval pattern from the source maqam
@@ -695,7 +698,7 @@ export function renderingsLookup(allPitchClasses: PitchClass[], allAjnas: JinsDa
       if (!maqamRenderings.has(maqamId)) {
         const maqamData = allMaqamat.find((m) => m.getId() === maqamId);
         if (!maqamData) throw new Error(`No maqām with id ${maqamId}`);
-        maqamRenderings.set(maqamId, calculateMaqamTranspositions(allPitchClasses, allAjnas, maqamData, true, centsTolerance));
+        maqamRenderings.set(maqamId, calculateMaqamForms(allPitchClasses, allAjnas, maqamData, centsTolerance));
       }
       return maqamRenderings.get(maqamId)!;
     },
@@ -703,7 +706,7 @@ export function renderingsLookup(allPitchClasses: PitchClass[], allAjnas: JinsDa
       if (!jinsRenderings.has(jinsId)) {
         const jinsData = allAjnas.find((j) => j.getId() === jinsId);
         if (!jinsData) throw new Error(`No jins with id ${jinsId}`);
-        jinsRenderings.set(jinsId, calculateJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance));
+        jinsRenderings.set(jinsId, calculateJinsForms(allPitchClasses, jinsData, centsTolerance));
       }
       return jinsRenderings.get(jinsId)!;
     },

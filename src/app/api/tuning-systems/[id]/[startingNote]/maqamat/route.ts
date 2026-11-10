@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { entityToken, standardizeText } from "@/functions/export";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import PitchClass from "@/models/PitchClass";
@@ -177,7 +177,7 @@ export async function GET(
       : null;
     const renderPitchClassSpellings = degreeSpellingsModule?.renderPitchClassSpellings;
 
-    // One degree-detail object, shared by the taḥlīl and every transposition in
+    // One degree-detail object, shared by the base form and every transposition in
     // both directions. The 12-EDO fields match GET /maqamat/{id}: the reference
     // key the degree is spelled against, the deviation from it, and the two as
     // "<MIDI note> <±cents>", so a client can map degrees to keyboard keys
@@ -203,25 +203,24 @@ export async function GET(
         // array for every maqām in systems like ibnsina_1037.
         const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
 
-        // Calculate transpositions and get tahlil
-        const transpositions = calculateMaqamTranspositions(
+        // Calculate transpositions and get the base form
+        const transpositions = calculateMaqamForms(
           pitchClasses,
           ajnas,
           maqam,
-          true,
           centsTolerance
         );
-        // The tahlil (base form). Not `!t.transposition` — that is also false
-        // for the tahlil's octave-register siblings.
-        const tahlil = transpositions.find((t: any) => t.isBaseForm);
+        // The base form. Not `!t.transposition` — that is also false
+        // for the base form's octave renderings.
+        const baseForm = transpositions.find((t: any) => t.isBaseForm);
 
-        // Skip if no tahlil found (shouldn't happen but TypeScript safety)
-        if (!tahlil) {
+        // Skip if no base form is found (shouldn't happen but TypeScript safety)
+        if (!baseForm) {
           continue;
         }
 
         // Get classification
-        const classification = classifyMaqamFamily(tahlil);
+        const classification = classifyMaqamFamily(baseForm);
 
         // Check for asymmetric descending
         const ascendingNotes = maqam.getAscendingNoteNames();
@@ -241,10 +240,10 @@ export async function GET(
           },
           {
             version: maqam.getVersion(),
-            // Every item on this listing is the tahlil; the taswir are listed
-            // separately under `transpositions`. Taken from the resolved tahlil
+            // Every item on this listing is the base form; the taswir are listed
+            // separately under `transpositions`. Taken from the resolved base form
             // rather than hard-coded true.
-            extras: { isBaseForm: tahlil.isBaseForm, formType: formTypeOf(tahlil) },
+            extras: { isBaseForm: baseForm.isBaseForm, formType: formTypeOf(baseForm) },
             inArabic,
             displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
           }
@@ -294,8 +293,8 @@ export async function GET(
           if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
             // Spell each direction on its own: ascending and descending are
             // independent outside 12-pitch-class sets.
-            const renderedAscending = renderPitchClassSpellings(tahlil.ascendingPitchClasses, true);
-            const renderedDescending = renderPitchClassSpellings(tahlil.descendingPitchClasses, false);
+            const renderedAscending = renderPitchClassSpellings(baseForm.ascendingPitchClasses, true);
+            const renderedDescending = renderPitchClassSpellings(baseForm.descendingPitchClasses, false);
 
             item.maqamDegrees = {
               ascending: renderedAscending.map(toDegreeDetail),
@@ -313,7 +312,7 @@ export async function GET(
         // `transpositions`, the octave renderings under `octaveRenderings`.
         const renderingEntry = (t: any) => {
           const tonicNoteName = t.ascendingPitchClasses[0].noteName;
-          // Each direction on its own, as for the taḥlīl above.
+          // Each direction on its own, as for the base form above.
           const maqamDegrees =
             shouldIncludeDegreeDetails && renderPitchClassSpellings
               ? {

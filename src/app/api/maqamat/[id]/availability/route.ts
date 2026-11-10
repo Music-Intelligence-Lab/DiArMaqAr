@@ -5,7 +5,7 @@ import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { resolveEntityId, standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
@@ -126,11 +126,10 @@ export async function GET(
         // If transpositionNoteName is specified, check if this transposition is valid
         if (transpositionNoteName) {
           const pitchClasses = getTuningSystemPitchClasses(tuningSystem, tuningSystemStartingNoteName);
-          const transpositions = calculateMaqamTranspositions(
+          const transpositions = calculateMaqamForms(
             pitchClasses,
             ajnas,
             maqam,
-            true,
             centsTolerance
           );
           // Check if any transposition starts on the requested note (case/diacritics insensitive)

@@ -82,7 +82,7 @@ function tiersFor(candidate: JinsCandidate, degreeNoteName: string, attestation:
     -(attestation.perSlot.get(`${candidate.jinsId}@${slot}`) ?? 0),
     // 3. Attested anywhere. transposeSayr shifts stored note names by the
     //    transposition offset, which means suyūr are recorded at each maqām's
-    //    tahlil position — so tiers 1 and 2 cannot speak to taṣwīr degrees at all,
+    //    base-form position — so tiers 1 and 2 cannot speak to taṣwīr degrees at all,
     //    and this corpus-wide count is what carries the signal there.
     -(attestation.corpusWide.get(candidate.jinsId) ?? 0),
     // 4. Structurally seated on this degree. Inference, not evidence, so it ranks
