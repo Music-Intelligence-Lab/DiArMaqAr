@@ -6327,9 +6327,7 @@
     "secondaryJinsDegree": [
       "ḥusaynī"
     ],
-    "tertiaryJinsDegree": [
-      "muḥayyar"
-    ],
+    "tertiaryJinsDegree": null,
     "ghammaz": [
       "nawā"
     ],
@@ -6486,7 +6484,7 @@
         "page": "128-129"
       }
     ],
-    "version": "2026-07-26T09:49:29.606Z"
+    "version": "2026-11-10T16:40:21.000Z"
   },
   {
     "id": "49",
