@@ -9416,7 +9416,7 @@ paths:
                               $ref: '#/components/schemas/IdentifierRef'
                             interval:
                               type: object
-                              description: Interval data (excludes pitchClassIndex when querying by note names)
+                              description: Interval data
                               properties:
                                 fraction:
                                   type: string
@@ -9672,7 +9672,7 @@ paths:
                                 $ref: '#/components/schemas/IdentifierRef'
                               interval:
                                 type: object
-                                description: Interval data (excludes pitchClassIndex when querying by note names)
+                                description: Interval data
                                 properties:
                                   fraction:
                                     type: string
