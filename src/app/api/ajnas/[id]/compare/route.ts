@@ -129,8 +129,7 @@ function formatIntervalData(intervals: any[], format: string) {
         cents: interval.cents,
         decimalRatio: interval.decimalRatio,
         stringLength: interval.stringLength,
-        fretDivision: interval.fretDivision,
-        pitchClassIndex: interval.pitchClassIndex
+        fretDivision: interval.fretDivision
       }));
     case "cents":
       return intervals.map((interval) => ({

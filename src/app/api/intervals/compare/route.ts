@@ -23,7 +23,7 @@ import {
 export const OPTIONS = handleCorsPreflightRequest;
 
 /**
- * Format interval data for API responses (excludes pitchClassIndex when querying by note names)
+ * Format interval data for API responses
  */
 function formatIntervalData(interval: ReturnType<typeof calculateInterval>) {
   return {
