@@ -865,9 +865,9 @@ function pitchSpaceRenderings(pitchClasses: PitchClass[], allAjnas: JinsData[], 
  * The suyūr an export carries for one maqām form: those playable on it, moved
  * onto it, as the app and the API show them (see playableSuyur).
  */
-function exportedSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses">, pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number): Sayr[] {
+function exportedSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses" | "descendingPitchClasses">, pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number): Sayr[] {
   const renderings = pitchSpaceRenderings(pitchClasses, allAjnas, allMaqamat, centsTolerance);
-  return playableSuyur(maqam, form, { pitchClasses, ajnas: allAjnas, maqamat: allMaqamat, renderings }).map((sayr) => ({
+  return playableSuyur(maqam, form, { pitchClasses, ajnas: allAjnas, maqamat: allMaqamat, renderings, centsTolerance }).map((sayr) => ({
     ...sayr,
     version: sayr.version || maqam.getVersion(),
   }));

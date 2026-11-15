@@ -80,9 +80,9 @@ function tiersFor(candidate: JinsCandidate, degreeNoteName: string, attestation:
     //    names: nikrīz is attested mostly at rāst and only rarely at kurdān, where
     //    it would otherwise tie with nawā athar and lose its own octave.
     -(attestation.perSlot.get(`${candidate.jinsId}@${slot}`) ?? 0),
-    // 3. Attested anywhere. transposeSayr shifts stored note names by the
-    //    transposition offset, which means suyūr are recorded at each maqām's
-    //    base-form position — so tiers 1 and 2 cannot speak to taṣwīr degrees at all,
+    // 3. Attested anywhere. Suyūr are stored on each maqām's base form and only
+    //    moved onto a taṣwīr when shown (transposeSayr), so tiers 1 and 2 cannot
+    //    speak to taṣwīr degrees at all,
     //    and this corpus-wide count is what carries the signal there.
     -(attestation.corpusWide.get(candidate.jinsId) ?? 0),
     // 4. Structurally seated on this degree. Inference, not evidence, so it ranks

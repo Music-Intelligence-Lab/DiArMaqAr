@@ -119,37 +119,87 @@ function calculatePitchClassTranspositions(inputPitchClasses: PitchClass[], pitc
   });
 }
 
+/** A maqām's notes in one pitch space: every note of both directions in pitch order, and its tonic */
+export interface MaqamPlacement {
+  structure: PitchClass[];
+  tonic: PitchClass;
+}
+
 /**
- * Shifts a note name by `shift` positions within `allPitchClasses`. Used by
- * sayr transposition. This is a fixed shift across the tuning system, not a
- * scale-degree mapping: where the steps are uneven, moving the tonic by N
- * positions does not move every degree by N. The maqām degree fields are
- * mapped by structure position instead (see calculateMaqamForms).
+ * Where a note named against a maqām's base form falls on one of its forms.
+ * Used for the degree fields (ghammāz, jins degrees) and for every sayr stop.
  *
- * @param noteName Source note name to shift.
- * @param shift Positive = upward, negative = downward, in tuning-system positions.
- * @param allPitchClasses The tuning system's full pitch-class array.
- * @returns An object reporting the shifted note name plus flags for the two
- *   failure modes: `notFound` if `noteName` is absent from `allPitchClasses`,
- *   and `outOfBounds` if the shifted index falls outside the pitch-class array.
- *   In both failure modes the original `noteName` is returned unchanged so
- *   callers that want "preserve on failure" behaviour (like transposeSayr)
- *   can use the result directly.
+ * 1. A note of the maqām: the form's note at the same place in the maqām
+ *    (nawā, degree V of rāst, is muḥayyar on rāst al-nawā).
+ * 2. An octave of a note of the maqām: that form note, moved by the same
+ *    octaves (saham/ramal tūtī in rāst is jawāb muḥayyar on rāst al-nawā).
+ * 3. Any other note: the note at the same distance from the form's tonic as
+ *    it is from the base form's tonic, within the cents tolerance (ʿirāq, a
+ *    whole tone below dūgāh, is segāh on bayyātī al-nawā).
+ *
+ * Counting places in the tuning system's note list instead is wrong wherever
+ * its steps are uneven: in Allami 2025 nawā is 15 places above rāst but
+ * muḥayyar is 17 above nawā, so a count lands nawā on shahnāz.
+ *
+ * @returns the note name, or null when the pitch space has no such note
+ *   (past its range, or no note at that distance). Never a substitute.
  */
-function shiftNoteNameByTransposition(
+export function placeNoteOnForm(
   noteName: string,
-  shift: number,
-  allPitchClasses: PitchClass[]
-): { noteName: string; outOfBounds: boolean; notFound: boolean } {
-  const noteIndex = allPitchClasses.findIndex((p) => p.noteName === noteName);
-  if (noteIndex === -1) {
-    return { noteName, outOfBounds: false, notFound: true };
+  allPitchClasses: PitchClass[],
+  stored: MaqamPlacement,
+  form: MaqamPlacement,
+  centsTolerance: number
+): string | null {
+  const named = (pitchClass: PitchClass | undefined) =>
+    pitchClass && pitchClass.noteName !== "" && pitchClass.noteName !== "none" ? pitchClass.noteName : null;
+
+  const position = stored.structure.findIndex((cell) => cell.noteName === noteName);
+  if (position !== -1) return named(form.structure[position]);
+
+  const source = allPitchClasses.find((pitchClass) => pitchClass.noteName === noteName);
+  if (!source) return null;
+
+  const octaveEquivalents = stored.structure
+    .map((cell, index) => ({ index, octaves: cell.octave - source.octave, cell }))
+    .filter(({ cell, octaves }) => octaves !== 0 && cell.pitchClassIndex === source.pitchClassIndex)
+    .sort((a, b) => Math.abs(a.octaves) - Math.abs(b.octaves));
+  if (octaveEquivalents.length > 0) {
+    const { index, octaves } = octaveEquivalents[0];
+    return named(shiftPitchClassByOctave(allPitchClasses, form.structure[index], -octaves));
   }
-  const newIndex = noteIndex + shift;
-  if (newIndex < 0 || newIndex >= allPitchClasses.length) {
-    return { noteName, outOfBounds: true, notFound: false };
+
+  const target = parseFloat(source.cents) - parseFloat(stored.tonic.cents) + parseFloat(form.tonic.cents);
+  let nearest: PitchClass | undefined;
+  let deviation = Infinity;
+  for (const pitchClass of allPitchClasses) {
+    const d = Math.abs(parseFloat(pitchClass.cents) - target);
+    if (d < deviation) {
+      deviation = d;
+      nearest = pitchClass;
+    }
   }
-  return { noteName: allPitchClasses[newIndex].noteName, outOfBounds: false, notFound: false };
+  return deviation <= centsTolerance ? named(nearest) : null;
+}
+
+/** The placement of the stored maqām and of one of its forms, for placeNoteOnForm */
+export function maqamPlacements(
+  allPitchClasses: PitchClass[],
+  maqamData: MaqamData,
+  form: Pick<Maqam, "ascendingPitchClasses" | "descendingPitchClasses">
+): { stored: MaqamPlacement; form: MaqamPlacement } {
+  const storedNames = new Set([...maqamData.getAscendingNoteNames(), ...maqamData.getDescendingNoteNames()]);
+  const formNames = new Set([...form.ascendingPitchClasses, ...form.descendingPitchClasses].map((pitchClass) => pitchClass.noteName));
+  const storedStructure = allPitchClasses.filter((pitchClass) => storedNames.has(pitchClass.noteName));
+  const formStructure = allPitchClasses.filter((pitchClass) => formNames.has(pitchClass.noteName));
+  const storedTonic = allPitchClasses.find((pitchClass) => pitchClass.noteName === maqamData.getAscendingNoteNames()[0]);
+  if (!storedTonic || storedStructure.length !== formStructure.length) {
+    throw new Error(`Form ${form.ascendingPitchClasses[0]?.noteName} does not match the stored structure of maqām ${maqamData.getName()} (id ${maqamData.getId()})`);
+  }
+  return {
+    stored: { structure: storedStructure, tonic: storedTonic },
+    form: { structure: formStructure, tonic: form.ascendingPitchClasses[0] },
+  };
 }
 
 /**
@@ -342,32 +392,12 @@ export function calculateMaqamForms(
     const isTransposed = !sameModalDegreeSlot(firstMaqamNote, firstTransposedNote);
 
     // The four degree fields (primary, secondary and tertiary jins, ghammāz) are
-    // stored as note names of the base form. Each is carried to this form by its
-    // place in the maqām: the note at the same position of the structure. A
-    // fixed tuning-system shift (move every note as far as the tonic moved) is
-    // wrong wherever the steps are uneven: in Allami 2025, maqām rāst on qarār
-    // chahārgāh moved its ghammāz nawā to rahāwī, which is not in that form at
-    // all, instead of to its own degree V.
-    //
-    // A stored degree outside the structure is taken through the structure
-    // note an octave from it, then moved back by that octave (tarznwin's
-    // ghammāz nawā through its saham/ramal tūtī). On the base form both rules
-    // return the stored name unchanged.
-    const mapDegreeNote = (noteName: string): string | null => {
-      const position = structureCells.findIndex((cell) => cell.noteName === noteName);
-      if (position !== -1) return structure[position].noteName;
-
-      const source = allPitchClasses.find((pitchClass) => pitchClass.noteName === noteName);
-      if (!source) return null;
-      const octaveEquivalents = structureCells
-        .map((cell, index) => ({ index, octaves: cell.octave - source.octave, cell }))
-        .filter(({ cell, octaves }) => octaves !== 0 && cell.pitchClassIndex === source.pitchClassIndex)
-        .sort((a, b) => Math.abs(a.octaves) - Math.abs(b.octaves));
-      if (octaveEquivalents.length === 0) return null;
-      const { index, octaves } = octaveEquivalents[0];
-      const shifted = shiftPitchClassByOctave(allPitchClasses, structure[index], -octaves);
-      return shifted.noteName === "" ? null : shifted.noteName;
-    };
+    // stored as note names of the base form. Each is carried to this form by
+    // placeNoteOnForm, the same rule that moves a sayr's stops.
+    const storedPlacement = { structure: structureCells, tonic: structureCells[ascendingPositions[0]] };
+    const formPlacement = { structure, tonic: ascendingPitchClasses[0] };
+    const mapDegreeNote = (noteName: string): string | null =>
+      placeNoteOnForm(noteName, allPitchClasses, storedPlacement, formPlacement, centsTolerance);
 
     const mapDegree = (source: string[] | null | undefined): string[] | null => {
       if (source == null) return null;
@@ -664,49 +694,41 @@ export function canTransposeMaqamToNote(
 }
 
 /**
- * Transposes a sayr by shifting its note names.
- * 
- * Calculates the shift amount by comparing the first note of the source maqām data
- * with the first note of the target maqām, then applies this shift to all note
- * references in the sayr. Handles different stop types appropriately and flags
- * when transposed notes fall outside the available tuning system range.
- * 
- * @param sayr - The sayr structure to transpose
- * @param allPitchClasses - Available pitch classes in the tuning system
- * @param maqamData - Source maqām data for calculating shift amount
- * @param maqam - Target maqām for calculating shift amount
- * @returns Object containing the transposed sayr and out-of-bounds flag
+ * Moves a sayr onto one form of its maqām. Every note stop and every jins or
+ * maqām stop's starting note is placed by placeNoteOnForm, so the sayr keeps
+ * its place in the maqām. On the base form nothing moves.
+ *
+ * @returns the moved sayr, and unplaceable: true when some stop has no note in
+ *   this pitch space (the sayr cannot be played here)
  */
-export function transposeSayr(sayr: Sayr, allPitchClasses: PitchClass[], maqamData: MaqamData, maqam: Pick<Maqam, "ascendingPitchClasses">): { transposedSayr: Sayr; hasOutOfBoundsNotes: boolean } {
-  const firstNoteInData = maqamData.getAscendingNoteNames()[0];
-  const firstNoteInMaqam = maqam.ascendingPitchClasses[0].noteName;
+export function transposeSayr(
+  sayr: Sayr,
+  allPitchClasses: PitchClass[],
+  maqamData: MaqamData,
+  maqam: Pick<Maqam, "ascendingPitchClasses" | "descendingPitchClasses">,
+  centsTolerance: number
+): { transposedSayr: Sayr; unplaceable: boolean } {
+  const placements = maqamPlacements(allPitchClasses, maqamData, maqam);
+  let unplaceable = false;
 
-  const firstNoteInDataIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === firstNoteInData);
-  const firstNoteInMaqamIndex = allPitchClasses.findIndex((pitchClass) => pitchClass.noteName === firstNoteInMaqam);
-
-  const shift = firstNoteInMaqamIndex - firstNoteInDataIndex;
-  let hasOutOfBoundsNotes = false;
-
-  const shiftOne = (noteName: string): string => {
-    const result = shiftNoteNameByTransposition(noteName, shift, allPitchClasses);
-    if (result.outOfBounds) hasOutOfBoundsNotes = true;
-    return result.noteName;
+  const place = (noteName: string): string => {
+    const placed = placeNoteOnForm(noteName, allPitchClasses, placements.stored, placements.form, centsTolerance);
+    if (placed === null) {
+      unplaceable = true;
+      return noteName;
+    }
+    return placed;
   };
-
-  const originalStops = sayr.stops;
 
   // A stop keeps the fields it has: only a note's value and a jins or maqām
   // stop's starting note move
-  const newStops = originalStops.map((stop) => {
-    if (stop.type === "note") return { ...stop, value: shiftOne(stop.value) };
-    if ((stop.type === "jins" || stop.type === "maqam") && stop.startingNote) return { ...stop, startingNote: shiftOne(stop.startingNote) };
+  const newStops = sayr.stops.map((stop) => {
+    if (stop.type === "note") return { ...stop, value: place(stop.value) };
+    if ((stop.type === "jins" || stop.type === "maqam") && stop.startingNote) return { ...stop, startingNote: place(stop.startingNote) };
     return { ...stop };
   });
 
-  return {
-    transposedSayr: { ...sayr, stops: newStops },
-    hasOutOfBoundsNotes
-  };
+  return { transposedSayr: { ...sayr, stops: newStops }, unplaceable };
 }
 
 

@@ -20,6 +20,8 @@ export interface SuyurContext {
   ajnas: JinsData[];
   maqamat: MaqamData[];
   renderings: PitchSpaceRenderings;
+  /** How far a stop's note may be from the exact distance when it is not a note of the maqām (see placeNoteOnForm) */
+  centsTolerance: number;
 }
 
 /**
@@ -32,8 +34,9 @@ export interface SuyurContext {
  * has moved it onto that form's tonic.
  *
  * It is playable when every stop is:
- * - a note: the pitch space has that note, and moving the sayr did not push it
- *   past either end of the pitch space;
+ * - a note: moving the sayr placed it on a named note of the pitch space
+ *   (placeNoteOnForm: same place in the maqām, else same distance from the
+ *   tonic within the cents tolerance; never past either end, never "none");
  * - a jins or maqām: that form, starting on the stop's note, is one of the forms
  *   the pitch space lists for it (base form, taṣwīr or octave rendering), with
  *   its intervals within the cents tolerance. Having the notes is not enough.
@@ -49,14 +52,14 @@ export interface SuyurContext {
  *   empty or unknown jins or maqām id, or a direction other than ascending or
  *   descending. The message names the maqām, the sayr and the stop.
  */
-export function playableSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses">, context: SuyurContext): Sayr[] {
+export function playableSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses" | "descendingPitchClasses">, context: SuyurContext): Sayr[] {
   const noteNames = new Set(context.pitchClasses.map((pitchClass) => pitchClass.noteName));
   const playable: Sayr[] = [];
 
   for (const sayr of maqam.getSuyur()) {
     const stored = withStartingNotes(maqam, sayr, context);
-    const { transposedSayr, hasOutOfBoundsNotes } = transposeSayr(stored, context.pitchClasses, maqam, form);
-    if (hasOutOfBoundsNotes) continue;
+    const { transposedSayr, unplaceable } = transposeSayr(stored, context.pitchClasses, maqam, form, context.centsTolerance);
+    if (unplaceable) continue;
     if (transposedSayr.stops.every((stop) => stopIsPlayable(stop, noteNames, context.renderings))) {
       playable.push(transposedSayr);
     }
@@ -117,7 +120,7 @@ function withStartingNotes(maqam: MaqamData, sayr: Sayr, context: SuyurContext):
 function stopIsPlayable(stop: SayrStop, noteNames: Set<string>, renderings: PitchSpaceRenderings): boolean {
   switch (stop.type) {
     case "note":
-      return noteNames.has(stop.value);
+      return stop.value !== "none" && noteNames.has(stop.value);
     case "jins":
       return renderings.jins(stop.value).some((jins) => jins.jinsPitchClasses[0].noteName === stop.startingNote);
     case "maqam":

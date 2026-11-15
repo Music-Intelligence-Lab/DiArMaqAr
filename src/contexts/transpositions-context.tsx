@@ -124,8 +124,9 @@ export function TranspositionsContextProvider({ children }: { children: React.Re
       ajnas,
       maqamat,
       renderings: { maqam: formsOf(allMaqamTranspositionsMap, "maqām"), jins: formsOf(allJinsTranspositionsMap, "jins") },
+      centsTolerance,
     });
-  }, [selectedMaqamData, selectedMaqam, maqamTranspositions, allPitchClasses, ajnas, maqamat, allMaqamTranspositionsMap, allJinsTranspositionsMap]);
+  }, [selectedMaqamData, selectedMaqam, maqamTranspositions, allPitchClasses, ajnas, maqamat, allMaqamTranspositionsMap, allJinsTranspositionsMap, centsTolerance]);
 
   return (
     <TranspositionsContext.Provider

@@ -93,6 +93,7 @@ export class PitchSpaceForms {
       ajnas: this.ajnas,
       maqamat: this.maqamatData,
       renderings: { maqam: (id) => this.maqamRenderings(id), jins: (id) => this.jinsRenderings(id) },
+      centsTolerance: this.centsTolerance,
     };
     return playableSuyur(maqam, form, this.suyurContext);
   }
