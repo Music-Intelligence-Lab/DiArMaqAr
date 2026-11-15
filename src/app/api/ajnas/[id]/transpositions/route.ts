@@ -1,6 +1,6 @@
 import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
-import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";

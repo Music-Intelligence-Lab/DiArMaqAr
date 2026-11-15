@@ -1,6 +1,6 @@
 import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
-import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { mergePathTonic } from "@/app/api/path-tonic";
 import { ajnasByDegree } from "@/app/api/maqamat/maqam-detail";
 import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";

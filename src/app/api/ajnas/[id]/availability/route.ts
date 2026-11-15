@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { mergePathTonic, rejectPathTonic } from "@/app/api/path-tonic";
+import { mergePathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { resolveEntityId, standardizeText } from "@/functions/export";
