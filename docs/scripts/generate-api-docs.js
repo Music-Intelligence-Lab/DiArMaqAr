@@ -73,7 +73,7 @@ Currently, there are no rate limits. Please use the API responsibly.
 
 Most endpoints support these optional parameters:
 
-- **\`includeArabic\`** (default: \`"true"\`): Include Arabic script alongside transliteration
+- **\`includeArabic\`** (default: \`"false"\`): Include Arabic script alongside transliteration
   - \`"true"\`: Bilingual responses with \`*Ar\` suffixed fields (\`displayNameAr\`, \`noteNameDisplayAr\`, etc.)
   - \`"false"\`: English transliteration only
 

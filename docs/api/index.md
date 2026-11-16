@@ -296,7 +296,7 @@ The two `centsInOctave` values, 701.9 and 731.4, differ by 29.5 cents. They are 
 All endpoints return JSON. No authentication required.
 
 **Common parameters:**
-- `includeArabic` (default: "true") - Include Arabic script alongside transliteration
+- `includeArabic` (default: "false") - Include Arabic script alongside transliteration
 - `includeSources` (default varies) - Include bibliographic source references
 
 For complete parameter documentation, see the [Endpoints Reference](./endpoints-reference).
