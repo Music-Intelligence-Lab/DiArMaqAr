@@ -12,6 +12,7 @@ import { parseBooleanFlag } from "@/functions/parseBooleanFlag";
 
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Hamza patterns (must come first - longest patterns first)
+  āʾi: "ائ", // hamza on a yāʾ seat after long alif (zāʾid → زائد)
   āʾ: "اء", // hamza after long alif
   ʾā: "آ", // alif with madda
   ʾa: "أ", // hamza above alif (only actual hamza character)
@@ -221,6 +222,9 @@ function convertNoteNameToArabic(name: string): string {
 
 const arabicNameCache = new Map<string, string>();
 
+/** Latin letters, with or without diacritics, and the ʿayn and hamza marks. */
+const LATIN_LETTERS = /[A-Za-zÀ-ɏḀ-ỿʿʾ]/;
+
 /**
  * Generic dynamic Arabic converter that detects type and applies appropriate conversion
  */
@@ -246,6 +250,12 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
       break;
     default:
       arabic = transliterateToArabic(name);
+  }
+  // A letter the map does not cover passes through unconverted, so the name
+  // would come back half Latin ("مقام نaiروز"). Refuse it rather than return it.
+  const leftover = arabic.match(LATIN_LETTERS);
+  if (leftover) {
+    throw new Error(`Cannot write the ${type} name "${name}" in Arabic: "${leftover[0]}" has no Arabic letter (got "${arabic}")`);
   }
   arabicNameCache.set(key, arabic);
   return arabic;
