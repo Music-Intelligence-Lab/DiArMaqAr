@@ -44,7 +44,7 @@ Currently, there are no rate limits. Please use the API responsibly.
 
 Most endpoints support these optional parameters:
 
-- **`includeArabic`** (default: `"true"`): Include Arabic script alongside transliteration
+- **`includeArabic`** (default: `"false"`): Include Arabic script alongside transliteration
   - `"true"`: Bilingual responses with `*Ar` suffixed fields (`displayNameAr`, `noteNameDisplayAr`, etc.)
   - `"false"`: English transliteration only
 
@@ -1637,7 +1637,7 @@ note names.
    - Extracts IPN reference note names from ascending and descending sequences
    - Puts every degree of the maqām on its key; each key the maqām leaves empty takes
      al-Kindī's (alkindi_874) pitch on that key. Nothing else enters a set: maqām
-     nairūz's set holds tīk ḥiṣār on G#, its own degree; the set holding maqām lāmī
+     nayrūz's set holds tīk ḥiṣār on G#, its own degree; the set holding maqām lāmī
      has ḥiṣār there.
    - Places the tonic in the first octave above `startingNote` (0 to 1200 cents) and
      each following key in the lowest octave above the key before, so every set ascends

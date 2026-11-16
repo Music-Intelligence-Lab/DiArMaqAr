@@ -32,7 +32,7 @@ export interface MaqamTranspositionInfo {
  * Represents a classification set grouping compatible maqamat
  */
 export interface ClassificationSet {
-  /** The identifier of the member the set is named after, plus "_set" — "maqam_nairuz_set" (see chooseSetNamesake) */
+  /** The identifier of the member the set is named after, plus "_set" — "maqam_nayruz_set" (see chooseSetNamesake) */
   id: string;
   name: string;
   sourceMaqam: {

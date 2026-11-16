@@ -65,7 +65,7 @@ export function chooseSetNamesake(
 
 /**
  * A set's name and source, from the member it is named after: the member's
- * identifier plus "_set" (maqam_nairuz_set, maqam_qarjaghar_al_ushayran_set).
+ * identifier plus "_set" (maqam_nayruz_set, maqam_qarjaghar_al_ushayran_set).
  */
 export function setNamedAfter(member: ClassificationSetMember) {
   return {

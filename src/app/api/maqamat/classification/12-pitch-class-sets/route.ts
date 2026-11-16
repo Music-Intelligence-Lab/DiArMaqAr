@@ -535,7 +535,7 @@ export async function GET(request: Request) {
 
         // The tonic of this transposition and the key of the set that holds it,
         // found by pitch: the set may hold it on a neighbouring key of its letter
-        // (tīk ḥiṣār on G# in the nairūz set)
+        // (tīk ḥiṣār on G# in the nayrūz set)
         const maqamTonicPitchClass = info.maqam.ascendingPitchClasses[0];
         const maqamTonicIpnRef = keyHoldingPitch(maqamTonicPitchClass, listedPitchClassSet, centsTolerance);
         const maqamTonicPositionInSet = orderedPitchClasses.findIndex(item => item.ipnRef === maqamTonicIpnRef);
