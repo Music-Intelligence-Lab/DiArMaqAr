@@ -297,6 +297,7 @@ const translations = {
 
     // Tuning System Octave Tables
     "octave.title": "Dīwān (octave)",
+    "octave.noteCount": "{count} notes",
     "octave.cascadeEnabled": "Cascade Enabled",
     "octave.cascadeDisabled": "Cascade Disabled",
     "octave.pitchClass": "Pitch Class",
@@ -377,9 +378,7 @@ const translations = {
     "fretboard.preset.five-strings-2": "Five-string ʿūd 2",
     "fretboard.preset.five-strings-3": "Five-string ʿūd 3",
     "fretboard.anf": "Anf (nut)",
-    "fretboard.quarterString": "¼ string",
     "fretboard.halfString": "½ string",
-    "fretboard.aboveOpen": "above the open watar",
     "fretboard.unavailable": "This dūzān cannot be laid out in this tanghīm.",
     "fretboard.noteNotInSystem": "is not a note of this tanghīm",
     "fretboard.notAscending": "must be higher than the watar above it",
@@ -734,6 +733,7 @@ const translations = {
 
     // Tuning System Octave Tables (Arabic translations)
     "octave.title": "الديوان (أوكتاف)",
+    "octave.noteCount": "النغمات: {count}",
     "octave.cascadeEnabled": "التتالي مُفعَّل",
     "octave.cascadeDisabled": "التتالي مُعطَّل",
     "octave.pitchClass": "فئة النغمة",
@@ -814,9 +814,7 @@ const translations = {
     "fretboard.preset.five-strings-2": "عود بخمسة أوتار ٢",
     "fretboard.preset.five-strings-3": "عود بخمسة أوتار ٣",
     "fretboard.anf": "الأنف",
-    "fretboard.quarterString": "ربع الوتر",
     "fretboard.halfString": "نصف الوتر",
-    "fretboard.aboveOpen": "فوق الوتر المرسل",
     "fretboard.unavailable": "لا يمكن تمثيل هذا الدوزان في هذا النظام النغمي.",
     "fretboard.noteNotInSystem": "ليست نغمة في هذا النظام النغمي",
     "fretboard.notAscending": "يجب أن تكون أعلى من الوتر الذي فوقه",
@@ -1169,6 +1167,7 @@ const translations = {
 
     // Tuning System Octave Tables
     "octave.title": "Dīwān (octave)",
+    "octave.noteCount": "{count} notes",
     "octave.cascadeEnabled": "Cascade activée",
     "octave.cascadeDisabled": "Cascade désactivée",
     "octave.pitchClass": "Classe de hauteur",
@@ -1249,9 +1248,7 @@ const translations = {
     "fretboard.preset.five-strings-2": "ʿūd à cinq cordes 2",
     "fretboard.preset.five-strings-3": "ʿūd à cinq cordes 3",
     "fretboard.anf": "Anf (sillet)",
-    "fretboard.quarterString": "¼ de corde",
     "fretboard.halfString": "½ corde",
-    "fretboard.aboveOpen": "au-dessus du watar à vide",
     "fretboard.unavailable": "Ce dūzān ne peut pas être représenté dans ce tanghīm.",
     "fretboard.noteNotInSystem": "n'est pas une note de ce tanghīm",
     "fretboard.notAscending": "doit être plus aigu que le watar au-dessus",

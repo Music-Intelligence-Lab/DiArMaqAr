@@ -94,6 +94,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
 
+  // Which cells are selected, by position. The open octaves follow a change of
+  // selection only: naming a note rebuilds the pitch classes (a new array with
+  // the same cells selected), and that must not close the octave being named.
+  const selectionKey = selectedPitchClasses.map((pc) => `${pc.octave}:${pc.pitchClassIndex}`).join(",");
   useEffect(() => {
     if (selectedPitchClasses.length === 0) {
       setOpenedOctaveRows({ 0: false, 1: true, 2: true, 3: false });
@@ -106,7 +110,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
       }
       setOpenedOctaveRows(rows);
     }
-  }, [selectedPitchClasses]);
+  }, [selectionKey]);
 
   // Ensure current value type is always checked, uncheck value types not in current tuning system
   useEffect(() => {
@@ -747,7 +751,10 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
               });
             }}
           >
-            {t('octave.title')} {octave}{" "}
+            {t('octave.title')} {octave}
+            {/* Each octave's own count: a stored octave can differ from octave 1 */}
+            {"  ·  "}
+            {t("octave.noteCount").replace("{count}", String(rowCells.length))}{" "}
           </span>
           {admin && openedOctaveRows[octave as 0 | 1 | 2 | 3] && (octave === 1 || octave === 2 || isStoredOctave(octave)) && (
             <button

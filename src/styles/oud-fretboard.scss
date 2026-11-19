@@ -108,6 +108,12 @@
     border-left: 2px solid rgba($text, 0.5);
   }
 
+  /* On the fret names' line: the same baseline as the names, above the markers. */
+  &__fret-names-track &__scale-mark {
+    top: auto;
+    bottom: 14px;
+  }
+
   &__fret-name-text {
     position: absolute;
     bottom: calc(100% + 4px);
@@ -274,10 +280,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    @include hover-tooltip;
   }
 
-  /** A 2px tick is far too small a target; this widens the hit area. */
+  /** A 2px tick is far too small a hover target; this widens the hit area. */
   &__hit {
     position: absolute;
     left: -7px;

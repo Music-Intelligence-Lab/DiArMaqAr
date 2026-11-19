@@ -30,6 +30,8 @@ const LABEL_MODES: LabelMode[] = ["pao", "ipn", "solfege", "ratio", "cents", "fr
 
 /** The dūzān that draws the ʿūd the tuning system's source describes (see SourceOud). */
 const SOURCE_PRESET_ID = "source";
+/** Half the string's length from the anf: the octave of the open string. */
+const HALF_STRING = 0.5;
 
 /** Modes whose labels are numeric: narrow, symmetrical, centred on the tick. */
 const NUMERIC_MODES: LabelMode[] = ["ratio", "cents", "fretDivision"];
@@ -507,54 +509,52 @@ export default function OudFretboard({
         /* Direction-locked: the anf is always at the left and the octave always
            at the right, in every language. Only the chrome above mirrors. */
         <div className="oud-fretboard__plot" style={{ direction: "ltr" }} ref={plotRef}>
-          <div className="oud-fretboard__scale">
-            <span className="oud-fretboard__scale-gutter" />
-            <span className="oud-fretboard__scale-head" />
-            <span className="oud-fretboard__scale-track">
-              <span className="oud-fretboard__scale-mark oud-fretboard__scale-mark_start">
-                {t("fretboard.anf")}
-              </span>
-              {/* Marks at their real place on the string, within the drawn window */}
-              {[
-                { position: 0.25, label: t("fretboard.quarterString") },
-                { position: 0.5, label: t("fretboard.halfString") },
-              ]
-                .filter((mark) => mark.position <= windowEnd + 1e-9)
-                .map((mark) =>
-                  Math.abs(mark.position - windowEnd) < 1e-9 ? (
-                    <span key={mark.position} className="oud-fretboard__scale-mark oud-fretboard__scale-mark_end">
-                      {mark.label}
-                    </span>
+          {/* The anf and the half-string mark, at their real place on the string.
+              With the source's frets shown they share the fret names' line;
+              otherwise they have a line of their own. */}
+          {(() => {
+            const scaleMarks = (
+              <>
+                <span className="oud-fretboard__scale-mark oud-fretboard__scale-mark_start">{t("fretboard.anf")}</span>
+                {HALF_STRING <= windowEnd + 1e-9 &&
+                  (Math.abs(HALF_STRING - windowEnd) < 1e-9 ? (
+                    <span className="oud-fretboard__scale-mark oud-fretboard__scale-mark_end">{t("fretboard.halfString")}</span>
                   ) : (
-                    <span key={mark.position} className="oud-fretboard__scale-mark" style={{ left: `${(mark.position / windowEnd) * 100}%` }}>
-                      {mark.label}
+                    <span className="oud-fretboard__scale-mark" style={{ left: `${(HALF_STRING / windowEnd) * 100}%` }}>
+                      {t("fretboard.halfString")}
                     </span>
-                  )
-                )}
-            </span>
-            <span className="oud-fretboard__scale-tail" />
-          </div>
-
-          {/* The source's frets are tied across the neck, so their names sit once
-              above the awtār, at the anf line, not on each watar. */}
-          {showingSource && (
-            <div className="oud-fretboard__fret-names">
-              <span className="oud-fretboard__scale-gutter" />
-              <span className="oud-fretboard__scale-head" />
-              <span className="oud-fretboard__fret-names-track">
-                {sourceOud?.frets.map((fret) => (
-                  <span
-                    key={fret.id}
-                    className="oud-fretboard__fret-name"
-                    style={{ left: `${((1 - 1 / ratioValue(fret.ratio)) / windowEnd) * 100}%` }}
-                  >
-                    <span className="oud-fretboard__fret-name-text">{fretName(fret)}</span>
-                  </span>
-                ))}
-              </span>
-              <span className="oud-fretboard__scale-tail" />
-            </div>
-          )}
+                  ))}
+              </>
+            );
+            return showingSource ? (
+              /* The source's frets are tied across the neck, so their names sit
+                 once above the awtār, not on each watar. */
+              <div className="oud-fretboard__fret-names">
+                <span className="oud-fretboard__scale-gutter" />
+                <span className="oud-fretboard__scale-head" />
+                <span className="oud-fretboard__fret-names-track">
+                  {scaleMarks}
+                  {sourceOud?.frets.map((fret) => (
+                    <span
+                      key={fret.id}
+                      className="oud-fretboard__fret-name"
+                      style={{ left: `${((1 - 1 / ratioValue(fret.ratio)) / windowEnd) * 100}%` }}
+                    >
+                      <span className="oud-fretboard__fret-name-text">{fretName(fret)}</span>
+                    </span>
+                  ))}
+                </span>
+                <span className="oud-fretboard__scale-tail" />
+              </div>
+            ) : (
+              <div className="oud-fretboard__scale">
+                <span className="oud-fretboard__scale-gutter" />
+                <span className="oud-fretboard__scale-head" />
+                <span className="oud-fretboard__scale-track">{scaleMarks}</span>
+                <span className="oud-fretboard__scale-tail" />
+              </div>
+            );
+          })()}
 
           {fretboard.strings.map((string, stringIndex) => {
             const row = plan![stringIndex];
@@ -617,15 +617,6 @@ export default function OudFretboard({
                           (isExactOctave(allPitchClasses, pitchClass) ? "" : " oud-fretboard__division_not-exact-octave")
                         }
                         style={{ left: `${(division.position / windowEnd) * 100}%` }}
-                        data-tooltip={`${division.fret ? `${fretName(division.fret)}  ·  ` : ""}${getDisplayName(pitchClass.noteName, "note")}  ·  ${
-                          pitchClass.fraction
-                        }  ·  ${Math.round(
-                          parseFloat(pitchClass.cents) - centsOf(string.openPitchClass)
-                        )}¢ ${t("fretboard.aboveOpen")}${
-                          division.fret
-                            ? `\n${language === "ar" ? division.fret.constructionArabic : division.fret.constructionEnglish}`
-                            : ""
-                        }`}
                       >
                         <span className="oud-fretboard__hit" />
                         <span className="oud-fretboard__tick" />
