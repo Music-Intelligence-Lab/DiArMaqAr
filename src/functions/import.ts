@@ -12,6 +12,7 @@ import maqamatData from "@/../data/maqamat.json";
 import sourcesData from "@/../data/sources.json";
 import patternsData from "@/../data/patterns.json";
 
+import validateTuningSystem from "@/functions/validateTuningSystem";
 import TuningSystem from "@/models/TuningSystem";
 import JinsData from "@/models/Jins";
 import MaqamData from "@/models/Maqam";
@@ -34,7 +35,7 @@ type RawSource = { sourceType: string; [key: string]: any };
  * @returns Array of TuningSystem objects with complete functionality
  */
 export function getTuningSystems(): TuningSystem[] {
-  return (tuningSystemsData as any[]).map(
+  const tuningSystems = (tuningSystemsData as any[]).map(
     (d) =>
       new TuningSystem(
         d.titleEnglish, // English title of the tuning system
@@ -54,9 +55,17 @@ export function getTuningSystems(): TuningSystem[] {
         d.referenceFrequencies, // Reference frequency data
         Number(d.defaultReferenceFrequency), // Default reference frequency
         true, // Enable full functionality
-        d.version // Version timestamp (optional, defaults to current time)
+        d.version, // Version timestamp (optional, defaults to current time)
+        // Octaves stored as the source gives them (absent when every octave is octave 1 halved or doubled)
+        d.tuningSystemPitchClassesByOctave
+          ? { pitchClassValues: d.tuningSystemPitchClassesByOctave, noteNames: d.noteNamesByOctave ?? {} }
+          : null,
+        // The ʿūd the source describes (absent when none is recorded)
+        d.sourceOud ?? null
       )
   );
+  tuningSystems.forEach(validateTuningSystem);
+  return tuningSystems;
 }
 
 /**

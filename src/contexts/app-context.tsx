@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
-import TuningSystem from "@/models/TuningSystem";
+import TuningSystem, { StoredOctaves, StorableOctave } from "@/models/TuningSystem";
 import JinsData, { Jins, AjnasModulations } from "@/models/Jins";
 import NoteName, { TransliteratedNoteNameOctaveOne, TransliteratedNoteNameOctaveTwo, Cell } from "@/models/NoteName";
 import { octaveOneNoteNames, octaveTwoNoteNames } from "@/models/NoteName";
@@ -13,6 +13,10 @@ import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
 import PitchClass from "@/models/PitchClass";
 import { getTuningSystems, getMaqamat, getAjnas, getSources, getPatterns } from "@/functions/import";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
+import nameStoredOctaves from "@/functions/nameStoredOctaves";
+import detectPitchClassValueType from "@/functions/detectPitchClassType";
+import convertPitchClassValue from "@/functions/convertPitchClass";
+import { SourceOud } from "@/models/SourceOud";
 import modulate from "@/functions/modulate";
 import { standardizeText } from "@/functions/export";
 
@@ -48,6 +52,14 @@ interface AppContextInterface {
   allPitchClasses: PitchClass[];
   selectedIndices: number[];
   setSelectedIndices: React.Dispatch<React.SetStateAction<number[]>>;
+  /** Stored octaves as currently shown: the admin's unsaved edits, else the saved ones */
+  storedOctaves: StoredOctaves | null;
+  setStoredOctaveNoteNames: (startingNote: string, octave: StorableOctave, names: NoteName[]) => void;
+  /** Stores octaves' values (an unsaved admin edit); null returns an octave to being worked out automatically */
+  setStoredOctaveValues: (changes: Partial<Record<StorableOctave, string[] | null>>) => void;
+  /** The source's ʿūd as currently shown: the admin's unsaved edit, else the saved one */
+  sourceOud: SourceOud | null;
+  setSourceOud: (sourceOud: SourceOud | null) => void;
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: NoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
@@ -105,6 +117,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   const [unresolvedStartingNote, setUnresolvedStartingNote] = useState<string | null>(null);
 
   const [tuningSystemStringLength, setTuningSystemStringLength] = useState(0);
+  // The admin's unsaved edits to stored-octave names, for the system they were made on
+  const [storedOctavesEdit, setStoredOctavesEdit] = useState<{ tuningSystemId: string; storedOctaves: StoredOctaves | null } | null>(null);
+  // The admin's unsaved edits to the source's ʿūd, for the system they were made on
+  const [sourceOudEdit, setSourceOudEdit] = useState<{ tuningSystemId: string; sourceOud: SourceOud | null } | null>(null);
   const [referenceFrequencies, setReferenceFrequencies] = useState<{
     [noteName: string]: number;
   }>({});
@@ -138,6 +154,113 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
     [tuningSystemPitchClasses]
   );
 
+  /**
+   * The stored octaves the app shows: the admin's live edits when there are any
+   * for this tuning system, otherwise the saved ones. A note-name set being
+   * created in the admin has no stored-octave names yet, so it starts with every
+   * one unnamed ("none"), visibly, for the admin to fill in.
+   */
+  const storedOctaves = useMemo<StoredOctaves | null>(() => {
+    if (!selectedTuningSystem) return null;
+    const base =
+      storedOctavesEdit?.tuningSystemId === selectedTuningSystem.getId() ? storedOctavesEdit.storedOctaves : selectedTuningSystem.getStoredOctaves();
+    if (!base) return null;
+    const firstNote = getFirstNoteName(selectedIndices);
+    if (!firstNote || firstNote === "none" || base.noteNames[firstNote]) return base;
+    const unnamed = Object.fromEntries(
+      Object.entries(base.pitchClassValues).map(([octave, values]) => [octave, (values ?? []).map(() => "none" as NoteName)])
+    );
+    return { ...base, noteNames: { ...base.noteNames, [firstNote]: unnamed } };
+  }, [selectedTuningSystem, storedOctavesEdit, selectedIndices]);
+
+  /** Names one stored octave of one note-name set (an unsaved admin edit). */
+  const setStoredOctaveNoteNames = useCallback(
+    (startingNote: string, octave: StorableOctave, names: NoteName[]) => {
+      if (!selectedTuningSystem || !storedOctaves) return;
+      setStoredOctavesEdit({
+        tuningSystemId: selectedTuningSystem.getId(),
+        storedOctaves: {
+          ...storedOctaves,
+          noteNames: { ...storedOctaves.noteNames, [startingNote]: { ...storedOctaves.noteNames[startingNote], [octave]: names } },
+        },
+      });
+    },
+    [selectedTuningSystem, storedOctaves]
+  );
+
+  /**
+   * Stores the given octaves' values, or with null drops an octave so it is
+   * worked out automatically again. Every note-name set is renamed for the new values (see
+   * nameStoredOctaves: names already given are kept, exact octaves are named,
+   * the rest are "none"). The abjad list holds octave 1's names then octave 2's,
+   * so a change in octave 2's count resizes its octave-2 part, keeping the names
+   * already there.
+   */
+  const setStoredOctaveValues = useCallback(
+    (changes: Partial<Record<StorableOctave, string[] | null>>) => {
+      if (!selectedTuningSystem) return;
+      const octaveOneValues = tuningSystemPitchClassesArray;
+      const type = detectPitchClassValueType(octaveOneValues);
+      if (type === "unknown" || type === "fretDivision") throw new Error(`Octaves cannot be stored for ${type} values`);
+      const toCents = (value: string) => {
+        const converted = convertPitchClassValue(value, type, tuningSystemStringLength, selectedTuningSystem.getDefaultReferenceFrequency());
+        if (!converted) throw new Error(`"${value}" is not a ${type} value`);
+        return parseFloat(converted.cents);
+      };
+
+      const previousValues = storedOctaves?.pitchClassValues ?? {};
+      const nextValues = { ...previousValues };
+      for (const [key, values] of Object.entries(changes)) {
+        const octave = Number(key) as StorableOctave;
+        if (values) nextValues[octave] = values;
+        else delete nextValues[octave];
+      }
+
+      const octaveOneCount = octaveOneValues.length;
+      const octaveTwoCount = (nextValues[2] ?? octaveOneValues).length;
+      setSelectedAbjadNames((abjad) => {
+        const two = abjad.slice(octaveOneCount, octaveOneCount + octaveTwoCount);
+        return [...abjad.slice(0, octaveOneCount), ...two, ...Array(octaveTwoCount - two.length).fill("")];
+      });
+
+      if (!Object.keys(nextValues).length) {
+        setStoredOctavesEdit({ tuningSystemId: selectedTuningSystem.getId(), storedOctaves: null });
+        return;
+      }
+
+      const sets = [...selectedTuningSystem.getNoteNameSets()];
+      const liveSet = selectedIndices.map((idx) =>
+        idx < 0 ? "none" : idx < octaveOneNoteNames.length ? octaveOneNoteNames[idx] : octaveTwoNoteNames[idx - octaveOneNoteNames.length]
+      ) as NoteName[];
+      if (liveSet[0] && liveSet[0] !== "none" && !sets.some((set) => set[0] === liveSet[0])) sets.push(liveSet);
+
+      const noteNames: StoredOctaves["noteNames"] = {};
+      for (const set of sets) {
+        noteNames[set[0]] = nameStoredOctaves(
+          octaveOneValues,
+          set,
+          nextValues,
+          { values: previousValues, names: storedOctaves?.noteNames[set[0]] ?? {} },
+          toCents
+        );
+      }
+      setStoredOctavesEdit({ tuningSystemId: selectedTuningSystem.getId(), storedOctaves: { pitchClassValues: nextValues, noteNames } });
+    },
+    [selectedTuningSystem, storedOctaves, tuningSystemPitchClassesArray, tuningSystemStringLength, selectedIndices]
+  );
+
+  const sourceOud = useMemo<SourceOud | null>(() => {
+    if (!selectedTuningSystem) return null;
+    return sourceOudEdit?.tuningSystemId === selectedTuningSystem.getId() ? sourceOudEdit.sourceOud : selectedTuningSystem.getSourceOud();
+  }, [selectedTuningSystem, sourceOudEdit]);
+
+  const setSourceOud = useCallback(
+    (next: SourceOud | null) => {
+      if (selectedTuningSystem) setSourceOudEdit({ tuningSystemId: selectedTuningSystem.getId(), sourceOud: next });
+    },
+    [selectedTuningSystem]
+  );
+
   const allPitchClasses = useMemo(() => {
     if (!selectedTuningSystem) return [];
     const miniCells: Cell[] = [];
@@ -159,9 +282,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       tuningSystemPitchClassesArray,
       tuningSystemStringLength,
       referenceFrequencies,
-      selectedIndices
+      selectedIndices,
+      storedOctaves
     );
-  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray, tuningSystemStringLength]);
+  }, [selectedTuningSystem, selectedIndices, referenceFrequencies, tuningSystemPitchClassesArray, tuningSystemStringLength, storedOctaves]);
 
   useEffect(() => {
     setTuningSystems(getTuningSystems());
@@ -505,6 +629,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       allPitchClasses,
       selectedIndices,
       setSelectedIndices,
+      storedOctaves,
+      setStoredOctaveNoteNames,
+      setStoredOctaveValues,
+      sourceOud,
+      setSourceOud,
       originalIndices,
       setOriginalIndices,
       mapIndices,
@@ -555,6 +684,11 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       selectedPitchClasses,
       allPitchClasses,
       selectedIndices,
+      storedOctaves,
+      setStoredOctaveNoteNames,
+      setStoredOctaveValues,
+      sourceOud,
+      setSourceOud,
       originalIndices,
       mapIndices,
       tuningSystemStringLength,

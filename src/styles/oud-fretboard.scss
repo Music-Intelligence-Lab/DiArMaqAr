@@ -83,6 +83,41 @@
     height: 14px;
   }
 
+  /*
+   * The source's fret names, once, above the awtār at the anf line. Names sit
+   * at an angle from their fret so close frets (the two mujannabs are under a
+   * centimetre apart on a real neck) never collide; a short marker under each
+   * name shows exactly where its fret lies.
+   */
+  &__fret-names {
+    display: flex;
+    margin-bottom: 4px;
+  }
+
+  &__fret-names-track {
+    flex: 1 1 auto;
+    position: relative;
+    height: 96px;
+  }
+
+  &__fret-name {
+    position: absolute;
+    bottom: 0;
+    height: 10px;
+    margin-left: -1px;
+    border-left: 2px solid rgba($text, 0.5);
+  }
+
+  &__fret-name-text {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 0;
+    font-size: $font-size-xs;
+    white-space: nowrap;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+  }
+
   &__scale-mark {
     @include type-eyebrow;
     position: absolute;
@@ -131,6 +166,17 @@
     font-size: $font-size-xs;
     text-align: center;
     padding: 0 2px;
+  }
+
+  /* The source's own name for the watar (bamm, mathlath…), where the open-note
+     select sits for a dūzān the reader chooses: same box, not editable. */
+  &__string-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    width: 100%;
+    font-size: $font-size-xs;
   }
 
   /**
@@ -231,7 +277,7 @@
     @include hover-tooltip;
   }
 
-  /** A 1px tick is far too small a target; this widens the hit area. */
+  /** A 2px tick is far too small a target; this widens the hit area. */
   &__hit {
     position: absolute;
     left: -7px;
@@ -251,7 +297,7 @@
     top: 50%;
     height: 18px;
     margin-top: -9px;
-    width: 1px;
+    width: 2px;
     left: 0;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.5);
@@ -279,7 +325,7 @@
     .oud-fretboard__tick {
       background: none;
       width: 0;
-      border-left: 1px dotted rgba(255, 255, 255, 0.3);
+      border-left: 2px dotted rgba(255, 255, 255, 0.3);
     }
   }
 
@@ -337,6 +383,25 @@
    * reachable lower on that next watar, so the undimmed span is the range for
    * which this watar is the practical choice.
    */
+  &__division_not-exact-octave &__tick {
+    background: $not-exact-octave;
+  }
+
+  &__not-exact-octave-legend {
+    margin: 0 0 $space-block-half;
+    font-size: $font-size-xs;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 3px;
+      margin-inline-end: 6px;
+      vertical-align: middle;
+      background: $not-exact-octave;
+    }
+  }
+
   &__division_beyond &__tick {
     background: rgba(255, 255, 255, 0.17);
   }
@@ -349,10 +414,10 @@
     background: rgba(255, 255, 255, 0.09);
   }
 
-  /* 1px → 3px keeps the growth symmetrical about the tick's centre. */
+  /* 2px → 4px keeps the growth symmetrical about the tick's centre. */
   &__division:hover &__tick {
     background: $gold;
-    width: 3px;
+    width: 4px;
   }
 
   &__division:hover &__label {
@@ -369,7 +434,7 @@
   /** What a jins or maqām selection will drive, once those pass a highlight set. */
   &__division_highlighted &__tick {
     background: $tertiary;
-    width: 3px;
+    width: 4px;
   }
 
   &__division_highlighted &__label {

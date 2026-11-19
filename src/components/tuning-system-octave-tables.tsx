@@ -6,7 +6,7 @@ import useSoundContext from "@/contexts/sound-context";
 import useFilterContext from "@/contexts/filter-context";
 import useLanguageContext from "@/contexts/language-context";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
-import {
+import NoteName, {
   octaveOneNoteNames,
   octaveTwoNoteNames,
   TransliteratedNoteNameOctaveOne,
@@ -27,6 +27,8 @@ import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNo
 import StaffNotation from "./staff-notation";
 import getFirstNoteName from "@/functions/getFirstNoteName";
 import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
+import { arrayIndexOf, isExactOctave, octaveCells } from "@/functions/octaveLayout";
+import { StorableOctave } from "@/models/TuningSystem";
 
 /**
  * How far one chevron press travels: a viewport, less one column so a
@@ -57,6 +59,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
     selectedAbjadNames,
     setSelectedAbjadNames,
     selectedMaqam,
+    storedOctaves,
+    setStoredOctaveNoteNames,
   } = useAppContext();
 
   const { activePitchClasses, noteOn, noteOff } = useSoundContext();
@@ -238,10 +242,9 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
   const isCellSelected = (octave: number, colIndex: number) => selectedPitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.pitchClassIndex === colIndex);
   const isCellActive = (octave: number, colIndex: number) => activePitchClasses.some((pitchClasses) => pitchClasses.octave === octave && pitchClasses.pitchClassIndex === colIndex);
   const isCellDescending = (octave: number, colIndex: number) => {
-    const pitchClassIndex = octave * tuningSystemPitchClassesArray.length + colIndex;
-    
-    // Safety check: ensure allPitchClasses exists and has the required index
-    if (!allPitchClasses || pitchClassIndex >= allPitchClasses.length || !allPitchClasses[pitchClassIndex]) {
+    // Safety check: ensure allPitchClasses exists and has the required cell
+    const pitchClassIndex = allPitchClasses ? arrayIndexOf(allPitchClasses, octave, colIndex) : -1;
+    if (pitchClassIndex === -1) {
       return false;
     }
     
@@ -509,25 +512,65 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
   const numberOfPitchClasses = tuningSystemPitchClassesArray.length;
 
+  /**
+   * Where a cell's abjad name sits in the abjad list, which holds octave 1's names
+   * then octave 2's (octave 2 may have its own count; see StoredOctaves). Octave 0
+   * reads octave 1's names and octave 3 octave 2's, as the generator does, unless
+   * that octave is stored: a stored octave 0 or 3 has no abjad names (-1).
+   */
+  const octaveCount = (octave: number) => (allPitchClasses ? octaveCells(allPitchClasses, octave).length : 0);
+  function abjadIndex(octave: number, colIndex: number): number {
+    if ((octave === 0 || octave === 3) && isStoredOctave(octave)) return -1;
+    return octave <= 1 ? colIndex : numberOfPitchClasses + colIndex;
+  }
+
   function handleAbjadSelect(colIndex: number, newValue: string, octave: number) {
     setSelectedAbjadNames((prev) => {
       const copy = [...prev];
-      const rowOffset = octave === 1 ? 0 : numberOfPitchClasses;
-      const baseIdx = rowOffset + colIndex;
-
-      copy[baseIdx] = newValue;
+      copy[abjadIndex(octave, colIndex)] = newValue;
 
       if (cascade) {
         const allNames = abjadNames;
         const startPos = allNames.indexOf(newValue);
         if (startPos >= 0) {
-          for (let c = colIndex + 1; c < numberOfPitchClasses; c++) {
-            copy[rowOffset + c] = allNames[startPos + (c - colIndex)] ?? "";
+          for (let c = colIndex + 1; c < octaveCount(octave); c++) {
+            copy[abjadIndex(octave, c)] = allNames[startPos + (c - colIndex)] ?? "";
           }
         }
       }
       return copy;
     });
+  }
+
+  // ----------------------------------------------------------------------------------
+  // Stored octaves (see StoredOctaves): an octave the source gives as its own list
+  // is named cell by cell, per note-name set, rather than derived from octave 1.
+  // ----------------------------------------------------------------------------------
+
+  const startingNote = getFirstNoteName(selectedIndices);
+  const isStoredOctave = (octave: number) =>
+    octave !== 1 && !!storedOctaves?.pitchClassValues[octave as StorableOctave] && startingNote !== "none";
+
+  /** The names a stored octave's cells can take: its own register and the one above (as octave 1's select offers octave one and two). */
+  const storedOctaveNameOptions = (octave: StorableOctave): NoteName[][] => {
+    const registers = [octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames];
+    return [registers[octave] as readonly string[] as NoteName[], registers[octave + 1] as readonly string[] as NoteName[]];
+  };
+
+  function handleSelectStoredOctaveNote(octave: StorableOctave, colIndex: number, chosenName: NoteName) {
+    if (!storedOctaves || startingNote === "none") return;
+    const names = [...(storedOctaves.noteNames[startingNote]?.[octave] ?? storedOctaves.pitchClassValues[octave]!.map(() => "none" as NoteName))];
+    names[colIndex] = chosenName;
+
+    // Cascade: the following cells take the following names, in the select's order
+    if (cascade && chosenName !== "none") {
+      const order = storedOctaveNameOptions(octave).flat();
+      const start = order.indexOf(chosenName);
+      for (let c = colIndex + 1; c < names.length; c++) {
+        names[c] = order[start + (c - colIndex)] ?? "none";
+      }
+    }
+    setStoredOctaveNoteNames(startingNote, octave, names);
   }
 
   // If user changes a note in a certain octave, find that note's index in that octave’s array, update the “first-octave” index.
@@ -623,8 +666,8 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
 
   const getOctavePitchClasses = (octave: number) => {
     if (!allPitchClasses || allPitchClasses.length === 0) return [];
-    if (allPitchClasses.length % numberOfPitchClasses !== 0) throw new Error("All pitchClasses must be evenly divisible by the number of pitch classes.");
-    return allPitchClasses.slice(octave * numberOfPitchClasses, (octave + 1) * numberOfPitchClasses);
+    // Octaves can differ in length when the source gives them (see StoredOctaves)
+    return octaveCells(allPitchClasses, octave);
   };
 
   const displayStringValue = (value: string | number, decimal = 2) => {
@@ -706,7 +749,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           >
             {t('octave.title')} {octave}{" "}
           </span>
-          {admin && ((octave === 1 && openedOctaveRows[1]) || (octave === 2 && openedOctaveRows[2])) && (
+          {admin && openedOctaveRows[octave as 0 | 1 | 2 | 3] && (octave === 1 || octave === 2 || isStoredOctave(octave)) && (
             <button
               className="tuning-system-manager__octave-cascade-button"
               onClick={(e: React.MouseEvent) => {
@@ -828,6 +871,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
           <div className="tuning-system-manager__octave-summary-content"></div>
         </summary>
 
+        {/* What the two marks on the source-value row mean */}
+        {pitchClassType !== "unknown" && filters[pitchClassType as keyof typeof filters] && (
+          <div className="tuning-system-manager__legend">
+            <p className="tuning-system-manager__legend-item tuning-system-manager__legend-item_source-values">{t("octave.sourceValuesLegend")}</p>
+            {rowCells.some((cell) => !isExactOctave(allPitchClasses, cell)) && (
+              <p className="tuning-system-manager__legend-item tuning-system-manager__legend-item_not-exact-octave">{t("octave.notExactOctaveLegend")}</p>
+            )}
+          </div>
+        )}
+
         <div className="tuning-system-manager__octaves-carousel">
           <button
             className="carousel-button carousel-button-prev"
@@ -844,7 +897,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
             <table className="tuning-system-manager__octave-table" border={0}>
               {(() => {
                 // first column is the row header (fixed), remaining columns match pitch class count
-                const totalCols = 1 + tuningSystemPitchClassesArray.length;
+                const totalCols = 1 + rowCells.length;
                 const cols: React.ReactElement[] = [];
                 cols.push(
                   <col
@@ -871,6 +924,29 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 >
                   <td className="tuning-system-manager__row-header">{t('octave.noteNames')}</td>
                   {rowCells.map((pitchClass, colIndex) => {
+                    if (admin && isStoredOctave(octave)) {
+                      return (
+                        <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                          <select
+                            className="tuning-system-manager__select-note"
+                            value={pitchClass.noteName}
+                            onChange={(e) => handleSelectStoredOctaveNote(octave as StorableOctave, colIndex, e.target.value as NoteName)}
+                          >
+                            <option value="none">{t('octave.none')}</option>
+                            {storedOctaveNameOptions(octave as StorableOctave).map((group, groupIndex) => (
+                              <React.Fragment key={groupIndex}>
+                                {groupIndex > 0 && <option disabled value="">---</option>}
+                                {group.map((nm) => (
+                                  <option key={nm} value={nm}>
+                                    {getDisplayName(nm, 'note')}
+                                  </option>
+                                ))}
+                              </React.Fragment>
+                            ))}
+                          </select>
+                        </td>
+                      );
+                    }
                     if (octave === 1 && admin) {
                       return (
                         <td key={colIndex} className={getCellClassName(octave, colIndex)}>
@@ -907,7 +983,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.pitchClass && (
                   <tr data-row-type="pitchClass">
                     <td className="tuning-system-manager__row-header">{t('octave.pitchClass')}</td>
-                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
+                    {rowCells.map((_, colIndex) => (
                       <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                         {colIndex}
                       </td>
@@ -918,7 +994,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.abjadName && (
                   <tr data-row-type="abjadName">
                     <td className="tuning-system-manager__row-header">{t('octave.abjadName')}</td>
-                    {tuningSystemPitchClassesArray.map((_, colIndex) => (
+                    {rowCells.map((_, colIndex) => (
                       <td
                         key={colIndex}
                         className={`
@@ -929,7 +1005,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                         {admin && (octave === 1 || octave === 2) ? (
                           <select
                             className="tuning-system-manager__select-abjad"
-                            value={selectedAbjadNames[colIndex + (octave === 1 ? 0 : numberOfPitchClasses)] || ""}
+                            value={selectedAbjadNames[abjadIndex(octave, colIndex)] || ""}
                             onChange={(e) => handleAbjadSelect(colIndex, e.target.value, octave)}
                           >
                             <option value="">--</option>
@@ -940,7 +1016,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                             ))}
                           </select>
                         ) : (
-                          <span className="tuning-system-manager__abjad-name">{(selectedAbjadNames[colIndex + (octave <= 1 ? 0 : numberOfPitchClasses)] || "--").replace(/\//g, "/\u200B")}</span>
+                          <span className="tuning-system-manager__abjad-name">{((abjadIndex(octave, colIndex) === -1 ? "" : selectedAbjadNames[abjadIndex(octave, colIndex)]) || "--").replace(/\//g, "/\u200B")}</span>
                         )}
                       </td>
                     ))}
@@ -981,8 +1057,16 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                            pitchClassType === 'stringLength' ? 'stringLength' :
                            pitchClassType === 'fretDivision' ? 'fretDivision' : 'cents'}`)}
                     </td>
+                    {/* The source's own value carries the mark: whether it is an exact
+                        octave is a claim about what the source gives */}
                     {rowCells.map((pitchClass, colIndex) => (
-                      <td key={colIndex} className={getCellClassName(octave, colIndex)}>
+                      <td
+                        key={colIndex}
+                        className={
+                          getCellClassName(octave, colIndex) +
+                          (isExactOctave(allPitchClasses, pitchClass) ? "" : "tuning-system-manager__cell_not-exact-octave ")
+                        }
+                      >
                         {displayStringValue(pitchClass.originalValue)}
                       </td>
                     ))}
@@ -1164,7 +1248,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {/* Row 12: Select (checkbox) */}
                 <tr data-row-type="select">
                   <td className="tuning-system-manager__row-header">{t('octave.select')}</td>
-                  {tuningSystemPitchClassesArray.map((_, colIndex) => (
+                  {rowCells.map((_, colIndex) => (
                     <td key={colIndex} className={getCellClassName(octave, colIndex)}>
                       <input
                         type="checkbox"
@@ -1181,7 +1265,7 @@ export default function TuningSystemOctaveTables({ admin }: { admin: boolean }) 
                 {filters.staffNotation && (
                   <tr data-row-type="staffNotation">
                     <td className="tuning-system-manager__row-header">{t('octave.staffNotation')}</td>
-                    <td colSpan={tuningSystemPitchClassesArray.length} className="staff-notation-cell">
+                    <td colSpan={rowCells.length} className="staff-notation-cell">
                       <StaffNotation pitchClasses={rowCells.map((pc) => ({ ...pc, englishName: displayEnglishName(pc) }))} />
                     </td>
                   </tr>

@@ -1,6 +1,7 @@
 import { standardizeText } from "@/functions/export";
 import NoteName from "./NoteName";
 import { SourcePageReference } from "./bibliography/Source";
+import { SourceOud } from "./SourceOud";
 
 /**
  * Represents a tuning system used in Arabic maqam music theory.
@@ -17,6 +18,34 @@ import { SourcePageReference } from "./bibliography/Source";
  * for jins and maqam analysis. Since each pitch class has both relational and absolute values,
  * all other representations can be derived through conversion formulas.
  */
+/** The octaves besides octave 1 that a tuning system can store as the source gives them. */
+export const STORABLE_OCTAVES = [0, 2, 3] as const;
+export type StorableOctave = (typeof STORABLE_OCTAVES)[number];
+
+/**
+ * Octaves stored as the source gives them, besides octave 1.
+ *
+ * Most tuning systems store one octave and every other octave is that octave
+ * halved or doubled. A fretted ʿūd does not work that way: on Ibn Sīnā's ʿūd,
+ * tuned in fourths, an octave up gives exact doubles of only some notes, near
+ * neighbours of others, nothing for some, and notes with no partner below at
+ * all. So any of octaves 0, 2 and 3 can be stored as its own list, of any
+ * length, with its own names. An octave that is not stored is derived as
+ * before: octave 0 is octave 1 halved, octave 2 is octave 1 doubled, octave 3
+ * is octave 2 (stored or derived) doubled.
+ */
+export interface StoredOctaves {
+  /** Per stored octave: its values in octave 1's unit (fraction, cents, decimal ratio or string length), lowest first. */
+  pitchClassValues: Partial<Record<StorableOctave, string[]>>;
+  /**
+   * Per note-name set, keyed by the set's starting note (its first name), and
+   * per stored octave: the names of that octave's values. Keyed rather than
+   * positional because the sets are reordered when saved. "none" marks a value
+   * not yet named.
+   */
+  noteNames: { [startingNote: string]: Partial<Record<StorableOctave, NoteName[]>> };
+}
+
 export default class TuningSystem {
   /** Unique identifier generated from creator, year, and title */
   private id: string;
@@ -91,6 +120,15 @@ export default class TuningSystem {
   private version!: string;
 
   /**
+   * Octaves stored as the source gives them (see {@link StoredOctaves}). Null
+   * for every system whose octaves are octave 1 halved and doubled.
+   */
+  private storedOctaves: StoredOctaves | null;
+
+  /** The ʿūd the source describes (see {@link SourceOud}), or null when none is recorded */
+  private sourceOud: SourceOud | null;
+
+  /**
    * Creates a new TuningSystem instance.
    *
    * @param titleEnglish - English title of the tuning system
@@ -111,6 +149,8 @@ export default class TuningSystem {
    * @param defaultReferenceFrequency - Default frequency anchor (e.g., 440 Hz)
    * @param saved - Whether the system has been saved to storage
    * @param version - ISO 8601 timestamp of last modification (defaults to current time)
+   * @param storedOctaves - Octaves stored as the source gives them, or null when every octave is octave 1 halved or doubled
+   * @param sourceOud - The ʿūd the source describes, or null
    */
   constructor(
     titleEnglish: string,
@@ -130,7 +170,9 @@ export default class TuningSystem {
     referenceFrequencies: { [noteName: string]: number },
     defaultReferenceFrequency: number,
     saved: boolean,
-    version?: string
+    version?: string,
+    storedOctaves: StoredOctaves | null = null,
+    sourceOud: SourceOud | null = null
   ) {
     // Generate unique ID by combining creator, year, and title (sanitized)
     this.id = standardizeText(`${creatorEnglish}_${year}`.replaceAll(" ", "").replaceAll("+", "").replaceAll("-", ""));
@@ -152,6 +194,8 @@ export default class TuningSystem {
     this.defaultReferenceFrequency = defaultReferenceFrequency;
     this.saved = saved;
     this.version = version || new Date().toISOString();
+    this.storedOctaves = storedOctaves;
+    this.sourceOud = sourceOud;
   }
 
   /**
@@ -334,6 +378,16 @@ export default class TuningSystem {
    *
    * @returns ISO 8601 timestamp string
    */
+  /** Octaves stored as the source gives them, or null when every octave is octave 1 halved or doubled. */
+  getStoredOctaves(): StoredOctaves | null {
+    return this.storedOctaves;
+  }
+
+  /** The ʿūd the source describes, or null when none is recorded. */
+  getSourceOud(): SourceOud | null {
+    return this.sourceOud;
+  }
+
   getVersion(): string {
     return this.version;
   }
@@ -382,7 +436,15 @@ export default class TuningSystem {
       this.stringLength,
       this.referenceFrequencies,
       this.defaultReferenceFrequency,
-      this.saved
+      this.saved,
+      this.version,
+      this.storedOctaves && {
+        pitchClassValues: this.storedOctaves.pitchClassValues,
+        noteNames: Object.fromEntries(
+          Object.entries(this.storedOctaves.noteNames).filter(([startingNote]) => newNoteNames.some((set) => set[0] === startingNote))
+        ),
+      },
+      this.sourceOud
     );
   }
 

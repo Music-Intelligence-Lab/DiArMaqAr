@@ -857,6 +857,38 @@
       background-color: $black !important;
       color: $text !important;
     }
+
+    &_not-exact-octave {
+      @include not-exact-octave-mark;
+    }
+  }
+
+  // Key to the marks on the source-value row; each swatch is drawn with the
+  // same mixin as the mark it explains
+  &__legend {
+    margin: 0 0 $space-block-half;
+  }
+
+  &__legend-item {
+    margin: 0;
+    font-size: $font-size-xs;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 10px;
+      margin-inline-end: 6px;
+      vertical-align: middle;
+    }
+
+    &_source-values::before {
+      @include structural-mark;
+    }
+
+    &_not-exact-octave::before {
+      @include not-exact-octave-mark;
+    }
   }
 
   &__select-note {
@@ -1001,4 +1033,49 @@
 
 [dir="rtl"] .tuning-system-manager__row-header {
   text-align: right; // RTL alignment for Arabic
+}
+
+.tuning-system-manager__save-error {
+  @include type-data-value;
+  margin: 0 0 $space-block-half;
+  color: $delete;
+}
+
+// Admin: octaves 0, 2 and 3, and the source's ʿūd. Fields reuse the manager
+// form roles; only the row layout is particular to these lists.
+.tuning-system-manager__stored-octaves {
+  margin-bottom: $space-block;
+}
+
+.tuning-system-manager__hint {
+  @include type-settings-description;
+  margin: 0 0 $space-block-half;
+}
+
+.source-oud-editor {
+  margin-bottom: $space-block;
+
+  &__heading,
+  &__subheading {
+    @include manager-form-label;
+    margin-top: $space-block-half;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__ratio {
+    width: 8rem;
+  }
+
+  &__reference {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 }

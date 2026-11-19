@@ -286,6 +286,16 @@ $letter-spacing-wide:    0.06em; // landing-page Latin hero subtitle only
     border-bottom: 3px solid $secondary;
 }
 
+// A pitch a source gives that is not an exact octave of a pitch in the
+// neighbouring octave (isExactOctave in octaveLayout.ts): one colour for the
+// tables and the strings view, so the two read as the same claim. Drawn on
+// the cell's bottom edge, the same line as structural-mark, so a row header's
+// pink and its cells' gold read as one underline.
+$not-exact-octave: $quaternary;
+@mixin not-exact-octave-mark {
+    box-shadow: inset 0 -3px 0 $not-exact-octave;
+}
+
 // Table hover — the CELL under the pointer lights, not its whole row. A row
 // highlight claims a relationship the reader did not ask about; the cell is
 // what they are actually reading. One rule for every table in the app.

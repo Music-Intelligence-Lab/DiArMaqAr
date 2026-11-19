@@ -39,6 +39,22 @@ import FrequencyKnob from "./frequency-knob";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 import CommentText from "./comment-text";
+import validateTuningSystem from "@/functions/validateTuningSystem";
+import deriveOctavesFromSourceOud from "@/functions/deriveOctavesFromSourceOud";
+import { STORABLE_OCTAVES, StorableOctave } from "@/models/TuningSystem";
+import SourceOudEditor from "./source-oud-editor";
+
+/**
+ * Reads one stored-octave box: one value per line, in octave 1's unit. An
+ * empty box means the octave is worked out automatically (null). A line that
+ * does not read is a problem, and the box's values are not used until it is fixed.
+ */
+function readOctaveBox(text: string, type: string): { values: string[] | null; problem: string | null } {
+  const lines = text.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
+  if (!lines.length) return { values: null, problem: null };
+  const bad = lines.find((line) => (type === "fraction" ? !/^[1-9]\d*[/:][1-9]\d*$/.test(line) : !isFinite(Number(line))));
+  return bad === undefined ? { values: lines, problem: null } : { values: null, problem: bad };
+}
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -88,6 +104,10 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const lh = useLocalizedHref();
 
   const {
+    storedOctaves,
+    setStoredOctaveValues,
+    sourceOud,
+    setSourceOud,
     tuningSystems,
     setTuningSystems,
     selectedTuningSystem,
@@ -418,6 +438,45 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     setSourcePageReferences(newList);
   };
 
+  /** Why the last save was refused, shown above the buttons */
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  /**
+   * The text of the octave 0, 2 and 3 boxes as typed, for the tuning system it
+   * was typed on. Without a draft a box shows the octave's stored values.
+   */
+  const [octaveDrafts, setOctaveDrafts] = useState<{ tuningSystemId: string; text: Record<StorableOctave, string> } | null>(null);
+  const [sourceOudValid, setSourceOudValid] = useState(true);
+  const [deriveError, setDeriveError] = useState<string | null>(null);
+  const octaveOneType = detectPitchClassValueType(tuningSystemPitchClassesArray);
+  const canStoreOctaves = octaveOneType !== "unknown" && octaveOneType !== "fretDivision";
+  const octaveText = (octave: StorableOctave) =>
+    octaveDrafts && octaveDrafts.tuningSystemId === selectedTuningSystem?.getId()
+      ? octaveDrafts.text[octave]
+      : (storedOctaves?.pitchClassValues[octave] ?? []).join("\n");
+  const octaveProblems = STORABLE_OCTAVES.map((octave) => ({ octave, problem: readOctaveBox(octaveText(octave), octaveOneType).problem })).filter((p) => p.problem);
+
+  function setOctaveBoxes(changes: Partial<Record<StorableOctave, string>>) {
+    if (!selectedTuningSystem) return;
+    const text = Object.fromEntries(STORABLE_OCTAVES.map((octave) => [octave, changes[octave] ?? octaveText(octave)])) as Record<StorableOctave, string>;
+    setOctaveDrafts({ tuningSystemId: selectedTuningSystem.getId(), text });
+    const readable = Object.entries(changes).map(([octave, value]) => [octave, readOctaveBox(value!, octaveOneType)] as const);
+    if (readable.some(([, read]) => read.problem)) return;
+    setStoredOctaveValues(Object.fromEntries(readable.map(([octave, read]) => [octave, read.values])));
+  }
+
+  /** Fills octaves 0 and 3 from the source's ʿūd, continued in fourths. */
+  function deriveOuterOctaves() {
+    if (!sourceOud) return;
+    try {
+      const derived = deriveOctavesFromSourceOud(tuningSystemPitchClassesArray, storedOctaves?.pitchClassValues[2] ?? null, sourceOud);
+      setDeriveError(null);
+      setOctaveBoxes({ 0: derived[0].join("\n"), 3: derived[3].join("\n") });
+    } catch (error) {
+      setDeriveError(error instanceof Error ? error.message : String(error));
+    }
+  }
+
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
     const usedNoteNames =
@@ -425,7 +484,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         ? givenNoteNames
         : selectedTuningSystem?.getNoteNameSets() || [[]];
 
+    // Never save the last readable state behind a box that no longer reads
+    if (octaveProblems.length || !sourceOudValid) {
+      setSaveError(t("tuningSystem.fixBeforeSaving"));
+      return;
+    }
+
     if (selectedTuningSystem) {
+      // Stored-octave names as edited, kept only for sets that are being saved
+      const savedStoredOctaves = storedOctaves && {
+        pitchClassValues: storedOctaves.pitchClassValues,
+        noteNames: Object.fromEntries(
+          Object.entries(storedOctaves.noteNames).filter(([startingNote]) => usedNoteNames.some((set) => set[0] === startingNote))
+        ),
+      };
       const updated = new TuningSystem(
         titleEnglish,
         titleArabic,
@@ -444,8 +516,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         referenceFrequencies,
         Number(defaultReferenceFrequency),
         true,
-        selectedTuningSystem.getVersion()
+        selectedTuningSystem.getVersion(),
+        savedStoredOctaves,
+        sourceOud
       );
+      // Refuse to save stored octaves that would not load back, and say why
+      try {
+        validateTuningSystem(updated);
+      } catch (error) {
+        setSaveError(error instanceof Error ? error.message : String(error));
+        return;
+      }
+      setSaveError(null);
       const updatedList = selectedTuningSystem.isSaved()
         ? tuningSystems.map((ts) =>
             ts.getId() === selectedTuningSystem.getId() ? updated : ts
@@ -574,8 +656,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     setSelectedIndices(newSelectedIndices);
 
-    // 5. Re‐pad selectedAbjadNames to length = newArr.length * 2
-    const totalAbjadSlots = newArr.length * 2;
+    // 5. Re‐pad selectedAbjadNames: octave 1's slots then octave 2's, which is
+    // its own count when the source gives octave 2 (see StoredOctaves)
+    const totalAbjadSlots = newArr.length + (storedOctaves?.pitchClassValues[2]?.length ?? newArr.length);
     const padded = Array(totalAbjadSlots).fill("");
     setSelectedAbjadNames(padded);
   }
@@ -986,7 +1069,73 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             </div>
           </div>
 
+          {/* Octaves 0, 2 and 3: stored when the source gives them, else worked out */}
+          <div className="tuning-system-manager__stored-octaves">
+            <h3 className="tuning-system-manager__label">{t("tuningSystem.storedOctaves")}</h3>
+            <p className="tuning-system-manager__hint">
+              {canStoreOctaves ? t("tuningSystem.storedOctavesHint") : t("tuningSystem.storedOctavesUnavailable").replace("{type}", octaveOneType)}
+            </p>
+            {canStoreOctaves && (
+              <>
+                <div className="tuning-system-manager__group">
+                  {STORABLE_OCTAVES.map((octave) => {
+                    const problem = octaveProblems.find((p) => p.octave === octave)?.problem;
+                    return (
+                      <div key={octave} className="tuning-system-manager__input-container">
+                        <label className="tuning-system-manager__label" htmlFor={`octave${octave}Field`}>
+                          {t("tuningSystem.octaveValues").replace("{octave}", String(octave))}
+                        </label>
+                        <textarea
+                          className="tuning-system-manager__textarea"
+                          id={`octave${octave}Field`}
+                          rows={5}
+                          placeholder={t(`tuningSystem.octave${octave}Automatic`)}
+                          value={octaveText(octave)}
+                          onChange={(e) => setOctaveBoxes({ [octave]: e.target.value })}
+                        />
+                        {problem && (
+                          <p className="tuning-system-manager__save-error" role="alert">
+                            {t("tuningSystem.octaveValueProblem").replace("{value}", problem).replace("{type}", octaveOneType)}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                {sourceOud && (
+                  <>
+                    <button
+                      type="button"
+                      className="tuning-system-manager__source-add-button"
+                      onClick={deriveOuterOctaves}
+                      disabled={octaveOneType !== "fraction" || !sourceOudValid || octaveProblems.length > 0}
+                    >
+                      {t("tuningSystem.deriveOuterOctaves")}
+                    </button>
+                    <p className="tuning-system-manager__hint">
+                      {octaveOneType === "fraction" ? t("tuningSystem.deriveOuterOctavesHint") : t("tuningSystem.deriveNeedsRatios")}
+                    </p>
+                    {deriveError && (
+                      <p className="tuning-system-manager__save-error" role="alert">
+                        {deriveError}
+                      </p>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+
+          <SourceOudEditor
+            key={selectedTuningSystem.getId()}
+            sourceOud={sourceOud}
+            onChange={setSourceOud}
+            onValidityChange={setSourceOudValid}
+            sources={sources}
+          />
+
           {/* Buttons */}
+          {saveError && <p className="tuning-system-manager__save-error" role="alert">{saveError}</p>}
           <div className="tuning-system-manager__buttons">
             <button
               className="tuning-system-manager__save-button"

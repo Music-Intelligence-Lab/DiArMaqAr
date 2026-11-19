@@ -1,4 +1,6 @@
 import PitchClass from "@/models/PitchClass";
+import { octaveEquivalentIndex } from "@/functions/octaveLayout";
+import { SourceOud, SourceOudFret, SourceOudString } from "@/models/SourceOud";
 
 /**
  * Lays a tuning system out as dasātīn (fret divisions) on virtual ʿūd awtār.
@@ -13,11 +15,16 @@ import PitchClass from "@/models/PitchClass";
  *
  * The geometry is the physical one. A pitch sounding an interval r above an
  * open watar is stopped where the remaining string length is 1/r of the whole,
- * so its distance from the anf (nut) is 1 - 1/r of the string. The octave
- * therefore falls at exactly half the string, and spacing compresses toward it.
+ * so its distance from the anf (nut) is 1 - 1/r of the string. An exact octave
+ * therefore falls at half the string, and spacing compresses toward it.
+ *
+ * Each watar ends at the tuning system's own octave of its open note (see
+ * octaveLayout). Where the source gives an octave that is not an exact doubling
+ * (Ibn Sīnā's ʿūd), that octave is drawn where it really falls, a little short of
+ * or past the half string.
  */
 
-/** The drawn window is the half string: anf (0) to the octave (0.5). */
+/** The half string: where an exact octave falls (anf = 0). */
 export const FRETBOARD_MAX_POSITION = 0.5;
 
 /**
@@ -45,11 +52,12 @@ export type FretboardUnavailability =
   | { kind: "fretDivisionValueType" }
   | { kind: "noteNotInSystem"; stringIndex: number; noteName: string }
   | { kind: "notAscending"; stringIndex: number; noteName: string }
-  | { kind: "noOctaveAbove"; stringIndex: number; noteName: string };
+  | { kind: "noOctaveAbove"; stringIndex: number; noteName: string }
+  | { kind: "sourcePitchNotInSystem"; stringIndex: number; stringName: string; fretName: string; ratio: string };
 
 export interface FretboardDivision {
   pitchClass: PitchClass;
-  /** 0 … FRETBOARD_MAX_POSITION, proportional along the whole string. */
+  /** 0 … the watar's octave position, proportional along the whole string. */
   position: number;
   isOpen: boolean;
   isOctave: boolean;
@@ -59,10 +67,14 @@ export interface FretboardDivision {
    * would take them — and not where they need naming.
    */
   beyondHandover: boolean;
+  /** The source's fret this division is, when drawing the source's own ʿūd */
+  fret?: SourceOudFret;
 }
 
 export interface FretboardString {
   openPitchClass: PitchClass;
+  /** The tuning system's own octave of the open note, where this watar's window ends. */
+  octavePitchClass: PitchClass;
   /** Tablature numbering: the lowest-pitched watar carries the highest number. */
   courseNumber: number;
   divisions: FretboardDivision[];
@@ -70,6 +82,8 @@ export interface FretboardString {
   handoverCents: number | null;
   /** Frets tied across the neck that land on no pitch of this watar. */
   phantomPositions: number[];
+  /** The source's string, when drawing the source's own ʿūd */
+  sourceString?: SourceOudString;
 }
 
 export type FretboardResult =
@@ -79,6 +93,11 @@ export type FretboardResult =
       strings: FretboardString[];
       /** Every fret position on the neck, since a dastān is tied across it. */
       fretPositions: number[];
+      /**
+       * The drawn window: anf (0) to the furthest octave of any watar. Exactly
+       * FRETBOARD_MAX_POSITION when every octave is an exact doubling.
+       */
+      maxPosition: number;
     }
   | { ok: false; reasons: FretboardUnavailability[] };
 
@@ -114,10 +133,7 @@ export function resolveOpenStrings(
     }
 
     const openPitchClass = ascending[0];
-    const hasOctave = allPitchClasses.some(
-      (pc) => Math.abs(centsOf(pc) - (centsOf(openPitchClass) + 1200)) < CENTS_EPSILON
-    );
-    if (!hasOctave) {
+    if (octaveEquivalentIndex(allPitchClasses, openPitchClass, 1) === -1) {
       reasons.push({ kind: "noOctaveAbove", stringIndex, noteName });
       return;
     }
@@ -155,6 +171,10 @@ export default function getFretboardDivisions(
 
   const strings: FretboardString[] = open.map((openPitchClass, stringIndex) => {
     const openCents = centsOf(openPitchClass);
+    // resolveOpenStrings has already refused any open note without an octave
+    const octavePitchClass = allPitchClasses[octaveEquivalentIndex(allPitchClasses, openPitchClass, 1)];
+    const octaveCents = centsOf(octavePitchClass);
+    const octavePosition = divisionPosition(openCents, octaveCents);
 
     /**
      * The note shared with the watar below. The bottom watar has none, so it
@@ -172,28 +192,35 @@ export default function getFretboardDivisions(
       .filter(
         (pc) =>
           centsOf(pc) >= openCents - CENTS_EPSILON &&
-          centsOf(pc) <= openCents + 1200 + CENTS_EPSILON
+          centsOf(pc) <= octaveCents + CENTS_EPSILON
       )
       .sort((a, b) => centsOf(a) - centsOf(b))
       .map((pitchClass) => {
         // Clamped only against floating-point noise, never as a fallback.
         const raw = divisionPosition(openCents, centsOf(pitchClass));
-        const position = Math.min(Math.max(raw, 0), FRETBOARD_MAX_POSITION);
+        const position = Math.min(Math.max(raw, 0), octavePosition);
         return {
           pitchClass,
           position,
           isOpen: position === 0,
-          isOctave: position === FRETBOARD_MAX_POSITION,
+          isOctave: position === octavePosition,
           beyondHandover:
             handoverCents !== null && centsOf(pitchClass) > handoverCents + CENTS_EPSILON,
         };
       });
 
-    return { openPitchClass, courseNumber: open.length - stringIndex, divisions, handoverCents, phantomPositions: [] };
+    return { openPitchClass, octavePitchClass, courseNumber: open.length - stringIndex, divisions, handoverCents, phantomPositions: [] };
   });
 
-  // A dastān is a gut fret tied right across the neck, so it crosses every
-  // watar — including those on which it lands on no pitch of the tanghīm.
+  return withFretsAcrossTheNeck(strings);
+}
+
+/**
+ * A dastān is a gut fret tied right across the neck, so it crosses every watar —
+ * including those on which it lands on no pitch of the tanghīm, or which do not
+ * use it. Fills each string's phantom positions and the drawn window.
+ */
+function withFretsAcrossTheNeck(strings: FretboardString[]): FretboardResult {
   const fretPositions: number[] = [];
   strings
     .flatMap((s) => s.divisions.map((d) => d.position))
@@ -210,5 +237,82 @@ export default function getFretboardDivisions(
     );
   });
 
-  return { ok: true, strings, fretPositions };
+  const maxPosition = Math.max(...strings.map((string) => string.divisions[string.divisions.length - 1]?.position ?? 0), 0);
+
+  return { ok: true, strings, fretPositions, maxPosition };
+}
+
+/** A ratio such as "4/3" as a number; throws on anything else. */
+export function ratioValue(ratio: string): number {
+  const match = /^\s*([1-9]\d*)\s*\/\s*([1-9]\d*)\s*$/.exec(ratio);
+  if (!match) throw new Error(`"${ratio}" is not a ratio such as 4/3`);
+  return Number(match[1]) / Number(match[2]);
+}
+
+/**
+ * The ʿūd a source describes (see SourceOud), laid out as it is: each string
+ * from its open note to its last fret, carrying only its own frets, each one a
+ * pitch of the tanghīm. Nothing is inferred: a stopped pitch the tanghīm does
+ * not hold is a reason the layout is unavailable, never something snapped or
+ * dropped.
+ *
+ * @param allPitchClasses - the tuning system's pitch classes, as produced by
+ *   getTuningSystemPitchClasses
+ */
+export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: SourceOud): FretboardResult {
+  const unison = allPitchClasses.find((pc) => pc.octave === 1 && pc.pitchClassIndex === 0);
+  if (!unison) return { ok: false, reasons: [] };
+  const base = centsOf(unison);
+  const pitchAt = (ratio: number) => {
+    const cents = base + 1200 * Math.log2(ratio);
+    return allPitchClasses.find((pc) => Math.abs(centsOf(pc) - cents) < CENTS_EPSILON);
+  };
+
+  const reasons: FretboardUnavailability[] = [];
+  const strings: FretboardString[] = [];
+  oud.strings.forEach((sourceString, stringIndex) => {
+    const open = ratioValue(sourceString.openRatio);
+    const frets = sourceString.frets ? oud.frets.filter((f) => sourceString.frets!.includes(f.id)) : oud.frets;
+    const stops: { ratio: number; ratioText: string; fret?: SourceOudFret }[] = [
+      { ratio: 1, ratioText: "1/1" },
+      ...frets.map((fret) => ({ ratio: ratioValue(fret.ratio), ratioText: fret.ratio, fret })),
+    ];
+
+    const divisions: FretboardDivision[] = [];
+    for (const stop of stops) {
+      const pitchClass = pitchAt(open * stop.ratio);
+      if (!pitchClass) {
+        reasons.push({
+          kind: "sourcePitchNotInSystem",
+          stringIndex,
+          stringName: sourceString.nameEnglish,
+          fretName: stop.fret?.nameEnglish ?? "open",
+          ratio: stop.ratioText,
+        });
+        continue;
+      }
+      divisions.push({
+        pitchClass,
+        position: 1 - 1 / stop.ratio,
+        isOpen: !stop.fret,
+        isOctave: false,
+        beyondHandover: false,
+        fret: stop.fret,
+      });
+    }
+
+    const openPitchClass = divisions.find((d) => d.isOpen)?.pitchClass;
+    if (!openPitchClass) return;
+    strings.push({
+      openPitchClass,
+      octavePitchClass: divisions[divisions.length - 1].pitchClass,
+      courseNumber: oud.strings.length - stringIndex,
+      divisions,
+      handoverCents: null,
+      phantomPositions: [],
+      sourceString,
+    });
+  });
+
+  return reasons.length ? { ok: false, reasons } : withFretsAcrossTheNeck(strings);
 }

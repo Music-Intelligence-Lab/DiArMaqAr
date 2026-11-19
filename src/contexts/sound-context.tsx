@@ -8,6 +8,7 @@ import romanToNumber from "@/functions/romanToNumber";
 import PitchClass from "@/models/PitchClass";
 import { initializeCustomWaves, PERIODIC_WAVES, APERIODIC_WAVES } from "@/audio/waves";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
+import { getOctaveLayout, octaveRepeatStartIndex, octaveRepeatEndIndex } from "@/functions/octaveLayout";
 import extendSelectedPitchClasses from "@/functions/extendSelectedPitchClasses";
 import { Maqam } from "@/models/Maqam";
 import clampTempo from "@/functions/clampTempo";
@@ -197,14 +198,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         descendingMaqamPitchClasses = allPitchClasses.filter((pitchClass) => descendingNoteNames.includes(pitchClass.noteName));
       }
 
-      let sliceIndex = 0;
-      const lastAscendingPitchClass = ascendingMaqamPitchClasses[ascendingMaqamPitchClasses.length - 1];
-
-      for (let i = 0; i < ascendingMaqamPitchClasses.length; i++) {
-        if (parseFloat(ascendingMaqamPitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
-          sliceIndex = i + 1;
-        }
-      }
+      const sliceIndex = octaveRepeatStartIndex(allPitchClasses, ascendingMaqamPitchClasses);
 
       const extendedAscendingPitchClasses = [
         ...ascendingMaqamPitchClasses,
@@ -285,10 +279,11 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
     if (soundSettings.inputMode === "tuningSystem" && selectedTuningSystem) {
       const pitchClasses = allPitchClasses;
       const MIDI_BASE = 55;
-      const numberOfCellsPerRow = selectedTuningSystem.getOriginalPitchClassValues().length;
+      // MIDI_BASE maps to the first cell of octave 1, wherever octave 0 ends
+      const octaveOneOffset = getOctaveLayout(pitchClasses).offsets[1];
 
       for (let noteNumber = 0; noteNumber <= 127; noteNumber++) {
-        const idx = noteNumber + numberOfCellsPerRow - MIDI_BASE;
+        const idx = noteNumber + octaveOneOffset - MIDI_BASE;
         if (idx >= 0 && idx < pitchClasses.length) {
           mapping[noteNumber] = pitchClasses[idx];
         }
@@ -878,23 +873,8 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         return;
       }
 
-      let ascendingSliceIndex = 0;
-      const lastAscendingPitchClass = pitchClasses[pitchClasses.length - 1];
-
-      for (let i = 0; i < pitchClasses.length; i++) {
-        if (parseFloat(pitchClasses[i].frequency) * 2 <= parseFloat(lastAscendingPitchClass.frequency)) {
-          ascendingSliceIndex = i + 1;
-        }
-      }
-
-      let descendingSliceIndex = 0;
-      const firstAscendingPitchClass = pitchClasses[0];
-
-      for (let i = pitchClasses.length - 1; i >= 0; i--) {
-        if (parseFloat(pitchClasses[i].frequency) / 2 >= parseFloat(firstAscendingPitchClass.frequency)) {
-          descendingSliceIndex = i + 1;
-        }
-      }
+      const ascendingSliceIndex = octaveRepeatStartIndex(allPitchClasses, pitchClasses);
+      let descendingSliceIndex = octaveRepeatEndIndex(allPitchClasses, pitchClasses);
 
       if (descendingSliceIndex === 0) descendingSliceIndex = pitchClasses.length + 1;
 

@@ -7,6 +7,7 @@ import { sameModalDegreeSlot } from "@/models/NoteName";
 import { compareJinsCandidates, getSuyurAttestation, JinsCandidate } from "@/functions/ajnasOrdering";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import shiftPitchClassByOctave from "./shiftPitchClassByOctave";
+import { pitchClassFamilyKey } from "./octaveLayout";
 import { getPitchClassIntervals } from "./getPitchClassIntervals";
 
 /**
@@ -160,9 +161,10 @@ export function placeNoteOnForm(
   const source = allPitchClasses.find((pitchClass) => pitchClass.noteName === noteName);
   if (!source) return null;
 
+  const sourceFamily = pitchClassFamilyKey(allPitchClasses, source);
   const octaveEquivalents = stored.structure
     .map((cell, index) => ({ index, octaves: cell.octave - source.octave, cell }))
-    .filter(({ cell, octaves }) => octaves !== 0 && cell.pitchClassIndex === source.pitchClassIndex)
+    .filter(({ cell, octaves }) => octaves !== 0 && pitchClassFamilyKey(allPitchClasses, cell) === sourceFamily)
     .sort((a, b) => Math.abs(a.octaves) - Math.abs(b.octaves));
   if (octaveEquivalents.length > 0) {
     const { index, octaves } = octaveEquivalents[0];
