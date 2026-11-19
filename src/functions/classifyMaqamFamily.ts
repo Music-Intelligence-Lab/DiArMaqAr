@@ -4,6 +4,13 @@ import { Jins } from "@/models/Jins";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 
 /**
+ * The family label of a maqām with no identifiable jins. A classification label,
+ * not a maqām or jins name: it has its own Arabic (see getFamilyNameDisplayAr)
+ * and must never go through the name transliterator.
+ */
+export const NO_JINS_FAMILY = "no jins";
+
+/**
  * Classification method types for future extensibility
  */
 export type MaqamFamilyClassificationMethod = "firstJins";
@@ -54,7 +61,7 @@ export interface MaqamFamilyClassification {
 export function getBaseJinsName(jinsName: string): string {
   // Handle empty or invalid input
   if (!jinsName || !jinsName.trim()) {
-    return 'no jins';
+    return NO_JINS_FAMILY;
   }
 
   // Remove the "jins " or "جنس " prefix if present
@@ -77,8 +84,8 @@ export function getBaseJinsName(jinsName: string): string {
   // reading a jins differently are two families here, not one: jins būselīk
   // (al-Shawwā) and jins būselīk (al-Ḥilū) each keep their own label.
 
-  // Final safety check - return 'no jins' if we somehow got an empty result
-  return baseName ? baseName : 'no jins';
+  // Final safety check - return "no jins" if we somehow got an empty result
+  return baseName ? baseName : NO_JINS_FAMILY;
 }
 
 /**
@@ -90,7 +97,7 @@ export function getBaseJinsName(jinsName: string): string {
  * land on "rāḥat al-arwāḥ" and match each other.
  */
 function getBaseMaqamName(maqamName: string): string {
-  if (!maqamName || !maqamName.trim()) return "no jins";
+  if (!maqamName || !maqamName.trim()) return NO_JINS_FAMILY;
   const withoutPrefix = maqamName.replace(/^(Maqām\s+|Maqam\s+|مقام\s+)/i, "");
   return getBaseJinsName(withoutPrefix);
 }
@@ -196,11 +203,11 @@ export function classifyMaqamFamily(maqam: Maqam): MaqamFamilyClassification {
   // Get the first jins name
   const fullJinsName = getFirstJinsNameForMaqam(maqam);
   
-  // If no jins found, return "no jins" classification
+  // If no jins found, return the "no jins" classification
   if (!fullJinsName) {
     return {
       method: "firstJins",
-      familyName: "no jins",
+      familyName: NO_JINS_FAMILY,
       fullJinsName: null,
       scaleDegree: "1",
       source: "none",

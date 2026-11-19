@@ -12,7 +12,7 @@ import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { spellMaqamDirections } from "@/app/api/pitch-spellings";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getFamilyNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import type TuningSystem from "@/models/TuningSystem";
 import type { Maqam } from "@/models/Maqam";
@@ -598,7 +598,7 @@ export async function GET(
             maqamFamilyId: standardizeText(familyClassification.familyName),
             maqamFamilyDisplayName: familyClassification.familyName,
             ...(inArabic && {
-              maqamFamilyDisplayNameAr: getMaqamNameDisplayAr(familyClassification.familyName),
+              maqamFamilyDisplayNameAr: getFamilyNameDisplayAr(familyClassification.familyName),
             }),
           },
         }

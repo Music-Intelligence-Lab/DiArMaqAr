@@ -1,4 +1,5 @@
 import { getDynamicArabicName, getInArabicFlag } from "@/functions/dynamicArabicConverter";
+import { NO_JINS_FAMILY } from "@/functions/classifyMaqamFamily";
 
 /**
  * Helper utilities for Arabic language support in API responses
@@ -26,6 +27,15 @@ export function getJinsNameDisplayAr(name: string): string {
  */
 export function getMaqamNameDisplayAr(name: string): string {
   return getDynamicArabicName(name, "maqam");
+}
+
+/**
+ * Gets the Arabic of a maqām family name. A family is named after its jins, so
+ * the name is transliterated like a maqām name; the "no jins" label is not a
+ * name and has its own wording, the same as the app's ("بلا جنس").
+ */
+export function getFamilyNameDisplayAr(familyName: string): string {
+  return familyName === NO_JINS_FAMILY ? "بلا جنس" : getMaqamNameDisplayAr(familyName);
 }
 
 /**

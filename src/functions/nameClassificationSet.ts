@@ -1,6 +1,6 @@
 import MaqamData, { Maqam } from "@/models/Maqam";
 import { entityToken } from "@/functions/export";
-import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
+import { classifyMaqamFamily, NO_JINS_FAMILY } from "@/functions/classifyMaqamFamily";
 
 /** One member of a classification set: a maqām transposition and its maqām. */
 export interface ClassificationSetMember {
@@ -8,7 +8,6 @@ export interface ClassificationSetMember {
   maqamData: MaqamData;
 }
 
-const NO_JINS_FAMILY = "no jins";
 
 const maqamId = (member: ClassificationSetMember) => Number(member.maqamData.getId());
 const tonicCents = (member: ClassificationSetMember) => parseFloat(member.maqam.ascendingPitchClasses[0].cents);
