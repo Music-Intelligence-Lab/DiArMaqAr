@@ -197,11 +197,11 @@ export default function PitchClassBar() {
     // Determine the tonic of the current selected maqam or jins
     const maqamTonic = selectedMaqam
       ? selectedMaqam.ascendingPitchClasses[0]?.originalValue
-      : selectedMaqamData?.getTahlil(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
+      : selectedMaqamData?.getBaseForm(allPitchClasses).ascendingPitchClasses[0]?.originalValue;
     // Use selectedJins (transposition) if available, else fall back to base jins details
     const jinsTonic = selectedJins
       ? selectedJins.jinsPitchClasses[0]?.originalValue
-      : selectedJinsData?.getTahlil(allPitchClasses).jinsPitchClasses[0]?.originalValue;
+      : selectedJinsData?.getBaseForm(allPitchClasses).jinsPitchClasses[0]?.originalValue;
 
     const entries = allPitchClasses.map((pitchClass: PitchClass) => {
       const originalValue = pitchClass.originalValue;
@@ -216,7 +216,7 @@ export default function PitchClassBar() {
       const isDescending = selectedMaqam
         ? selectedMaqam.descendingPitchClasses.map((pitchClass) => pitchClass.originalValue).includes(originalValue)
         : selectedMaqamData
-            ?.getTahlil(allPitchClasses)
+            ?.getBaseForm(allPitchClasses)
             .descendingPitchClasses.map((pitchClass) => pitchClass.originalValue)
             .includes(originalValue) ?? false;
 

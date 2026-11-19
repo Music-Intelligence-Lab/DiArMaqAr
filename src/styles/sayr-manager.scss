@@ -39,23 +39,6 @@
     line-height: $line-height-tight;
   }
 
-  // Was the app's only light-on-light surface (#fff3cd/#856404) — a warning
-  // has to sit on the dark ground like everything else, so it's drawn as a
-  // gold rule against the page instead of a pale card.
-  &__transposition-warning {
-    background-color: rgba($gold, 0.08);
-    border-inline-start: 2px solid $gold;
-    color: $text;
-    padding: $space-block-half $space-block;
-    margin-bottom: $space-block;
-    font-size: $font-size-md;
-    font-weight: $font-weight-regular;
-    line-height: $line-height-normal;
-    display: flex;
-    align-items: center;
-    gap: $space-block-half;
-  }
-
   // No [dir="rtl"] row-reverse: a flex row already lays out right-to-left
   // under an RTL ancestor, so reversing it reversed the mirroring back to
   // LTR. Same house rule the comments-sources-container mixin states — the

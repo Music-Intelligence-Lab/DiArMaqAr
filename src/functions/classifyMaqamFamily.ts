@@ -138,12 +138,12 @@ function pickFamilyJins(degree: Jins[] | undefined, maqamName: string): Jins | u
  * at the first scale degree. The descending ajnas array is in reverse order,
  * so the first scale degree jins is at the END of the array.
  * 
- * @param maqam - The maqam instance (tahlil) to analyze
+ * @param maqam - The maqam instance (base form) to analyze
  * @returns Full jins name or null if no jins found
  * 
  * @example
- * const tahlil = getMaqamTahlil(...);
- * const jinsName = getFirstJinsNameForMaqam(tahlil);
+ * const baseForm = getMaqamBaseForm(...);
+ * const jinsName = getFirstJinsNameForMaqam(baseForm);
  * // Returns: "Jins Rast al-rast" or null
  */
 export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
@@ -179,15 +179,15 @@ export function getFirstJinsNameForMaqam(maqam: Maqam): string | null {
  * 2. Descending ajnas at first degree (fallback)
  * 3. "no jins" for maqamat with no identifiable jins
  * 
- * **Note:** This function should be called on the tahlil (original form, transposition: false)
+ * **Note:** This function should be called on the base form
  * to get accurate family classification. All transpositions inherit the same family.
  * 
- * @param maqam - The maqam instance to classify (should be tahlil, not transposition)
+ * @param maqam - The maqam instance to classify (should be the base form, not a transposition)
  * @returns Classification object with family name and metadata
  * 
  * @example
- * const tahlil = transpositions.find(t => !t.transposition);
- * const classification = classifyMaqamFamily(tahlil);
+ * const baseForm = forms.find(t => t.isBaseForm);
+ * const classification = classifyMaqamFamily(baseForm);
  * console.log(classification.method); // "firstJins"
  * console.log(classification.familyName); // "rast"
  * console.log(classification.source); // "ascending"
@@ -233,7 +233,7 @@ export function classifyMaqamFamily(maqam: Maqam): MaqamFamilyClassification {
 }
 
 /**
- * Helper function to get first jins name for a MaqamData by looking up its tahlil
+ * Helper function to get first jins name for a MaqamData by looking up its base form
  * from a transpositions map.
  * 
  * This is a convenience wrapper for UI components that work with MaqamData and
@@ -254,15 +254,16 @@ export function getFirstJinsNameForMaqamData(
   const transpositions = transpositionsMap.get(maqamData.getId());
   if (!transpositions || transpositions.length === 0) return null;
 
-  // Get the tahlil (original form, transposition: false) to get the first jins
-  const tahlil = transpositions.find(t => !t.transposition);
-  if (!tahlil) return null;
+  // The base form (isBaseForm) gives the first jins. Not `!t.transposition`: that
+  // also matches the base form's octave renderings.
+  const baseForm = transpositions.find(t => t.isBaseForm);
+  if (!baseForm) return null;
 
-  return getFirstJinsNameForMaqam(tahlil);
+  return getFirstJinsNameForMaqam(baseForm);
 }
 
 /**
- * Helper function to classify a MaqamData by looking up its tahlil
+ * Helper function to classify a MaqamData by looking up its base form
  * from a transpositions map.
  * 
  * This is a convenience wrapper for UI components that work with MaqamData and
@@ -283,9 +284,10 @@ export function classifyMaqamDataFamily(
   const transpositions = transpositionsMap.get(maqamData.getId());
   if (!transpositions || transpositions.length === 0) return null;
 
-  // Get the tahlil (original form, transposition: false)
-  const tahlil = transpositions.find(t => !t.transposition);
-  if (!tahlil) return null;
+  // The base form (isBaseForm). Not `!t.transposition`: that also matches the
+  // base form's octave renderings.
+  const baseForm = transpositions.find(t => t.isBaseForm);
+  if (!baseForm) return null;
 
-  return classifyMaqamFamily(tahlil);
+  return classifyMaqamFamily(baseForm);
 }

@@ -10,7 +10,7 @@ import calculateNumberOfModulations from "@/functions/calculateNumberOfModulatio
 import { AjnasModulations, shiftJinsByOctaves, Jins } from "@/models/Jins";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import modulate from "@/functions/modulate";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms, renderingsLookup } from "@/functions/transpose";
 import { standardizeText } from "@/functions/export";
 type ModulationsPair = { ajnas: AjnasModulations; maqamat: MaqamatModulations };
 
@@ -53,30 +53,36 @@ export default function Modulations() {
     // Apply octave shift if enabled for this stack index
     const shouldShift = overrideOctaveShift ?? (octaveShiftEnabled[stackIdx] || false);
     if (shouldShift) {
+      // The shifted targets are looked up among each maqām's and jins's own
+      // renderings, at the same tolerance modulate() used to find them.
+      const renderings = renderingsLookup(allPitchClasses, ajnas, maqamat);
+      const maqamRenderings = renderings.maqam;
+      const jinsRenderings = renderings.jins;
+
       // Shift all ajnas modulations down by one octave
       const shiftedAjnasMods = {
         ...ajnasMods,
-        modulationsOnFirstDegree: ajnasMods.modulationsOnFirstDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnThirdDegree: ajnasMods.modulationsOnThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnAltThirdDegree: ajnasMods.modulationsOnAltThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnFourthDegree: ajnasMods.modulationsOnFourthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnFifthDegree: ajnasMods.modulationsOnFifthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnSixthDegreeAsc: ajnasMods.modulationsOnSixthDegreeAsc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnSixthDegreeDesc: ajnasMods.modulationsOnSixthDegreeDesc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
-        modulationsOnSixthDegreeIfNoThird: ajnasMods.modulationsOnSixthDegreeIfNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1)).filter((jins): jins is Jins => jins !== null),
+        modulationsOnFirstDegree: ajnasMods.modulationsOnFirstDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnThirdDegree: ajnasMods.modulationsOnThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnAltThirdDegree: ajnasMods.modulationsOnAltThirdDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnFourthDegree: ajnasMods.modulationsOnFourthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnFifthDegree: ajnasMods.modulationsOnFifthDegree.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeAsc: ajnasMods.modulationsOnSixthDegreeAsc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeDesc: ajnasMods.modulationsOnSixthDegreeDesc.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
+        modulationsOnSixthDegreeIfNoThird: ajnasMods.modulationsOnSixthDegreeIfNoThird.map(jins => shiftJinsByOctaves(allPitchClasses, jins, -1, jinsRenderings(jins.jinsId))).filter((jins): jins is Jins => jins !== null),
       };
 
       // Shift all maqamat modulations down by one octave
       const shiftedMaqamatMods = {
         ...maqamatMods,
-        modulationsOnFirstDegree: maqamatMods.modulationsOnFirstDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnThirdDegree: maqamatMods.modulationsOnThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnAltThirdDegree: maqamatMods.modulationsOnAltThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnFourthDegree: maqamatMods.modulationsOnFourthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnFifthDegree: maqamatMods.modulationsOnFifthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnSixthDegreeAsc: maqamatMods.modulationsOnSixthDegreeAsc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnSixthDegreeDesc: maqamatMods.modulationsOnSixthDegreeDesc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
-        modulationsOnSixthDegreeIfNoThird: maqamatMods.modulationsOnSixthDegreeIfNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1)).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnFirstDegree: maqamatMods.modulationsOnFirstDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnThirdDegree: maqamatMods.modulationsOnThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnAltThirdDegree: maqamatMods.modulationsOnAltThirdDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnFourthDegree: maqamatMods.modulationsOnFourthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnFifthDegree: maqamatMods.modulationsOnFifthDegree.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeAsc: maqamatMods.modulationsOnSixthDegreeAsc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeDesc: maqamatMods.modulationsOnSixthDegreeDesc.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
+        modulationsOnSixthDegreeIfNoThird: maqamatMods.modulationsOnSixthDegreeIfNoThird.map(maqam => shiftMaqamByOctaves(allPitchClasses, maqam, -1, maqamRenderings(maqam.maqamId))).filter((maqam): maqam is Maqam => maqam !== null),
       };
 
       return {
@@ -122,11 +128,11 @@ export default function Modulations() {
     const maqamData = maqamat.find((m) => m.getId() === chain[0].maqamId);
     if (!maqamData) return null;
 
-    const transpositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+    const transpositions = calculateMaqamForms(allPitchClasses, ajnas, maqamData, centsTolerance);
     let first = transpositions.find((m) => standardizeText(m.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) || null;
     if (!first) {
-      const tahlil = maqamData.getTahlil(allPitchClasses);
-      if (standardizeText(tahlil.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) first = tahlil;
+      const baseForm = maqamData.getBaseForm(allPitchClasses);
+      if (standardizeText(baseForm.ascendingPitchClasses[0]?.noteName ?? "") === chain[0].tonicIdName) first = baseForm;
     }
     if (!first) return null;
 
@@ -149,7 +155,7 @@ export default function Modulations() {
     if (sourceMaqamStack.length === 0 && selectedMaqamData) {
       let transposition: Maqam;
       if (selectedMaqam) transposition = selectedMaqam;
-      else transposition = selectedMaqamData.getTahlil(allPitchClasses);
+      else transposition = selectedMaqamData.getBaseForm(allPitchClasses);
 
       // If a chain descriptor whose last hop matches the current selection exists,
       // replay the whole chain instead of seeding a fresh single-hop stack

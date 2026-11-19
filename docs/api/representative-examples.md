@@ -777,6 +777,18 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
 
 Valid `transposeTo` tonics depend on the maqām, tuning system, and starting note — use `options=true` (above) to list them for a given combination.
 
+### 12-Pitch-Class Sets
+```bash
+curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=alsabbagh_1954&startingNote=rast&includeIncompatible=true"
+```
+
+A transposition that does not fit (maqām faraḥnāk (al-Ḥilū) on qarār segāh):
+```bash
+curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=alsabbagh_1954&startingNote=rast&maqamId=maqam_farahnak_alhilu"
+```
+
+Transpositions that do not fit are always counted, and listed with the key and the pitch classes that need it. See [Transpositions that do not fit a 12-pitch-class set](./index#transpositions-that-do-not-fit-a-12-pitch-class-set).
+
 ---
 
 ## Testing Combinations

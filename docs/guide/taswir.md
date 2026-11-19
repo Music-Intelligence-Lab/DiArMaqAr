@@ -43,13 +43,15 @@ A jins transposition systematically shifts a jins to begin from a different pitc
 
 ### Example: Jins Kurd
 
-**Original (Tahlīl):** Jins kurd starting on dūgāh
+**Base form:** Jins kurd starting on dūgāh
 - Pattern: dūgāh → kurdī → chahārgāh → nawā
 - Intervals: [specific cents pattern]
 
-**Transposition (Taswīr):** Jins kurd starting on muḥayyar
-- Pattern: muhayyar → [notes maintaining same intervals]
-- Name: "jins kurd al-muḥayyar"
+**Transposition (Taṣwīr):** Jins kurd starting on ḥusaynī
+- Pattern: ḥusaynī → [notes maintaining same intervals]
+- Name: "jins kurd al-ḥusaynī"
+
+Jins kurd on muḥayyar is *not* a transposition. Muḥayyar is the octave of dūgāh, so it is the base form one octave up: an octave rendering.
 
 ### Algorithm Characteristics
 
@@ -107,23 +109,24 @@ Each maqām node in API responses includes two identifier fields:
 | Field | Purpose | Stability | Example |
 |-------|---------|-----------|---------|
 | `baseMaqamIdName` | Query/lookup identifier | **Stable** across transpositions | `maqam_nahawand` |
-| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al_kurdan` |
+| `maqamIdName` | Display identifier | **Changes** with transposition | `maqam_nahawand_al_nawa` |
 
 ### Naming Pattern
 
-- **Original form (taḥlīl)**: Uses base name only → `maqam_nahawand`
-- **Transposed form (taṣwīr)**: Adds `_al-{tonic}` suffix → `maqam_nahawand_al_kurdan`
+- **Base form**: Uses base name only → `maqam_nahawand`
+- **Transposed form (taṣwīr)**: Adds `_al_{tonic}` suffix → `maqam_nahawand_al_nawa`
+- **Octave rendering**: Adds the same suffix → `maqam_nahawand_al_kurdan` (kurdān is the octave of rāst, so this is not a transposition)
 
 ### Querying Transposed Maqāmāt
 
 **To find a specific transposition, use base maqam ID + tonic parameters:**
 
 ```bash
-# Find maqām nahāwand on kurdān
-?toMaqam=maqam_nahawand&toTonic=kurdan   # ✅ Correct
+# Find maqām nahāwand on nawā
+?toMaqam=maqam_nahawand&toTonic=nawa     # ✅ Correct
 
 # NOT the display name format
-?toMaqam=maqam_nahawand_al_kurdan        # ❌ Will not work
+?toMaqam=maqam_nahawand_al_nawa          # ❌ Will not work
 ```
 
 ### Example Response
@@ -138,8 +141,8 @@ Each maqām node in API responses includes two identifier fields:
   },
   "to": {
     "baseMaqamIdName": "maqam_nahawand",
-    "maqamIdName": "maqam_nahawand_al_kurdan",
-    "maqamDisplayName": "maqām nahāwand al-kurdān",
+    "maqamIdName": "maqam_nahawand_al_nawa",
+    "maqamDisplayName": "maqām nahāwand al-nawā",
     "isTransposition": true
   }
 }

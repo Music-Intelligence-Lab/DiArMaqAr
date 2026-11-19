@@ -9,7 +9,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { entityToken, standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
-import { getIpnReferenceNoteName, getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
+import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
 import EntitySourceNote from "@/components/entity-source-note";
@@ -175,10 +175,10 @@ const MaqamTranspositions: React.FC = () => {
 
   useEffect(() => {
     setVisibleCount(BATCH_SIZE);
-    // Always open tahlil (first element) on load
+    // Always open the base form (first element) on load
     if (maqamTranspositions && maqamTranspositions.length > 0) {
-      const tahlilName = maqamTranspositions[0].name;
-      setOpenTranspositions([tahlilName]);
+      const baseFormName = maqamTranspositions[0].name;
+      setOpenTranspositions([baseFormName]);
     }
   }, [selectedMaqamData, selectedTuningSystem, maqamTranspositions]);
 
@@ -241,14 +241,14 @@ const MaqamTranspositions: React.FC = () => {
           }
         }, URL_SCROLL_TIMEOUT_MS);
       } else {
-        // Case 2: No maqam is selected (tahlil case) — same immediate open
-        const tahlilName = maqamTranspositions[0].name;
-        setOpenTranspositions([tahlilName]);
+        // Case 2: No maqam is selected (base-form case) — same immediate open
+        const baseFormName = maqamTranspositions[0].name;
+        setOpenTranspositions([baseFormName]);
 
         // Ensure first batch is visible
         setVisibleCount(BATCH_SIZE);
 
-        // Scroll to tahlil (same shared debounced slot as above)
+        // Scroll to the base form (same shared debounced slot as above)
         if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = window.setTimeout(() => {
           if (maqamTranspositions[0].ascendingPitchClasses?.length > 0) {
@@ -397,7 +397,7 @@ const MaqamTranspositions: React.FC = () => {
             // Only the pitch class moves. The name is inherited verbatim from the
             // tonic's jins: a register shift is not taṣwīr, so the octave-completion
             // cell keeps the base form (jins nahāwand, not jins nahāwand al-kurdān),
-            // matching how calculateMaqamTranspositions names ajnās that land on an
+            // matching how calculateMaqamForms names ajnās that land on an
             // octave sibling in maqāmāt long enough to reach one on their own.
             octaveTransposition = octaveTransposition.map((jins) => ({
               ...jins,
@@ -526,7 +526,7 @@ const MaqamTranspositions: React.FC = () => {
           if (filters["centsDeviation"]) {
             const centsDeviationRow = [t("maqam.centsDeviation")];
             pitchClasses.forEach((pc, i) => {
-              const referenceNote = getIpnReferenceNoteName(pc);
+              const referenceNote = getIpnReferenceNoteNameWithOctave(pc);
               const deviationText = `${referenceNote}${pc.centsDeviation > 0 ? ' +' : ' '}${pc.centsDeviation.toFixed(1)}`;
               centsDeviationRow.push(deviationText);
               if (i < pitchClasses.length - 1) {
@@ -756,18 +756,10 @@ const MaqamTranspositions: React.FC = () => {
     const openRowSpan = isSymmetric ? 1 + detailRowsPerBlock : 1 + detailRowsPerBlock * 2 + 1;
 
     function renderTranspositionRow(maqam: Maqam, ascending: boolean, rowIndex: number) {
-      // Always pass the combined ascending + descending pitch classes so cross-
-      // direction diatonic-slot collisions (e.g. segāh vs nīm būselīk both on E
-      // in asymmetric maqāmāt) are detected and the maqām-theory displacement
-      // rule fires in renderPitchClassSpellings.
-      const allMaqamPitchClasses = [
-        ...maqam.ascendingPitchClasses,
-        ...maqam.descendingPitchClasses,
-      ];
-
-      // Apply sequential English name spellings for melodic sequences
-      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true, allMaqamPitchClasses);
-      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false, allMaqamPitchClasses);
+      // Spell each direction on its own: ascending and descending sequences are
+      // independent here (only 12-pitch-class sets combine them).
+      let ascendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.ascendingPitchClasses, true);
+      let descendingTranspositionPitchClasses = renderPitchClassSpellings(maqam.descendingPitchClasses, false);
 
       let ascendingIntervals = maqam.ascendingPitchClassIntervals;
       let descendingIntervals = maqam.descendingPitchClassIntervals;
@@ -802,8 +794,8 @@ const MaqamTranspositions: React.FC = () => {
 
       const transposition = maqam.transposition;
       const pitchClasses = ascending ? ascendingTranspositionPitchClasses : descendingTranspositionPitchClasses;
-      // Octave-register siblings share transposition=false but only the canonical
-      // tonic in its proper octave gets the tahlil-style title (PAO name + badge)
+      // Octave renderings share transposition=false but only the canonical
+      // tonic in its proper octave gets the base-form-style title (PAO name + badge)
       const isCanonicalTonic = !transposition && pitchClasses[0]?.noteName === selectedMaqamData?.getAscendingNoteNames()[0];
       const oppositePitchClasses = ascending ? descendingTranspositionPitchClasses : ascendingTranspositionPitchClasses;
       const intervals = ascending ? ascendingIntervals : descendingIntervals;
@@ -1563,7 +1555,7 @@ const MaqamTranspositions: React.FC = () => {
               // on the octave registers of the tonic: they carry
               // transposition=false, so loading one sets selectedMaqam to null
               // (see the select-and-load handler) AND satisfies isAnalysis —
-              // which lit the taḥlīl instead of the register the reader chose.
+              // which lit the base form instead of the register the reader chose.
               // The tonic and its octave differ in octave alone, so both parts
               // of the key are needed.
               const loadedTonic = selectedPitchClasses[0];

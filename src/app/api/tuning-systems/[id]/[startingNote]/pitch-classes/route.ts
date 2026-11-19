@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
@@ -253,7 +254,9 @@ export async function GET(
 
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
     const octaveFilter = searchParams.get("octave") || "all";
-    const includeSources = searchParams.get("includeSources") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeSources"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeSources } = booleanFlags.values;
 
     // Define valid pitch class data types
     const validPitchClassDataTypes = [

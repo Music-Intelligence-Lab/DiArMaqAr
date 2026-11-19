@@ -1,8 +1,10 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
+import { rejectPathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
@@ -127,9 +129,8 @@ export async function GET(
     const tuningSystems = getTuningSystems();
 
     // Find the jins
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
 
     if (!jins) {
       return addCorsHeaders(
@@ -142,6 +143,9 @@ export async function GET(
         )
       );
     }
+
+    const transposedPathId = rejectPathTonic(jinsId, resolvedId?.tonicIdName, jins.getIdName(), "ajnas/{idName}/transpositions");
+    if (transposedPathId) return addCorsHeaders(transposedPathId);
 
     // Find the tuning system
     const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -206,15 +210,14 @@ export async function GET(
       );
     }
 
-    const transpositions = calculateJinsTranspositions(
+    const transpositions = calculateJinsForms(
       pitchClasses,
       jins,
-      true,
       centsTolerance
     );
 
     // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
-    // that is handled at the source in calculateJinsTranspositions().
+    // that is handled at the source in calculateJinsForms().
     const transpositionsListed = transpositions.filter((t) => t.transposition);
 
     if (transpositionsListed.length === 0) {
@@ -249,10 +252,14 @@ export async function GET(
       };
 
       return {
+        idName: entityToken(t),
+        displayName: t.name,
+        ...(inArabic && { displayNameAr: getJinsNameDisplayAr(t.name) }),
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.
         isBaseForm: t.isBaseForm,
+        formType: formTypeOf(t),
         links: buildLinksNamespace({
           detail: `/api/ajnas/${jins.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
@@ -270,9 +277,9 @@ export async function GET(
       },
       {
         version: jins.getVersion(),
-        // The header entity is the jins itself, i.e. the tahlil — the taswir
-        // are the list below. Taken from the resolved tahlil, not hard-coded.
-        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
+        // The header entity is the jins itself, i.e. the base form — the taswir
+        // are the list below. Taken from the resolved base form, not hard-coded.
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,
         displayNameAr: inArabic ? getJinsNameDisplayAr(jins.getName()) : undefined,
       }

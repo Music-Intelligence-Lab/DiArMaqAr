@@ -48,6 +48,8 @@ next-env.d.ts
 /exports/*
 # public/data is runtime/generated data (statistics, analytics, exports) — untracked
 /public/data/
+# Archive statistics: generated before every build (npm run generate-statistics)
+/src/generated/
 
 # Local-only internal folders (scripts tooling, article/shawwa_article sources).
 # Not part of the public-facing project; kept on disk under .untracked/.

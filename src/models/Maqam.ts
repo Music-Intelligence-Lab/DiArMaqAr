@@ -41,7 +41,7 @@ export interface MaqamDataInterface {
  * classes or tuning systems, serving as the "template" or "blueprint" of a maqam
  * as it would appear in theoretical texts or JSON data files. To create an actual
  * playable maqam with specific pitches, this data must be combined with a tuning
- * system through the getTahlil() method to produce a Maqam interface instance.
+ * system through the getBaseForm() method to produce a Maqam interface instance.
  * 
  * **Key Features**:
  * - **Bidirectional sequences**: Separate ascending (ṣuʿūd) and descending (hubūṭ) paths
@@ -185,7 +185,7 @@ export default class MaqamData {
    * Gets the ascending sequence (ṣuʿūd) note names.
    * 
    * These are abstract cultural identifiers without connection to specific
-   * pitch frequencies. To get actual playable pitches, use getTahlil() with
+   * pitch frequencies. To get actual playable pitches, use getBaseForm() with
    * a specific tuning system.
    * 
    * @returns Array of ascending note names
@@ -344,7 +344,7 @@ export default class MaqamData {
   }
 
   /**
-   * Converts this abstract maqam into a concrete, playable tahlil (original form).
+   * Converts this abstract maqam into a concrete, playable base form.
    * 
    * This is the crucial method that bridges the gap between abstract note names
    * and actual musical pitches. It processes both ascending and descending sequences
@@ -356,14 +356,14 @@ export default class MaqamData {
    * - Playable musical content with directional characteristics
    * - Foundation for embedded ajnas analysis and suyur transposition
    * 
-   * The resulting Maqam represents the "tahlil" (original/root form) of the maqam,
+   * The resulting Maqam represents the base form of the maqam,
    * as opposed to "taswir" (transpositions) which would start from different
    * pitch classes but maintain the same intervallic patterns and directional structure.
    * 
    * @param allPitchClasses - All pitch classes available in the tuning system
    * @returns Maqam interface instance with concrete pitches and intervals
    */
-  getTahlil(allPitchClasses: PitchClass[]): Maqam {
+  getBaseForm(allPitchClasses: PitchClass[]): Maqam {
     const ascendingPitchClasses = allPitchClasses.filter((pitchClass) => this.ascendingNoteNames.includes(pitchClass.noteName));
     const ascendingPitchClassIntervals: PitchClassInterval[] = getPitchClassIntervals(ascendingPitchClasses);
     const descendingPitchClasses = allPitchClasses.filter((pitchClass) => this.descendingNoteNames.includes(pitchClass.noteName)).reverse();
@@ -520,12 +520,17 @@ export interface SayrStop {
  * (which contains only abstract note names), a Maqam interface instance is
  * playable and can be used for audio synthesis and comprehensive analysis.
  * 
- * **Tahlil vs Taswir**:
- * - **Tahlil** (transposition: false): The original form of the maqam starting
- *   from its traditional root note (e.g., Maqam Farahfazza starting on yegah)
- * - **Taswir** (transposition: true): A transposition of the maqam starting
- *   from a different pitch class while preserving intervallic relationships and
- *   directional characteristics (e.g., Maqam Farahfazza al-Rast starting on rast)
+ * **The three kinds of form** (read with formTypeOf in @/functions/formType):
+ * - **Base form** (isBaseForm: true): the maqām on its traditional
+ *   tonic (maqām faraḥfazza on yegāh)
+ * - **Octave rendering** (transposition: false, isBaseForm: false): the base form
+ *   one or more octaves away, on the same modal degree (maqām faraḥfazza on
+ *   nawā). Not a taṣwīr: only the register moves.
+ * - **Taṣwīr**, a transposition (transposition: true): the maqām moved to
+ *   another modal degree, keeping its intervals and directional behaviour
+ *   (maqām faraḥfazza al-rāst)
+ *
+ * Only a taṣwīr is a transposition.
  * 
  * **Advanced Features**:
  * - **Embedded ajnas analysis**: Algorithm identifies all possible ajnās patterns
@@ -545,32 +550,33 @@ export interface Maqam {
   
   /** 
    * Name of this maqam instance.
-   * For tahlil: original name (e.g., "Maqam Farahfazza")
-   * For taswir: includes transposition info (e.g., "Maqam Farahfazza al-Rast")
+   * For the base form: the maqām's own name (e.g., "Maqam Farahfazza")
+   * For every other form: names its tonic (e.g., "Maqam Farahfazza al-Rast")
    */
   name: string;
   
   /**
-   * Whether this is a transposition (taswir) or original form (tahlil).
-   * false = tahlil (original), true = taswir (transposition)
+   * Whether this form is a taṣwīr (transposition).
+   * true = taṣwīr; false = the base form OR one of its octave renderings.
+   * False alone does not identify the base form — use isBaseForm, or formTypeOf.
    */
   transposition: boolean;
 
   /**
-   * Whether this is the base form (tahlil): the canonical form of this maqām,
-   * from which its transpositions are derived. Every transposition of one
+   * Whether this is the base form: the canonical form of this maqām,
+   * from which its other forms are derived. Every transposition of one
    * maqām repeats that maqām's maqamId, and exactly one entry is the base form.
    *
-   * Distinct from `transposition`, which stays false for octave/register
-   * siblings of the tahlil (e.g. maqām rāst al-kurdān) because a register
+   * Distinct from `transposition`, which stays false for octave renderings
+   * of the base form (e.g. maqām rāst al-kirdān) because a register
    * shift is not taṣwīr. The base form is the one on the maqām's canonical
    * first note. A maqām the tuning system cannot build yields nothing at all,
    * so the guarantee reads: exactly one base form whenever the list is
    * non-empty.
    *
-   * - transposition false + isBaseForm true  = tahlil (base form)
-   * - transposition false + isBaseForm false = octave/register sibling
-   * - transposition true  + isBaseForm false = taswir (transposition)
+   * - transposition false + isBaseForm true  = base form
+   * - transposition false + isBaseForm false = octave rendering
+   * - transposition true  + isBaseForm false = taṣwīr (transposition)
    */
   isBaseForm: boolean;
 
@@ -582,7 +588,7 @@ export interface Maqam {
   
   /** 
    * Intervallic relationships between consecutive pitch classes in ascending sequence.
-   * These intervals remain consistent between tahlil and taswir forms.
+   * These intervals remain consistent between the base form and its transpositions.
    */
   ascendingPitchClassIntervals: PitchClassInterval[];
   
@@ -603,7 +609,7 @@ export interface Maqam {
   
   /** 
    * Intervallic relationships between consecutive pitch classes in descending sequence.
-   * These intervals remain consistent between tahlil and taswir forms.
+   * These intervals remain consistent between the base form and its transpositions.
    */
   descendingPitchClassIntervals: PitchClassInterval[];
   
@@ -618,9 +624,11 @@ export interface Maqam {
 
   /**
    * Transposed primary jins degree as note names.
-   * Each element is mapped from the source MaqamData's primaryJinsDegree by
-   * applying the same tuning-system shift as the transposed scale.
-   * Null when the source is null OR when transposition pushes any element out of bounds.
+   * Each element is mapped from the source MaqamData's primaryJinsDegree to the
+   * note on the same degree of this form (the same position in the maqām's
+   * structure), not by a fixed tuning-system shift.
+   * Null when the source is null OR when any element cannot be placed in this
+   * form within the tuning system's range.
    */
   primaryJinsNoteName?: NoteName[] | null;
 
@@ -699,68 +707,32 @@ export interface MaqamatModulations {
 }
 
 /**
- * Shifts a maqam to a different octave while maintaining intervallic relationships.
- * 
- * @param allPitchClasses - All available pitch classes in the tuning system
- * @param maqam - The maqam to shift
- * @param octaveShift - Number of octaves to shift (positive = up, negative = down)
- * @returns New Maqam instance shifted by the specified number of octaves
+ * The same maqām form one or more octaves away.
+ *
+ * The result is taken from `renderings` — every rendering of this maqām in the
+ * pitch space, as calculateMaqamForms returns them — rather than built
+ * here, so its name, idName, flags and embedded ajnās are the canonical ones.
+ * Building it here named maqām yegāh al-nawā shifted down "maqām yegāh
+ * al-yegāh", when it is the base form, maqām yegāh itself.
+ *
+ * @param allPitchClasses - The whole pitch space of the tuning system
+ * @param maqam - The form to shift
+ * @param octaveShift - Octaves to shift (positive = up, negative = down)
+ * @param renderings - Every rendering of the same maqām in that pitch space
+ * @returns The rendering on the shifted tonic, or null when a shifted note falls outside the pitch space
  */
-export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number): Maqam | null {
-  // Defensive check for undefined maqam or pitch class arrays
-  if (!maqam || !maqam.ascendingPitchClasses || !maqam.descendingPitchClasses) {
-    console.warn('⚠️ shiftMaqamByOctaves: maqam or pitch class arrays are undefined', {
-      maqamExists: !!maqam,
-      maqamId: maqam?.maqamId,
-      maqamName: maqam?.name,
-      ascendingPitchClassesExists: !!maqam?.ascendingPitchClasses,
-      descendingPitchClassesExists: !!maqam?.descendingPitchClasses
-    });
-    return null;
-  }
-  
-  const shiftedAscendingPitchClasses = maqam.ascendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
-  const shiftedDescendingPitchClasses = maqam.descendingPitchClasses.map((pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift));
+export function shiftMaqamByOctaves(allPitchClasses: PitchClass[], maqam: Maqam, octaveShift: number, renderings: Maqam[]): Maqam | null {
+  const shiftedNoteNames = [...maqam.ascendingPitchClasses, ...maqam.descendingPitchClasses].map(
+    (pc) => shiftPitchClassByOctave(allPitchClasses, pc, octaveShift).noteName
+  );
+  if (shiftedNoteNames.some((noteName) => noteName === "")) return null;
 
-  // Check if any pitch class shift failed (indicated by empty noteName)
-  const ascendingValid = shiftedAscendingPitchClasses.every(pc => pc.noteName !== "");
-  const descendingValid = shiftedDescendingPitchClasses.every(pc => pc.noteName !== "");
-  
-  if (!ascendingValid || !descendingValid) {
-    // Return null if octave shift would put any note out of bounds
-    return null;
+  const tonic = shiftedNoteNames[0];
+  const rendering = renderings.find((r) => r.maqamId === maqam.maqamId && r.ascendingPitchClasses[0]?.noteName === tonic);
+  if (!rendering) {
+    throw new Error(`${maqam.name} shifted by ${octaveShift} octave(s) lands on ${tonic}, but no rendering of the maqām starts there.`);
   }
-
-  const shiftedAscendingIntervals = getPitchClassIntervals(shiftedAscendingPitchClasses);
-  const shiftedDescendingIntervals = getPitchClassIntervals(shiftedDescendingPitchClasses);
-
-  // Extract the base maqam name (remove any existing "al-" suffix and what follows)
-  let baseMaqamName = maqam.name;
-  const alIndex = baseMaqamName.indexOf(' al-');
-  if (alIndex !== -1) {
-    baseMaqamName = baseMaqamName.substring(0, alIndex);
-  }
-  
-  // Create new name with the shifted tonic
-  const newTonicName = shiftedAscendingPitchClasses[0].noteName;
-  const newName = `${baseMaqamName} al-${newTonicName}`;
-  
-  return {
-    maqamId: maqam.maqamId,
-    name: newName,
-    transposition: maqam.transposition,
-    // Shifting registers moves off the canonical first note, so the result is
-    // never the base form — even when the source maqam was.
-    isBaseForm: false,
-    ascendingPitchClasses: shiftedAscendingPitchClasses,
-    ascendingPitchClassIntervals: shiftedAscendingIntervals,
-    descendingPitchClasses: shiftedDescendingPitchClasses,
-    descendingPitchClassIntervals: shiftedDescendingIntervals,
-    ascendingMaqamAjnas: maqam.ascendingMaqamAjnas,
-    descendingMaqamAjnas: maqam.descendingMaqamAjnas,
-    modulations: maqam.modulations,
-    numberOfHops: maqam.numberOfHops,
-  };
+  return rendering;
 }
 
 /**

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
+import { mergePathTonic } from "@/app/api/path-tonic";
 import { getAjnas, getTuningSystems } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
+import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
+import { resolveEntityId, standardizeText } from "@/functions/export";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
@@ -33,7 +35,7 @@ export async function GET(
   try {
     const { id: jinsId } = await params;
     const { searchParams } = new URL(request.url);
-    const transpositionNoteName = searchParams.get("transpositionNoteName");
+    let transpositionNoteName = searchParams.get("transpositionNoteName");
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
@@ -75,9 +77,8 @@ export async function GET(
     const tuningSystems = getTuningSystems();
     
     // Find the jins by ID or name
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
 
     if (!jins) {
       return addCorsHeaders(
@@ -90,6 +91,11 @@ export async function GET(
         )
       );
     }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(jinsId, resolvedId?.tonicIdName, "transpositionNoteName", transpositionNoteName);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transpositionNoteName = pathTonic.tonic;
 
     // Validate transpositionNoteName if provided
     if (transpositionNoteName !== null && transpositionNoteName.trim() === "") {
@@ -106,49 +112,35 @@ export async function GET(
     }
 
     // Calculate availability - which tuning systems support this jins
-    // A tuning system is available if ANY of its note name sets can realize the jins
-    // Use shifted note name sets (3 octaves) to handle ajnās that may span multiple octaves
+    // A tuning system is available if ANY of its starting notes can realize the jins
+    // in that starting note's pitch space (see getPitchSpaceNoteNames)
     const availableTuningSystems: any[] = [];
     
     for (const tuningSystem of tuningSystems) {
-      // Get both the original note name sets and their 3-octave expansions
-      const noteNameSets = tuningSystem.getNoteNameSets();
-      const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-      
       // Track which tuning system starting note names work for this jins
       const validTuningSystemStartingNoteNames: string[] = [];
-      
-      for (let i = 0; i < shiftedNoteNameSets.length; i++) {
-        if (jins.isJinsPossible(shiftedNoteNameSets[i])) {
-          // The first note in the original (non-shifted) set is the tuning system starting note name
-          const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
-          if (tuningSystemStartingNoteName && !validTuningSystemStartingNoteNames.includes(tuningSystemStartingNoteName)) {
-            // If transpositionNoteName is specified, check if this transposition is valid
-            if (transpositionNoteName) {
-              const pitchClasses = getTuningSystemPitchClasses(tuningSystem, tuningSystemStartingNoteName);
-              const transpositions = calculateJinsTranspositions(
-                pitchClasses,
-                jins,
-                true,
-                centsTolerance
-              );
-              
-              // Check if any transposition starts on the requested note (case/diacritics insensitive)
-              const hasTransposition = transpositions.some(t => 
-                standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(transpositionNoteName)
-              );
-              
-              if (hasTransposition) {
-                validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
-              }
-            } else {
-              // No transposition filter - just check availability
-              validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
-            }
-          }
+
+      for (const { startingNote: tuningSystemStartingNoteName, noteNames } of getStartingNotePitchSpaces(tuningSystem)) {
+        if (!jins.isJinsPossible(noteNames)) continue;
+        // If transpositionNoteName is specified, check if this transposition is valid
+        if (transpositionNoteName) {
+          const pitchClasses = getTuningSystemPitchClasses(tuningSystem, tuningSystemStartingNoteName);
+          const transpositions = calculateJinsForms(
+            pitchClasses,
+            jins,
+            centsTolerance
+          );
+          // Check if any transposition starts on the requested note (case/diacritics insensitive)
+          const hasTransposition = transpositions.some(t =>
+            standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(transpositionNoteName)
+          );
+          if (hasTransposition) validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
+        } else {
+          // No transposition filter - just check availability
+          validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
         }
       }
-      
+
       if (validTuningSystemStartingNoteNames.length > 0) {
         const tuningSystemNamespace = buildEntityNamespace(
           {

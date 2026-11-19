@@ -8,7 +8,7 @@ import useSoundContext from "@/contexts/sound-context";
 import useLanguageContext from "@/contexts/language-context";
 import MaqamData from "@/models/Maqam";
 // Transpositions now provided via TranspositionsContext
-// import { calculateMaqamTranspositions } from "@/functions/transpose";
+// import { calculateMaqamForms } from "@/functions/transpose";
 import { updateMaqamat } from "@/functions/update";
 import { SourcePageReference, sourceSortKey } from "@/models/bibliography/Source";
 import useTranspositionsContext from "@/contexts/transpositions-context";

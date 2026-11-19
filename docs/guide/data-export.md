@@ -68,6 +68,26 @@ Scala is a widely-used format for tuning system representation, compatible with 
 - Software instrument design
 - Hardware synthesizer configuration
 
+#### 12-Pitch-Class Chromatic Set (.scl)
+- Available when exporting a maqām
+- Gives each pitch class the maqām uses, ascending and descending, its own key among the 12 keys of an octave
+- Fills the keys the maqām does not use with the tuning system's own chromatic pitch classes, or with those of al-Kindī (874) on the same starting note when the tuning system does not have all 12
+- Exports exactly the transposition you are viewing, under that transposition's name
+
+Earlier versions could export a different transposition of the same maqām under the name of the one you had selected. That no longer happens.
+
+Some transpositions cannot form a 12-pitch-class set. For these, the option is shown disabled. The export window gives the reason: the key and the pitch classes that need it. It also lists the other tonics on which the maqām does fit, or says that no transposition of the maqām fits in this tuning system. See [Maqāmāt that cannot form a 12-pitch-class set](#maqamat-that-cannot-form-a-12-pitch-class-set).
+
+### Maqāmāt that cannot form a 12-pitch-class set {#maqamat-that-cannot-form-a-12-pitch-class-set}
+
+A 12-pitch-class set assigns each pitch class a maqām uses to its own key on a keyboard with 12 keys per octave, such as a piano keyboard or a piano roll. Octaves count as the same pitch class. When a pitch class's key is already taken by another, it can move to the key next to it. A maqām does not fit when two of its pitch classes need the same key and the keys next to it are taken as well. This is rare. Such maqāmāt are always listed, with the key and the pitch classes that need it.
+
+**Example:** in al-Ṣabbāgh (1954) from rāst, maqām faraḥnāk (al-Ḥilū) on qarār segāh does not fit. Two of its pitch classes, ʿirāq (B-b2) and nīm kawasht (B-2), are 29.5 cents apart. Both need the B key. Neither can move, because the keys next to it are taken: nīm ʿajam is on Bb and rāst is on C.
+
+Where this is reported:
+- **In the app:** the 12-Pitch-Class Chromatic Set (.scl) export option is disabled for that transposition, with the reason and the tonics on which the maqām does fit.
+- **In the API:** the `/api/maqamat/classification/12-pitch-class-sets` endpoint lists every transposition that does not fit, with the key and the pitch classes that need it. See [Transpositions that do not fit a 12-pitch-class set](/api/#transpositions-that-do-not-fit-a-12-pitch-class-set).
+
 ## Export Options
 
 **For Maqāmāt:**

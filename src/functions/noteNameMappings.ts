@@ -490,63 +490,139 @@ function getExpectedLetterSequence(startLetter: string, count: number, ascending
 }
 
 /**
- * Finds the best enharmonic spelling that matches a target letter.
+ * The accidentals used by the IPN note-name tables above, as
+ * [quarter tones, commas] offsets from the natural letter.
  *
- * @param noteName - The English note name (e.g., "Ab3", "F#4")
+ * `b--` is a quarter tone below the flat: the tables spell nīm ḥiṣār (a quarter
+ * tone above G) as Ab--, the counterpart of nīm ʿajam's A-# (a quarter tone
+ * above A). `#++` is its mirror, a quarter tone above the sharp (buzurk on D is
+ * D#++). Bare `--` (B--, jawāb rahāwī) is two commas, a different quantity.
+ *
+ * Only these accidentals may be produced by respelling. `##` and `bb` (two
+ * semitones from the letter) let a degree stay on its letter where a single
+ * sharp or flat cannot reach: nawā on F is F##, ḥusaynī on B is Bbb.
+ */
+const ACCIDENTAL_OFFSETS: { [accidental: string]: [number, number] } = {
+  "": [0, 0],
+  "#": [2, 0],
+  "b": [-2, 0],
+  "##": [4, 0],
+  "bb": [-4, 0],
+  "-#": [1, 0],
+  "-b": [-1, 0],
+  "+": [0, 1],
+  "-": [0, -1],
+  "--": [0, -2],
+  "#-": [2, -1],
+  "b+": [-2, 1],
+  "b-": [-2, -1],
+  "b--": [-3, 0],
+  "#++": [3, 0],
+  "#+": [2, 1],
+};
+
+/**
+ * A half-flat spelling that sits directly above a plain sharp or flat in the
+ * tables names that chromatic note raised by a comma: tīk ḥijāz G-b = F#+,
+ * tīk zīrgūleh D-b = C#+, tīk ḥiṣār A-b = Ab+. Where the tables keep a separate
+ * tīk position in between (ʿajam Bb, tīk ʿajam Bb+, ʿirāq B-b) the half-flat is
+ * a different note and has no such alternative. Derived from table order.
+ */
+const RAISED_CHROMATIC_SPELLINGS: { [halfFlat: string]: string } = (() => {
+  const alternatives: { [halfFlat: string]: string } = {};
+  for (const octave of [englishOctaveZero, englishOctaveOne, englishOctaveTwo, englishOctaveThree, englishOctaveFour]) {
+    for (let i = 1; i < octave.length; i++) {
+      const current = octave[i].replace(/\d+$/, "");
+      const previous = octave[i - 1].replace(/\d+$/, "");
+      if (/^[A-G]-b$/.test(current) && /^[A-G][#b]$/.test(previous)) alternatives[current] = `${previous}+`;
+    }
+  }
+  return alternatives;
+})();
+
+const LETTERS_FROM_C = "CDEFGAB";
+// Quarter tones above C for each natural letter (semitone positions × 2)
+const LETTER_QUARTER_TONES = [0, 4, 8, 10, 14, 18, 22];
+
+/**
+ * Reads a spelling's position as written: [quarter tones above C (0-23), commas].
+ *
+ * This is the spelling's own claim about where the note sits, not a measured
+ * pitch: A-#3 → [19, 0], Bb--3 → [19, 0], E-3 → [8, -1]. Returns null for names
+ * whose accidental is not one the tables use.
+ *
+ * @param englishName - The English note name (e.g., "E-b3", "Ab--2")
+ */
+export function getSpellingPosition(englishName: string): [number, number] | null {
+  const match = englishName.match(/^([A-Ga-g])([#b+-]*)(-?\d*)$/);
+  if (!match) return null;
+  const offset = ACCIDENTAL_OFFSETS[match[2]];
+  if (!offset) return null;
+  const letterQuarterTones = LETTER_QUARTER_TONES[LETTERS_FROM_C.indexOf(match[1].toUpperCase())];
+  return [(((letterQuarterTones + offset[0]) % 24) + 24) % 24, offset[1]];
+}
+
+/**
+ * Respells a note name onto a neighbouring letter at the same pitch.
+ *
+ * The accidental's [quarter tones, commas] offset is moved by the distance
+ * between the two letters, and the result must be an accidental the tables
+ * already use. A-#3 on B becomes Bb--3; Ab--3 on G becomes G-#3; C3 on B
+ * becomes B#2 (the octave number follows the letter, so crossing between B and
+ * C changes it).
+ *
+ * @param noteName - The English note name (e.g., "Ab3", "A-#3")
  * @param targetLetter - The desired letter (A-G)
- * @returns The note name with the target letter, or null if impossible
+ * @returns The note name on the target letter, or null if no accidental fits
  */
 function findEnharmonicWithLetter(noteName: string, targetLetter: string): string | null {
-  // Extract note part and octave part
-  const match = noteName.match(/^([A-Ga-g][#b+-]*)(.*)$/);
+  const match = noteName.match(/^([A-Ga-g])([#b+-]*)(-?\d*)$/);
   if (!match) return null;
+  const [, letter, accidental, octaveStr] = match;
 
-  const notePart = match[1];
-  const octavePart = match[2];
+  if (letter.toUpperCase() === targetLetter.toUpperCase()) return noteName;
 
-  // Normalize: first letter uppercase, rest as-is (e.g., "Ab", "C#", "Bb")
-  const key = notePart.charAt(0).toUpperCase() + notePart.slice(1).toLowerCase();
+  // A tīk note directly above a chromatic note moves as that note raised by a
+  // comma (tīk ḥijāz G-b3 → F#+3), ahead of the general quarter-tone respelling
+  // (which would give F#++3)
+  const alternative = RAISED_CHROMATIC_SPELLINGS[letter.toUpperCase() + accidental];
+  if (alternative !== undefined) {
+    const raised = respellOntoLetter(alternative[0], alternative.slice(1), octaveStr, targetLetter);
+    if (raised !== null) return raised;
+  }
 
-  // Don't provide alternatives for microtonal notes (with + or - symbols)
-  if (/[+-]/.test(notePart)) {
+  return respellOntoLetter(letter, accidental, octaveStr, targetLetter);
+}
+
+function respellOntoLetter(letter: string, accidental: string, octaveStr: string, targetLetter: string): string | null {
+  const offset = ACCIDENTAL_OFFSETS[accidental];
+  if (!offset) return null;
+
+  const from = LETTERS_FROM_C.indexOf(letter.toUpperCase());
+  const to = LETTERS_FROM_C.indexOf(targetLetter.toUpperCase());
+  if (to === from) return letter + accidental + octaveStr;
+
+  let distance = LETTER_QUARTER_TONES[to] - LETTER_QUARTER_TONES[from];
+  let octaveShift = 0;
+  if (to === (from + 1) % 7) {
+    // One letter up; B → C enters the next octave
+    if (to < from) { distance += 24; octaveShift = 1; }
+  } else if (to === (from + 6) % 7) {
+    // One letter down; C → B enters the previous octave
+    if (to > from) { distance -= 24; octaveShift = -1; }
+  } else {
     return null;
   }
 
-  // Simple enharmonic map (only common single sharps/flats)
-  const enharmonicMap: { [key: string]: string[] } = {
-    "C": ["C", "B#"],
-    "C#": ["C#", "Db"],
-    "Db": ["Db", "C#"],
-    "D": ["D"],
-    "D#": ["D#", "Eb"],
-    "Eb": ["Eb", "D#"],
-    "E": ["E", "Fb"],
-    "F": ["F", "E#"],
-    "F#": ["F#", "Gb"],
-    "Gb": ["Gb", "F#"],
-    "G": ["G"],
-    "G#": ["G#", "Ab"],
-    "Ab": ["Ab", "G#"],
-    "A": ["A"],
-    "A#": ["A#", "Bb"],
-    "Bb": ["Bb", "A#"],
-    "B": ["B", "Cb"],
-  };
+  const quarterTones = offset[0] - distance;
+  const respelled = Object.keys(ACCIDENTAL_OFFSETS).find(
+    (key) => ACCIDENTAL_OFFSETS[key][0] === quarterTones && ACCIDENTAL_OFFSETS[key][1] === offset[1]
+  );
+  if (respelled === undefined) return null;
 
-  const alternatives = enharmonicMap[key] || [key];
-
-  // Find the alternative that starts with the target letter
-  for (const alt of alternatives) {
-    if (alt[0].toUpperCase() === targetLetter.toUpperCase()) {
-      // Preserve case and add octave
-      const result = notePart[0] === notePart[0].toLowerCase()
-        ? alt.toLowerCase() + octavePart
-        : alt + octavePart;
-      return result;
-    }
-  }
-
-  return null;
+  const outLetter = letter === letter.toLowerCase() ? targetLetter.toLowerCase() : targetLetter.toUpperCase();
+  const outOctave = octaveStr === "" ? "" : String(parseInt(octaveStr, 10) + octaveShift);
+  return outLetter + respelled + outOctave;
 }
 
 /**
@@ -576,72 +652,92 @@ export function getSequentialEnglishNames(arabicNames: string[], ascending: bool
     return defaultNames;
   }
 
-  // For descending sequences, determine the expected letter sequence from the LAST note
-  // going upward, then reverse it to get the descending sequence
-  let expectedLetters: string[];
-  if (ascending) {
-    const firstLetter = defaultNames[0][0].toUpperCase();
-    expectedLetters = getExpectedLetterSequence(firstLetter, arabicNames.length, true);
-  } else {
-    // For descending: start from last note, calculate ascending sequence, then reverse
-    const lastLetter = defaultNames[defaultNames.length - 1][0].toUpperCase();
-    const ascendingFromLast = getExpectedLetterSequence(lastLetter, arabicNames.length, true);
-    expectedLetters = ascendingFromLast.reverse();
-  }
+  // The anchor is the note the letters are counted from: the first note going
+  // up, the last (lowest) note going down. Its letter decides every other
+  // degree's letter, so it is spelled like any other degree: try its table
+  // letter and both neighbouring letters, and keep the spelling that leaves the
+  // fewest degrees off their letter; on a tie, the one that respells the fewest
+  // degrees (closest to the table's own spellings); then the table spelling.
+  // nīm ʿajam starting maqām rāst: A-#3 forces B#3, D-b4… onto wrong letters;
+  // Bb--3 lets C4, D-b4, Eb--4, F4, G4, A-b4 all fit.
+  const anchorName = ascending ? defaultNames[0] : defaultNames[defaultNames.length - 1];
+  // No English mapping for the anchor: no letter sequence to follow
+  if (anchorName === "--") return defaultNames;
+  const anchorIndex = LETTERS_FROM_C.indexOf(anchorName[0].toUpperCase());
+  const anchorLetters = [anchorIndex, (anchorIndex + 6) % 7, (anchorIndex + 1) % 7]
+    .map((index) => LETTERS_FROM_C[index])
+    .filter((letter) => findEnharmonicWithLetter(anchorName, letter) !== null);
 
-  const result: string[] = [];
+  const spellFrom = (anchorLetter: string): { names: string[]; offLetter: number; respelled: number } => {
+    const fromAnchor = getExpectedLetterSequence(anchorLetter, arabicNames.length, true);
+    const expectedLetters = ascending ? fromAnchor : fromAnchor.reverse();
+    const result: string[] = [];
 
-  for (let i = 0; i < defaultNames.length; i++) {
-    const defaultName = defaultNames[i];
+    for (let i = 0; i < defaultNames.length; i++) {
+      const defaultName = defaultNames[i];
 
-    if (defaultName === "--") {
-      result.push("--");
-      continue;
-    }
+      if (defaultName === "--") {
+        result.push("--");
+        continue;
+      }
 
-    const expectedLetter = expectedLetters[i];
+      const expectedLetter = expectedLetters[i];
 
-    // No expected letter available (e.g. the anchor note had no English mapping,
-    // so getExpectedLetterSequence returned []) — keep the default spelling
-    if (!expectedLetter) {
-      result.push(defaultName);
-      continue;
-    }
+      // No expected letter available (e.g. the anchor note had no English mapping,
+      // so getExpectedLetterSequence returned []) — keep the default spelling
+      if (!expectedLetter) {
+        result.push(defaultName);
+        continue;
+      }
 
-    const actualLetter = defaultName[0].toUpperCase();
+      const actualLetter = defaultName[0].toUpperCase();
 
-    // If the default already matches the expected letter, use it
-    if (actualLetter === expectedLetter) {
-      result.push(defaultName);
-      continue;
-    }
+      // If the default already matches the expected letter, use it
+      if (actualLetter === expectedLetter) {
+        result.push(defaultName);
+        continue;
+      }
 
-    // Check if this note advances to the next sequential letter (e.g., E then F).
-    // CRITICAL: Do NOT allow same letter (e.g., F then F#) - each pitch class must have a unique natural.
-    // Per Western notation convention, scales use consecutive letters (D-E-F-G-A-B-C-D).
-    if (i > 0) {
-      const prevDefaultName = defaultNames[i - 1];
-      if (prevDefaultName !== "--") {
-        const prevLetter = prevDefaultName[0].toUpperCase();
-        const nextSequentialLetter = getNextSequentialLetter(prevLetter);
-        if (actualLetter === nextSequentialLetter) {
-          result.push(defaultName);
-          continue;
+      // Check if this note advances to the next sequential letter (e.g., E then F).
+      // CRITICAL: Do NOT allow same letter (e.g., F then F#) - each pitch class must have a unique natural.
+      // Per Western notation convention, scales use consecutive letters (D-E-F-G-A-B-C-D).
+      // Compare with the previous note as spelled in this sequence, not its default:
+      // a respelled predecessor (A-#3 → Bb--3) has moved to a new letter.
+      if (i > 0) {
+        const prevName = result[i - 1];
+        if (prevName !== "--") {
+          const prevLetter = prevName[0].toUpperCase();
+          const nextSequentialLetter = getNextSequentialLetter(prevLetter);
+          if (actualLetter === nextSequentialLetter) {
+            result.push(defaultName);
+            continue;
+          }
         }
       }
-    }
 
-    // Try to find an enharmonic spelling with the expected letter
-    const enharmonic = findEnharmonicWithLetter(defaultName, expectedLetter);
-    if (enharmonic) {
-      result.push(enharmonic);
-    } else {
-      // No enharmonic found, use default (this handles microtonal notes or complex cases)
-      result.push(defaultName);
+      // Try to find an enharmonic spelling with the expected letter
+      const enharmonic = findEnharmonicWithLetter(defaultName, expectedLetter);
+      if (enharmonic) {
+        result.push(enharmonic);
+      } else {
+        // No enharmonic found, use default (this handles microtonal notes or complex cases)
+        result.push(defaultName);
+      }
     }
+    const offLetter = result.filter((name, i) => name !== "--" && name[0].toUpperCase() !== expectedLetters[i]).length;
+    const respelled = result.filter((name, i) => name !== defaultNames[i]).length;
+    return { names: result, offLetter, respelled };
+  };
+
+  let best = spellFrom(anchorLetters[0]);
+  for (const letter of anchorLetters.slice(1)) {
+    const candidate = spellFrom(letter);
+    const better =
+      candidate.offLetter < best.offLetter ||
+      (candidate.offLetter === best.offLetter && candidate.respelled < best.respelled);
+    if (better) best = candidate;
   }
-
-  return result;
+  return best.names;
 }
 
 /**

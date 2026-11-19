@@ -1,13 +1,18 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import {
   classifyMaqamat,
-  ClassificationResult
+  ClassificationResult,
+  IncompatibleMaqam,
+  keyHoldingPitch,
+  listTwelvePitchClassSetFromC
 } from "@/functions/classifyMaqamat12PitchClassSets";
 import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
-import { parseInArabic } from "@/app/api/arabic-helpers";
-import { standardizeText } from "@/functions/export";
+import { getNoteNameDisplayAr, parseInArabic } from "@/app/api/arabic-helpers";
+import { canonicalEntityIdName, entityToken, matchesMaqamId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -118,8 +123,14 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
  * - startSetFromC: boolean (default: false) - start pitch class set from IPN "C" (for Scala .scl export)
- * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
- * - maqamId: string (optional) - filter by maqam ID to find sets containing it (e.g., "maqam_rast")
+ * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set"); a set is named after one of its members, see chooseSetNamesake
+ * - maqamId: string (optional) - filter by maqam ID to find sets containing it (e.g., "maqam_rast").
+ *   Also lists its transpositions that fit no set; a maqām with none that fit is
+ *   still a 200 (compatible: false), only an unknown id is a 404.
+ *
+ * Incompatible transpositions: two different pitches would need the same 12-EDO
+ * key and the keys next to it are taken. Each entry names the clashing keys and
+ * notes, with one plain-sentence explanation.
  *
  * Scala Export Mode (startSetFromC=true):
  * When enabled, the pitch class set is reordered to start from IPN "C" at degree 0, making it
@@ -149,7 +160,9 @@ function formatPitchClassData(pitchClass: any, format: string | null | undefined
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeIncompatible = searchParams.get("includeIncompatible") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIncompatible", "startSetFromC"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIncompatible, startSetFromC } = booleanFlags.values;
     const setIdParam = searchParams.get("setId");
     const maqamIdParam = searchParams.get("maqamId");
     
@@ -224,7 +237,6 @@ export async function GET(request: Request) {
     }
 
     // Parse startSetFromC parameter (for Scala .scl export compatibility)
-    const startSetFromC = searchParams.get("startSetFromC") === "true";
 
     // Parse pitchClassDataType parameter
     const pitchClassDataType = searchParams.get("pitchClassDataType");
@@ -377,6 +389,65 @@ export async function GET(request: Request) {
       centsTolerance
     );
 
+    // An incompatible transposition: which keys its pitches would share, and
+    // the same in one plain sentence
+    const formatIncompatible = (incompatible: IncompatibleMaqam) => {
+      const maqamNamespace = buildEntityNamespace(
+        {
+          id: incompatible.maqam.getId(),
+          idName: incompatible.maqam.getIdName(),
+          displayName: incompatible.maqam.getName()
+        },
+        {
+          inArabic
+        }
+      );
+
+      const transpositionNamespace = incompatible.transposition
+        ? buildIdentifierNamespace(
+            {
+              idName: entityToken(incompatible.transposition),
+              displayName: incompatible.transposition.name
+            },
+            {
+              inArabic
+            }
+          )
+        : null;
+
+      return {
+        maqam: maqamNamespace,
+        transposition: transpositionNamespace && incompatible.transposition
+          ? {
+              ...transpositionNamespace,
+              isTransposed: incompatible.transposition.transposition,
+              isBaseForm: incompatible.transposition.isBaseForm,
+              formType: formTypeOf(incompatible.transposition)
+            }
+          : null,
+        compatible: false,
+        reason: incompatible.reason,
+        explanation: incompatible.explanation,
+        clashes: incompatible.clashes.map((clash) => ({
+          key: clash.key,
+          notes: clash.notes.map((note) => ({
+            noteName: standardizeText(note.noteName),
+            displayName: note.noteName,
+            ...(inArabic && { displayNameAr: getNoteNameDisplayAr(note.noteName) }),
+            englishName: note.englishName,
+            cents: note.cents,
+            centsInOctave: note.centsInOctave
+          }))
+        }))
+      };
+    };
+    const incompatibleFormatted = result.incompatibleMaqamat.map(formatIncompatible);
+
+    // Every octave of both tuning systems, to list a set from C (startSetFromC)
+    const octaveSources = startSetFromC
+      ? [getTuningSystemPitchClasses(cairoTuningSystem, cairoStartingNote as any), getTuningSystemPitchClasses(alKindiTuningSystem, alKindiStartingNote as any)]
+      : [];
+
     // Format response
     const formattedSets = result.sets.map((set) => {
       const sourceMaqamNamespace = buildEntityNamespace(
@@ -390,58 +461,13 @@ export async function GET(request: Request) {
         }
       );
 
-      // Get all pitch classes from all octaves for octave shifting when needed
-      const allTuningSystemPitchClasses = startSetFromC ? getTuningSystemPitchClasses(
-        cairoTuningSystem,
-        cairoStartingNote as any
-      ) : null;
-
-      // Get all 12 pitch classes from the original set
       // CRITICAL: Pitch classes are already in chromatic ascending order from create12PitchClassSet
       // with correct octave selection. Do NOT re-sort them or the octave selection will break.
-      const allPitchClasses: Array<{ ipnRef: string; pitchClass: any }> = [];
-
-      // Get the maqam tonic IPN reference
-      const maqamTonicIpnRef = set.pitchClassSet.pitchClasses.entries().next().value?.[0] || 'C';
-
-      // Define chromatic order for comparison
-      const chromaticOrder = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      const tonicIndex = chromaticOrder.indexOf(maqamTonicIpnRef);
-
-      for (const [ipnRef, pc] of set.pitchClassSet.pitchClasses.entries()) {
-        let pitchClassToUse = pc;
-
-        // For Scala mode: shift octave 2 notes that come BEFORE the tonic to octave 1
-        // This handles cases where the maqam starts mid-octave (e.g., D)
-        // and we need C and C# from octave 1 instead of octave 2
-        if (startSetFromC && pc.octave === 2 && allTuningSystemPitchClasses) {
-          const currentIndex = chromaticOrder.indexOf(ipnRef);
-          // If this note comes before the tonic in chromatic order, get octave 1 equivalent
-          if (currentIndex < tonicIndex) {
-            const octave1Equivalent = allTuningSystemPitchClasses.find(
-              tpc => tpc.referenceNoteName === ipnRef && tpc.octave === 1
-            );
-
-            if (octave1Equivalent) {
-              pitchClassToUse = octave1Equivalent;
-            }
-          }
-        }
-
-        allPitchClasses.push({ ipnRef, pitchClass: pitchClassToUse });
-      }
-
-      // For Scala mode: rotate array to start from C
-      let orderedPitchClasses = allPitchClasses;
-      if (startSetFromC) {
-        const cIndex = allPitchClasses.findIndex(item => item.ipnRef === 'C');
-        if (cIndex !== -1 && cIndex > 0) {
-          orderedPitchClasses = [
-            ...allPitchClasses.slice(cIndex),
-            ...allPitchClasses.slice(0, cIndex)
-          ];
-        }
-      }
+      // For Scala mode the same 12 pitches are listed from C instead of the tonic.
+      const listedPitchClassSet = startSetFromC
+        ? listTwelvePitchClassSetFromC(set.pitchClassSet, octaveSources)
+        : set.pitchClassSet;
+      const orderedPitchClasses = [...listedPitchClassSet.pitchClasses.entries()].map(([ipnRef, pitchClass]) => ({ ipnRef, pitchClass }));
 
       // Get reference cents from the FIRST pitch class in the ordered array
       // This will be the maqam tonic (default) or C (if startSetFromC=true)
@@ -496,7 +522,7 @@ export async function GET(request: Request) {
       const compatibleMaqamatFormatted = set.compatibleMaqamat.map((info) => {
         const transpositionNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(info.maqam.name),
+            idName: entityToken(info.maqam),
             displayName: info.maqam.name
           },
           {
@@ -507,115 +533,90 @@ export async function GET(request: Request) {
         // Store base maqam ID for filtering
         const baseMaqamIdName = info.maqamData.getIdName();
 
-        // Get the tonic for this specific maqam from its ascending pitch classes
-        const maqamTonicPitchClass = info.maqam.ascendingPitchClasses?.[0];
-        const maqamTonicNoteName = maqamTonicPitchClass?.noteName || '';
+        // The tonic of this transposition and the key of the set that holds it,
+        // found by pitch: the set may hold it on a neighbouring key of its letter
+        // (tīk ḥiṣār on G# in the nayrūz set)
+        const maqamTonicPitchClass = info.maqam.ascendingPitchClasses[0];
+        const maqamTonicIpnRef = keyHoldingPitch(maqamTonicPitchClass, listedPitchClassSet, centsTolerance);
+        const maqamTonicPositionInSet = orderedPitchClasses.findIndex(item => item.ipnRef === maqamTonicIpnRef);
 
-        // Get the IPN reference note name for the tonic (e.g., "D", "C#")
-        // This works even if the tonic is in a different octave (e.g., qarār dūgāh -> "D")
-        const tonicIpnRef = maqamTonicPitchClass?.referenceNoteName || '';
-
-        // Find the matching IPN in the 12-pitch-class set
-        // This finds the octave equivalent within the set
-        const maqamTonicPitchClassMatch = tonicIpnRef
-          ? orderedPitchClasses.find(item => item.ipnRef === tonicIpnRef)
-          : null;
-
-        const maqamTonicIpnRef = maqamTonicPitchClassMatch?.ipnRef || tonicIpnRef;
-        const maqamTonicPositionInSet = maqamTonicPitchClassMatch
-          ? orderedPitchClasses.findIndex(item => item.ipnRef === tonicIpnRef)
-          : -1;
-
-        // Build tonic namespace for this maqam
-        const tonicNamespace = maqamTonicNoteName ? buildIdentifierNamespace(
+        const tonicNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(maqamTonicNoteName),
-            displayName: maqamTonicNoteName
+            idName: standardizeText(maqamTonicPitchClass.noteName),
+            displayName: maqamTonicPitchClass.noteName
           },
           {
             inArabic
           }
-        ) : null;
+        );
 
         return {
           maqamIdName: transpositionNamespace.idName,
           maqamDisplayName: transpositionNamespace.displayName,
           baseMaqamIdName: baseMaqamIdName, // Store for filtering
           isTransposed: info.maqam.transposition,
-          // Not the inverse of isTransposed: an octave-register sibling of the
+          // Not the inverse of isTransposed: an octave rendering of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
-          tonic: tonicNamespace ? {
+          formType: formTypeOf(info.maqam),
+          tonic: {
             ipnReferenceNoteName: maqamTonicIpnRef,
             noteNameIdName: tonicNamespace.idName,
             noteNameDisplayName: tonicNamespace.displayName,
             positionInSet: maqamTonicPositionInSet
-          } : null
+          }
         };
       });
 
-      // Deduplicate compatible maqamat before counting
-      // Use maqam name + tonic IPN as key to identify duplicates
-      const seenMaqamatByTonic = new Set<string>();
-      const deduplicatedMaqamat = compatibleMaqamatFormatted.filter((maqam) => {
-        const tonicIpn = maqam.tonic?.ipnReferenceNoteName || 'Unknown';
-        const key = `${maqam.maqamDisplayName}:${tonicIpn}`;
-        if (seenMaqamatByTonic.has(key)) {
-          return false; // Duplicate, filter it out
-        }
-        seenMaqamatByTonic.add(key);
-        return true; // Keep this entry
-      });
-
-      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by position in set
-      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
-        // PRIORITY 1: Tahlil (non-transposed) versions come first
+      // Sort compatible maqamat: base-form versions first, then by position in set
+      const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
+        // PRIORITY 1: Base-form versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
         }
 
         // PRIORITY 2: Sort by position in set
-        const aPosition = a.tonic?.positionInSet ?? 999;
-        const bPosition = b.tonic?.positionInSet ?? 999;
-        return aPosition - bPosition;
+        return a.tonic.positionInSet - b.tonic.positionInSet;
       });
 
-      const setNameStandardized = standardizeText(set.name);
       return {
-        setIdName: setNameStandardized,
+        setIdName: set.id,
         setDisplayName: set.name,
         sourceMaqam: sourceMaqamNamespace,
         pitchClassSet: pitchClassSetArray,
         compatibleMaqamat: sortedMaqamat,
-        compatibleMaqamatCount: deduplicatedMaqamat.length
+        compatibleMaqamatCount: sortedMaqamat.length
       };
     });
 
     // Filter sets based on query parameters
     let filteredSets = formattedSets;
+    // Set by a maqamId query: whether the maqām fits, and its transpositions that do not
+    let maqamIdResult: {
+      maqamId: string;
+      compatible: boolean;
+      explanation?: string;
+      incompatibleTranspositions: typeof incompatibleFormatted;
+    } | null = null;
 
     if (setIdParam) {
-      // Filter by specific set ID
-      const setIdStandardized = standardizeText(setIdParam);
+      // Filter by specific set ID. A set is named after one of its members (see
+      // chooseSetNamesake), so the older closed-up spelling of that member is accepted too.
+      const extractedMaqamId = standardizeText(setIdParam).replace(/_set$/, '');
+      const extractedMaqamIdStandardized = canonicalEntityIdName(extractedMaqamId, maqamat.map((m) => m.getIdName()));
+      const setIdStandardized = `${extractedMaqamIdStandardized}_set`;
       filteredSets = formattedSets.filter(set =>
         set.setIdName === setIdStandardized
       );
 
       if (filteredSets.length === 0) {
-        // Try to extract maqam ID from the set ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
-        const extractedMaqamId = setIdParam.replace(/_set$/, '');
-        const extractedMaqamIdStandardized = standardizeText(extractedMaqamId);
+        // Try the set ID as a maqām ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
 
         // Check if this maqam exists in any other sets
         const setsContainingMaqam = formattedSets.filter(set =>
-          set.compatibleMaqamat.some(maqam => {
-            const baseMatch = maqam.baseMaqamIdName === extractedMaqamIdStandardized ||
-                             maqam.baseMaqamIdName === extractedMaqamId;
-            const transpositionMatch = maqam.maqamIdName === extractedMaqamIdStandardized ||
-                                      maqam.maqamIdName === extractedMaqamId ||
-                                      maqam.maqamIdName.startsWith(extractedMaqamIdStandardized + "_");
-            return baseMatch || transpositionMatch;
-          })
+          set.compatibleMaqamat.some(maqam =>
+            matchesMaqamId(maqam.baseMaqamIdName, maqam.maqamIdName, extractedMaqamIdStandardized)
+          )
         );
 
         if (setsContainingMaqam.length > 0) {
@@ -625,19 +626,16 @@ export async function GET(request: Request) {
             setDisplayName: set.setDisplayName,
             sourceMaqam: set.sourceMaqam.displayName,
             maqamPositionInSet: (() => {
-              const maqamEntry = set.compatibleMaqamat.find(m => {
-                const baseMatch = m.baseMaqamIdName === extractedMaqamIdStandardized ||
-                                 m.baseMaqamIdName === extractedMaqamId;
-                const transpositionMatch = m.maqamIdName === extractedMaqamIdStandardized ||
-                                          m.maqamIdName === extractedMaqamId;
-                return baseMatch || transpositionMatch;
-              });
+              const maqamEntry = set.compatibleMaqamat.find(m =>
+                matchesMaqamId(m.baseMaqamIdName, m.maqamIdName, extractedMaqamIdStandardized)
+              );
               return maqamEntry ? {
                 maqamDisplayName: maqamEntry.maqamDisplayName,
-                tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
-                tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
+                tonicIpn: maqamEntry.tonic.ipnReferenceNoteName,
+                tonicNoteName: maqamEntry.tonic.noteNameDisplayName,
                 isTransposed: maqamEntry.isTransposed,
-                isBaseForm: maqamEntry.isBaseForm
+                isBaseForm: maqamEntry.isBaseForm,
+                formType: maqamEntry.formType
               } : null;
             })()
           }));
@@ -674,31 +672,54 @@ export async function GET(request: Request) {
         );
       }
     } else if (maqamIdParam) {
-      // Filter by maqam ID - find sets containing this maqam
-      const maqamIdStandardized = standardizeText(maqamIdParam);
+      // Filter by maqam ID: the maqām (numeric id or idName) or one transposition idName
+      const maqamData = maqamat.find(
+        (m) => m.getId() === maqamIdParam || m.getIdName() === standardizeText(maqamIdParam)
+      );
+      const maqamIdName = maqamData ? maqamData.getIdName() : canonicalEntityIdName(maqamIdParam, maqamat.map((m) => m.getIdName()));
+
       filteredSets = formattedSets.filter(set =>
-        set.compatibleMaqamat.some(maqam => {
-          // Match by base maqam ID name (for base maqam) or transposition ID name (for transpositions)
-          const baseMatch = maqam.baseMaqamIdName === maqamIdStandardized ||
-                           maqam.baseMaqamIdName === maqamIdParam;
-          const transpositionMatch = maqam.maqamIdName === maqamIdStandardized ||
-                                    maqam.maqamIdName === maqamIdParam ||
-                                    maqam.maqamIdName.startsWith(maqamIdStandardized + "_");
-          return baseMatch || transpositionMatch;
-        })
+        set.compatibleMaqamat.some(maqam => matchesMaqamId(maqam.baseMaqamIdName, maqam.maqamIdName, maqamIdName))
+      );
+      const incompatibleTranspositions = incompatibleFormatted.filter(entry =>
+        matchesMaqamId(entry.maqam.idName, entry.transposition?.idName, maqamIdName)
       );
 
-      if (filteredSets.length === 0) {
+      if (!maqamData && filteredSets.length === 0 && incompatibleTranspositions.length === 0) {
         return addCorsHeaders(
           NextResponse.json(
             {
-              error: `No sets found containing maqam '${maqamIdParam}'`,
-              hint: "Use ?maqamId=<maqam-id> to find sets containing a specific maqam (e.g., ?maqamId=maqam_rast)"
+              error: `Maqām '${maqamIdParam}' not found`,
+              message: "No maqām or maqām transposition has this id.",
+              hint: "Use ?maqamId=<maqam-id> with a maqām idName or numeric id (e.g., ?maqamId=maqam_rast)",
+              availableMaqamatUrl: getCanonicalApiUrl("/api/maqamat")
             },
             { status: 404 }
           )
         );
       }
+
+      const compatible = filteredSets.length > 0;
+      const where = `${cairoTuningSystem.stringify()} from ${cairoStartingNote}`;
+      let explanation: string | undefined;
+      if (!compatible && !maqamData) {
+        explanation = `${incompatibleTranspositions[0].transposition?.displayName} does not fit a 12-pitch-class set in ${where}.`;
+      } else if (!compatible && incompatibleTranspositions.length > 0) {
+        explanation = `No transposition of ${maqamData!.getName()} fits a 12-pitch-class set in ${where}.`;
+      } else if (!compatible) {
+        // Neither in a set nor incompatible: the tuning system lacks some of its notes
+        const noteNames = getTuningSystemPitchClasses(cairoTuningSystem, cairoStartingNote as any).map((pc) => pc.noteName);
+        if (maqamData!.isMaqamPossible(noteNames)) {
+          throw new Error(`${maqamData!.getName()} is possible in ${tuningSystemId} from ${cairoStartingNote} but was not classified`);
+        }
+        explanation = `${maqamData!.getName()} cannot be realized in ${where}: the tuning system lacks some of its notes, so it has no transposition to fit a 12-pitch-class set.`;
+      }
+      maqamIdResult = {
+        maqamId: maqamIdName,
+        compatible,
+        ...(explanation && { explanation }),
+        incompatibleTranspositions
+      };
     }
 
     // Sort sets by compatibleMaqamatCount in descending order (most to least)
@@ -715,6 +736,11 @@ export async function GET(request: Request) {
     );
 
     const response: any = {
+      ...(maqamIdResult && {
+        maqamId: maqamIdResult.maqamId,
+        compatible: maqamIdResult.compatible,
+        ...(maqamIdResult.explanation && { explanation: maqamIdResult.explanation })
+      }),
       statistics: {
         totalSets: filteredSets.length,
         totalCompatibleMaqamat: filteredCompatibleCount,
@@ -727,6 +753,7 @@ export async function GET(request: Request) {
         }
       },
       sets: filteredSets,
+      ...(maqamIdResult && { incompatibleTranspositions: maqamIdResult.incompatibleTranspositions }),
       parameters: {
         tuningSystem: {
           id: cairoTuningSystem.getId(),
@@ -754,43 +781,6 @@ export async function GET(request: Request) {
     };
 
     if (includeIncompatible) {
-      const incompatibleFormatted = result.incompatibleMaqamat.map((incompatible) => {
-        const maqamNamespace = buildEntityNamespace(
-          {
-            id: incompatible.maqam.getId(),
-            idName: incompatible.maqam.getIdName(),
-            displayName: incompatible.maqam.getName()
-          },
-          {
-            inArabic
-          }
-        );
-
-        const transpositionNamespace = incompatible.transposition
-          ? buildIdentifierNamespace(
-              {
-                idName: standardizeText(incompatible.transposition.name),
-                displayName: incompatible.transposition.name
-              },
-              {
-                inArabic
-              }
-            )
-          : null;
-
-        return {
-          maqam: maqamNamespace,
-          transposition: transpositionNamespace && incompatible.transposition
-            ? {
-                ...transpositionNamespace,
-                isTransposed: incompatible.transposition.transposition,
-                isBaseForm: incompatible.transposition.isBaseForm
-              }
-            : null,
-          reason: incompatible.reason
-        };
-      });
-
       response.incompatibleMaqamat = incompatibleFormatted;
       response.incompatibleMaqamatCount = incompatibleFormatted.length;
     }

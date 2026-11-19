@@ -44,7 +44,7 @@ Currently, there are no rate limits. Please use the API responsibly.
 
 Most endpoints support these optional parameters:
 
-- **`includeArabic`** (default: `"true"`): Include Arabic script alongside transliteration
+- **`includeArabic`** (default: `"false"`): Include Arabic script alongside transliteration
   - `"true"`: Bilingual responses with `*Ar` suffixed fields (`displayNameAr`, `noteNameDisplayAr`, etc.)
   - `"false"`: English transliteration only
 
@@ -259,12 +259,16 @@ GET /maqamat/{idName}
 Retrieve comprehensive data for a specific maqām on its conventional or a transposed tonic, in a specific tuning system on a specific starting note name.
 
 **Special Path Parameter Value:**
-- The `{idName}` path parameter accepts the special value `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note
+- The `{idName}` path parameter accepts the special value `"all"` to retrieve every maqām form a tuning system can build from a starting note, in one request
 - When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required
+- Each item of `maqamat` is exactly the body this endpoint returns for that form with the same options, without the envelope (`parameters`, `context`, `links`), which the bulk response carries once
+- `forms` chooses the base forms (default), their transpositions (taṣwīr), or both; `includeOctaveRenderings=true` adds the octave-register renderings (e.g. `maqam_rast_al_qarar_rast`), which are neither
+- `fields` keeps only the named top-level fields of each item (`maqam` is always kept) and skips the work for the others
+- Responses are paged by size: a page holds at most about 5 MB of items. `total` counts every selected form, `count` the forms on this page, and `next` is the URL of the next page (`null` on the last). Follow `next` until it is `null`
 
 Returns:
 - Comprehensive pitch class data in the requested tuning system and starting note name
-- All ajnās present at each maqām degree in the ascending and descending maqām structure, organized by their maqām degree note names
+- All ajnās present at each maqām degree in the ascending and descending maqām structure, keyed by each degree's URL-safe `noteName` (the same value as `pitchData[].noteName`, e.g. `segah`)
 - The maqām's primary, secondary, and (when defined) tertiary jins positions as transposed per-degree entries — each carrying the note name, maqām degree (roman numeral), and the resolved jins entity `{jinsId, jinsIdName, jinsDisplayName}`
 - The maqām's ghammāz (modulation emphasis note) as a note-name + maqām-degree entry (no jins fields — the ghammāz is a melodic-emphasis note, not a jins)
 - All four of `primaryJins`, `secondaryJins`, `tertiaryJins`, and `ghammaz` are transposed in sync with the selected transposition (e.g. when `transposeTo=nawa` is used, every entry reflects the new tonic and the new maqām-degree position of each note). They are returned as arrays of per-degree objects to accommodate alternatives, or `null` when a maqām has no entry for that slot (e.g. rāst has no tertiary).
@@ -285,9 +289,9 @@ Requirements:
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier.
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
 
-**Special value**: Use `"all"` to retrieve data for all maqāmāt in a specific tuning system and starting note. When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
+**Special value**: Use `"all"` to retrieve every maqām form in a specific tuning system and starting note at once (see `forms`, `includeOctaveRenderings`, `fields` and `offset`). When using `"all"`, both `tuningSystem` and `startingNote` query parameters are required.
  (string) **(required)**
   - Example: `maqam_rast` - Maqām Rāst (representative example)
   - Example: `maqam_bayyat` - Maqām Bayyāt (representative example)
@@ -328,7 +332,10 @@ Requirements:
   - Example: `true`
 - `includeModulations8vb` (optional): Include available modulations an octave below - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `includeSuyur` (optional): Include suyūr (melodic paths) data - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeSuyur` (optional): Include the suyūr (melodic paths) that can be played on the maqām form requested,
+each moved onto that form.
+  each moved onto that form. See `suyur` in the response.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -341,6 +348,26 @@ Requirements:
   - Example: `true`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
+- `forms` (optional): Only with idName `all`.
+  - `transpositions`: every transposition (taṣwīr) of each maqām in this tuning system and starting note
+  - `all`: both, the base form of each maqām followed by its transpositions
+ - Type: `string` - Valid values: `base`, `transpositions`, `all` - Default: `base`
+- `includeOctaveRenderings` (optional): Only with idName `all`.
+  same maqām an octave from its base form (e.g. `maqam_rast_al_qarar_rast`). They are
+  neither the base form nor a transposition, and they appear as modulation targets.
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `fields` (optional): Only with idName `all`.
+  `ajnas,primaryJins,modulations`. `maqam` is always kept. A field left out is not
+  computed, so leaving out `modulations`, `lowerOctaveModulations` and `stats` skips the
+  modulation analysis. Unknown or empty values are a 400. Valid fields: family, tonic, transposition, stats, characteristics, availableTranspositions,
+  availableOctaveRenderings, comments, sources, pitchData, intervals, ajnas, primaryJins,
+  secondaryJins, tertiaryJins, primaryJinsDescending, secondaryJinsDescending,
+  tertiaryJinsDescending, ghammaz, suyur, modulations, lowerOctaveModulations.
+ - Type: `string`
+- `offset` (optional): Only with idName `all`.
+  out for the first page, then follow the `next` URL of each response, which sets it.
+  A negative, fractional or too large value is a 400.
+ - Type: `integer` - Default: `0`
 
 **Example:**
 ```bash
@@ -349,6 +376,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
 
 **Response:** Maqām data retrieved successfully.
 
+- With idName `all`, the response is a `MaqamBulkResponse`: one page of maqām forms, each shaped as below without `parameters`, `context` and `links`
 - When options is true, the response structure differs and returns available parameter options instead of maqām data
 - In that case, transposition options contain only valid transposition tonics for this specific maqām, tuning system, and starting note combination
 
@@ -361,8 +389,9 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     "id": "1",
     "idName": "maqam_rast",
     "displayName": "maqām rāst",
-    "version": "2025-12-10T17:03:34.565Z",
-    "isBaseForm": true
+    "version": "2026-08-11T19:43:52.080Z",
+    "isBaseForm": true,
+    "formType": "base"
   },
   "family": {
     "idName": "rast",
@@ -375,8 +404,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
   "stats": {
     "numberOfTranspositions": 3,
     "numberOfPitchClasses": 7,
-    "numberOfMaqamModulations": 49,
-    "numberOfAjnasModulations": 47
+    "numberOfMaqamModulations": 79,
+    "numberOfAjnasModulations": 49
   },
   "characteristics": {
     "isOctaveRepeating": true,
@@ -387,6 +416,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     {
       "idName": "maqam_rast_al_qarar_chahargah",
       "displayName": "maqām rāst al-qarār chahārgāh",
+      "formType": "transposition",
       "tonic": {
         "idName": "qarar_chahargah",
         "displayName": "qarār chahārgāh"
@@ -395,6 +425,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     {
       "idName": "maqam_rast_al_chahargah",
       "displayName": "maqām rāst al-chahārgāh",
+      "formType": "transposition",
       "tonic": {
         "idName": "chahargah",
         "displayName": "chahārgāh"
@@ -403,20 +434,49 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     {
       "idName": "maqam_rast_al_mahuran",
       "displayName": "maqām rāst al-māhūrān",
+      "formType": "transposition",
       "tonic": {
         "idName": "mahuran",
         "displayName": "māhūrān"
       }
     }
   ],
+  "availableOctaveRenderings": [
+    {
+      "idName": "maqam_rast_al_qarar_rast",
+      "displayName": "maqām rāst al-qarār rāst",
+      "formType": "octaveRendering",
+      "tonic": {
+        "idName": "qarar_rast",
+        "displayName": "qarār rāst"
+      }
+    },
+    {
+      "idName": "maqam_rast_al_kurdan",
+      "displayName": "maqām rāst al-kurdān",
+      "formType": "octaveRendering",
+      "tonic": {
+        "idName": "kurdan",
+        "displayName": "kurdān"
+      }
+    }
+  ],
   "comments": {
-    "english": null,
-    "arabic": null
+    "english": "This maqām's data is compiled from al-Shawwā (1946, p.42), al-Ṣabbāgh (1950, p.41) and al-Ḥilū (1961, p.107). The sources agree on the scale in both directions: al-Ḥilū's construction runs two identical disjunct octaves, rāst to jawāb kurdān, and his printed note against awj, \"and in the descent it is substituted by ʿajam\", independently reproduces al-Shawwā's descending ʿajam; his ḥusaynī row is annotated \"to make būselīk on nawā\" (1961, p.107). On the maqām's character: \"it rests on presenting the jins rāst on the two degrees nawā and yegāh\" (1961, p.107), agreeing with the ghammāz nawā assigned here. His footnote explains the maqām's canonical standing: \"this maqām rāst is composed of the succession of the natural tonal degrees, as we indicated earlier; for that disposition, and because from each of these eight notes, that is its degrees, an Arab maqām standing in its own right is composed, it has been considered the fundamental scale in Arab music. In view of this standing of it, we ought to have presented it in analysis and notation before the other maqāms, were it not that the necessity of our ordering the maqāms in this book according to the degrees of their finals, from the deepest note upwards in sequence, made us fix it here in its rank, that is, in the centre of the tonal register on which it rests\" (1961, p.107).",
+    "arabic": "جُمعت بيانات هذا المقام من الشوا (1946، ص42) والصباغ (1950، ص41) والحلو (1961، ص107). تتفق المصادر على السلّم في الاتجاهين: تكوين الحلو ديوانان منفصلان متطابقان من الراست الى جواب الكردان، وملاحظته المطبوعة عند الاوج «وفي الهبوط يستبدل بالعجم» تعيد باستقلال انتاج العجم في هبوط الشوا؛ وصف الحسيني عنده معلّم «لعمل بوسليك على النوا» (1961، ص107). عن شخصية المقام: «تقوم على اظهار جنس الراست على درجتي النوا واليكاه» (1961، ص107)، بما يوافق الغماز النوا المعتمد هنا. تشرح حاشيته مكانة المقام: «ان مقام الراست هذا يتألف من تتابع الدرجات الصوتية الطبيعية كما اشرنا سابقاً ، فهو لذلك الوضع ولكون اصواته أي درجاته الثمانية هــذه يتألف من كل منها مقام عربي قائم في ذاته . قد اعتبر السلم الاساسي في الموسيقى العربية . ونظراً لمقامه هذا ، فقد كان يجب علينا ان نقدمه في التحليل والتدوين على سواه من المقامات لولا ان وجوب ترتيبنا وضع المقامات في هذا الكتاب بحسب درجات ارتكازاتها من اغلظ صوت الى ما فوقه حدّةً على التوالي جعلنا نثبته هنا في صفه ، اي في مركز طبقته الصوتية التي يستقر عليها» (1961، ص107)."
   },
   "sources": [
     {
       "sourceId": "alshawwa_1946",
       "page": "42"
+    },
+    {
+      "sourceId": "alhilu_1961",
+      "page": "107"
+    },
+    {
+      "sourceId": "abbas_1986",
+      "page": "30/36/91"
     }
   ],
   "parameters": {
@@ -425,22 +485,25 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
     "includeModulations": false,
     "includeModulations8vb": false,
     "includeSuyur": false,
-    "transposeTo": null
+    "transposeTo": null,
+    "centsTolerance": 5
   },
   "context": {
     "tuningSystem": {
       "id": "ibnsina_1037",
       "idName": "ibnsina_1037",
       "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
-      "version": "2025-11-09T00:44:40.275Z",
+      "version": "2026-08-16T22:20:52.549Z",
       "startingNotes": {
         "idNames": [
           "ushayran",
-          "yegah"
+          "yegah",
+          "rast"
         ],
         "displayNames": [
           "ʿushayrān",
-          "yegāh"
+          "yegāh",
+          "rāst"
         ]
       },
       "selectedStartingNote": {
@@ -452,7 +515,7 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
         "allOctaves": 68
       },
       "originalValueType": "fraction",
-      "referenceFrequency": 97.999
+      "referenceFrequency": 98
     }
   },
   "links": {
@@ -567,92 +630,223 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
   },
   "ajnas": {
     "ascending": {
-      "rāst": [
+      "rast": [
         {
           "id": "19",
           "idName": "jins_rast",
-          "displayName": "jins rāst"
+          "displayName": "jins rāst",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "32",
+          "idName": "jins_yegah_al_rast",
+          "displayName": "jins yegāh al-rāst",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
-      "dūgāh": [
+      "dugah": [
         {
           "id": "2",
           "idName": "jins_bayyat",
-          "displayName": "jins bayyāt"
+          "displayName": "jins bayyāt",
+          "isBaseForm": true,
+          "formType": "base"
         }
       ],
-      "segāh": [
+      "segah": [
         {
           "id": "3",
+          "idName": "jins_segah_alhilu",
+          "displayName": "jins segāh (al-Ḥilū)",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "52",
+          "idName": "jins_mayeh_al_segah",
+          "displayName": "jins māyeh al-segāh",
+          "isBaseForm": false,
+          "formType": "transposition"
+        },
+        {
+          "id": "16",
           "idName": "jins_segah",
-          "displayName": "jins segāh"
+          "displayName": "jins segāh",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "36",
+          "idName": "jins_farahnak_al_segah",
+          "displayName": "jins faraḥnāk al-segāh",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
-      "chahārgāh": [],
-      "nawā": [
+      "chahargah": [
+        {
+          "id": "41",
+          "idName": "jins_mahran_al_chahargah",
+          "displayName": "jins mahrān al-chahārgāh",
+          "isBaseForm": false,
+          "formType": "transposition"
+        }
+      ],
+      "nawa": [
         {
           "id": "19",
           "idName": "jins_rast_al_nawa",
-          "displayName": "jins rāst al-nawā"
+          "displayName": "jins rāst al-nawā",
+          "isBaseForm": false,
+          "formType": "transposition"
+        },
+        {
+          "id": "32",
+          "idName": "jins_yegah_al_nawa",
+          "displayName": "jins yegāh al-nawā",
+          "isBaseForm": false,
+          "formType": "octaveRendering"
         }
       ],
-      "ḥusaynī": [
+      "husayni": [
         {
           "id": "2",
           "idName": "jins_bayyat_al_husayni",
-          "displayName": "jins bayyāt al-ḥusaynī"
+          "displayName": "jins bayyāt al-ḥusaynī",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
       "awj": [
         {
-          "id": "3",
+          "id": "51",
+          "idName": "jins_awj",
+          "displayName": "jins awj",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "26",
+          "idName": "jins_iraq_al_awj",
+          "displayName": "jins ʿirāq al-awj",
+          "isBaseForm": false,
+          "formType": "octaveRendering"
+        },
+        {
+          "id": "16",
           "idName": "jins_segah_al_awj",
-          "displayName": "jins segāh al-awj"
+          "displayName": "jins segāh al-awj",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ]
     },
     "descending": {
-      "ʿajam": [],
-      "ḥusaynī": [
+      "ajam": [
+        {
+          "id": "41",
+          "idName": "jins_mahran_al_ajam",
+          "displayName": "jins mahrān al-ʿajam",
+          "isBaseForm": false,
+          "formType": "octaveRendering"
+        }
+      ],
+      "husayni": [
         {
           "id": "7",
           "idName": "jins_kurd_al_husayni",
-          "displayName": "jins kurd al-ḥusaynī"
+          "displayName": "jins kurd al-ḥusaynī",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
-      "nawā": [
+      "nawa": [
+        {
+          "id": "22",
+          "idName": "jins_buselik_alhilu_al_nawa",
+          "displayName": "jins būselīk (al-Ḥilū) al-nawā",
+          "isBaseForm": false,
+          "formType": "transposition"
+        },
         {
           "id": "6",
           "idName": "jins_nahawand_al_nawa",
-          "displayName": "jins nahāwand al-nawā"
+          "displayName": "jins nahāwand al-nawā",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
-      "chahārgāh": [
+      "chahargah": [
         {
           "id": "5",
           "idName": "jins_ajam_ushayran_al_chahargah",
-          "displayName": "jins ʿajam ʿushayrān al-chahārgāh"
+          "displayName": "jins ʿajam ʿushayrān al-chahārgāh",
+          "isBaseForm": false,
+          "formType": "transposition"
+        },
+        {
+          "id": "31",
+          "idName": "jins_chahargah",
+          "displayName": "jins chahārgāh",
+          "isBaseForm": true,
+          "formType": "base"
         }
       ],
-      "segāh": [
+      "segah": [
         {
           "id": "3",
+          "idName": "jins_segah_alhilu",
+          "displayName": "jins segāh (al-Ḥilū)",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "52",
+          "idName": "jins_mayeh_al_segah",
+          "displayName": "jins māyeh al-segāh",
+          "isBaseForm": false,
+          "formType": "transposition"
+        },
+        {
+          "id": "16",
           "idName": "jins_segah",
-          "displayName": "jins segāh"
+          "displayName": "jins segāh",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "36",
+          "idName": "jins_farahnak_al_segah",
+          "displayName": "jins faraḥnāk al-segāh",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ],
-      "dūgāh": [
+      "dugah": [
         {
           "id": "2",
           "idName": "jins_bayyat",
-          "displayName": "jins bayyāt"
+          "displayName": "jins bayyāt",
+          "isBaseForm": true,
+          "formType": "base"
         }
       ],
-      "rāst": [
+      "rast": [
         {
           "id": "19",
           "idName": "jins_rast",
-          "displayName": "jins rāst"
+          "displayName": "jins rāst",
+          "isBaseForm": true,
+          "formType": "base"
+        },
+        {
+          "id": "32",
+          "idName": "jins_yegah_al_rast",
+          "displayName": "jins yegāh al-rāst",
+          "isBaseForm": false,
+          "formType": "transposition"
         }
       ]
     }
@@ -662,9 +856,25 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       "noteName": "rast",
       "noteNameDisplay": "rāst",
       "maqamDegree": "I",
+      "jinsStatus": "matched",
       "jinsId": "19",
       "jinsIdName": "jins_rast",
-      "jinsDisplayName": "jins rāst"
+      "jinsDisplayName": "jins rāst",
+      "jinsIsBaseForm": true,
+      "jinsFormType": "base"
+    }
+  ],
+  "primaryJinsDescending": [
+    {
+      "noteName": "rast",
+      "noteNameDisplay": "rāst",
+      "maqamDegree": "I",
+      "jinsStatus": "matched",
+      "jinsId": "19",
+      "jinsIdName": "jins_rast",
+      "jinsDisplayName": "jins rāst",
+      "jinsIsBaseForm": true,
+      "jinsFormType": "base"
     }
   ],
   "secondaryJins": [
@@ -672,17 +882,39 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast?tuningSystem=ibnsina_1037&sta
       "noteName": "nawa",
       "noteNameDisplay": "nawā",
       "maqamDegree": "V",
+      "jinsStatus": "matched",
       "jinsId": "19",
       "jinsIdName": "jins_rast_al_nawa",
-      "jinsDisplayName": "jins rāst al-nawā"
+      "jinsDisplayName": "jins rāst al-nawā",
+      "jinsIsBaseForm": false,
+      "jinsFormType": "transposition"
+    }
+  ],
+  "secondaryJinsDescending": [
+    {
+      "noteName": "nawa",
+      "noteNameDisplay": "nawā",
+      "maqamDegree": "V",
+      "jinsStatus": "matched",
+      "jinsId": "22",
+      "jinsIdName": "jins_buselik_alhilu_al_nawa",
+      "jinsDisplayName": "jins būselīk (al-Ḥilū) al-nawā",
+      "jinsIsBaseForm": false,
+      "jinsFormType": "transposition"
     }
   ],
   "tertiaryJins": null,
+  "tertiaryJinsDescending": null,
   "ghammaz": [
     {
       "noteName": "nawa",
       "noteNameDisplay": "nawā",
-      "maqamDegree": "V"
+      "maqamDegree": "V",
+      "intervalFromTonic": {
+        "cents": 701.9550008653875,
+        "fraction": "3/2",
+        "decimalRatio": 1.5
+      }
     }
   ]
 }
@@ -704,7 +936,8 @@ Return tuning-system availability for a maqām.
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
+ (string) **(required)**
   - Example: `maqam_bayyat`
 
 **Query Parameters:**
@@ -779,7 +1012,7 @@ GET /maqamat/{idName}/transpositions
 ```
 
 Lists distinct transpositions (taswīr) for a maqām within a specific tuning system and starting note.
-The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+The base form is excluded. Octave renderings of the same modal degree
 (e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
 If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
@@ -787,7 +1020,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`) or its numeric id. This route lists every transposition of the maqām, so the idName of a single transposition (`maqam_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
+ (string) **(required)**
   - Example: `maqam_rast`
 
 **Query Parameters:**
@@ -822,13 +1056,15 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
     "id": "1",
     "idName": "maqam_rast",
     "displayName": "maqām rāst",
-    "version": "2025-12-10T17:03:34.565Z"
+    "version": "2026-08-11T19:43:52.080Z",
+    "isBaseForm": true,
+    "formType": "base"
   },
   "tuningSystem": {
     "id": "ibnsina_1037",
     "idName": "ibnsina_1037",
     "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
-    "version": "2025-11-09T00:44:40.275Z",
+    "version": "2026-08-16T22:20:52.549Z",
     "numberOfPitchClassesSingleOctave": 17
   },
   "startingNote": {
@@ -851,6 +1087,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
     },
     "detailed": [
       {
+        "idName": "maqam_rast_al_qarar_chahargah",
+        "displayName": "maqām rāst al-qarār chahārgāh",
         "tonic": {
           "idName": "qarar_chahargah",
           "displayName": "qarār chahārgāh"
@@ -859,14 +1097,19 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           "pitchClassIndex": 14,
           "octave": 0
         },
+        "isBaseForm": false,
+        "formType": "transposition",
         "primaryJins": [
           {
             "noteName": "qarar_chahargah",
             "noteNameDisplay": "qarār chahārgāh",
             "maqamDegree": "I",
+            "jinsStatus": "matched",
             "jinsId": "19",
             "jinsIdName": "jins_rast_al_qarar_chahargah",
-            "jinsDisplayName": "jins rāst al-qarār chahārgāh"
+            "jinsDisplayName": "jins rāst al-qarār chahārgāh",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
           }
         ],
         "secondaryJins": [
@@ -874,17 +1117,52 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteName": "rast",
             "noteNameDisplay": "rāst",
             "maqamDegree": "V",
+            "jinsStatus": "matched",
             "jinsId": "19",
             "jinsIdName": "jins_rast",
-            "jinsDisplayName": "jins rāst"
+            "jinsDisplayName": "jins rāst",
+            "jinsIsBaseForm": true,
+            "jinsFormType": "base"
           }
         ],
         "tertiaryJins": null,
+        "primaryJinsDescending": [
+          {
+            "noteName": "qarar_chahargah",
+            "noteNameDisplay": "qarār chahārgāh",
+            "maqamDegree": "I",
+            "jinsStatus": "matched",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al_qarar_chahargah",
+            "jinsDisplayName": "jins rāst al-qarār chahārgāh",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
+          }
+        ],
+        "secondaryJinsDescending": [
+          {
+            "noteName": "rast",
+            "noteNameDisplay": "rāst",
+            "maqamDegree": "V",
+            "jinsStatus": "matched",
+            "jinsId": "6",
+            "jinsIdName": "jins_nahawand",
+            "jinsDisplayName": "jins nahāwand",
+            "jinsIsBaseForm": true,
+            "jinsFormType": "base"
+          }
+        ],
+        "tertiaryJinsDescending": null,
         "ghammaz": [
           {
             "noteName": "rast",
             "noteNameDisplay": "rāst",
-            "maqamDegree": "V"
+            "maqamDegree": "V",
+            "intervalFromTonic": {
+              "cents": 701.9550008653874,
+              "fraction": "3/2",
+              "decimalRatio": 1.5
+            }
           }
         ],
         "links": {
@@ -892,6 +1170,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
         }
       },
       {
+        "idName": "maqam_rast_al_chahargah",
+        "displayName": "maqām rāst al-chahārgāh",
         "tonic": {
           "idName": "chahargah",
           "displayName": "chahārgāh"
@@ -900,14 +1180,19 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           "pitchClassIndex": 14,
           "octave": 1
         },
+        "isBaseForm": false,
+        "formType": "transposition",
         "primaryJins": [
           {
             "noteName": "chahargah",
             "noteNameDisplay": "chahārgāh",
             "maqamDegree": "I",
+            "jinsStatus": "matched",
             "jinsId": "19",
             "jinsIdName": "jins_rast_al_chahargah",
-            "jinsDisplayName": "jins rāst al-chahārgāh"
+            "jinsDisplayName": "jins rāst al-chahārgāh",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
           }
         ],
         "secondaryJins": [
@@ -915,17 +1200,52 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteName": "kurdan",
             "noteNameDisplay": "kurdān",
             "maqamDegree": "V",
+            "jinsStatus": "matched",
             "jinsId": "19",
-            "jinsIdName": "jins_rast",
-            "jinsDisplayName": "jins rāst"
+            "jinsIdName": "jins_rast_al_kurdan",
+            "jinsDisplayName": "jins rāst al-kurdān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "octaveRendering"
           }
         ],
         "tertiaryJins": null,
+        "primaryJinsDescending": [
+          {
+            "noteName": "chahargah",
+            "noteNameDisplay": "chahārgāh",
+            "maqamDegree": "I",
+            "jinsStatus": "matched",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al_chahargah",
+            "jinsDisplayName": "jins rāst al-chahārgāh",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
+          }
+        ],
+        "secondaryJinsDescending": [
+          {
+            "noteName": "kurdan",
+            "noteNameDisplay": "kurdān",
+            "maqamDegree": "V",
+            "jinsStatus": "matched",
+            "jinsId": "6",
+            "jinsIdName": "jins_nahawand_al_kurdan",
+            "jinsDisplayName": "jins nahāwand al-kurdān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "octaveRendering"
+          }
+        ],
+        "tertiaryJinsDescending": null,
         "ghammaz": [
           {
             "noteName": "kurdan",
             "noteNameDisplay": "kurdān",
-            "maqamDegree": "V"
+            "maqamDegree": "V",
+            "intervalFromTonic": {
+              "cents": 701.9550008653874,
+              "fraction": "3/2",
+              "decimalRatio": 1.5
+            }
           }
         ],
         "links": {
@@ -933,6 +1253,8 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
         }
       },
       {
+        "idName": "maqam_rast_al_mahuran",
+        "displayName": "maqām rāst al-māhūrān",
         "tonic": {
           "idName": "mahuran",
           "displayName": "māhūrān"
@@ -941,14 +1263,19 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
           "pitchClassIndex": 14,
           "octave": 2
         },
+        "isBaseForm": false,
+        "formType": "transposition",
         "primaryJins": [
           {
             "noteName": "mahuran",
             "noteNameDisplay": "māhūrān",
             "maqamDegree": "I",
+            "jinsStatus": "matched",
             "jinsId": "19",
             "jinsIdName": "jins_rast_al_mahuran",
-            "jinsDisplayName": "jins rāst al-māhūrān"
+            "jinsDisplayName": "jins rāst al-māhūrān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
           }
         ],
         "secondaryJins": [
@@ -956,17 +1283,52 @@ curl "https://diarmaqar.net/api/maqamat/maqam_rast/transpositions?tuningSystem=i
             "noteName": "jawab_kurdan",
             "noteNameDisplay": "jawāb kurdān",
             "maqamDegree": "V",
+            "jinsStatus": "matched",
             "jinsId": "19",
-            "jinsIdName": "jins_rast",
-            "jinsDisplayName": "jins rāst"
+            "jinsIdName": "jins_rast_al_jawab_kurdan",
+            "jinsDisplayName": "jins rāst al-jawāb kurdān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "octaveRendering"
           }
         ],
         "tertiaryJins": null,
+        "primaryJinsDescending": [
+          {
+            "noteName": "mahuran",
+            "noteNameDisplay": "māhūrān",
+            "maqamDegree": "I",
+            "jinsStatus": "matched",
+            "jinsId": "19",
+            "jinsIdName": "jins_rast_al_mahuran",
+            "jinsDisplayName": "jins rāst al-māhūrān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "transposition"
+          }
+        ],
+        "secondaryJinsDescending": [
+          {
+            "noteName": "jawab_kurdan",
+            "noteNameDisplay": "jawāb kurdān",
+            "maqamDegree": "V",
+            "jinsStatus": "matched",
+            "jinsId": "6",
+            "jinsIdName": "jins_nahawand_al_jawab_kurdan",
+            "jinsDisplayName": "jins nahāwand al-jawāb kurdān",
+            "jinsIsBaseForm": false,
+            "jinsFormType": "octaveRendering"
+          }
+        ],
+        "tertiaryJinsDescending": null,
         "ghammaz": [
           {
             "noteName": "jawab_kurdan",
             "noteNameDisplay": "jawāb kurdān",
-            "maqamDegree": "V"
+            "maqamDegree": "V",
+            "intervalFromTonic": {
+              "cents": 701.9550008653873,
+              "fraction": "3/2",
+              "decimalRatio": 1.5
+            }
           }
         ],
         "links": {
@@ -1014,7 +1376,8 @@ systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
-- `idName`: URL-safe maqām identifier (string) **(required)**
+- `idName`: URL-safe maqām identifier: A maqām's idName (`maqam_rast`), its numeric id, or the idName of one of its transpositions (`maqam_rast_al_qarar_chahargah`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`maqam_rast_alqarar_chahargah`) is also accepted.
+ (string) **(required)**
   - Example: `maqam_bayyat`
 
 **Query Parameters:**
@@ -1158,25 +1521,25 @@ respective cell via `note` or `error` fields. The counters
         },
         "ajnas": {
           "ascending": {
-            "rāst": [
+            "rast": [
               {
                 "id": "19",
                 "idName": "jins_rast",
                 "displayName": "jins rāst"
               }
             ],
-            "dūgāh": [
+            "dugah": [
               {
                 "id": "2",
                 "idName": "jins_bayyat",
                 "displayName": "jins bayyāt"
               }
             ],
-            "chahārgāh": []
+            "chahargah": []
           },
           "descending": {
-            "ʿajam": [],
-            "ḥusaynī": [
+            "ajam": [],
+            "husayni": [
               {
                 "id": "30",
                 "idName": "jins_kurd_ushayran",
@@ -1261,9 +1624,9 @@ note names.
   `startingNote` to ensure octaves align correctly
 - **Chromatic Order**: Each set contains exactly 12 pitch classes ordered chromatically
   starting from the maqām's tonic (e.g., C, C#, D, D#... for Rāst)
-- **Arabic Musicological Logic**: IPN references respect Arabic maqām theory where
-  microtonal modifiers indicate what the pitch is a variant OF, not mathematical proximity
-  to 12-EDO semitones
+- **Arabic Musicological Logic**: IPN references follow Arabic maqām theory: a note's
+  quarter-tone or comma spelling names the note it is a variant of (E-b is a variant of E),
+  not the nearest 12-EDO semitone
 - **Direct Tuning System Values**: All cent values come directly from tuning systems
   without post-processing or calculation
 
@@ -1272,27 +1635,67 @@ note names.
    the same `startingNote`
 2. For each maqām transposition:
    - Extracts IPN reference note names from ascending and descending sequences
-   - Replaces matching pitch classes in al-Kindi base (ascending takes priority, then descending)
-   - Selects pitch classes from correct octaves to ensure ascending chromatic order
-   - Orders the 12 pitch classes chromatically starting from the maqām's tonic
-3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rāst set")
+   - Puts every degree of the maqām on its key; each key the maqām leaves empty takes
+     al-Kindī's (alkindi_874) pitch on that key. Nothing else enters a set: maqām
+     nayrūz's set holds tīk ḥiṣār on G#, its own degree; the set holding maqām lāmī
+     has ḥiṣār there.
+   - Places the tonic in the first octave above `startingNote` (0 to 1200 cents) and
+     each following key in the lowest octave above the key before, so every set ascends
+     from its tonic within both tuning systems. A set has no register: one made from
+     qarār dūgāh is listed from dūgāh.
+3. Groups compatible maqāmāt together: a transposition joins a set only when every pitch
+   of its ascending and descending sequences is in the set
+4. Names each group after one of its members (see Set names) and lists the 12 pitch
+   classes from that member's tonic
+
+**Set names:**
+A set is named after one of its members, chosen by one rule. The name never changes
+which maqāmāt are in the set or which 12 pitches it holds.
+1. A set that holds one or more base forms is named after the base form whose maqām has
+   the lowest id. Maqām lāmī (allami_2022 from ʿushayrān) is in the maqām ḥijāz kār kurd
+   set: that set holds the base forms of ḥijāz kār kurd (id 4), lāmī (id 9) and others.
+2. A set with no base form is named after its commonest family (the jins on the first
+   degree of each member's maqām, as `/maqamat/families` reads it; "no jins" is not
+   counted). Of that family, the maqām with the lowest id names the set. Two families
+   with the same count: the one whose lowest maqām id is lower. When every member is
+   "no jins", the lowest maqām id of all names the set.
+3. When that maqām is in the set more than once, the form whose tonic has no qarār or
+   jawāb prefix is used, else any form; between several, the lowest tonic in pitch.
+The set ID is the chosen member's idName plus `_set`, and `sourceMaqam` and
+`sourceTransposition` are that member.
 
 **Compatibility:**
-- Maqāmāt with duplicate IPN references (same IPN appearing with different pitch values)
-  are marked as incompatible and cannot form valid 12-pitch-class sets
+- A 12-pitch-class set has one pitch class per key. Each pitch class of a maqām takes the key
+  of its own note letter, or a neighbouring key when that one is taken.
+- A maqām transposition is incompatible when two different pitch classes would need the same
+  key and the keys next to it are already taken. For example, maqām faraḥnāk (al-Ḥilū) on
+  qarār segāh needs both ʿirāq (B-b2) and nīm kawasht (B-2) on the B key.
+- Each incompatible transposition says which keys clash, which notes need them, and gives
+  the same in one plain sentence (`explanation`).
+- The number of incompatible transpositions is always in `statistics.incompatibleMaqamatCount`;
+  the full list is included on request.
+- A maqām transposition is compatible with a set when every one of its pitches, octave
+  ignored, is within `centsTolerance` of one of the set's 12 pitches. Only the pitch is
+  compared, not the key it sits on. Maqām chahārgāh (al-Ṣabbāgh) needs nīm ʿajam
+  (60.41 cents above the octave in allami_2022), so it is not in a set that has ʿajam
+  (90.22) instead.
 - Compatible maqāmāt can be performed entirely within a single 12-pitch-class set
 
 **Output Format:**
 - Pitch classes ordered chromatically (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-- Starting from the maqām's tonic (default) OR from IPN "C" (if `startSetFromC=true`)
+- Starting from the tonic of the member the set is named after, in the first octave
+  above `startingNote` (default), OR from IPN "C" at or below that tonic (if
+  `startSetFromC=true`)
 - Relative cents from 0 (reference note) to ~1050-1200 (octave)
 - `maqamTonic` field indicates the actual maqām tonic position and note name
 - Suitable for MIDI keyboard tuning and Scala (.scl) file generation
 
 **Filtering Options:**
 - Use `setId` to retrieve a specific set and its compatible maqāmāt
-- Use `maqamId` to find all sets containing a specific maqām
+- Use `maqamId` to find all sets containing a specific maqām, together with its
+  transpositions that fit no set. A maqām with no transposition that fits still
+  returns 200, with `compatible: false`, an explanation and an empty `sets` list.
+  Only an id that names no maqām or transposition returns 404.
 
 
 **Query Parameters:**
@@ -1307,7 +1710,7 @@ correctly and pitch classes can be properly selected from matching octaves.
   - Example: `yegah`
 - `centsTolerance` (optional): Tolerance in cents for pitch class comparison (default: 5) - Type: `number` - Default: `5`
   - Example: `5`
-- `includeIncompatible` (optional): Include maqāmāt that cannot form valid 12-pitch-class sets - Type: `string` - Valid values: `true`, `false` - Default: `false`
+- `includeIncompatible` (optional): Include the full list of maqām transpositions that cannot form a 12-pitch-class set, with the clashing keys and notes of each (their number is always in the statistics). - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeArabic` (optional): Return bilingual responses with Arabic script when true.
   - All English/transliteration fields remain unchanged
@@ -1353,9 +1756,9 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
   - `?pitchClassDataType=all` returns all available data fields
  - Type: `string` - Valid values: `all`, `abjadName`, `englishName`, `solfege`, `fraction`, ... (15 total)
   - Example: `cents`
-- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). - Type: `string`
   - Example: `maqam_rast_set`
-- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+- `maqamId` (optional): Filter by maqām to find all sets containing it and list its transpositions that fit no set: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). - Type: `string`
   - Example: `maqam_rast`
 
 **Example:**
@@ -1363,7 +1766,7 @@ directly compatible with Scala (.scl) file format which maps degree 0 to middle 
 curl "https://diarmaqar.net/api/maqamat/classification/12-pitch-class-sets?tuningSystem=cairocongresstuningcommittee_1929&startingNote=yegah&includeArabic=true"
 ```
 
-**Response:** Classification results with sets and compatible maqāmāt
+**Response:** Classification results with sets and compatible maqāmāt; with a maqām filter, also whether the maqām fits any set and which of its transpositions do not
 
 **Example response — default:**
 
@@ -1470,7 +1873,7 @@ GET /maqamat/classification/maqam-pitch-class-sets
 ```
 
 Groups maqāmāt according to maqam-based pitch class sets. Each set contains all pitch
-classes from a single source maqam (union of ascending and descending), and identifies
+classes from a single maqām transposition (union of ascending and descending), and identifies
 which other maqāmāt can be performed using only those pitch classes.
 
 **Musicological Purpose:**
@@ -1490,10 +1893,10 @@ bayyāt on dūgāh and maqām segāh on segāh.
 - **Union of Melodic Paths**: Includes all pitch classes from both ascending AND descending sequences
 - **Exact Matching**: All pitch classes from a compatible maqām must exist in the source set (within tolerance)
 - **Direct Values**: All cent values come directly from tuning system without calculation
-- **Tahlil Priority**: Base (non-transposed) maqāmāt create canonical sets first, then transpositions
+- **Base-form Priority**: Base forms create canonical sets first, then transpositions
 
 **The Algorithm:**
-1. For each maqām transposition (tahlil first, then transpositions):
+1. For each maqām form (base form first, then transpositions):
    - Extracts all unique pitch classes from ascending + descending sequences
    - Groups by IPN reference (octave-equivalent)
    - Validates no duplicate IPN references with different cents values
@@ -1503,14 +1906,25 @@ bayyāt on dūgāh and maqām segāh on segāh.
    - Compares cents values within tolerance (octave-normalized)
    - Marks candidate as compatible if all pitch classes match
 3. Groups compatible maqāmāt together
-4. Names each group after the source maqām (e.g., "maqām rāst set")
+4. Names each group after one of its members (see Set names)
+
+**Set names:**
+A set is named by the same rule as on `/maqamat/classification/12-pitch-class-sets`:
+after its lowest-id base form when it holds one, else after the lowest-id maqām of its
+commonest family, preferring a tonic with no qarār or jawāb prefix, then the lowest tonic.
+The set's pitch classes are those of the transposition that made it. The maqām the set
+is named after is a member, so its pitch classes are all in the set, but the set can
+hold more. The set ID is the chosen member's idName plus `_set`.
 
 **Compatibility:**
 - Maqāmāt with duplicate IPN references (same IPN with different cents values when octave-normalized)
   are marked as incompatible
 - Compatible maqāmāt can be performed entirely using the pitch classes of the source maqām
-- **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible)
-- Sets containing only the source maqām (no compatible maqāmāt) are filtered out
+- **Minimum Set Size**: Only sets with 2 or more maqāmāt are returned (source + at least one compatible).
+  One maqām on one tonic key counts once however many octaves it appears in, so a set holding
+  only maqām rāst on rāst and on kurdān is not returned.
+- Every member is listed, octave equivalents included: maqām bayyāt on yegāh, on nawā and on
+  saham/ramal tūtī are three entries of one set
 
 **Output Format:**
 - Sets ordered by number of compatible maqāmāt (descending)
@@ -1541,9 +1955,9 @@ bayyāt on dūgāh and maqām segāh on segāh.
   When false: Omits pitch class data, returning only set metadata and compatible maqamat
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
-- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set') - Type: `string`
+- `setId` (optional): Filter by specific set ID to retrieve that set and its compatible maqāmāt (e.g., 'maqam_rast_set'). - Type: `string`
   - Example: `maqam_rast_set`
-- `maqamId` (optional): Filter by maqām ID to find all sets containing that maqām (e.g., 'maqam_rast') - Type: `string`
+- `maqamId` (optional): Filter by maqām to find all sets containing it: a maqām idName (e.g., 'maqam_rast'), its numeric id, or one transposition's idName (e.g., 'maqam_rast_al_qarar_chahargah'; the older closed-up spelling 'maqam_rast_alqarar_chahargah' is also accepted). - Type: `string`
   - Example: `maqam_rast`
 
 **Example:**
@@ -1801,7 +2215,8 @@ Requirements:
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
+ (string) **(required)**
   - Example: `jins_rast` - Jins Rāst (representative example - with zalzalian intervals)
   - Example: `jins_kurd` - Jins Kurd (representative example - without zalzalian intervals)
   - Example: `jins_bayyat` - Jins Bayyāt (representative example - with zalzalian intervals)
@@ -1947,11 +2362,12 @@ Return tuning-system availability for a jins.
 - Shows which tuning systems on which starting note names can realize the specified jins
 - If `transpositionNoteName` is provided, filters results to show only tuning systems where the jins can be transposed to that specific note
 - Validity is computed against each tuning system's note name sets and the jins's pitch class intervals
-- Availability checking spans 3 octaves to correctly handle ajnās that may span multiple octaves
+- Availability is checked in every octave the tuning system builds from each starting note, so ajnās that span several octaves are found
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_rast`), its numeric id, or the idName of one of its transpositions (`jins_rast_al_nawa`). A transposed idName works like `transpositionNoteName` for its tonic; giving it together with a different `transpositionNoteName` is a 400. The older closed-up spelling is also accepted.
+ (string) **(required)**
   - Example: `jins_rast`
 
 **Query Parameters:**
@@ -2026,7 +2442,7 @@ GET /ajnas/{idName}/transpositions
 ```
 
 Lists distinct transpositions (taswīr) for a jins within a specific tuning system and starting note.
-The analytical form (tahlīl) is excluded. Octave/register variants of the same modal degree
+The base form is excluded. Octave renderings of the same modal degree
 (e.g. qarār dūgāh vs dūgāh vs muḥayyar) are not treated as distinct taswīr.
 
 If there are no distinct taswīr for this tuning-system + starting-note combination, this endpoint returns `422`
@@ -2034,7 +2450,8 @@ with an `{ error, hint }` payload (it does not return a 200 with an empty list).
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_rast`) or its numeric id. This route lists every transposition of the jins, so the idName of a single transposition (`jins_rast_al_nawa`) is rejected with a 400 that names the base idName to use.
+ (string) **(required)**
   - Example: `jins_bayyat`
 
 **Query Parameters:**
@@ -2108,6 +2525,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
     },
     "detailed": [
       {
+        "idName": "jins_bayyat_al_qarar_yegah",
+        "displayName": "jins bayyāt al-qarār yegāh",
         "tonic": {
           "idName": "qarar_yegah",
           "displayName": "qarār yegāh"
@@ -2121,6 +2540,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_qarar_ushayran",
+        "displayName": "jins bayyāt al-qarār ʿushayrān",
         "tonic": {
           "idName": "qarar_ushayran",
           "displayName": "qarār ʿushayrān"
@@ -2134,6 +2555,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_qarar_rast",
+        "displayName": "jins bayyāt al-qarār rāst",
         "tonic": {
           "idName": "qarar_rast",
           "displayName": "qarār rāst"
@@ -2147,6 +2570,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_yegah",
+        "displayName": "jins bayyāt al-yegāh",
         "tonic": {
           "idName": "yegah",
           "displayName": "yegāh"
@@ -2160,6 +2585,8 @@ curl "https://diarmaqar.net/api/ajnas/jins_bayyat/transpositions?tuningSystem=me
         }
       },
       {
+        "idName": "jins_bayyat_al_ushayran",
+        "displayName": "jins bayyāt al-ʿushayrān",
         "tonic": {
           "idName": "ushayran",
           "displayName": "ʿushayrān"
@@ -2216,7 +2643,8 @@ across historical tuning systems and/or multiple modal transpositions.
 
 
 **Path Parameters:**
-- `idName`: URL-safe jins identifier (string) **(required)**
+- `idName`: URL-safe jins identifier: A jins's idName (`jins_segah`), its numeric id, or the idName of one of its transpositions (`jins_segah_al_tik_hisar`). A transposed idName works like adding `transposeTo` for its tonic; giving it together with a different `transposeTo` is a 400. The older closed-up spelling (`jins_segah_altik_hisar`) is also accepted.
+ (string) **(required)**
   - Example: `jins_bayyat`
 
 **Query Parameters:**
@@ -2661,7 +3089,8 @@ GET /tuning-systems/{id}/{startingNote}/maqamat
 
 Return all maqāmāt that can be realized in a given tuning system beginning on a specific starting note name.
 
-- Feasibility is determined by comparing maqām pitch classes to the tuning system's note name sets (including adjacent octave context)
+- Feasibility is determined by comparing maqām note names to every pitch class the tuning system builds from that starting note, in all its octaves (the same pitch space transpositions and modulations are calculated in)
+- `characteristics.hasSuyur` is true when at least one sayr can be played on the maqām's base form in this pitch space (the suyūr `GET /maqamat/{idName}?includeSuyur=true` returns)
 
 
 **Path Parameters:**
@@ -2686,18 +3115,35 @@ of PAO note name idNames (URL-safe identifiers for scale degrees)..
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeDegreeDetails` (optional): When true (and when includeMaqamDegrees=true), the endpoint returns `maqamDegrees.ascending` /
-`maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege }` instead of
-note-name strings.
-  `maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege }` instead of
-  note-name strings. The same transformation applies to `transpositions[].maqamDegrees`.
+`maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege,
+ipnReferenceNoteName, centsDeviation, midiNotePlusCentsDeviation }` instead of note-name strings.
+The same transformation applies to `transpositions[].maqamDegrees`.
+  `maqamDegrees.descending` as arrays of objects `{ noteName, englishName, solfege,
+  ipnReferenceNoteName, centsDeviation, midiNotePlusCentsDeviation }` instead of note-name strings.
+  The same transformation applies to `transpositions[].maqamDegrees`. The last three fields are the same as in GET /maqamat/{id}: the 12-EDO key the degree is spelled
+  against (`ipnReferenceNoteName`, e.g. "Bb"), the degree's deviation from it in cents
+  (`centsDeviation`), and the MIDI note number followed by the deviation (`midiNotePlusCentsDeviation`, e.g.
+  "58 -9.8"). Each direction is spelled on its own, so an ascending and a descending degree may share
+  a key.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
 - `includeTranspositions` (optional): When true, each maqām in data includes a `transpositions` array with the other transpositions
 (excluding the base tonic).
-  (excluding the base tonic). Each transposition has `tonic` and `maqamDegrees` with ascending/descending
-  note name idNames for that transposed position.
+  (excluding the base tonic). Each transposition has its own `idName` and `displayName`
+  (`maqam_rast_al_chahargah`, "maqām rāst al-chahārgāh"; plus `displayNameAr` with `inArabic=true`),
+  its `tonic`, and `maqamDegrees` with ascending/descending note name idNames for that transposed
+  position. The `idName` works as a path segment: `/maqamat/maqam_rast_al_chahargah`.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `includeOctaveRenderings` (optional): When true, each maqām in data also has an `octaveRenderings` array: the base form an
+octave or more away, on the same modal degree (`maqam_yegah_al_nawa`, maqām yegāh on nawā).
+  octave or more away, on the same modal degree (`maqam_yegah_al_nawa`, maqām yegāh on nawā). These are not taṣwīr, so
+  they are never in `transpositions`. Entries have the same shape as `transpositions`.
+  Together with the base form and `transpositions`, this lists every maqām form that
+  maqām detail can refer to (in `ajnas`, the structural jins slots, `modulations` and
+  `lowerOctaveModulations`). Every listed form carries `formType` (base, transposition or
+  octaveRendering).
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
 - `sortBy` (optional): Sort order for results.
   and `/ajnas`, which default to `alphabetical`) because the endpoint is intrinsically about
   a concrete pitch layout. Invalid values return HTTP 400.
@@ -2722,18 +3168,20 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
     "id": "ibnsina_1037",
     "idName": "ibnsina_1037",
     "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
-    "version": "2025-11-09T00:44:40.275Z",
+    "version": "2026-08-16T22:20:52.549Z",
     "year": "1037",
     "numberOfPitchClassesSingleOctave": 17
   },
   "startingNotes": {
     "idNames": [
       "ushayran",
-      "yegah"
+      "yegah",
+      "rast"
     ],
     "displayNames": [
       "ʿushayrān",
-      "yegāh"
+      "yegāh",
+      "rāst"
     ]
   },
   "selectedStartingNote": {
@@ -2741,11 +3189,11 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
     "displayName": "yegāh"
   },
   "stats": {
-    "totalMaqamatForStartingNote": 43,
-    "totalMaqamatInLibrary": 63,
-    "uniqueTonicCount": 9,
-    "uniqueFamilyCount": 15,
-    "referenceFrequency": 97.999
+    "totalMaqamatForStartingNote": 69,
+    "totalMaqamatInLibrary": 145,
+    "uniqueTonicCount": 8,
+    "uniqueFamilyCount": 26,
+    "referenceFrequency": 98
   },
   "data": [
     {
@@ -2753,11 +3201,13 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
         "id": "34",
         "idName": "maqam_dilkeshidah",
         "displayName": "maqām dilkeshīdah",
-        "version": "2025-10-18T19:41:17.132Z"
+        "version": "2025-10-18T19:41:17.132Z",
+        "isBaseForm": true,
+        "formType": "base"
       },
       "family": {
-        "idName": "nahawand",
-        "displayName": "nahāwand"
+        "idName": "buselik_alhilu",
+        "displayName": "būselīk (al-Ḥilū)"
       },
       "tonic": {
         "idName": "yegah",
@@ -2773,18 +3223,84 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
       },
       "links": {
         "detail": "https://diarmaqar.net/api/maqamat/maqam_dilkeshidah"
-      }
+      },
+      "transpositions": [
+        {
+          "idName": "maqam_dilkeshidah_al_qarar_rast",
+          "displayName": "maqām dilkeshīdah al-qarār rāst",
+          "tonic": {
+            "idName": "qarar_rast",
+            "displayName": "qarār rāst"
+          },
+          "isBaseForm": false,
+          "formType": "transposition",
+          "maqamDegrees": {
+            "ascending": [
+              "qarar_rast",
+              "qarar_dugah",
+              "qarar_kurdi",
+              "qarar_chahargah",
+              "yegah",
+              "qarar_tik_hisar_shuri",
+              "kawasht"
+            ],
+            "descending": [
+              "ajam_ushayran",
+              "qarar_tik_hisar_shuri",
+              "yegah",
+              "qarar_chahargah",
+              "qarar_kurdi",
+              "qarar_dugah",
+              "qarar_rast"
+            ]
+          }
+        }
+      ],
+      "octaveRenderings": [
+        {
+          "idName": "maqam_dilkeshidah_al_qarar_yegah",
+          "displayName": "maqām dilkeshīdah al-qarār yegāh",
+          "tonic": {
+            "idName": "qarar_yegah",
+            "displayName": "qarār yegāh"
+          },
+          "isBaseForm": false,
+          "formType": "octaveRendering",
+          "maqamDegrees": {
+            "ascending": [
+              "qarar_yegah",
+              "qarar_ushayran",
+              "qarar_ajam_ushayran",
+              "qarar_rast",
+              "qarar_dugah",
+              "qarar_segah",
+              "qarar_hijaz"
+            ],
+            "descending": [
+              "qarar_chahargah",
+              "qarar_segah",
+              "qarar_dugah",
+              "qarar_rast",
+              "qarar_ajam_ushayran",
+              "qarar_ushayran",
+              "qarar_yegah"
+            ]
+          }
+        }
+      ]
     },
     {
       "maqam": {
         "id": "30",
         "idName": "maqam_farahfazza",
         "displayName": "maqām faraḥfazzā",
-        "version": "2025-10-18T19:41:17.132Z"
+        "version": "2026-07-25T15:22:12.206Z",
+        "isBaseForm": true,
+        "formType": "base"
       },
       "family": {
-        "idName": "nahawand",
-        "displayName": "nahāwand"
+        "idName": "buselik_alhilu",
+        "displayName": "būselīk (al-Ḥilū)"
       },
       "tonic": {
         "idName": "yegah",
@@ -2800,91 +3316,71 @@ curl "https://diarmaqar.net/api/tuning-systems/alfarabi_950g/ushayran/maqamat?in
       },
       "links": {
         "detail": "https://diarmaqar.net/api/maqamat/maqam_farahfazza"
-      }
-    },
-    {
-      "maqam": {
-        "id": "53",
-        "idName": "maqam_rast_yegah",
-        "displayName": "maqām rāst yegāh",
-        "version": "2025-10-18T19:41:17.132Z"
       },
-      "family": {
-        "idName": "rast",
-        "displayName": "rāst"
-      },
-      "tonic": {
-        "idName": "yegah",
-        "displayName": "yegāh"
-      },
-      "stats": {
-        "numberOfPitchClasses": 7
-      },
-      "characteristics": {
-        "isOctaveRepeating": true,
-        "hasAsymmetricDescending": true,
-        "hasSuyur": false
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/maqamat/maqam_rast_yegah"
-      }
-    },
-    {
-      "maqam": {
-        "id": "32",
-        "idName": "maqam_sultani_yegah",
-        "displayName": "maqām sulṭānī yegāh",
-        "version": "2025-10-18T19:41:17.132Z"
-      },
-      "family": {
-        "idName": "nahawand",
-        "displayName": "nahāwand"
-      },
-      "tonic": {
-        "idName": "yegah",
-        "displayName": "yegāh"
-      },
-      "stats": {
-        "numberOfPitchClasses": 7
-      },
-      "characteristics": {
-        "isOctaveRepeating": true,
-        "hasAsymmetricDescending": true,
-        "hasSuyur": true
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/maqamat/maqam_sultani_yegah"
-      }
-    },
-    {
-      "maqam": {
-        "id": "61",
-        "idName": "maqam_zanjaran",
-        "displayName": "maqām zanjarān",
-        "version": "2025-12-11T23:34:00.303Z"
-      },
-      "family": {
-        "idName": "hijaz",
-        "displayName": "ḥijāz"
-      },
-      "tonic": {
-        "idName": "yegah",
-        "displayName": "yegāh"
-      },
-      "stats": {
-        "numberOfPitchClasses": 7
-      },
-      "characteristics": {
-        "isOctaveRepeating": true,
-        "hasAsymmetricDescending": true,
-        "hasSuyur": false
-      },
-      "links": {
-        "detail": "https://diarmaqar.net/api/maqamat/maqam_zanjaran"
-      }
-    },
-    {
-      "…": "truncated — 38 more items"
+      "transpositions": [
+        {
+          "idName": "maqam_farahfazza_al_qarar_ushayran",
+          "displayName": "maqām faraḥfazzā al-qarār ʿushayrān",
+          "tonic": {
+            "idName": "qarar_ushayran",
+            "displayName": "qarār ʿushayrān"
+          },
+          "isBaseForm": false,
+          "formType": "transposition",
+          "maqamDegrees": {
+            "ascending": [
+              "qarar_ushayran",
+              "qarar_kawasht",
+              "qarar_rast",
+              "qarar_dugah",
+              "qarar_buselik_ushshaq",
+              "qarar_chahargah",
+              "yegah"
+            ],
+            "descending": [
+              "qarar_hisar",
+              "qarar_chahargah",
+              "qarar_buselik_ushshaq",
+              "qarar_dugah",
+              "qarar_rast",
+              "qarar_kawasht",
+              "qarar_ushayran"
+            ]
+          }
+        }
+      ],
+      "octaveRenderings": [
+        {
+          "idName": "maqam_farahfazza_al_qarar_yegah",
+          "displayName": "maqām faraḥfazzā al-qarār yegāh",
+          "tonic": {
+            "idName": "qarar_yegah",
+            "displayName": "qarār yegāh"
+          },
+          "isBaseForm": false,
+          "formType": "octaveRendering",
+          "maqamDegrees": {
+            "ascending": [
+              "qarar_yegah",
+              "qarar_ushayran",
+              "qarar_ajam_ushayran",
+              "qarar_rast",
+              "qarar_dugah",
+              "qarar_kurdi",
+              "qarar_chahargah"
+            ],
+            "descending": [
+              "qarar_hijaz",
+              "qarar_kurdi",
+              "qarar_dugah",
+              "qarar_rast",
+              "qarar_ajam_ushayran",
+              "qarar_ushayran",
+              "qarar_yegah"
+            ]
+          }
+        }
+      ]
     }
   ],
   "links": {
@@ -2904,7 +3400,7 @@ GET /tuning-systems/{id}/{startingNote}/ajnas
 
 Return all ajnās that can be realized in a given tuning system beginning on a specific starting note name.
 
-- Feasibility is determined by comparing jins pitch classes to the tuning system's note name sets (including adjacent octave context)
+- Feasibility is determined by comparing jins note names to every pitch class the tuning system builds from that starting note, in all its octaves (the same pitch space transpositions and modulations are calculated in)
 - A jins is a single ascending set of note names, so unlike a maqām it has no descending counterpart, no sayr and no family classification. `jinsDegrees` is therefore one array rather than an ascending/descending pair
 - This is the ajnās counterpart of `/tuning-systems/{id}/{startingNote}/maqamat` and returns the same response shape
 
@@ -2936,10 +3432,21 @@ objects `{ noteName, englishName, solfege }` instead of note-name strings.
   - Example: `true`
 - `includeTranspositions` (optional): When true, each jins in data includes a `transpositions` array with the other transpositions
 (taṣwīr) available in this tuning system, excluding the base tonic.
-  (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has `tonic` and
-  `jinsDegrees` for that transposed position.
+  (taṣwīr) available in this tuning system, excluding the base tonic. Each entry has its own
+  `idName` and `displayName` (`jins_rast_al_nawa`, "jins rāst al-nawā"; plus `displayNameAr` with
+  `inArabic=true`), its `tonic`, and `jinsDegrees` for that transposed position. The `idName` works
+  as a path segment: `/ajnas/jins_rast_al_nawa`.
  - Type: `string` - Valid values: `true`, `false` - Default: `false`
   - Example: `true`
+- `includeOctaveRenderings` (optional): When true, each jins in data also has an `octaveRenderings` array: the base form an
+octave or more away, on the same modal degree (`jins_yegah_al_nawa`, jins yegāh on nawā).
+  octave or more away, on the same modal degree (`jins_yegah_al_nawa`, jins yegāh on nawā). These are not taṣwīr, so
+  they are never in `transpositions`. Entries have the same shape as `transpositions`.
+  Together with the base form and `transpositions`, this lists every jins form that
+  maqām detail can refer to (in `ajnas`, the structural jins slots, `modulations` and
+  `lowerOctaveModulations`). Every listed form carries `formType` (base, transposition or
+  octaveRendering).
+ - Type: `string` - Valid values: `true`, `false` - Default: `false`
 - `sortBy` (optional): Sort order for results.
   defaults to `alphabetical`) because the endpoint is intrinsically about a concrete pitch layout.
   Invalid values return HTTP 400.
@@ -2964,18 +3471,20 @@ curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeA
     "id": "ibnsina_1037",
     "idName": "ibnsina_1037",
     "displayName": "Ibn Sīnā  (1037) 7-Fret Oud 17-Tone",
-    "version": "2025-11-09T00:44:40.275Z",
+    "version": "2026-08-16T22:20:52.549Z",
     "year": "1037",
     "numberOfPitchClassesSingleOctave": 17
   },
   "startingNotes": {
     "idNames": [
       "ushayran",
-      "yegah"
+      "yegah",
+      "rast"
     ],
     "displayNames": [
       "ʿushayrān",
-      "yegāh"
+      "yegāh",
+      "rāst"
     ]
   },
   "selectedStartingNote": {
@@ -2983,10 +3492,10 @@ curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeA
     "displayName": "yegāh"
   },
   "stats": {
-    "totalAjnasForStartingNote": 36,
-    "totalAjnasInLibrary": 41,
-    "uniqueTonicCount": 11,
-    "referenceFrequency": 97.999
+    "totalAjnasForStartingNote": 39,
+    "totalAjnasInLibrary": 44,
+    "uniqueTonicCount": 10,
+    "referenceFrequency": 98
   },
   "data": [
     {
@@ -2994,7 +3503,9 @@ curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeA
         "id": "39",
         "idName": "jins_qaf",
         "displayName": "jins qāf",
-        "version": "2026-07-20T09:57:37.540Z"
+        "version": "2026-07-20T09:57:37.540Z",
+        "isBaseForm": true,
+        "formType": "base"
       },
       "tonic": {
         "idName": "yegah",
@@ -3005,14 +3516,52 @@ curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeA
       },
       "links": {
         "detail": "https://diarmaqar.net/api/ajnas/jins_qaf"
-      }
+      },
+      "transpositions": [
+        {
+          "idName": "jins_qaf_al_qarar_rast",
+          "displayName": "jins qāf al-qarār rāst",
+          "tonic": {
+            "idName": "qarar_rast",
+            "displayName": "qarār rāst"
+          },
+          "isBaseForm": false,
+          "formType": "transposition",
+          "jinsDegrees": [
+            "qarar_rast",
+            "qarar_zirguleh",
+            "qarar_kurdi",
+            "qarar_hijaz"
+          ]
+        }
+      ],
+      "octaveRenderings": [
+        {
+          "idName": "jins_qaf_al_qarar_yegah",
+          "displayName": "jins qāf al-qarār yegāh",
+          "tonic": {
+            "idName": "qarar_yegah",
+            "displayName": "qarār yegāh"
+          },
+          "isBaseForm": false,
+          "formType": "octaveRendering",
+          "jinsDegrees": [
+            "qarar_yegah",
+            "qarar_qarar_hisar",
+            "qarar_ajam_ushayran",
+            "qarar_zirguleh"
+          ]
+        }
+      ]
     },
     {
       "jins": {
         "id": "48",
         "idName": "jins_shad_araban",
         "displayName": "jins shad ʿarabān",
-        "version": "2026-07-20T18:09:15.658Z"
+        "version": "2026-07-20T18:09:15.658Z",
+        "isBaseForm": true,
+        "formType": "base"
       },
       "tonic": {
         "idName": "yegah",
@@ -3023,7 +3572,43 @@ curl "https://diarmaqar.net/api/tuning-systems/ibnsina_1037/yegah/ajnas?includeA
       },
       "links": {
         "detail": "https://diarmaqar.net/api/ajnas/jins_shad_araban"
-      }
+      },
+      "transpositions": [
+        {
+          "idName": "jins_shad_araban_al_qarar_ajam_ushayran",
+          "displayName": "jins shad ʿarabān al-qarār ʿajam ʿushayrān",
+          "tonic": {
+            "idName": "qarar_ajam_ushayran",
+            "displayName": "qarār ʿajam ʿushayrān"
+          },
+          "isBaseForm": false,
+          "formType": "transposition",
+          "jinsDegrees": [
+            "qarar_ajam_ushayran",
+            "qarar_kawasht",
+            "qarar_dugah",
+            "qarar_kurdi"
+          ]
+        }
+      ],
+      "octaveRenderings": [
+        {
+          "idName": "jins_shad_araban_al_qarar_yegah",
+          "displayName": "jins shad ʿarabān al-qarār yegāh",
+          "tonic": {
+            "idName": "qarar_yegah",
+            "displayName": "qarār yegāh"
+          },
+          "isBaseForm": false,
+          "formType": "octaveRendering",
+          "jinsDegrees": [
+            "qarar_yegah",
+            "qarar_qarar_hisar",
+            "qarar_kawasht",
+            "qarar_rast"
+          ]
+        }
+      ]
     }
   ],
   "links": {
@@ -3097,9 +3682,7 @@ Combine with `fromTonic` to specify a particular transposition..
  - Type: `string`
   - Example: `maqam_rast`
 - `fromTonic` (optional): Optional specific tonic for the source maqam (URL-safe).
-If not specified, uses the canonical (taḥlīl) form..
-  If not specified, uses the canonical (taḥlīl) form.
- - Type: `string`
+If not specified, uses the base form. - Type: `string`
   - Example: `rast`
 - `toMaqam` **(required)**: Target maqam base ID (the destination of the journey).
 Use the base maqam identifier (e.g., "maqam_nahawand"), not the transposition display name.
@@ -3109,9 +3692,7 @@ Combine with `toTonic` to specify a particular transposition..
  - Type: `string`
   - Example: `maqam_segah`
 - `toTonic` (optional): Optional specific tonic for the target maqam (URL-safe).
-If not specified, uses the canonical (taḥlīl) form..
-  If not specified, uses the canonical (taḥlīl) form.
- - Type: `string`
+If not specified, uses the base form. - Type: `string`
   - Example: `segah`
 - `maxHops` **(required)**: Maximum number of modulation steps allowed (required safeguard).
 Prevents combinatorial explosion in route calculation.
@@ -4297,6 +4878,8 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
     {
       "id": "alkhulai_1904_2011",
       "displayName": "al-khulai-(1904/2011)",
+      "citation": "al-Khulaʿī 1904/2011",
+      "citationAr": "الخلعي 1904/2011",
       "sourceType": "Book",
       "title": "Kitāb al-Mūsiqā al-Sharqī",
       "titleAr": "كتاب الموسيقى الشرقي",
@@ -4327,6 +4910,8 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
     {
       "id": "farmer_1937",
       "displayName": "farmer-(1937)",
+      "citation": "Farmer 1937",
+      "citationAr": "فارمر 1937",
       "sourceType": "Article",
       "title": "The Lute Scale of Avicenna",
       "titleAr": "سلم العود لإبن سينا",
@@ -4359,6 +4944,8 @@ curl "https://diarmaqar.net/api/sources?includeArabic=true"
     {
       "id": "allami_2022",
       "displayName": "allami-(2022)",
+      "citation": "Allami 2022",
+      "citationAr": "اللامي 2022",
       "sourceType": "Thesis",
       "title": "Échos-monde: Towards a hybrid repertoire of contemporary and experimental acoustic, electroacoustic and electronic Arabic music",
       "titleAr": "‎عالم الأصداء: نحو رصيدٍ هجينٍ للموسيقى العربية المعاصرة والتجريبية، صوتياً وكهروصوتياً وإلكترونياً",
@@ -4451,6 +5038,7 @@ curl "https://diarmaqar.net/api/sources/farmer_1937?includeArabic=true"
   "source": {
     "id": "alkhulai_1904_2011",
     "displayName": "al-khulai-(1904/2011)",
+    "citation": "al-Khulaʿī 1904/2011",
     "sourceType": "Book",
     "title": "Kitāb al-Mūsiqā al-Sharqī",
     "contributors": [
@@ -4778,6 +5366,116 @@ curl "https://diarmaqar.net/api/sources/alshawwa_1946/ajnas?includeArabic=true"
       }
     }
   ]
+}
+```
+
+
+---
+
+## Statistics
+
+### Get archive statistics {#getStatistics}
+
+```
+GET /statistics
+```
+
+Return the archive's totals and, for every tuning system on every
+starting note, how many ajnās and maqāmāt it can build, how many
+transpositions (taṣwīr) and octave renderings they have, and how many
+modulations their forms allow.
+
+Each maqām or jins has three kinds of form in a tuning system:
+- **base form**: the maqām on its own notes, e.g. maqām rāst on rāst
+- **transposition** (taṣwīr): moved onto another tonic, e.g. maqām rāst al-nawā
+- **octave rendering**: the base form or a taṣwīr one or more octaves
+  away, e.g. maqām rāst on qarār rāst. Not a taṣwīr, so never counted
+  in `transpositions`.
+
+Modulations follow al-Shawwā's 1946 guidelines. Each form's options are
+counted degree by degree, as GET /maqamat/{idName} lists them, then
+summed over the forms: a target on the sixth degree that qualifies both
+ascending and descending counts 2. They are kept apart by the kind of
+form they start from (`fromBaseForms`, `fromTranspositions`,
+`fromOctaveRenderings`); base forms plus transpositions is the headline
+figure the statistics page shows.
+
+The numbers are computed before a deploy whenever the data they count has
+changed, not per request. They carry a `dataFingerprint` of that data and
+the time they were computed (`generatedAt`).
+
+
+**Example:**
+```bash
+curl "https://diarmaqar.net/api/statistics"
+```
+
+**Response:** Archive statistics retrieved successfully
+
+**Example response — oneRow:**
+
+```json
+{
+  "dataFingerprint": "4f1c…",
+  "generatedAt": "2026-11-10T19:30:00.000Z",
+  "archive": {
+    "tuningSystems": 28,
+    "tuningSystemStartingNotes": 48,
+    "maqamat": 145,
+    "ajnas": 44,
+    "suyur": 193,
+    "sources": 19,
+    "patterns": 7
+  },
+  "count": 48,
+  "data": [
+    {
+      "tuningSystem": {
+        "id": "ronzevalle_1904",
+        "idName": "ronzevalle_1904",
+        "displayName": "Ronzevalle (1904) Modernist Arabic Tuning",
+        "year": "1904"
+      },
+      "startingNote": {
+        "idName": "ushayran",
+        "displayName": "ʿushayrān"
+      },
+      "ajnas": {
+        "possible": 42,
+        "total": 44,
+        "transpositions": 3440,
+        "octaveRenderings": 118
+      },
+      "maqamat": {
+        "possible": 105,
+        "total": 145,
+        "transpositions": 7383,
+        "octaveRenderings": 212,
+        "suyur": 129
+      },
+      "modulations": {
+        "fromBaseForms": {
+          "maqamat": 50523,
+          "ajnas": 20286
+        },
+        "fromTranspositions": {
+          "maqamat": 1776759,
+          "ajnas": 815983
+        },
+        "fromOctaveRenderings": {
+          "maqamat": 91504,
+          "ajnas": 40647
+        }
+      },
+      "links": {
+        "maqamat": "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/maqamat",
+        "ajnas": "https://diarmaqar.net/api/tuning-systems/ronzevalle_1904/ushayran/ajnas"
+      }
+    }
+  ],
+  "links": {
+    "self": "https://diarmaqar.net/api/statistics"
+  }
 }
 ```
 

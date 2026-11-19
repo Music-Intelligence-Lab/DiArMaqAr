@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { parseInArabic, getMaqamNameDisplayAr } from "@/app/api/arabic-helpers";
@@ -117,7 +117,6 @@ export async function GET(request: Request) {
     }
 
     const noteNameSets = tuningSystem.getNoteNameSets();
-    const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
 
     const startingNoteIndex = noteNameSets.findIndex(
       (set) => set[0] && standardizeText(set[0]) === standardizeText(startingNoteParam)
@@ -150,9 +149,11 @@ export async function GET(request: Request) {
       startingNote as any
     );
 
-    const availableMaqamat = maqamat.filter((maqam) =>
-      shiftedNoteNameSets.some((noteNameSet) => maqam.isMaqamPossible(noteNameSet))
-    );
+    // Checked in the requested starting note's pitch space, the same note names
+    // the transpositions below are calculated in (see getPitchSpaceNoteNames).
+    // Checking every starting note instead listed maqāmāt this one cannot build.
+    const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
+    const availableMaqamat = maqamat.filter((maqam) => maqam.isMaqamPossible(pitchSpaceNoteNames));
 
     const familyMap = new Map<
       string,
@@ -161,17 +162,16 @@ export async function GET(request: Request) {
 
     for (const maqam of availableMaqamat) {
       try {
-        const transpositions = calculateMaqamTranspositions(
+        const transpositions = calculateMaqamForms(
           pitchClasses,
           ajnas,
           maqam,
-          true,
           centsTolerance
         );
-        const tahlil = transpositions.find((t) => !t.transposition);
-        if (!tahlil) continue;
+        const baseForm = transpositions.find((t) => t.isBaseForm);
+        if (!baseForm) continue;
 
-        const classification = classifyMaqamFamily(tahlil);
+        const classification = classifyMaqamFamily(baseForm);
         const idName = standardizeText(classification.familyName);
         if (!familyMap.has(idName)) {
           familyMap.set(idName, {

@@ -1,8 +1,12 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextRequest, NextResponse } from "next/server";
 import { getTuningSystems, getMaqamat, getAjnas } from "@/functions/import";
-import { standardizeText } from "@/functions/export";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
+import { entityToken, standardizeText } from "@/functions/export";
+import { PitchSpaceForms } from "@/functions/pitchSpaceForms";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
+import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import PitchClass from "@/models/PitchClass";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
@@ -42,9 +46,9 @@ export async function GET(
     }
 
     // Parse optional include flags
-    const includeTranspositions = searchParams.get("includeTranspositions") === "true";
-    const includeMaqamDegrees = searchParams.get("includeMaqamDegrees") === "true";
-    const includeDegreeDetails = searchParams.get("includeDegreeDetails") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeTranspositions", "includeOctaveRenderings", "includeMaqamDegrees", "includeDegreeDetails"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeTranspositions, includeOctaveRenderings, includeMaqamDegrees, includeDegreeDetails } = booleanFlags.values;
     const shouldIncludeDegreeDetails = includeMaqamDegrees && includeDegreeDetails;
 
     // Get cents tolerance parameter
@@ -151,9 +155,6 @@ export async function GET(
       return addCorsHeaders(response);
     }
 
-    // Get all note name sets with adjacent octaves for proper maqam checking
-    const shiftedSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
     // The starting note requested in the path, in its display form (with
     // diacritics) — getTuningSystemPitchClasses matches note-name sets on the
     // exact string. Every maqām below is analysed in THIS set: the starting note
@@ -165,6 +166,10 @@ export async function GET(
     // Pitch classes depend only on (tuningSystem, startingNote), so compute them
     // once for the whole request rather than per maqām.
     const pitchClasses = getTuningSystemPitchClasses(tuningSystem, requestedStartingNoteDisplay);
+    // The pitch space every maqām is checked against: the same note names the
+    // transpositions below are calculated in (see getPitchSpaceNoteNames).
+    const pitchSpaceNoteNames = pitchClasses.map((pc) => pc.noteName);
+    const forms = new PitchSpaceForms(pitchClasses, ajnas, maqamatData, centsTolerance);
 
     // Sequential spelling logic for degree detail objects (englishName + solfege).
     // We import lazily to keep the default list endpoint fast.
@@ -173,30 +178,25 @@ export async function GET(
       : null;
     const renderPitchClassSpellings = degreeSpellingsModule?.renderPitchClassSpellings;
 
+    // One degree-detail object, shared by the base form and every transposition in
+    // both directions. The 12-EDO fields match GET /maqamat/{id}: the reference
+    // key the degree is spelled against, the deviation from it, and the two as
+    // "<MIDI note> <±cents>", so a client can map degrees to keyboard keys
+    // without deriving the key from englishName.
+    const toDegreeDetail = (pc: PitchClass) => ({
+      noteName: standardizeText(pc.noteName),
+      englishName: pc.englishName,
+      solfege: pc.solfege!,
+      ipnReferenceNoteName: pc.referenceNoteName,
+      centsDeviation: pc.centsDeviation,
+      midiNotePlusCentsDeviation: `${calculateIpnReferenceMidiNote(pc)} ${pc.centsDeviation >= 0 ? "+" : ""}${pc.centsDeviation.toFixed(1)}`,
+    });
+
     // Find all maqamat that are possible in this tuning system
     const availableMaqamat: any[] = [];
 
     for (const maqam of maqamatData) {
-      // Check if maqam is possible in any of the starting notes
-      let isPossible = false;
-      const availableStartingNotes: string[] = [];
-
-      for (const noteNameSet of shiftedSets) {
-        if (maqam.isMaqamPossible(noteNameSet)) {
-          isPossible = true;
-          // Get the tuning system starting note (first note of middle octave)
-          const tuningSystemStartingNote = noteNameSet[noteNameSet.length / 3];
-          const standardizedNote = standardizeText(tuningSystemStartingNote);
-          if (!availableStartingNotes.includes(standardizedNote)) {
-            availableStartingNotes.push(standardizedNote);
-          }
-        }
-      }
-
-      // Filter by the required startingNote parameter (from URL path)
-      isPossible = availableStartingNotes.includes(normalizedParam);
-
-      if (isPossible) {
+      if (maqam.isMaqamPossible(pitchSpaceNoteNames)) {
         // The maqām's own tonic, used for the `tonic` namespace below. It must not
         // be passed to getTuningSystemPitchClasses — a maqām tonic is rarely one of
         // a tuning system's starting notes, and doing so previously selected the
@@ -204,25 +204,19 @@ export async function GET(
         // array for every maqām in systems like ibnsina_1037.
         const canonicalStartingNote = maqam.getAscendingNoteNames()[0];
 
-        // Calculate transpositions and get tahlil
-        const transpositions = calculateMaqamTranspositions(
-          pitchClasses,
-          ajnas,
-          maqam,
-          true,
-          centsTolerance
-        );
-        // The tahlil (base form). Not `!t.transposition` — that is also false
-        // for the tahlil's octave-register siblings.
-        const tahlil = transpositions.find((t: any) => t.isBaseForm);
+        // Calculate transpositions and get the base form
+        const transpositions = forms.transpositionsOf(maqam);
+        // The base form. Not `!t.transposition` — that is also false
+        // for the base form's octave renderings.
+        const baseForm = transpositions.find((t: any) => t.isBaseForm);
 
-        // Skip if no tahlil found (shouldn't happen but TypeScript safety)
-        if (!tahlil) {
+        // Skip if no base form is found (shouldn't happen but TypeScript safety)
+        if (!baseForm) {
           continue;
         }
 
         // Get classification
-        const classification = classifyMaqamFamily(tahlil);
+        const classification = classifyMaqamFamily(baseForm);
 
         // Check for asymmetric descending
         const ascendingNotes = maqam.getAscendingNoteNames();
@@ -230,9 +224,8 @@ export async function GET(
         const hasAsymmetricDescending =
           JSON.stringify(ascendingNotes) !== JSON.stringify(descendingNotes);
 
-        // Check for suyur
-        const suyur = maqam.getSuyur();
-        const hasSuyur = suyur && suyur.length > 0;
+        // Whether the base form has a sayr playable in this pitch space
+        const hasSuyur = forms.playableSuyur(maqam, baseForm).length > 0;
 
         const maqamNamespace = buildEntityNamespace(
           {
@@ -242,10 +235,10 @@ export async function GET(
           },
           {
             version: maqam.getVersion(),
-            // Every item on this listing is the tahlil; the taswir are listed
-            // separately under `transpositions`. Taken from the resolved tahlil
+            // Every item on this listing is the base form; the taswir are listed
+            // separately under `transpositions`. Taken from the resolved base form
             // rather than hard-coded true.
-            extras: { isBaseForm: tahlil.isBaseForm },
+            extras: { isBaseForm: baseForm.isBaseForm, formType: formTypeOf(baseForm) },
             inArabic,
             displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
           }
@@ -293,36 +286,14 @@ export async function GET(
 
         if (includeMaqamDegrees) {
           if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-            // Always pass combined asc+desc so cross-direction diatonic-slot
-            // collisions (e.g. bayyātī ʿushayrān E-b vs E-3) trigger the
-            // maqām-theory displacement rule in renderPitchClassSpellings.
-            const allMaqamPitchClasses = [
-              ...tahlil.ascendingPitchClasses,
-              ...tahlil.descendingPitchClasses,
-            ];
-
-            const renderedAscending = renderPitchClassSpellings(
-              tahlil.ascendingPitchClasses,
-              true,
-              allMaqamPitchClasses
-            );
-            const renderedDescending = renderPitchClassSpellings(
-              tahlil.descendingPitchClasses,
-              false,
-              allMaqamPitchClasses
-            );
+            // Spell each direction on its own: ascending and descending are
+            // independent outside 12-pitch-class sets.
+            const renderedAscending = renderPitchClassSpellings(baseForm.ascendingPitchClasses, true);
+            const renderedDescending = renderPitchClassSpellings(baseForm.descendingPitchClasses, false);
 
             item.maqamDegrees = {
-              ascending: renderedAscending.map((pc: any) => ({
-                noteName: standardizeText(pc.noteName),
-                englishName: pc.englishName,
-                solfege: pc.solfege!,
-              })),
-              descending: renderedDescending.map((pc: any) => ({
-                noteName: standardizeText(pc.noteName),
-                englishName: pc.englishName,
-                solfege: pc.solfege!,
-              })),
+              ascending: renderedAscending.map(toDegreeDetail),
+              descending: renderedDescending.map(toDegreeDetail),
             };
           } else {
             item.maqamDegrees = {
@@ -332,75 +303,39 @@ export async function GET(
           }
         }
 
-        if (includeTranspositions) {
-          const otherTranspositions = transpositions.filter((t: { transposition: boolean }) => t.transposition);
-          item.transpositions = otherTranspositions.map((t: any) => {
-            const tonicNoteName = t.ascendingPitchClasses[0].noteName;
-
-            if (shouldIncludeDegreeDetails && renderPitchClassSpellings) {
-              // See comment on tahlil render above — always pass combined
-              // asc+desc so cross-direction collisions fire the maqām rule.
-              const allMaqamPitchClasses = [
-                ...t.ascendingPitchClasses,
-                ...t.descendingPitchClasses,
-              ];
-
-              const renderedAscending = renderPitchClassSpellings(
-                t.ascendingPitchClasses,
-                true,
-                allMaqamPitchClasses
-              );
-              const renderedDescending = renderPitchClassSpellings(
-                t.descendingPitchClasses,
-                false,
-                allMaqamPitchClasses
-              );
-
-              return {
-                tonic: buildIdentifierNamespace(
-                  {
-                    idName: standardizeText(tonicNoteName),
-                    displayName: tonicNoteName,
-                  },
-                  {
-                    inArabic,
-                    displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
-                  }
-                ),
-                // This array is filtered to taswir, so never the base form.
-                isBaseForm: t.isBaseForm,
-                maqamDegrees: {
-                  ascending: renderedAscending.map((pc: any) => ({
-                    noteName: standardizeText(pc.noteName),
-                    englishName: pc.englishName,
-                    solfege: pc.solfege!,
-                  })),
-                  descending: renderedDescending.map((pc: any) => ({
-                    noteName: standardizeText(pc.noteName),
-                    englishName: pc.englishName,
-                    solfege: pc.solfege!,
-                  })),
-                },
-              };
-            }
-
-            return {
-              tonic: buildIdentifierNamespace(
-                {
-                  idName: standardizeText(tonicNoteName),
-                  displayName: tonicNoteName,
-                },
-                {
-                  inArabic,
-                  displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined,
+        // One entry shape for every rendering listed: the taṣwīr under
+        // `transpositions`, the octave renderings under `octaveRenderings`.
+        const renderingEntry = (t: any) => {
+          const tonicNoteName = t.ascendingPitchClasses[0].noteName;
+          // Each direction on its own, as for the base form above.
+          const maqamDegrees =
+            shouldIncludeDegreeDetails && renderPitchClassSpellings
+              ? {
+                  ascending: renderPitchClassSpellings(t.ascendingPitchClasses, true).map(toDegreeDetail),
+                  descending: renderPitchClassSpellings(t.descendingPitchClasses, false).map(toDegreeDetail),
                 }
-              ),
-              maqamDegrees: {
-                ascending: t.ascendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
-                descending: t.descendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
-              },
-            };
-          });
+              : {
+                  ascending: t.ascendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
+                  descending: t.descendingPitchClasses.map((pc: any) => standardizeText(pc.noteName)),
+                };
+          return {
+            idName: entityToken(t),
+            displayName: t.name,
+            ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
+            tonic: buildIdentifierNamespace(
+              { idName: standardizeText(tonicNoteName), displayName: tonicNoteName },
+              { inArabic, displayAr: inArabic ? getNoteNameDisplayAr(tonicNoteName) : undefined }
+            ),
+            isBaseForm: t.isBaseForm,
+            formType: formTypeOf(t),
+            maqamDegrees,
+          };
+        };
+        if (includeTranspositions) {
+          item.transpositions = transpositions.filter((t) => formTypeOf(t) === "transposition").map(renderingEntry);
+        }
+        if (includeOctaveRenderings) {
+          item.octaveRenderings = transpositions.filter((t) => formTypeOf(t) === "octaveRendering").map(renderingEntry);
         }
 
         availableMaqamat.push(item);

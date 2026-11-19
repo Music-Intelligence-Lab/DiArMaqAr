@@ -229,6 +229,14 @@ export default defineConfig({
                 { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
               ]
             },
+            {
+              text: 'Statistics',
+              collapsed: true,
+              link: '/api/endpoints-reference#statistics',
+              items: [
+                { text: 'Get archive statistics', link: '/api/endpoints-reference#getStatistics' },
+              ]
+            },
           ]
         },
         {
@@ -242,6 +250,7 @@ export default defineConfig({
             { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
             { text: 'Intervals', link: '/api/playground#intervals' },
             { text: 'Sources', link: '/api/playground#sources' },
+            { text: 'Statistics', link: '/api/playground#statistics' },
             { text: 'Modulations', link: '/api/playground#modulations' },
           ]
         },
@@ -341,6 +350,14 @@ export default defineConfig({
                   { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
                 ]
               },
+              {
+                text: 'Statistics',
+                collapsed: true,
+                link: '/api/endpoints-reference#statistics',
+                items: [
+                  { text: 'Get archive statistics', link: '/api/endpoints-reference#getStatistics' },
+                ]
+              },
             ]
           },
           {
@@ -354,6 +371,7 @@ export default defineConfig({
               { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
               { text: 'Intervals', link: '/api/playground#intervals' },
               { text: 'Sources', link: '/api/playground#sources' },
+              { text: 'Statistics', link: '/api/playground#statistics' },
               { text: 'Modulations', link: '/api/playground#modulations' },
             ]
           },
@@ -453,6 +471,14 @@ export default defineConfig({
                   { text: 'List ajnas by source', link: '/api/endpoints-reference#listAjnasBySource' },
                 ]
               },
+              {
+                text: 'Statistics',
+                collapsed: true,
+                link: '/api/endpoints-reference#statistics',
+                items: [
+                  { text: 'Get archive statistics', link: '/api/endpoints-reference#getStatistics' },
+                ]
+              },
             ]
           },
           {
@@ -466,6 +492,7 @@ export default defineConfig({
               { text: 'Pitch Classes', link: '/api/playground#pitch-classes' },
               { text: 'Intervals', link: '/api/playground#intervals' },
               { text: 'Sources', link: '/api/playground#sources' },
+              { text: 'Statistics', link: '/api/playground#statistics' },
               { text: 'Modulations', link: '/api/playground#modulations' },
             ]
           },

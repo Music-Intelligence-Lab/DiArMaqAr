@@ -1,10 +1,13 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
+import { rejectPathTonic } from "@/app/api/path-tonic";
+import { structuralJinsEntries, ghammazEntries } from "@/app/api/maqamat/maqam-detail";
 import { getMaqamat, getAjnas, getTuningSystems } from "@/functions/import";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getJinsNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -128,9 +131,8 @@ export async function GET(
     const ajnas = getAjnas();
 
     // Find the maqām
-    const maqam = maqamatData.find(
-      (m) => m.getId() === maqamId || standardizeText(m.getName()) === standardizeText(maqamId)
-    );
+    const resolvedId = resolveEntityId(maqamId, maqamatData);
+    const maqam = resolvedId?.entity;
 
     if (!maqam) {
       return addCorsHeaders(
@@ -143,6 +145,9 @@ export async function GET(
         )
       );
     }
+
+    const transposedPathId = rejectPathTonic(maqamId, resolvedId?.tonicIdName, maqam.getIdName(), "maqamat/{idName}/transpositions");
+    if (transposedPathId) return addCorsHeaders(transposedPathId);
 
     // Find the tuning system
     const tuningSystem = tuningSystems.find((ts) => standardizeText(ts.getId()) === standardizeText(tuningSystemId));
@@ -209,16 +214,15 @@ export async function GET(
       );
     }
 
-    const transpositions = calculateMaqamTranspositions(
+    const transpositions = calculateMaqamForms(
       pitchClasses,
       ajnas,
       maqam,
-      true,
       centsTolerance
     );
 
     // API lists only taswīr (transposition: true). Octave/register variants must not be flagged true;
-    // that is handled at the source in calculateMaqamTranspositions().
+    // that is handled at the source in calculateMaqamForms().
     const transpositionsListed = transpositions.filter((t) => t.transposition);
 
     if (transpositionsListed.length === 0) {
@@ -233,60 +237,6 @@ export async function GET(
       );
     }
 
-    const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
-
-    // Given a specific Maqam transposition `t` and a source note-name array
-    // (one of `t.primaryJinsNoteName` etc.), produce an array of per-degree
-    // entries carrying note name, maqām degree (roman numeral), and — for
-    // jins slots — the resolved jins entity. Returns null when the source
-    // array is null (e.g. a maqām without a tertiary, or ghammāz explicitly
-    // suppressed).
-    const buildJinsDegreeEntries = (
-      t: typeof transpositionsListed[number],
-      noteNames: string[] | null | undefined,
-      { resolveJins }: { resolveJins: boolean }
-    ): any[] | null => {
-      if (noteNames == null) return null;
-      return noteNames.map((noteName) => {
-        const idx = t.ascendingPitchClasses.findIndex((pc) => pc.noteName === noteName);
-        const maqamDegree = idx >= 0
-          ? (romanNumerals[idx] || String(idx + 1))
-          : null;
-        const entry: any = {
-          noteName: standardizeText(noteName),
-          noteNameDisplay: noteName,
-          ...(inArabic && { noteNameDisplayAr: getNoteNameDisplayAr(noteName) }),
-          maqamDegree,
-        };
-        if (!resolveJins) return entry;
-        // .flat() first: each degree is now an array of every jins matching
-        // there, so searching the degrees directly would test arrays, not ajnās.
-        // This endpoint keeps its flat single-jins fields; the head it reports is
-        // now suyūr-ordered rather than file-ordered.
-        const fromAsc = t.ascendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        const jinsAtNote = fromAsc ?? t.descendingMaqamAjnas?.flat().find(
-          (j) => j != null && j.jinsPitchClasses[0]?.noteName === noteName
-        );
-        if (jinsAtNote) {
-          entry.jinsId = jinsAtNote.jinsId;
-          entry.jinsIdName = entityToken(jinsAtNote);
-          entry.jinsDisplayName = jinsAtNote.name || '';
-          entry.jinsIsBaseForm = jinsAtNote.isBaseForm;
-          if (inArabic) {
-            entry.jinsDisplayNameAr = getJinsNameDisplayAr(jinsAtNote.name || '');
-          }
-        } else {
-          entry.jinsId = null;
-          entry.jinsIdName = null;
-          entry.jinsDisplayName = null;
-          entry.jinsIsBaseForm = null;
-          if (inArabic) entry.jinsDisplayNameAr = null;
-        }
-        return entry;
-      });
-    };
 
     // Build transpositions list with tonicId (URL-safe) and tonicName (with diacritics or Arabic)
     const transpositionItems = transpositionsListed.map((t) => {
@@ -308,14 +258,21 @@ export async function GET(
       };
 
       return {
+        idName: entityToken(t),
+        displayName: t.name,
+        ...(inArabic && { displayNameAr: getMaqamNameDisplayAr(t.name) }),
         tonic: tonicNamespace,
         pitchClass: pitchClassNamespace,
         // This list is filtered to taswir, so never the base form.
         isBaseForm: t.isBaseForm,
-        primaryJins: buildJinsDegreeEntries(t, t.primaryJinsNoteName, { resolveJins: true }),
-        secondaryJins: buildJinsDegreeEntries(t, t.secondaryJinsNoteName, { resolveJins: true }),
-        tertiaryJins: buildJinsDegreeEntries(t, t.tertiaryJinsNoteName, { resolveJins: true }),
-        ghammaz: buildJinsDegreeEntries(t, t.ghammazNoteName, { resolveJins: false }),
+        formType: formTypeOf(t),
+        primaryJins: structuralJinsEntries(t, t.primaryJinsNoteName, "ascending", inArabic),
+        secondaryJins: structuralJinsEntries(t, t.secondaryJinsNoteName, "ascending", inArabic),
+        tertiaryJins: structuralJinsEntries(t, t.tertiaryJinsNoteName, "ascending", inArabic),
+        primaryJinsDescending: structuralJinsEntries(t, t.primaryJinsNoteName, "descending", inArabic),
+        secondaryJinsDescending: structuralJinsEntries(t, t.secondaryJinsNoteName, "descending", inArabic),
+        tertiaryJinsDescending: structuralJinsEntries(t, t.tertiaryJinsNoteName, "descending", inArabic),
+        ghammaz: ghammazEntries(t, t.ghammazNoteName, inArabic),
         links: buildLinksNamespace({
           detail: `/api/maqamat/${maqam.getIdName()}?tuningSystem=${encodeURIComponent(tuningSystemId)}&startingNote=${standardizeText(actualStartingNote)}&transposeTo=${standardizeText(tonicNoteName)}`
         })
@@ -333,9 +290,9 @@ export async function GET(
       },
       {
         version: maqam.getVersion(),
-        // The header entity is the maqam itself, i.e. the tahlil — the taswir
+        // The header entity is the maqam itself, i.e. the base form — the taswir
         // are the list below. Derived, not hard-coded.
-        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm) },
+        extras: { isBaseForm: transpositions.some((t) => t.isBaseForm), formType: "base" },
         inArabic,
         displayNameAr: inArabic ? getMaqamNameDisplayAr(maqam.getName()) : undefined,
       }

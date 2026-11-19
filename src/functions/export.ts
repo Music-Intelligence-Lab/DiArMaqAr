@@ -1,10 +1,11 @@
-import NoteName from "@/models/NoteName";
+import NoteName, { allNotes } from "@/models/NoteName";
 import TuningSystem from "@/models/TuningSystem";
 import JinsData, { AjnasModulations, Jins, JinsDataInterface, shiftJinsByOctaves } from "@/models/Jins";
 import MaqamData, { Maqam, MaqamatModulations, MaqamDataInterface, shiftMaqamByOctaves, Sayr } from "@/models/Maqam";
 import getTuningSystemPitchClasses from "./getTuningSystemPitchClasses";
 import { getAjnas, getMaqamat } from "./import";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "./transpose";
+import { calculateJinsForms, calculateMaqamForms, renderingsLookup } from "./transpose";
+import { playableSuyur } from "./playableSuyur";
 import PitchClass, { PitchClassInterval } from "@/models/PitchClass";
 import modulate from "./modulate";
 import calculateNumberOfModulations from "./calculateNumberOfModulations";
@@ -105,9 +106,9 @@ export const TONIC_SEPARATOR = "_al_";
 
 /**
  * Builds the canonical identifier for a maqām or jins: its idName, with the
- * tonic appended when this is a transposition rather than the taḥlīl.
+ * tonic appended when this is a transposition rather than the base form.
  *
- *   maqam_rast                                     — the taḥlīl
+ *   maqam_rast                                     — the base form
  *   maqam_rast_al_nawa                             — transposed to nawā
  *   maqam_hijaz_kar_alsabbagh_abbas_al_qarar_dugah — attributed, transposed
  *
@@ -142,11 +143,88 @@ export function createEntityTokenFromName(name: string, tonicNoteName: string): 
  * This is what every export, API response and URL names a transposed entity
  * by — call it rather than standardizing the display name, which would close up
  * the article and yield "maqam_rast_alnawa" instead of "maqam_rast_al_nawa".
+ *
+ * The base form is its bare idName. Every other rendering names its tonic — a
+ * taṣwīr (maqām rāst on nawā) and an octave rendering (maqām rāst on
+ * qarār rāst) alike, since both carry " al-<tonic>" in their display name.
  */
 export function entityToken(entity: { name: string; ascendingPitchClasses: PitchClass[] } | { name: string; jinsPitchClasses: PitchClass[] }): string {
   const tonic = "ascendingPitchClasses" in entity ? entity.ascendingPitchClasses[0]?.noteName : entity.jinsPitchClasses[0]?.noteName;
 
   return createEntityTokenFromName(entity.name, tonic ?? "");
+}
+
+const NOTE_NAME_ID_NAMES = new Set(allNotes.map((noteName) => standardizeText(noteName)));
+
+/**
+ * Reads a maqām or jins identifier sent by a client, accepting the closed-up
+ * spelling of a transposition as well as the canonical one.
+ *
+ * Some endpoints used to spell maqām rāst on chahārgāh "maqam_rast_alchahargah"
+ * rather than "maqam_rast_al_chahargah", and a client may have stored that.
+ * It is recognised only as an exact base idName, then "al", then an exact note
+ * name — so the article inside a base name (maqam_hijaz_alsabbagh_abbas,
+ * jins_buselik_alhilu) is never read as a tonic.
+ *
+ * Returns the canonical identifier, or the standardized input unchanged when it
+ * names no transposition of the given bases — the caller decides what an
+ * unknown id means.
+ */
+export function canonicalEntityIdName(idName: string, baseIdNames: readonly string[]): string {
+  const token = standardizeText(idName);
+  if (baseIdNames.includes(token)) return token;
+
+  // Longest first: maqam_hijaz_kar must be tried before maqam_hijaz.
+  const bases = [...baseIdNames].sort((a, b) => b.length - a.length);
+  for (const base of bases) {
+    const closedUpPrefix = `${base}_al`;
+    if (!token.startsWith(closedUpPrefix)) continue;
+
+    const rest = token.slice(closedUpPrefix.length);
+    const tonic = rest.startsWith("_") ? rest.slice(1) : rest;
+    if (NOTE_NAME_ID_NAMES.has(tonic)) return createEntityToken(base, tonic);
+  }
+
+  return token;
+}
+
+/**
+ * Resolves an identifier sent by a client to the maqām or jins it names, and to
+ * the tonic it is transposed to (absent for the base form).
+ *
+ *   "1", "maqam_rast"            → maqām rāst
+ *   "maqam_rast_al_nawa"         → maqām rāst, tonic "nawa"
+ *   "maqam_rast_alnawa"          → the same (older closed-up spelling)
+ *
+ * The tonic is returned as written, unchecked: whether the maqām can sit on it
+ * depends on the tuning system, which only the caller knows. Returns null when
+ * the identifier names no maqām or jins.
+ */
+export function resolveEntityId<T extends { getId(): string; getIdName(): string }>(
+  id: string,
+  entities: readonly T[]
+): { entity: T; tonicIdName?: string } | null {
+  const byId = entities.find((candidate) => candidate.getId() === id);
+  if (byId) return { entity: byId };
+
+  const token = canonicalEntityIdName(id, entities.map((candidate) => candidate.getIdName()));
+  const separatorIndex = token.indexOf(TONIC_SEPARATOR);
+  const idName = separatorIndex === -1 ? token : token.slice(0, separatorIndex);
+
+  const entity = entities.find((candidate) => candidate.getIdName() === idName);
+  if (!entity) return null;
+  if (separatorIndex === -1) return { entity };
+
+  return { entity, tonicIdName: token.slice(separatorIndex + TONIC_SEPARATOR.length) };
+}
+
+/**
+ * Whether a maqām transposition answers a maqām id query. The id names either
+ * the maqām (every transposition of it) or one transposition. Matched exactly,
+ * so maqam_hijaz does not also match maqam_hijaz_kar.
+ */
+export function matchesMaqamId(baseMaqamIdName: string, transpositionIdName: string | undefined, maqamIdName: string): boolean {
+  return baseMaqamIdName === maqamIdName || transpositionIdName === maqamIdName;
 }
 
 export interface MergedJins {
@@ -770,61 +848,88 @@ function createMaqamToJinsModulations(modulations: AjnasModulations): MaqamToJin
 }
 
 /**
+ * One renderings lookup per export: each export builds its own pitch-space
+ * array, so keying on it shares the lookup across that export's whole loop.
+ */
+const renderingsByPitchSpace = new WeakMap<PitchClass[], ReturnType<typeof renderingsLookup>>();
+function pitchSpaceRenderings(pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number) {
+  let renderings = renderingsByPitchSpace.get(pitchClasses);
+  if (!renderings) {
+    renderings = renderingsLookup(pitchClasses, allAjnas, allMaqamat, centsTolerance);
+    renderingsByPitchSpace.set(pitchClasses, renderings);
+  }
+  return renderings;
+}
+
+/**
+ * The suyūr an export carries for one maqām form: those playable on it, moved
+ * onto it, as the app and the API show them (see playableSuyur).
+ */
+function exportedSuyur(maqam: MaqamData, form: Pick<Maqam, "ascendingPitchClasses" | "descendingPitchClasses">, pitchClasses: PitchClass[], allAjnas: JinsData[], allMaqamat: MaqamData[], centsTolerance: number): Sayr[] {
+  const renderings = pitchSpaceRenderings(pitchClasses, allAjnas, allMaqamat, centsTolerance);
+  return playableSuyur(maqam, form, { pitchClasses, ajnas: allAjnas, maqamat: allMaqamat, renderings, centsTolerance }).map((sayr) => ({
+    ...sayr,
+    version: sayr.version || maqam.getVersion(),
+  }));
+}
+
+/**
  * Helper function to create maqam-to-maqam lower octave modulations structure.
  * Creates proper 8vb (octave-below) data for maqam modulations.
  */
 function createMaqamToMaqamLowerOctaveModulations(
   modulations: MaqamatModulations,
-  allPitchClasses: PitchClass[]
+  allPitchClasses: PitchClass[],
+  renderings: ReturnType<typeof renderingsLookup>
 ): MaqamToMaqamLowerOctaveModulationsStructure {
   const maqamatMods = modulations as MaqamatModulations;
   
   return {
     maqamToMaqamModulationsOnFirstDegree8vb: (maqamatMods.modulationsOnFirstDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnThirdDegree8vb: (maqamatMods.modulationsOnThirdDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnAltThirdDegree8vb: (maqamatMods.modulationsOnAltThirdDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFourthDegree8vb: (maqamatMods.modulationsOnFourthDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnFifthDegree8vb: (maqamatMods.modulationsOnFifthDegree || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeAsc8vb: (maqamatMods.modulationsOnSixthDegreeAsc || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeDesc8vb: (maqamatMods.modulationsOnSixthDegreeDesc || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToMaqamModulationsOnSixthDegreeIfNoThird8vb: (maqamatMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((maqam) => {
-        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1);
+        const shifted = shiftMaqamByOctaves(allPitchClasses, maqam, -1, renderings.maqam(maqam.maqamId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
@@ -839,7 +944,8 @@ function createMaqamToMaqamLowerOctaveModulations(
  */
 function createMaqamToJinsLowerOctaveModulations(
   modulations: AjnasModulations,
-  allPitchClasses: PitchClass[]
+  allPitchClasses: PitchClass[],
+  renderings: ReturnType<typeof renderingsLookup>
 ): MaqamToJinsLowerOctaveModulationsStructure {
   const ajnasMods = modulations as AjnasModulations;
   
@@ -861,49 +967,49 @@ function createMaqamToJinsLowerOctaveModulations(
   return {
     maqamToJinsModulationsOnFirstDegree8vb: (ajnasMods.modulationsOnFirstDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnThirdDegree8vb: (ajnasMods.modulationsOnThirdDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnAltThirdDegree8vb: (ajnasMods.modulationsOnAltThirdDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFourthDegree8vb: (ajnasMods.modulationsOnFourthDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnFifthDegree8vb: (ajnasMods.modulationsOnFifthDegree || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeAsc8vb: (ajnasMods.modulationsOnSixthDegreeAsc || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeDesc8vb: (ajnasMods.modulationsOnSixthDegreeDesc || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
     maqamToJinsModulationsOnSixthDegreeIfNoThird8vb: (ajnasMods.modulationsOnSixthDegreeIfNoThird || [])
       .map((jins) => {
-        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1);
+        const shifted = shiftJinsByOctaves(allPitchClasses, jins, -1, renderings.jins(jins.jinsId));
         return shifted ? entityToken(shifted) : null;
       })
       .filter((name): name is string => name !== null),
@@ -1078,8 +1184,8 @@ export async function exportTuningSystem(
   let totalMaqamModulations = 0;
   let totalAjnasModulations = 0;
 
-  // Store tahlil (original maqam) for classification
-  const maqamTahlilMap = new Map<string, Maqam>();
+  // Store base form for classification
+  const maqamBaseFormMap = new Map<string, Maqam>();
 
   // Include ajnas details if requested
   if (options.includeAjnasDetails || options.includeMaqamatDetails) {
@@ -1103,7 +1209,7 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      for (const jinsTransposition of calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jins, true, centsTolerance)) {
+      for (const jinsTransposition of calculateJinsForms(fullRangeTuningSystemPitchClasses, jins, centsTolerance)) {
         possibleAjnas.push(jinsTransposition);
         numberOfTranspositions++;
       }
@@ -1162,14 +1268,15 @@ export async function exportTuningSystem(
       }
 
       let numberOfTranspositions = 0;
-      const maqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqam, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqam, centsTolerance);
 
       for (let j = 0; j < maqamTranspositions.length; j++) {
         const maqamTransposition = maqamTranspositions[j];
 
-        // Store tahlil for family classification (original form only)
-        if (!maqamTransposition.transposition) {
-          maqamTahlilMap.set(maqamTransposition.maqamId, maqamTransposition);
+        // Store the base form for family classification. Not `!transposition`:
+        // that also matches the octave renderings, and the last one would win.
+        if (maqamTransposition.isBaseForm) {
+          maqamBaseFormMap.set(maqamTransposition.maqamId, maqamTransposition);
         }
 
         // Yield control every few transpositions to allow UI updates
@@ -1264,7 +1371,8 @@ export async function exportTuningSystem(
                 ...(options.includeModulations8vb && {
                   maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
                     maqamatModulations, 
-                    fullRangeTuningSystemPitchClasses
+                    fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
                   )
                 })
               };
@@ -1296,7 +1404,8 @@ export async function exportTuningSystem(
                 ...(options.includeModulations8vb && {
                   maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
                     ajnasModulations, 
-                    fullRangeTuningSystemPitchClasses
+                    fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
                   )
                 })
               };
@@ -1362,22 +1471,19 @@ export async function exportTuningSystem(
                 ])
               )
             : undefined,
-          suyur: maqamOverview.getSuyur().map(sayr => ({
-            ...sayr,
-            version: sayr.version || maqamOverview.getVersion()
-          })),
+          suyur: exportedSuyur(maqamOverview, possibleMaqam, fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance),
           transposition: possibleMaqam.transposition,
           isBaseForm: possibleMaqam.isBaseForm,
           commentsEnglish: maqamOverview.getCommentsEnglish(),
           commentsArabic: maqamOverview.getCommentsArabic(),
           SourcePageReferences: maqamOverview.getSourcePageReferences(),
           version: maqamOverview.getVersion(),
-          // Family classification - always included, inherited from tahlil
+          // Family classification - always included, inherited from the base form
           maqamFamilyClassification: (() => {
-            const tahlil = maqamTahlilMap.get(possibleMaqam.maqamId);
-            if (tahlil) {
+            const baseForm = maqamBaseFormMap.get(possibleMaqam.maqamId);
+            if (baseForm) {
               try {
-                const classification = classifyMaqamFamily(tahlil);
+                const classification = classifyMaqamFamily(baseForm);
                 const normalizedFamilyName = standardizeText(classification.familyName);
                 
                 // Add to family reference dictionary if not already present
@@ -1547,9 +1653,9 @@ export async function exportJins(
     // Find the jinsData for creating MergedJins
     jinsData = allAjnas.find((j) => j.getId() === jinsInput.jinsId);
   } else {
-    // It's a JinsData instance - convert to Jins using getTahlil
+    // It's a JinsData instance - convert to Jins using getBaseForm
     jinsData = jinsInput;
-    jinsToExport = jinsData.getTahlil(fullRangeTuningSystemPitchClasses);
+    jinsToExport = jinsData.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -1620,7 +1726,7 @@ export async function exportJins(
     const transpositionNames: string[] = [];
     let numberOfTranspositions = 0;
 
-    const jinsTranspositions = Array.from(calculateJinsTranspositions(fullRangeTuningSystemPitchClasses, jinsData, true, centsTolerance));
+    const jinsTranspositions = Array.from(calculateJinsForms(fullRangeTuningSystemPitchClasses, jinsData, centsTolerance));
 
     for (let i = 0; i < jinsTranspositions.length; i++) {
       const jinsTransposition = jinsTranspositions[i];
@@ -1786,9 +1892,9 @@ export async function exportMaqam(
     const allMaqamat = getMaqamat();
     maqamData = allMaqamat.find((m) => m.getId() === maqamInput.maqamId);
   } else {
-    // It's a MaqamData instance - convert to Maqam using getTahlil
+    // It's a MaqamData instance - convert to Maqam using getBaseForm
     maqamData = maqamInput;
-    maqamToExport = maqamData.getTahlil(fullRangeTuningSystemPitchClasses);
+    maqamToExport = maqamData.getBaseForm(fullRangeTuningSystemPitchClasses);
   }
 
   // Include tuning system details if requested
@@ -1849,9 +1955,9 @@ export async function exportMaqam(
   if (maqamData) {
     const convertedMaqam = convertMaqamAjnasToObjects(maqamToExport);
     
-    // Get classification - calculate once from tahlil
+    // Get classification - calculate once from the base form
     if (!maqamToExport.transposition) {
-      // This IS the tahlil, classify it directly
+      // This IS the base form, classify it directly
       try {
         const result = classifyMaqamFamily(maqamToExport);
         const normalizedFamilyName = standardizeText(result.familyName);
@@ -1877,14 +1983,14 @@ export async function exportMaqam(
         };
       }
     } else {
-      // This is a transposition - need to get tahlil and classify that
+      // This is a transposition - need to get the base form and classify that
       const allAjnas = getAjnas();
-      const allMaqamTranspositions = calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance);
-      const tahlil = allMaqamTranspositions.find(m => !m.transposition);
+      const allMaqamTranspositions = calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, centsTolerance);
+      const baseForm = allMaqamTranspositions.find(m => m.isBaseForm);
       
-      if (tahlil) {
+      if (baseForm) {
         try {
-          const result = classifyMaqamFamily(tahlil);
+          const result = classifyMaqamFamily(baseForm);
           const normalizedFamilyName = standardizeText(result.familyName);
           
           // Add to family reference dictionary
@@ -1939,10 +2045,7 @@ export async function exportMaqam(
             ])
           )
         : undefined,
-      suyur: maqamData.getSuyur().map(sayr => ({
-        ...sayr,
-        version: sayr.version || maqamData.getVersion()
-      })),
+      suyur: exportedSuyur(maqamData, maqamToExport, fullRangeTuningSystemPitchClasses, getAjnas(), getMaqamat(), centsTolerance),
       transposition: maqamToExport.transposition,
       isBaseForm: maqamToExport.isBaseForm,
       commentsEnglish: maqamData.getCommentsEnglish(),
@@ -1989,7 +2092,8 @@ export async function exportMaqam(
         ...(options.includeModulations8vb && {
           maqamToMaqamModulationsLowerOctave: createMaqamToMaqamLowerOctaveModulations(
             maqamatModulations, 
-            fullRangeTuningSystemPitchClasses
+            fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
           )
         })
       };
@@ -2028,7 +2132,8 @@ export async function exportMaqam(
         ...(options.includeModulations8vb && {
           maqamToJinsModulationsLowerOctave: createMaqamToJinsLowerOctaveModulations(
             ajnasModulations, 
-            fullRangeTuningSystemPitchClasses
+            fullRangeTuningSystemPitchClasses,
+                    pitchSpaceRenderings(fullRangeTuningSystemPitchClasses, allAjnas, allMaqamat, centsTolerance)
           )
         })
       };
@@ -2046,19 +2151,19 @@ export async function exportMaqam(
     const allAjnas = getAjnas();
     const allMaqamat = getMaqamat();
 
-    const maqamTranspositions = Array.from(calculateMaqamTranspositions(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, true, centsTolerance));
+    const maqamTranspositions = Array.from(calculateMaqamForms(fullRangeTuningSystemPitchClasses, allAjnas, maqamData, centsTolerance));
 
     // Reuse classification calculated above, or calculate it now if not done yet
     let sharedClassification: ExportMaqamFamilyClassification;
     if (maqamClassification.firstJins && maqamClassification.firstJins.familyName !== "no_jins") {
       sharedClassification = maqamClassification;
     } else {
-      // Calculate classification ONCE from the tahlil - all transpositions inherit it
-      const tahlil = maqamTranspositions.find(m => !m.transposition);
+      // Calculate classification ONCE from the base form - all transpositions inherit it
+      const baseForm = maqamTranspositions.find(m => m.isBaseForm);
       
-      if (tahlil) {
+      if (baseForm) {
         try {
-          const result = classifyMaqamFamily(tahlil);
+          const result = classifyMaqamFamily(baseForm);
           const normalizedFamilyName = standardizeText(result.familyName);
           
           // Add to family reference dictionary
@@ -2074,7 +2179,7 @@ export async function exportMaqam(
             }
           };
         } catch (error) {
-          console.warn(`⚠️ Could not classify maqam ${tahlil.name}:`, error);
+          console.warn(`⚠️ Could not classify maqam ${baseForm.name}:`, error);
           sharedClassification = {
             firstJins: {
               familyName: "no_jins",
@@ -2136,7 +2241,7 @@ export async function exportMaqam(
       if (maqamOverview) {
         const convertedMaqam = convertMaqamAjnasToObjects(maqamTransposition);
         
-        // Use the shared classification calculated once from the tahlil
+        // Use the shared classification calculated once from the base form
         const mergedMaqam: MergedMaqam = {
           maqamId: maqamTransposition.maqamId,
           name: maqamTransposition.name,

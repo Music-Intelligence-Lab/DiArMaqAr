@@ -82,7 +82,19 @@ dūgāh → ascending → segāh → jins bayāt al-segāh → nawā
 nawā → ascending → kurdān → jins bayāt al-kurdān → muḥayyar
 ```
 
-The bounds safety mechanism ensures transposed suyūr remain within practical tuning system limits, mirroring real-world musical constraints.
+## Which Suyūr Can Be Played
+
+A sayr is shown, returned by the API and counted in the [statistics](/api/#statistics) only where it can be played: in the tuning system and on the starting note selected, on the maqām form being shown. On a taṣwīr or an octave rendering, the sayr is first moved onto that form's tonic, then judged.
+
+Every stop must be playable:
+
+- **Note stops**: the tuning system has the note, and moving the sayr does not push it past either end of the tuning system's range.
+- **Jins and maqām stops**: the tuning system lists that jins or maqām on that note as one of its forms (its base form, a taṣwīr or an octave rendering), with the same intervals within the cents tolerance. Having the notes is not enough.
+- **Directional instructions**: always playable.
+
+For example, Cairo Congress (1929) on yegāh has the notes nawā, ḥusaynī, awj and kurdān. But between them the steps are 200, 149 and 149 cents, while jins rāst is 204, 149 and 159 cents. The last step differs by 10 cents, beyond the 5-cent tolerance, so this tuning system has no jins rāst on nawā, and a sayr that moves to jins rāst on nawā is not playable there. In al-Kindī's tuning system (874), the sayr of maqām nikrīz that descends to ʿirāq is not playable, because the tuning system has no ʿirāq.
+
+A jins or maqām stop that names no starting note sits on that jins's or maqām's own first note, and moves with the rest of the sayr.
 
 ## Multilingual Support
 

@@ -39,12 +39,13 @@ A jins transposition is the systematic shifting of a jins to begin from a differ
 ### Naming Convention
 
 Transpositions follow Arabic music theory naming:
-- **Taḥlīl**: The original jins (e.g., "jins kurd" starting on dūgāh)
-- **Taṣwīr**: A transposition (e.g., "jins kurd al-muhayyar" starting on muhayyar)
+- **Base form**: The jins on its own tonic (e.g., "jins kurd" starting on dūgāh)
+- **Taṣwīr**: A transposition to another modal degree (e.g., "jins kurd al-ḥusaynī" starting on ḥusaynī)
+- **Octave rendering**: The base form an octave away (e.g., "jins kurd al-muḥayyar", since muḥayyar is the octave of dūgāh). Not a transposition
 
 **Example:**
 - Original: Jins kurd starting on dūgāh → **jins kurd**
-- Transposition: Same interval pattern starting on muhayyar → **jins kurd al-muhayyar**
+- Transposition: Same interval pattern starting on ḥusaynī → **jins kurd al-ḥusaynī**
 
 When a maqām degree matches more than one jins under this naming, [suyūr attestation decides which one leads the display](/guide/maqamat/#multiple-ajnas-on-one-degree).
 

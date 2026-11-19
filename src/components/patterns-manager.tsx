@@ -14,7 +14,7 @@ export default function PatternsManager() {
   const [name, setName] = useState<string>("");
   const [notes, setNotes] = useState<PatternNote[]>([]);
 
-  const maqamModel = selectedMaqamData ? selectedMaqamData.getTahlil(allPitchClasses) : null;
+  const maqamModel = selectedMaqamData ? selectedMaqamData.getBaseForm(allPitchClasses) : null;
 
   const pitchClasses = maqamModel ? maqamModel.ascendingPitchClasses : [];
 

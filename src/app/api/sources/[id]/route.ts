@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCanonicalApiUrl } from "@/app/api/response-shapes";
 import { getSources } from "@/functions/import";
-import { urlSafeSourceId } from "@/models/bibliography/Source";
+import { sourceCitationLabel, urlSafeSourceId } from "@/models/bibliography/Source";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import Book from "@/models/bibliography/Book";
 import Article from "@/models/bibliography/Article";
@@ -83,6 +83,7 @@ export async function GET(
     const sourceData: any = {
       id: source.getId(),
       displayName: urlSafeSourceId(source), // legacy slug form; documented in the OpenAPI spec
+      citation: sourceCitationLabel(source, true),
       sourceType: source.getSourceType(),
       title: source.getTitleEnglish(),
       contributors: source.getContributors().map(c => ({
@@ -123,6 +124,7 @@ export async function GET(
     // Add Arabic versions when includeArabic=true
     if (inArabic) {
       sourceData.displayNameAr = urlSafeSourceId(source, false);
+      sourceData.citationAr = sourceCitationLabel(source, false);
       sourceData.titleAr = source.getTitleArabic();
       sourceData.contributors = source.getContributors().map((c, idx) => ({
         ...sourceData.contributors[idx],

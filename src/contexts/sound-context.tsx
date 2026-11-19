@@ -314,7 +314,7 @@ export function SoundContextProvider({ children }: { children: React.ReactNode }
         let maqam: Maqam;
 
         if (selectedMaqam) maqam = selectedMaqam;
-        else maqam = selectedMaqamData.getTahlil(allPitchClasses);
+        else maqam = selectedMaqamData.getBaseForm(allPitchClasses);
 
         const { ascendingPitchClasses, descendingPitchClasses } = maqam;
 

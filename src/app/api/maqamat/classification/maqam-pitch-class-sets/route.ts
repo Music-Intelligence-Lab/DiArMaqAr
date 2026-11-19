@@ -1,5 +1,7 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import {
   classifyMaqamatByMaqamPitchClassSets,
@@ -7,7 +9,7 @@ import {
 } from "@/functions/classifyMaqamatByMaqamPitchClassSets";
 import { buildEntityNamespace, buildIdentifierNamespace, getCanonicalApiUrl} from "@/app/api/response-shapes";
 import { parseInArabic, getNoteNameDisplayAr } from "@/app/api/arabic-helpers";
-import { standardizeText } from "@/functions/export";
+import { canonicalEntityIdName, entityToken, matchesMaqamId, standardizeText } from "@/functions/export";
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 
 export const OPTIONS = handleCorsPreflightRequest;
@@ -44,7 +46,7 @@ export const dynamic = "force-dynamic";
  * - startingNote: string (required) - starting note for tuning system
  * - includeIncompatible: boolean (default: false) - include maqamat that can't form sets
  * - includeArabic: boolean (default: false) - include Arabic display names
- * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set")
+ * - setId: string (optional) - filter by specific set ID (e.g., "maqam_rast_set"); a set is named after one of its members, see chooseSetNamesake
  * - maqamId: string (optional) - filter by maqam ID to find sets containing it
  * - centsTolerance: number (default: 5) - tolerance for cents comparison
  *
@@ -57,8 +59,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeIncompatible = searchParams.get("includeIncompatible") === "true";
-    const includePitchClassData = searchParams.get("includePitchClassData") === "true"; // Default false
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIncompatible", "includePitchClassData"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIncompatible, includePitchClassData } = booleanFlags.values;
     const setIdParam = searchParams.get("setId");
     const maqamIdParam = searchParams.get("maqamId");
 
@@ -235,7 +238,7 @@ export async function GET(request: Request) {
       const compatibleMaqamatFormatted = set.compatibleMaqamat.map((info) => {
         const transpositionNamespace = buildIdentifierNamespace(
           {
-            idName: standardizeText(info.maqam.name),
+            idName: entityToken(info.maqam),
             displayName: info.maqam.name
           },
           {
@@ -271,9 +274,10 @@ export async function GET(request: Request) {
           maqamDisplayName: transpositionNamespace.displayName,
           baseMaqamIdName: baseMaqamIdName, // Used for filtering, removed before response
           isTransposed: info.maqam.transposition,
-          // Not the inverse of isTransposed: an octave-register sibling of the
+          // Not the inverse of isTransposed: an octave rendering of the
           // base form is not a taswir, so both are false for it.
           isBaseForm: info.maqam.isBaseForm,
+          formType: formTypeOf(info.maqam),
           tonic: tonicNamespace ? {
             ipnReferenceNoteName: tonicIpnRef,
             noteNameIdName: tonicNamespace.idName,
@@ -282,24 +286,11 @@ export async function GET(request: Request) {
         };
       });
 
-      // Deduplicate compatible maqamat before counting
-      // Use base maqam ID + tonic IPN as key to remove octave equivalents
-      // (e.g., maqam rast on rast and maqam rast on muhayyar rast are octave equivalents)
-      const seenMaqamatByTonic = new Set<string>();
-      const deduplicatedMaqamat = compatibleMaqamatFormatted
-        .filter((maqam) => {
-          const tonicIpn = maqam.tonic?.ipnReferenceNoteName || 'Unknown';
-          const key = `${maqam.baseMaqamIdName}:${tonicIpn}`;
-          if (seenMaqamatByTonic.has(key)) {
-            return false; // Duplicate (octave equivalent), filter it out
-          }
-          seenMaqamatByTonic.add(key);
-          return true; // Keep this entry
-        });
-
-      // Sort compatible maqamat: tahlil (non-transposed) versions first, then by base maqam name
-      const sortedMaqamat = deduplicatedMaqamat.sort((a, b) => {
-        // PRIORITY 1: Tahlil (non-transposed) versions come first
+      // Every member is listed, octave equivalents included: maqām bayyāt on
+      // yegāh and on nawā are two transpositions of the set, not one.
+      // Sort compatible maqamat: base-form versions first, then by base maqam name
+      const sortedMaqamat = compatibleMaqamatFormatted.sort((a, b) => {
+        // PRIORITY 1: Base-form versions come first
         if (a.isTransposed !== b.isTransposed) {
           return a.isTransposed ? 1 : -1; // Non-transposed (false) comes before transposed (true)
         }
@@ -308,11 +299,9 @@ export async function GET(request: Request) {
         return a.maqamDisplayName.localeCompare(b.maqamDisplayName);
       });
 
-      const setNameStandardized = standardizeText(set.name);
-
       // Build response object with conditional pitch class data
       const responseObj: any = {
-        setIdName: setNameStandardized,
+        setIdName: set.id,
         setDisplayName: set.name,
         compatibleMaqamatCount: sortedMaqamat.length,
         sourceMaqam: sourceMaqamNamespace,
@@ -330,35 +319,30 @@ export async function GET(request: Request) {
       return responseObj;
     });
 
-    // Filter out sets with only 1 maqam (source only, no compatible maqamat)
-    // A valid set must have at least 2 maqamat (source + at least one compatible)
-    const validSets = formattedSets.filter(set => set.compatibleMaqamatCount >= 2);
+    // Filter out sets with only 1 maqam (source only, no compatible maqamat).
+    // A valid set must have at least 2 maqamat (source + at least one compatible);
+    // one maqām on one tonic key in several octaves counts once here.
+    const validSets = formattedSets.filter(set =>
+      new Set(set.compatibleMaqamat.map((maqam: any) => `${maqam.baseMaqamIdName}:${maqam.tonic?.ipnReferenceNoteName}`)).size >= 2
+    );
 
     // Filter sets based on query parameters
     let filteredSets = validSets;
 
     if (setIdParam) {
-      // Filter by specific set ID
-      const setIdStandardized = standardizeText(setIdParam);
+      // Filter by specific set ID. A set is named after one of its members (see
+      // chooseSetNamesake), so the older closed-up spelling of that member is accepted too.
+      const extractedMaqamId = standardizeText(setIdParam).replace(/_set$/, '');
+      const extractedMaqamIdStandardized = canonicalEntityIdName(extractedMaqamId, maqamat.map((m) => m.getIdName()));
+      const setIdStandardized = `${extractedMaqamIdStandardized}_set`;
       filteredSets = validSets.filter(set =>
         set.setIdName === setIdStandardized
       );
 
       if (filteredSets.length === 0) {
-        // Try to extract maqam ID from the set ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
-        const extractedMaqamId = setIdParam.replace(/_set$/, '');
-        const extractedMaqamIdStandardized = standardizeText(extractedMaqamId);
-
-        // Check if this maqam exists in any other sets
+        // Try the set ID as a maqām ID (e.g., "maqam_kurd_set" -> "maqam_kurd")
         const setsContainingMaqam = validSets.filter(set =>
-          set.compatibleMaqamat.some((maqam: any) => {
-            const baseMatch = maqam.baseMaqamIdName === extractedMaqamIdStandardized ||
-                             maqam.baseMaqamIdName === extractedMaqamId;
-            const transpositionMatch = maqam.maqamIdName === extractedMaqamIdStandardized ||
-                                      maqam.maqamIdName === extractedMaqamId ||
-                                      maqam.maqamIdName.startsWith(extractedMaqamIdStandardized + "_");
-            return baseMatch || transpositionMatch;
-          })
+          set.compatibleMaqamat.some((maqam: any) => matchesMaqamId(maqam.baseMaqamIdName, maqam.maqamIdName, extractedMaqamIdStandardized))
         );
 
         if (setsContainingMaqam.length > 0) {
@@ -368,19 +352,14 @@ export async function GET(request: Request) {
             setDisplayName: set.setDisplayName,
             sourceMaqam: set.sourceMaqam.displayName,
             maqamPositionInSet: (() => {
-              const maqamEntry = set.compatibleMaqamat.find((m: any) => {
-                const baseMatch = m.baseMaqamIdName === extractedMaqamIdStandardized ||
-                                 m.baseMaqamIdName === extractedMaqamId;
-                const transpositionMatch = m.maqamIdName === extractedMaqamIdStandardized ||
-                                          m.maqamIdName === extractedMaqamId;
-                return baseMatch || transpositionMatch;
-              });
+              const maqamEntry = set.compatibleMaqamat.find((m: any) => matchesMaqamId(m.baseMaqamIdName, m.maqamIdName, extractedMaqamIdStandardized));
               return maqamEntry ? {
                 maqamDisplayName: maqamEntry.maqamDisplayName,
                 tonicIpn: maqamEntry.tonic?.ipnReferenceNoteName,
                 tonicNoteName: maqamEntry.tonic?.noteNameDisplayName,
                 isTransposed: maqamEntry.isTransposed,
-                isBaseForm: maqamEntry.isBaseForm
+                isBaseForm: maqamEntry.isBaseForm,
+                formType: maqamEntry.formType
               } : null;
             })()
           }));
@@ -418,17 +397,13 @@ export async function GET(request: Request) {
       }
     } else if (maqamIdParam) {
       // Filter by maqam ID - find sets containing this maqam
-      const maqamIdStandardized = standardizeText(maqamIdParam);
+      // The maqām (numeric id or idName) or one transposition idName
+      const maqamData = maqamat.find(
+        (m) => m.getId() === maqamIdParam || m.getIdName() === standardizeText(maqamIdParam)
+      );
+      const maqamIdStandardized = maqamData ? maqamData.getIdName() : canonicalEntityIdName(maqamIdParam, maqamat.map((m) => m.getIdName()));
       filteredSets = validSets.filter(set =>
-        set.compatibleMaqamat.some((maqam: any) => {
-          // Match by base maqam ID name (for base maqam) or transposition ID name (for transpositions)
-          const baseMatch = maqam.baseMaqamIdName === maqamIdStandardized ||
-                           maqam.baseMaqamIdName === maqamIdParam;
-          const transpositionMatch = maqam.maqamIdName === maqamIdStandardized ||
-                                    maqam.maqamIdName === maqamIdParam ||
-                                    maqam.maqamIdName.startsWith(maqamIdStandardized + "_");
-          return baseMatch || transpositionMatch;
-        })
+        set.compatibleMaqamat.some((maqam: any) => matchesMaqamId(maqam.baseMaqamIdName, maqam.maqamIdName, maqamIdStandardized))
       );
 
       if (filteredSets.length === 0) {
@@ -503,7 +478,7 @@ export async function GET(request: Request) {
         const transpositionNamespace = incompatible.transposition
           ? buildIdentifierNamespace(
               {
-                idName: standardizeText(incompatible.transposition.name),
+                idName: entityToken(incompatible.transposition),
                 displayName: incompatible.transposition.name
               },
               {
@@ -518,7 +493,8 @@ export async function GET(request: Request) {
             ? {
                 ...transpositionNamespace,
                 isTransposed: incompatible.transposition.transposition,
-                isBaseForm: incompatible.transposition.isBaseForm
+                isBaseForm: incompatible.transposition.isBaseForm,
+              formType: formTypeOf(incompatible.transposition)
               }
             : null,
           reason: incompatible.reason

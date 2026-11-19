@@ -236,6 +236,50 @@ export function getNoteNameIndexAndOctave(noteName: NoteName): Cell {
 }
 
 /**
+ * Position of the note each nīm and tīk position varies, by index within an
+ * octave. In the PAO note naming nīm X is X lowered and tīk X is X raised;
+ * every octave array shares one 37-position layout, so the parents are read
+ * once from octave one's names. 37 means position 0 of the next octave
+ * (nīm nawā → nawā).
+ */
+const PARENT_POSITION: Map<number, number> = (() => {
+  const plain = (name: string) =>
+    name.normalize("NFD").replace(/[̀-ͯʿʾ]/g, "").replace(/^(qarar )+/, "");
+  const variant = (name: string) => plain(name).match(/^(nim|tik) (.+)$/);
+  const parents = new Map<number, number>();
+  octaveOneNoteNames.forEach((name, index) => {
+    const match = variant(name);
+    if (!match) return;
+    const target = match[2].split("/")[0].trim();
+    const position = octaveOneNoteNames.findIndex(
+      (candidate) => !variant(candidate) && plain(candidate).split("/").map((part) => part.trim()).includes(target)
+    );
+    if (position !== -1) parents.set(index, position);
+    else if (plain(octaveTwoNoteNames[0]) === target) parents.set(index, octaveOneNoteNames.length);
+    else throw new Error(`No parent note name found for "${name}"`);
+  });
+  return parents;
+})();
+
+/**
+ * The note a nīm or tīk note varies: tīk kawasht → kawasht, nīm zīrgūleh →
+ * zīrgūleh, jawāb tīk zīrgūleh → shahnāz, nīm nawā → nawā.
+ *
+ * @param noteName - The note name to analyze
+ * @returns The parent note name, or null for a note that is not a nīm or tīk note
+ */
+export function getParentNoteName(noteName: NoteName): NoteName | null {
+  const { octave, index } = getNoteNameIndexAndOctave(noteName);
+  const position = PARENT_POSITION.get(index);
+  if (octave === -1 || position === undefined) return null;
+  if (position === octaveOneNoteNames.length) {
+    const parent = getNoteNameFromIndexAndOctave({ octave: octave + 1, index: 0 });
+    return parent === "none" ? null : parent;
+  }
+  return getNoteNameFromIndexAndOctave({ octave, index: position });
+}
+
+/**
  * Gets the note name from octave and index coordinates.
  * 
  * @param cell - Cell object containing octave and index

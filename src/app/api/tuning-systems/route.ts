@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getTuningSystems } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import { standardizeText } from "@/functions/export";
@@ -23,7 +24,9 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const includeSources = searchParams.get("includeSources") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeSources"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeSources } = booleanFlags.values;
     
     // Parse includeArabic parameter
     let inArabic = false;

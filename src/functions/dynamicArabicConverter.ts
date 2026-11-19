@@ -8,9 +8,11 @@
  * - Persian and Turkish letters commonly used in maqam terminology
  * - Special characters and combinations unique to musical terms
  */
+import { parseBooleanFlag } from "@/functions/parseBooleanFlag";
 
 const LOC_TRANSLITERATION_MAP: Record<string, string> = {
   // Hamza patterns (must come first - longest patterns first)
+  āʾi: "ائ", // hamza on a yāʾ seat after long alif (zāʾid → زائد)
   āʾ: "اء", // hamza after long alif
   ʾā: "آ", // alif with madda
   ʾa: "أ", // hamza above alif (only actual hamza character)
@@ -218,22 +220,45 @@ function convertNoteNameToArabic(name: string): string {
   return transliterateToArabic(name);
 }
 
+const arabicNameCache = new Map<string, string>();
+
+/** Latin letters, with or without diacritics, and the ʿayn and hamza marks. */
+const LATIN_LETTERS = /[A-Za-zÀ-ɏḀ-ỿʿʾ]/;
+
 /**
  * Generic dynamic Arabic converter that detects type and applies appropriate conversion
  */
 export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqam"): string {
   if (!name || typeof name !== "string") return name;
 
+  // The conversion depends on nothing but (type, name), and a bulk response
+  // asks for the same few hundred names tens of thousands of times — every
+  // modulation target of every maqām form. Converting each once took
+  // /maqamat/all?forms=all&includeArabic=true from about 9 s to 3 s.
+  const key = `${type}\u0000${name}`;
+  const cached = arabicNameCache.get(key);
+  if (cached !== undefined) return cached;
+
+  let arabic: string;
   switch (type) {
     case "note":
-      return convertNoteNameToArabic(name);
+      arabic = convertNoteNameToArabic(name);
+      break;
     case "jins":
-      return convertMaqamNameToArabic(name);
     case "maqam":
-      return convertMaqamNameToArabic(name);
+      arabic = convertMaqamNameToArabic(name);
+      break;
     default:
-      return transliterateToArabic(name);
+      arabic = transliterateToArabic(name);
   }
+  // A letter the map does not cover passes through unconverted, so the name
+  // would come back half Latin ("مقام نaiروز"). Refuse it rather than return it.
+  const leftover = arabic.match(LATIN_LETTERS);
+  if (leftover) {
+    throw new Error(`Cannot write the ${type} name "${name}" in Arabic: "${leftover[0]}" has no Arabic letter (got "${arabic}")`);
+  }
+  arabicNameCache.set(key, arabic);
+  return arabic;
 }
 
 /**
@@ -241,18 +266,7 @@ export function getDynamicArabicName(name: string, type: "note" | "jins" | "maqa
  * Allows optional custom parameter name for future reuse.
  */
 export function parseInArabicFlag(value: string | null, fieldName: string = "includeArabic"): boolean {
-  if (value === null) return false; // Default to false
-
-  const trimmed = value.trim();
-  if (trimmed === "") {
-    throw new Error(`Invalid parameter: ${fieldName} cannot be empty. Use 'true' or 'false'.`);
-  }
-
-  const normalized = trimmed.toLowerCase();
-  if (normalized === "true") return true;
-  if (normalized === "false") return false;
-
-  throw new Error(`Invalid parameter: ${fieldName} must be 'true' or 'false', got '${value}'`);
+  return parseBooleanFlag(value, fieldName);
 }
 
 /**

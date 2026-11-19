@@ -95,9 +95,6 @@ export interface PitchClassInterval {
   /** Fret division difference */
   fretDivision: number;
 
-  /** Pitch class index difference considering octaves */
-  pitchClassIndex: number;
-
   /** String representation of the interval in its original format */
   originalValue: string;
   
@@ -135,7 +132,6 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
   const decimalRatio = convertFractionToDecimal(fraction);
   const stringLength = parseFloat(secondPitchClass.stringLength) - parseFloat(firstPitchClass.stringLength);
   const fretDivision = parseFloat(secondPitchClass.fretDivision) - parseFloat(firstPitchClass.fretDivision);
-  const pitchClassIndex = secondPitchClass.pitchClassIndex * secondPitchClass.octave - firstPitchClass.pitchClassIndex * firstPitchClass.octave;
 
   const originalValueType = secondPitchClass.originalValueType;
   let originalValue = "";
@@ -152,7 +148,6 @@ export function calculateInterval(firstPitchClass: PitchClass, secondPitchClass:
     decimalRatio,
     stringLength,
     fretDivision,
-    pitchClassIndex,
     originalValue,
     originalValueType,
   };

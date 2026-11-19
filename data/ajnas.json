@@ -42,8 +42,8 @@
   },
   {
     "id": "3",
-    "idName": "jins_segah",
-    "name": "jins segāh",
+    "idName": "jins_segah_alhilu",
+    "name": "jins segāh (al-Ḥilū)",
     "noteNames": [
       "segāh",
       "chahārgāh",
@@ -58,7 +58,7 @@
         "page": "82"
       }
     ],
-    "version": "2026-07-20T08:56:45.582Z"
+    "version": "2026-08-17T13:04:12.920Z"
   },
   {
     "id": "4",
@@ -309,6 +309,25 @@
       }
     ],
     "version": "2026-08-10T19:50:13.796Z"
+  },
+  {
+    "id": "16",
+    "idName": "jins_segah",
+    "name": "jins segāh",
+    "noteNames": [
+      "segāh",
+      "chahārgāh",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-17T13:04:40.060Z"
   },
   {
     "id": "17",

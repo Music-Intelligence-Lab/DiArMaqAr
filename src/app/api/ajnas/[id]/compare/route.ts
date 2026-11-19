@@ -1,11 +1,15 @@
+import { formTypeOf } from "@/functions/formType";
 import { NextResponse } from "next/server";
+import { mergePathTonic } from "@/app/api/path-tonic";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
 import { getAjnas, getTuningSystems } from "@/functions/import";
 import { resolveTuningSystemsParam } from "@/app/api/compare-helpers";
-import { entityToken, standardizeText } from "@/functions/export";
+import { entityToken, resolveEntityId, standardizeText } from "@/functions/export";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { calculateJinsTranspositions } from "@/functions/transpose";
+import { calculateJinsForms } from "@/functions/transpose";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { spellJinsPitchClasses } from "@/app/api/pitch-spellings";
 import { parseInArabic, getJinsNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import type TuningSystem from "@/models/TuningSystem";
@@ -125,8 +129,7 @@ function formatIntervalData(intervals: any[], format: string) {
         cents: interval.cents,
         decimalRatio: interval.decimalRatio,
         stringLength: interval.stringLength,
-        fretDivision: interval.fretDivision,
-        pitchClassIndex: interval.pitchClassIndex
+        fretDivision: interval.fretDivision
       }));
     case "cents":
       return intervals.map((interval) => ({
@@ -190,8 +193,7 @@ export async function GET(
     const tuningSystemsParam = searchParams.get("tuningSystems");
     const startingNotesParam = searchParams.get("startingNotes");
     const pitchClassDataType = searchParams.get("pitchClassDataType") || "all";
-    const intervalsParam = searchParams.get("includeIntervals");
-    const transposeToNote = searchParams.get("transposeTo");
+    let transposeToNote = searchParams.get("transposeTo");
 
     // Validate pitchClassDataType. Without this, an unrecognised value falls through to the
     // default branch and silently returns the bare note-name shape instead of erroring.
@@ -304,7 +306,7 @@ export async function GET(
           const tonicNoteName = t.jinsPitchClasses[0].noteName;
           const fullJinsName = t.name;
           return {
-            idName: standardizeText(fullJinsName),
+            idName: entityToken(t),
             displayName: fullJinsName,
             ...(inArabic && { displayNameAr: getJinsNameDisplayAr(fullJinsName) }),
             tonic: {
@@ -315,36 +317,9 @@ export async function GET(
           };
         });
 
-    // Validate intervals parameter (3-step validation: null -> empty string -> invalid value)
-    let includeIntervals = false; // Default to false
-    if (intervalsParam !== null) {
-      if (intervalsParam === "") {
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "Invalid parameter: includeIntervals",
-              message: "The 'includeIntervals' parameter cannot be empty. Use 'true' or 'false'.",
-              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
-            },
-            { status: 400 }
-          )
-        );
-      }
-      if (intervalsParam !== "true" && intervalsParam !== "false") {
-        return addCorsHeaders(
-          NextResponse.json(
-            {
-              error: "Invalid parameter: includeIntervals",
-              message: "The 'includeIntervals' parameter must be 'true' or 'false'.",
-              validOptions: ["true", "false"],
-              hint: "Use ?includeIntervals=true or ?includeIntervals=false"
-            },
-            { status: 400 }
-          )
-        );
-      }
-      includeIntervals = intervalsParam === "true";
-    }
+    const booleanFlags = readBooleanFlags(searchParams, ["includeIntervals"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeIntervals } = booleanFlags.values;
 
     // Validate tuningSystems parameter
     if (!tuningSystemsParam) {
@@ -424,6 +399,30 @@ export async function GET(
       );
     }
 
+    const ajnasData = getAjnas();
+    const tuningSystems = getTuningSystems();
+    
+    // Find the jins
+    const resolvedId = resolveEntityId(jinsId, ajnasData);
+    const jins = resolvedId?.entity;
+
+    if (!jins) {
+      return addCorsHeaders(
+        NextResponse.json(
+          { 
+            error: `Jins '${jinsId}' not found`,
+            hint: "Use /api/ajnas to see all available ajnās"
+          },
+          { status: 404 }
+        )
+      );
+    }
+
+    // A transposed idName in the path names the tonic too (maqam_rast_al_nawa)
+    const pathTonic = mergePathTonic(jinsId, resolvedId?.tonicIdName, "transposeTo", transposeToNote);
+    if (pathTonic.error) return addCorsHeaders(pathTonic.error);
+    transposeToNote = pathTonic.tonic;
+
     // Build Cartesian product of tuningSystems × startingNotes in user-supplied order.
     // Outer loop = tuningSystems, inner loop = startingNotes, so the result list is:
     //   TS1×SN1, TS1×SN2, …, TS1×SNm, TS2×SN1, …, TSn×SNm
@@ -440,26 +439,6 @@ export async function GET(
           ...(transposeToNote && { transposeTo: transposeToNote }),
         });
       }
-    }
-
-    const ajnasData = getAjnas();
-    const tuningSystems = getTuningSystems();
-    
-    // Find the jins
-    const jins = ajnasData.find(
-      (j) => j.getId() === jinsId || standardizeText(j.getName()) === standardizeText(jinsId)
-    );
-
-    if (!jins) {
-      return addCorsHeaders(
-        NextResponse.json(
-          { 
-            error: `Jins '${jinsId}' not found`,
-            hint: "Use /api/ajnas to see all available ajnās"
-          },
-          { status: 404 }
-        )
-      );
     }
 
     // Process each comparison
@@ -541,15 +520,15 @@ export async function GET(
       }
 
       // Calculate transpositions
-      const transpositions = calculateJinsTranspositions(pitchClasses, jins, true, centsTolerance);
+      const transpositions = calculateJinsForms(pitchClasses, jins, centsTolerance);
 
-      // The base form, i.e. the canonical-octave tahlil. `isBaseForm` is set on
+      // The base form, i.e. the form in the canonical octave. `isBaseForm` is set on
       // exactly the entry whose tonic is the canonical note name, so it already
-      // excludes octave-register siblings such as `qarār dūgāh` beside `dūgāh`.
-      const canonicalTahlil = transpositions.find((t) => t.isBaseForm);
+      // excludes octave renderings such as `qarār dūgāh` beside `dūgāh`.
+      const canonicalBaseForm = transpositions.find((t) => t.isBaseForm);
 
       // Find specific transposition if requested
-      let selectedTransposition = canonicalTahlil ?? transpositions[0];
+      let selectedTransposition = canonicalBaseForm ?? transpositions[0];
       if (cellTransposeTo) {
         const found = transpositions.find(
           (t) => standardizeText(t.jinsPitchClasses[0].noteName) === standardizeText(cellTransposeTo)
@@ -582,17 +561,17 @@ export async function GET(
       const comparisonJinsNamespace = buildEntityNamespace(
         {
           id: jins.getId(),
-          idName: isTransposed ? entityToken(selectedTransposition) : jins.getIdName(),
-          displayName: isTransposed ? selectedTransposition.name : jins.getName(),
+          idName: entityToken(selectedTransposition),
+          displayName: selectedTransposition.name,
         },
         {
           version: jins.getVersion(),
-          // Distinct from isTransposed: an octave-register sibling of the base
+          // Distinct from isTransposed: an octave rendering of the base
           // form is not a taswir, so both are false for it.
-          extras: { isBaseForm: selectedTransposition.isBaseForm },
+          extras: { isBaseForm: selectedTransposition.isBaseForm, formType: formTypeOf(selectedTransposition) },
           inArabic,
           displayNameAr: inArabic
-            ? getJinsNameDisplayAr(isTransposed ? selectedTransposition.name : jins.getName())
+            ? getJinsNameDisplayAr(selectedTransposition.name)
             : undefined,
         }
       );
@@ -640,7 +619,9 @@ export async function GET(
           },
         },
         availableTranspositions: buildAvailableJinsTranspositions(transpositions),
-        pitchData: formatPitchData(selectedTransposition.jinsPitchClasses, pitchClassDataType, inArabic),
+        // Maqām-context spellings — the same as the jins degrees of
+        // GET /api/tuning-systems/{id}/{startingNote}/ajnas.
+        pitchData: formatPitchData(spellJinsPitchClasses(selectedTransposition.jinsPitchClasses), pitchClassDataType, inArabic),
         parameters: {
           pitchClassDataType,
           includeIntervals,

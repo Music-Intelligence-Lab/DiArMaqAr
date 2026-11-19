@@ -15,11 +15,12 @@ import NoteName, {
 } from "@/models/NoteName";
 import PitchClass from "@/models/PitchClass";
 import { updateMaqamat } from "@/functions/update";
-import { transposeSayr } from "@/functions/transpose";
+import { assertSayrStops } from "@/functions/playableSuyur";
+import useTranspositionsContext from "@/contexts/transpositions-context";
 import JinsData from "@/models/Jins";
 import Link from "next/link";
 import CommentText from "./comment-text";
-import { calculateJinsTranspositions, calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateJinsForms, calculateMaqamForms } from "@/functions/transpose";
 import shiftPitchClassByOctave from "@/functions/shiftPitchClassByOctave";
 import { stringifySource, sourceSortKey } from "@/models/bibliography/Source";
 import { compareNormalized } from "@/functions/normalizeForSort";
@@ -73,6 +74,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     centsTolerance
   } = useAppContext();
   const { playSequence, noteOn, noteOff } = useSoundContext();
+  const { playableSuyur } = useTranspositionsContext();
 
   const [creatorEnglish, setCreatorEnglish] = useState("");
   const [creatorArabic, setCreatorArabic] = useState("");
@@ -81,7 +83,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   const [commentsEnglish, setCommentsEnglish] = useState("");
   const [commentsArabic, setCommentsArabic] = useState("");
   const [stops, setStops] = useState<SayrStop[]>([]);
-  const [hasTranspositionIssues, setHasTranspositionIssues] = useState(false);
   
   // Track the last manually selected sayr ID to avoid re-running effect on context changes
   const resetForm = () => {
@@ -92,28 +93,16 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     setCommentsEnglish("");
     setCommentsArabic("");
     setStops([]);
-    setHasTranspositionIssues(false);
   };
 
   // Load sayr data when manually selected (not when context changes)
   const loadSayrData = () => {
     if (selectedMaqamData && maqamSayrId) {
-      let sel: Sayr | undefined = selectedMaqamData.getSuyur().find((s) => s.id === maqamSayrId);
+      // The admin edits the sayr as stored. The reader sees it only when it can
+      // be played on the form shown, already moved onto that form.
+      const sel: Sayr | undefined = (admin ? selectedMaqamData.getSuyur() : playableSuyur).find((s) => s.id === maqamSayrId);
 
       if (sel) {
-        if (!admin && selectedMaqam && allPitchClasses) {
-          try {
-            const transpositionResult = transposeSayr(sel, allPitchClasses, selectedMaqamData, selectedMaqam);
-            sel = transpositionResult.transposedSayr;
-            setHasTranspositionIssues(transpositionResult.hasOutOfBoundsNotes);
-          } catch (error) {
-            console.warn("Failed to transpose sayr:", error);
-            setHasTranspositionIssues(true);
-          }
-        } else {
-          setHasTranspositionIssues(false);
-        }
-        
         setCreatorEnglish(sel.creatorEnglish ?? "");
         setCreatorArabic(sel.creatorArabic ?? "");
         setSourceId(sel.sourceId ?? "");
@@ -130,7 +119,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
   useEffect(() => {
     // Only run if this is a manual sayr ID change, not a context change
       loadSayrData();
-  }, [maqamSayrId, selectedMaqamData, selectedMaqam]);
+  }, [maqamSayrId, selectedMaqamData, selectedMaqam, playableSuyur]);
 
   // Initial load
   useEffect(() => {
@@ -145,7 +134,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const jinsTranspositions = calculateJinsTranspositions(allPitchClasses, jinsData, true, centsTolerance);
+      const jinsTranspositions = calculateJinsForms(allPitchClasses, jinsData, centsTolerance);
       const targetTransposition = jinsTranspositions.find(jins => jins.jinsPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -153,7 +142,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the jins
+    // Fallback to default behavior (base form) - get all notes of the jins
     if (pitchClasses.length === 0) {
       const jinsNoteNames = jinsData.getNoteNames();
       for (const pitchClass of allPitchClasses) {
@@ -178,7 +167,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
     
     if (startingNote) {
       // Find the transposition that starts with the specified note
-      const maqamTranspositions = calculateMaqamTranspositions(allPitchClasses, ajnas, maqamData, true, centsTolerance);
+      const maqamTranspositions = calculateMaqamForms(allPitchClasses, ajnas, maqamData, centsTolerance);
       const targetTransposition = maqamTranspositions.find(m => m.ascendingPitchClasses[0].noteName === startingNote);
       
       if (targetTransposition) {
@@ -186,7 +175,7 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       }
     }
     
-    // Fallback to default behavior (tahlil) - get all notes of the maqam
+    // Fallback to default behavior (base form) - get all notes of the maqam
     if (pitchClasses.length === 0) {
       const maqamNoteNames = maqamData.getAscendingNoteNames();
       for (const pitchClass of allPitchClasses) {
@@ -383,6 +372,9 @@ export default function SayrManager({ admin }: { admin: boolean }) {
       stops,
       version: new Date().toISOString(), // Always update sayr version on save
     };
+    // A stop with no note, or naming no jins or maqām, is a data error: refuse
+    // to save it rather than store a sayr no reader view can judge
+    assertSayrStops(selectedMaqamData, newSayr, ajnas, maqamat);
 
     // Update suyur list: if exists replace it, otherwise add it
     const updated = existingSuyur.some((s) => s.id === idUse)
@@ -443,10 +435,11 @@ export default function SayrManager({ admin }: { admin: boolean }) {
 
       {!admin && (
         <div className="sayr-manager__list">
-          {existingSuyur.length === 0 ? (
+          {/* Only the suyūr playable on the form shown (see playableSuyur) */}
+          {playableSuyur.length === 0 ? (
             <p className="sayr-manager__empty">{t("sayr.noSuyurAvailable")}</p>
           ) : (
-            existingSuyur.map((sayr, index) => {
+            playableSuyur.map((sayr, index) => {
               const source = sources.find((s) => s.getId() === sayr.sourceId);
               const isSelected = sayr.id === maqamSayrId;
               // One source-string builder app-wide; the old hand-rolled
@@ -522,15 +515,6 @@ export default function SayrManager({ admin }: { admin: boolean }) {
         )}
 
         <div className="sayr-manager__stops-section">
-          {!admin && hasTranspositionIssues && (
-            // role=status so the warning is announced as one message; the
-            // glyph is decorative, and announcing it would prepend a second
-            // "warning" to the sentence that already says so.
-            <div className="sayr-manager__transposition-warning" role="status">
-              <span aria-hidden="true">⚠️</span> {t('sayr.transpositionWarning')}
-            </div>
-          )}
-          
           {admin && (
             <h3 className="sayr-manager__stops-header">
               {t("sayr.stops")}{" "}

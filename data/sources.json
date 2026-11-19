@@ -555,5 +555,34 @@
     "pageRangeEnglish": "27-48",
     "pageRangeArabic": "",
     "DOI": "https://doi.org/10.2307/841911"
+  },
+  {
+    "id": "alrejab_2002_unknown",
+    "titleEnglish": "Min Turāth al-Mūsiqāh wal-Ghinā' al-ʿIrāqi ",
+    "titleArabic": "من تراث الموسيقى والغناء العراقي",
+    "sourceType": "Book",
+    "contributors": [
+      {
+        "type": "Author",
+        "firstNameEnglish": "al-Ḥaj Hāshem Muḥammad",
+        "lastNameEnglish": "al-Rejab",
+        "firstNameArabic": "الحاج هاشم محمد",
+        "lastNameArabic": "الرجب"
+      }
+    ],
+    "editionEnglish": "",
+    "editionArabic": "",
+    "publicationDateEnglish": "2002",
+    "publicationDateArabic": "",
+    "url": "",
+    "dateAccessed": "",
+    "version": "2026-08-18T15:41:59.782Z",
+    "originalPublicationDateEnglish": "",
+    "originalPublicationDateArabic": "",
+    "publisherEnglish": "Dār al-Sh'ūn al-Thaqafīya al-ʿĀmma",
+    "publisherArabic": "دار الشؤن الثقافية العامّة",
+    "placeEnglish": "Baghdad",
+    "placeArabic": "بغداد",
+    "ISBN": ""
   }
 ]

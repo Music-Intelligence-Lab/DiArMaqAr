@@ -73,7 +73,7 @@ Currently, there are no rate limits. Please use the API responsibly.
 
 Most endpoints support these optional parameters:
 
-- **\`includeArabic\`** (default: \`"true"\`): Include Arabic script alongside transliteration
+- **\`includeArabic\`** (default: \`"false"\`): Include Arabic script alongside transliteration
   - \`"true"\`: Bilingual responses with \`*Ar\` suffixed fields (\`displayNameAr\`, \`noteNameDisplayAr\`, etc.)
   - \`"false"\`: English transliteration only
 
@@ -103,7 +103,7 @@ Most endpoints support these optional parameters:
   }
 
   // Generate documentation for each tag
-  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Modulations', 'Pitch Classes', 'Intervals', 'Sources'];
+  const tagOrder = ['Maqāmāt', 'Ajnās', 'Tuning Systems', 'Modulations', 'Pitch Classes', 'Intervals', 'Sources', 'Statistics'];
   
   for (const tag of tagOrder) {
     if (!pathsByTag[tag]) continue;

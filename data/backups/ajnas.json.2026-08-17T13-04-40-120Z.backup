@@ -1,5 +1,26 @@
 [
   {
+    "id": "1",
+    "idName": "jins_nikriz_alsabbagh",
+    "name": "jins nikrīz (al-Ṣabbāgh)",
+    "noteNames": [
+      "rāst",
+      "dūgāh",
+      "kurdī",
+      "tīk ḥijāz/ṣabā",
+      "nawā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "29"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
+  },
+  {
     "id": "2",
     "idName": "jins_bayyat",
     "name": "jins bayyāt",
@@ -13,7 +34,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -21,8 +42,8 @@
   },
   {
     "id": "3",
-    "idName": "jins_segah",
-    "name": "jins segāh",
+    "idName": "jins_segah_alhilu",
+    "name": "jins segāh (al-Ḥilū)",
     "noteNames": [
       "segāh",
       "chahārgāh",
@@ -33,11 +54,11 @@
     "commentsArabic": "كثيراً ما يورد هذا الجنس كجنس ثلاثي (سيكاه، جهاركاه، نوا).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T08:56:45.582Z"
+    "version": "2026-08-17T13:04:12.920Z"
   },
   {
     "id": "4",
@@ -61,7 +82,7 @@
         "page": "23"
       },
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -81,7 +102,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -101,7 +122,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -121,11 +142,31 @@
     "commentsArabic": "في جدوله للاجناس المشهورة يطبع الحلو تحت هذا الجنس سطر «ومثله جنس العجم كرد» بدرجات مطابقة تماماً: دوكاه، كرد، جهاركاه، نوا، مثبتاً العجم كرد اسماً آخر يحمل الجنس نفسه (1961، ص82).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
     "version": "2026-07-26T13:39:15.732Z"
+  },
+  {
+    "id": "8",
+    "idName": "jins_saba_alsabbagh",
+    "name": "jins ṣabā (al-Ṣabbāgh)",
+    "noteNames": [
+      "dūgāh",
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "37"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
   },
   {
     "id": "9",
@@ -139,8 +180,33 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "50"
+      }
+    ],
+    "version": "2026-08-04T18:17:46.026Z"
+  },
+  {
+    "id": "10",
+    "idName": "jins_chahargah_alsabbagh",
+    "name": "jins chahārgāh (al-Ṣabbāgh)",
+    "noteNames": [
+      "chahārgāh",
+      "nawā",
+      "ḥusaynī",
+      "nīm ʿajam"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "42"
+      }
+    ],
+    "version": "2026-08-11T18:50:52.009Z"
   },
   {
     "id": "11",
@@ -155,8 +221,13 @@
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2026-07-20T13:01:34.466Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "85"
+      }
+    ],
+    "version": "2026-08-04T18:18:40.474Z"
   },
   {
     "id": "12",
@@ -172,7 +243,7 @@
     "commentsArabic": "جنس الحجاز ومقام الحجاز، هو من أكثر المقامات انتشاراً واستخداماً في المنطقة الناطقة بالعربية. وهو أيضاً جنس ومقام له اختلافات كثيرة في الأداء النغمي، حتى ولو نظرياته مثبتة على أنه مبني من النغمات: دوكاه، كردي، حجاز، نوى. لهذا السبب نظيف نسخ متعددة منه ليُسمع ويُقارن مع التغيرات النغمية ضمن نظام تنغيم واحد أو عبر أنظمة تنغيم متعددة.\n\nفي جدوله للاجناس المشهورة يدرج الحلو ( الشاهناز ) ضمن فصيلة الحجاز بدرجات مطابقة تماماً: دوكاه، كرد، حجاز، نوا، مثبتاً الشاهناز اسماً آخر يحمل الجنس نفسه (1961، ص82).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -192,7 +263,7 @@
     "commentsArabic": "يعطي الحلو الأصوات نفسها ضمن الاجناس التي يدوّنها لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العراق: ظميان . خاشع . منا . عواطف . مراحل. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "84"
       }
     ],
@@ -200,18 +271,44 @@
   },
   {
     "id": "14",
-    "idName": "jins_segah_baladi",
-    "name": "jins segāh baladī",
+    "idName": "jins_nahawand_alsabbagh",
+    "name": "jins nahāwand (al-Ṣabbāgh)",
     "noteNames": [
-      "nawā",
-      "tīk ḥiṣār",
-      "awj",
-      "kurdān"
+      "rāst",
+      "dūgāh",
+      "nīm kurdī/nahāwand",
+      "chahārgāh"
     ],
     "commentsEnglish": "",
     "commentsArabic": "",
-    "sourcePageReferences": [],
-    "version": "2025-10-18T19:34:26.343Z"
+    "sourcePageReferences": [
+      {
+        "sourceId": "alsabbagh_1954",
+        "page": "28"
+      }
+    ],
+    "version": "2026-08-11T18:46:09.054Z"
+  },
+  {
+    "id": "15",
+    "idName": "jins_mkhalef",
+    "name": "jins mkhālef",
+    "noteNames": [
+      "segāh",
+      "chahārgāh",
+      "tīk ḥijāz/ṣabā",
+      "tīk ḥiṣār",
+      "ḥusaynī"
+    ],
+    "commentsEnglish": "",
+    "commentsArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "abbas_1986",
+        "page": "33"
+      }
+    ],
+    "version": "2026-08-10T19:50:13.796Z"
   },
   {
     "id": "17",
@@ -227,7 +324,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -247,7 +344,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -255,7 +352,7 @@
   },
   {
     "id": "21",
-    "idName": "jins_buselik_(al-shawwa)",
+    "idName": "jins_buselik_alshawwa",
     "name": "jins būselīk (al-Shawwā)",
     "noteNames": [
       "dūgāh",
@@ -275,7 +372,7 @@
   },
   {
     "id": "22",
-    "idName": "jins_buselik_(al-hilu)",
+    "idName": "jins_buselik_alhilu",
     "name": "jins būselīk (al-Ḥilū)",
     "noteNames": [
       "dūgāh",
@@ -287,7 +384,7 @@
     "commentsArabic": "يطبع الحلو هذا الجنس سطراً واحداً باسمين، بعنوان «ومثله جنس البوسليك وجنس العشاق»، فالكتاب يساوي بين الاسمين لبناء واحد، ويقرنه («ومثله») بجنس نهاوند الذي يشاركه مسافاته (1961، ص82).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82, 126"
       }
     ],
@@ -307,7 +404,7 @@
     "commentsArabic": "جنس حجاز مصوّر على درجة الراست.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -315,7 +412,7 @@
   },
   {
     "id": "24",
-    "idName": "jins_awj_ara_(al-shawwa)",
+    "idName": "jins_awj_ara_alshawwa",
     "name": "jins awj ʾārāʾ (al-Shawwā)",
     "noteNames": [
       "ʿirāq",
@@ -331,7 +428,7 @@
         "page": "38"
       },
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -351,7 +448,7 @@
     "commentsArabic": "كثيراً ما يورد هذا الجنس كجنس ثلاثي (عراق، راست، دوكاه).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -359,8 +456,8 @@
   },
   {
     "id": "31",
-    "idName": "jins_chahargah_(al-shawwa)",
-    "name": "jins chahārgāh (al-Shawwā)",
+    "idName": "jins_chahargah",
+    "name": "jins chahārgāh",
     "noteNames": [
       "chahārgāh",
       "nawā",
@@ -371,11 +468,11 @@
     "commentsArabic": "يعطي الحلو الأصوات نفسها باسم جنس الجهاركاه، ويقرنه بجنس العجم عشيران.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
-    "version": "2026-07-20T10:00:19.176Z"
+    "version": "2026-08-04T18:24:07.102Z"
   },
   {
     "id": "32",
@@ -391,7 +488,7 @@
     "commentsArabic": "يقرنه الحلو بجنس الراست، ولا يختلفان إلا في درجة الاستقرار وهي هنا اليكاه.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -411,7 +508,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       },
       {
@@ -435,7 +532,7 @@
     "commentsArabic": "يجمع الحلو هذا الجنس مع جنس نوا أثر. ودرجته الثانية تحتاج إلى تدقيق: يكتب الحلو بوسليك، والظاهر أن المقصود النيم بوسليك. وهو يطابق العقد الأدنى من سلّم مقام الحصار عند الشوّا.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       },
       {
@@ -459,7 +556,7 @@
     "commentsArabic": "يورده الحلو ضمن فصيلة الحجاز، وهو جنس حجاز على درجة العشيران.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -479,7 +576,7 @@
     "commentsArabic": "يقرنه الحلو بجنس السيكاه، ومستقره درجة العراق.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -499,7 +596,7 @@
     "commentsArabic": "",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -507,7 +604,7 @@
   },
   {
     "id": "38",
-    "idName": "jins_rahat_al-arwah",
+    "idName": "jins_rahat_alarwah",
     "name": "jins rāḥat al-arwāḥ",
     "noteNames": [
       "ʿirāq",
@@ -519,7 +616,7 @@
     "commentsArabic": "يقرنه الحلو بجنس الهزام، ومستقره درجة العراق.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -539,7 +636,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة اليكاه: قاف . دموع الكرمة . جلنار . شعار العشيران . شيرازيه. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -559,7 +656,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العشيران: بنت عبقر . سلطانة العشيران . وحي النُور. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -579,7 +676,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العجم عشيران: مهران . صبا العجم . اصول العجم . مرجانة العجم. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -599,7 +696,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. أورده وحده، ومستقره درجة العجم عشيران. ولا يعطي الحلو سوى هذا الجنس الأدنى، دون جنس أعلى، لذلك أُدخلت النغمة هنا جنساً لا مقاماً.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -619,7 +716,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. أورده وحده، ومستقره درجة العراق. ولا يعطي الحلو سوى هذا الجنس الأدنى، دون جنس أعلى، لذلك أُدخلت النغمة هنا جنساً لا مقاماً.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -639,7 +736,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العراق: بلبله . عتاب . محاسن . هلال العراق . كم وكم . مستهام . دراري . مشارف. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -647,7 +744,7 @@
   },
   {
     "id": "45",
-    "idName": "jins_mazij_al-tib",
+    "idName": "jins_mazij_altib",
     "name": "jins mazīj al-ṭīb",
     "noteNames": [
       "ʿirāq",
@@ -659,7 +756,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العراق: مزيج الطيب . منهل . مناه . عروس الجن . دهرية . دُرِّية. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "83"
       }
     ],
@@ -667,7 +764,7 @@
   },
   {
     "id": "47",
-    "idName": "jins_ashwaq_al-kharif",
+    "idName": "jins_ashwaq_alkharif",
     "name": "jins ashwāq al-kharīf",
     "noteNames": [
       "ʿirāq",
@@ -679,7 +776,7 @@
     "commentsArabic": "من الاجناس التي يدوّنها الحلو لنغمات لم تعد مستعملة في عصره. وهو الجنس الأدنى الذي تشترك فيه فصيلة من النغمات لا تختلف إلا في جنسها الأعلى، ومستقرها جميعاً درجة العراق: اشواق الخريف . هتاف الخريف . نسمات الخريف . شمس الخريف . بلابل الخريف . تهاني صفر . بنت الغاب . مطوقة . رشفتين . لهفتين . أسيري. وقد عنون الحلو الفصيلة باسم اوراق الخريف. ولا يعطي الحلو سوى هذا الجنس الأدنى المشترك، دون الاجناس العليا التي تميّز النغمات بعضها من بعض، لذلك أُدخلت هنا جنساً لا مقامات.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "84"
       }
     ],
@@ -699,7 +796,7 @@
     "commentsArabic": "يورده الحلو ضمن فصيلة الحجاز، وهو جنس حجاز على درجة اليكاه.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       }
     ],
@@ -707,7 +804,7 @@
   },
   {
     "id": "49",
-    "idName": "jins_awj_ara_(al-hilu)",
+    "idName": "jins_awj_ara_alhilu",
     "name": "jins awj ʾārāʾ (al-Ḥilū)",
     "noteNames": [
       "kawasht",
@@ -719,7 +816,7 @@
     "commentsArabic": "يورده الحلو ضمن فصيلة الحجاز، وهو جنس حجاز على درجة الكوشت. ويعطي الشوّا أصواتاً مغايرة بالاسم نفسه، انظر جنس أوج آرا (الشوّا).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "82"
       },
       {
@@ -744,7 +841,7 @@
     "commentsArabic": "ذو خمس عند الحلو، الذي يعمل هبوط مقام حسيني العشيران «بجنس نكريز ذي الخمس على درجة الراست» (1961، ص98). وهو ايضاً عقد مقام النكريز، جالساً على الراست وعلى الكردان (1961، ص111).",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "98, 111"
       }
     ],
@@ -764,7 +861,7 @@
     "commentsArabic": "من عقود مقام العراق عند الحلو: «راست على النوا ذو خمس واوج على الاوج» (1961، ص102). اصواته اصوات جنس العراق مرفوعة ديواناً: الاوج جواب العراق في سلّم الحلو، اذ اصوات الديوان الثاني «هي اجوبة الديوان الاول» (1961، ص69)، ومسافات هذا العقد المطبوعة (3/4، 1، 3/4) تطابق جنس العراق تماماً.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "69, 102"
       }
     ],
@@ -784,7 +881,7 @@
     "commentsArabic": "من عقود مقام الفرحناك عند الحلو: «مايه على العراق ذو اربع»، مسماة في قائمتي عقوده صعوداً وهبوطاً (1961، ص115) ولا ترد سواهما في باب المقامات عنده. اصواتها من سلّمه (3/4، 1، 1): كجنس العراق لكن بالبوسليك مكان السيكاه في الاعلى. وهي غير مقام المايه في هذه البيانات الجالس على السيكاه.",
     "sourcePageReferences": [
       {
-        "sourceId": "alhilu_1957_1961",
+        "sourceId": "alhilu_1961",
         "page": "115"
       }
     ],

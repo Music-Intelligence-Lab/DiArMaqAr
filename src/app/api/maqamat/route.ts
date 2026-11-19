@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { getMaqamat, getTuningSystems, getAjnas } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
+import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
 import path from "path";
 import fs from "fs";
-import { calculateMaqamTranspositions } from "@/functions/transpose";
+import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
 import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
@@ -56,7 +58,9 @@ export async function GET(request: Request) {
       }
       throw err;
     }
-    const includeSources = searchParams.get("includeSources") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeSources"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeSources } = booleanFlags.values;
 
     // Get cents tolerance parameter
     let centsTolerance = 5; // Default tolerance
@@ -136,19 +140,9 @@ export async function GET(request: Request) {
       const availabilityEntries: AvailabilityAccumulator[] = [];
 
       for (const tuningSystem of tuningSystems) {
-        const noteNameSets = tuningSystem.getNoteNameSets();
-        const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
-        const validTuningSystemStartingNoteNames: string[] = [];
-
-        for (let i = 0; i < shiftedNoteNameSets.length; i++) {
-          if (maqam.isMaqamPossible(shiftedNoteNameSets[i])) {
-            const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
-            if (tuningSystemStartingNoteName) {
-              validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
-            }
-          }
-        }
+        const validTuningSystemStartingNoteNames: string[] = getStartingNotePitchSpaces(tuningSystem)
+          .filter(({ noteNames }) => maqam.isMaqamPossible(noteNames))
+          .map(({ startingNote }) => startingNote);
 
         if (validTuningSystemStartingNoteNames.length > 0) {
           availableInTuningSystems++;
@@ -184,21 +178,20 @@ export async function GET(request: Request) {
             );
             
             // Calculate transpositions to get ajnas analysis
-            const transpositions = calculateMaqamTranspositions(
+            const transpositions = calculateMaqamForms(
               pitchClasses,
               ajnas,
               maqam,
-              true, // withTahlil
               centsTolerance
             );
             
-            // Get the tahlil (base form). Not `!t.transposition` — that is also
-            // false for the tahlil's octave-register siblings.
-            const tahlil = transpositions.find(t => t.isBaseForm);
+            // Get the base form. Not `!t.transposition` — that is also
+            // false for the base form's octave renderings.
+            const baseForm = transpositions.find(t => t.isBaseForm);
             
-            if (tahlil) {
+            if (baseForm) {
               // Use proper classification function
-              const classification = classifyMaqamFamily(tahlil);
+              const classification = classifyMaqamFamily(baseForm);
               familyDisplay = classification.familyName;
               familyId = standardizeText(familyDisplay);
             }
@@ -231,7 +224,7 @@ export async function GET(request: Request) {
       const isOctaveRepeating = numberOfPitchClasses <= 7;
 
       // Generate idName (standardized URL-safe version - always transliterated)
-      const idName = standardizeText(maqam.getName());
+      const idName = maqam.getIdName();
       
       // Display name (always transliterated)
       const displayName = maqam.getName();

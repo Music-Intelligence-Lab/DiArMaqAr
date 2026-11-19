@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAjnas, getTuningSystems } from "@/functions/import";
+import { readBooleanFlags } from "@/app/api/boolean-flags";
+import { getStartingNotePitchSpaces } from "@/functions/pitchSpaceNoteNames";
 import { standardizeText } from "@/functions/export";
 import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { safeWriteFile } from "@/app/api/backup-utils";
@@ -55,7 +57,9 @@ export async function GET(request: Request) {
       }
       throw err;
     }
-    const includeSources = searchParams.get("includeSources") === "true";
+    const booleanFlags = readBooleanFlags(searchParams, ["includeSources"]);
+    if ("error" in booleanFlags) return addCorsHeaders(booleanFlags.error);
+    const { includeSources } = booleanFlags.values;
     
     // Parse includeArabic parameter
     let inArabic = false;
@@ -101,19 +105,9 @@ export async function GET(request: Request) {
       const availabilityEntries: AvailabilityAccumulator[] = [];
 
       for (const tuningSystem of tuningSystems) {
-        const noteNameSets = tuningSystem.getNoteNameSets();
-        const shiftedNoteNameSets = tuningSystem.getNoteNameSetsWithAdjacentOctaves();
-
-        const validTuningSystemStartingNoteNames: string[] = [];
-
-        for (let i = 0; i < shiftedNoteNameSets.length; i++) {
-          if (jins.isJinsPossible(shiftedNoteNameSets[i])) {
-            const tuningSystemStartingNoteName = noteNameSets[i]?.[0];
-            if (tuningSystemStartingNoteName) {
-              validTuningSystemStartingNoteNames.push(tuningSystemStartingNoteName);
-            }
-          }
-        }
+        const validTuningSystemStartingNoteNames: string[] = getStartingNotePitchSpaces(tuningSystem)
+          .filter(({ noteNames }) => jins.isJinsPossible(noteNames))
+          .map(({ startingNote }) => startingNote);
 
         if (validTuningSystemStartingNoteNames.length > 0) {
           availableInTuningSystems++;
