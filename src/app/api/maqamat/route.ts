@@ -10,7 +10,7 @@ import fs from "fs";
 import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getFamilyNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -253,7 +253,7 @@ export async function GET(request: Request) {
           inArabic,
           displayAr:
             inArabic && familyDisplayFinal !== "unknown"
-              ? getMaqamNameDisplayAr(familyDisplayFinal)
+              ? getFamilyNameDisplayAr(familyDisplayFinal)
               : undefined,
         }
       );

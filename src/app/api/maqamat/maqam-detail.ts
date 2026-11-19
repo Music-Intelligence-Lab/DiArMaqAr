@@ -4,7 +4,7 @@ import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { spellMaqamDirections } from "@/app/api/pitch-spellings";
 import { buildEntityNamespace, buildIdentifierNamespace } from "@/app/api/response-shapes";
-import { getMaqamNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr } from "@/app/api/arabic-helpers";
+import { getMaqamNameDisplayAr, getFamilyNameDisplayAr, getJinsNameDisplayAr, getNoteNameDisplayAr, getComments, getCommentsAr } from "@/app/api/arabic-helpers";
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave } from "@/models/NoteName";
 import { formTypeOf } from "@/functions/formType";
@@ -474,7 +474,7 @@ export function buildMaqamDetail(
     ),
     family: buildIdentifierNamespace(
       { idName: familyId, displayName: familyDisplay },
-      { inArabic, displayAr: inArabic && familyDisplay !== "unknown" ? getMaqamNameDisplayAr(familyDisplay) : undefined }
+      { inArabic, displayAr: inArabic && familyDisplay !== "unknown" ? getFamilyNameDisplayAr(familyDisplay) : undefined }
     ),
     tonic: tonicNamespace,
     transposition: isTransposed

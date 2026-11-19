@@ -5,7 +5,7 @@ import { addCorsHeaders, handleCorsPreflightRequest } from "@/app/api/cors";
 import { calculateMaqamForms } from "@/functions/transpose";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import getTuningSystemPitchClasses from "@/functions/getTuningSystemPitchClasses";
-import { parseInArabic, getMaqamNameDisplayAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getFamilyNameDisplayAr } from "@/app/api/arabic-helpers";
 import {
   buildIdentifierNamespace,
   buildLinksNamespace,
@@ -192,12 +192,8 @@ export async function GET(request: Request) {
       const familyNamespace = buildIdentifierNamespace(
         { idName, displayName },
         {
-          inArabic:
-            inArabic && displayName !== "unknown" && displayName !== "no jins",
-          displayAr:
-            inArabic && displayName !== "unknown" && displayName !== "no jins"
-              ? getMaqamNameDisplayAr(displayName)
-              : undefined,
+          inArabic: inArabic && displayName !== "unknown",
+          displayAr: inArabic && displayName !== "unknown" ? getFamilyNameDisplayAr(displayName) : undefined,
         }
       );
       return {

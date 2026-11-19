@@ -9,7 +9,7 @@ import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReference
 import PitchClass from "@/models/PitchClass";
 import { classifyMaqamFamily } from "@/functions/classifyMaqamFamily";
 import { handleCorsPreflightRequest, addCorsHeaders } from "@/app/api/cors";
-import { parseInArabic, getMaqamNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
+import { parseInArabic, getMaqamNameDisplayAr, getFamilyNameDisplayAr, getNoteNameDisplayAr, getTuningSystemDisplayNameAr } from "@/app/api/arabic-helpers";
 import {
   buildEntityNamespace,
   buildIdentifierNamespace,
@@ -252,7 +252,7 @@ export async function GET(
           },
           {
             inArabic,
-            displayAr: inArabic ? getMaqamNameDisplayAr(classification.familyName) : undefined,
+            displayAr: inArabic ? getFamilyNameDisplayAr(classification.familyName) : undefined,
           }
         );
 
