@@ -1,6 +1,6 @@
 import PitchClass from "@/models/PitchClass";
 import { getEnglishNoteName, getSequentialEnglishNames, getSolfegeFromEnglishName, getSpellingPosition } from "@/functions/noteNameMappings";
-import NoteName, { getNoteNameIndexAndOctave, getParentNoteName } from "@/models/NoteName";
+import NoteName, { getNoteNameIndexAndOctave, getParentNoteName, octaveOneNoteNames } from "@/models/NoteName";
 import { calculateCentsDeviationWithReferenceNote } from "@/functions/calculateCentsDeviation";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 
@@ -267,7 +267,7 @@ export function renderPitchClassSpellings(
   // Position across octaves, so a nīm note sits below and a tīk note above its parent
   const positionOf = (noteName: NoteName) => {
     const { octave, index } = getNoteNameIndexAndOctave(noteName);
-    return octave * 37 + index;
+    return octave * octaveOneNoteNames.length + index;
   };
   const units: Unit[] = [];
   const unitByPitch = new Map<number, Unit>();
