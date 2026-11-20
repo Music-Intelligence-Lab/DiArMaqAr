@@ -11,6 +11,10 @@
  */
 .oud-fretboard {
   width: 100%;
+  // Same inset as the controls above (starting-note row), so the strings
+  // view's controls, legend and plot start on the page's content edge
+  box-sizing: border-box;
+  padding: 0 20px;
 
   &__controls {
     display: flex;
@@ -32,7 +36,6 @@
   &__select {
     @include form-control;
     height: 27px;
-    min-width: 180px;
 
     &_narrow {
       min-width: 56px;
@@ -53,11 +56,11 @@
 
   // ---------------------------------------------------------------- plot
 
+  /* Never scrolls: the layout keeps every label inside the band (see the
+     end-aligned labels), so the strings always fit the page's width */
   &__plot {
     direction: ltr;
     width: 100%;
-    overflow-x: auto;
-    @include scrollbar-thin;
   }
 
   &__scale {
@@ -154,24 +157,27 @@
    * Stacked rather than side by side: the open note sits above its course
    * number, which buys back horizontal room for the neck itself.
    */
+  /* Flush with the page's text edge, so the strings get the width */
   &__gutter {
     flex: 0 0 var(--fretboard-gutter);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 2px;
     padding-inline-end: 8px;
     padding-block: 12px;
   }
 
+  /* The open note of each watar, chosen per string: the same control as the
+     dūzān select, at the gutter's small size */
   &__open-select {
     @include form-control;
-    height: 22px;
+    height: 24px;
     width: 100%;
     font-size: $font-size-xs;
-    text-align: center;
-    padding: 0 2px;
+    padding-inline: 6px 2px;
+    text-overflow: ellipsis;
   }
 
   /* The source's own name for the watar (bamm, mathlath…), where the open-note
@@ -179,8 +185,10 @@
   &__string-name {
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 22px;
+    // At least the select's height; a long name (qarār būselīk/ʿushshāq) wraps
+    // and the box grows with it rather than spilling onto the course number
+    min-height: 22px;
+    line-height: 1.2;
     width: 100%;
     font-size: $font-size-xs;
   }
@@ -192,7 +200,7 @@
   &__course {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 2px;
   }
 
@@ -231,11 +239,20 @@
     /* Pre-measurement height; the component sets the measured lane height
        inline once the track width is known. */
     height: 96px;
+  }
+
+  /* One band per watar across head, track and tail, so the anf and the
+     octave terminal sit inside it rather than on its edges */
+  &__head,
+  &__track,
+  &__tail {
     background: rgba(255, 255, 255, 0.03);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  &__row:nth-child(even) &__track {
+  &__row:nth-child(even) &__head,
+  &__row:nth-child(even) &__track,
+  &__row:nth-child(even) &__tail {
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -346,6 +363,13 @@
     left: 0;
     text-align: left;
 
+    /* The last name at the far end reads leftward, ending at its tick */
+    &_end {
+      left: auto;
+      right: 0;
+      text-align: right;
+    }
+
     &_above {
       top: auto;
       /* Anchored by its bottom, so a name that wraps to two lines grows upward
@@ -393,7 +417,9 @@
   }
 
   &__not-exact-octave-legend {
-    margin: 0 0 $space-block-half;
+    // Aligned with the strings' band, not the string names beside it
+    margin: $space-block-half 0 0;
+    margin-inline-start: var(--fretboard-gutter);
     font-size: $font-size-xs;
 
     &::before {
@@ -470,7 +496,17 @@
  * chrome, head and tail carry label overhang past the anf and the octave.
  */
 .oud-fretboard {
-  --fretboard-gutter: 88px;
-  --fretboard-head: 26px;
-  --fretboard-tail: 76px;
+  --fretboard-gutter: 72px;
+  // Room past the octave end for the names at the far end of each watar
+  // (they wrap onto lines, see the label plan); the anf gets the same, so both
+  // terminals sit equally far from the band's edges
+  --fretboard-head: 64px;
+  // The octave end sits as far from the band's edge as the anf does
+  --fretboard-tail: var(--fretboard-head);
+}
+
+/* A dūzān whose open notes are chosen per string needs room for a note
+   select in the gutter; the source's ʿūd only shows short names */
+.oud-fretboard_choosing-notes {
+  --fretboard-gutter: 120px;
 }

@@ -14,10 +14,12 @@ import getFretboardDivisions, {
 import { SourceOudFret } from "@/models/SourceOud";
 import {
   CUSTOM_PRESET_ID,
-  DEFAULT_PRESET_ID,
   MAX_STRINGS,
   MIN_STRINGS,
+  FretboardPreset,
+  SOURCE_PRESET_ID,
   fretboardPresets,
+  resolveDuzan,
   openStringNoteNameOptions,
 } from "@/models/FretboardPreset";
 import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
@@ -29,7 +31,6 @@ type LabelMode = "pao" | "ipn" | "solfege" | "ratio" | "cents" | "fretDivision";
 const LABEL_MODES: LabelMode[] = ["pao", "ipn", "solfege", "ratio", "cents", "fretDivision"];
 
 /** The dūzān that draws the ʿūd the tuning system's source describes (see SourceOud). */
-const SOURCE_PRESET_ID = "source";
 /** Half the string's length from the anf: the octave of the open string. */
 const HALF_STRING = 0.5;
 
@@ -103,12 +104,19 @@ function wrappedLineCount(text: string, maxWidth: number, font: string): number 
   return lines;
 }
 
+/** The widest piece a name cannot be broken inside (between spaces and after slashes). */
+function longestWordWidth(text: string, font: string): number {
+  return Math.max(0, ...text.split(" ").flatMap((word) => word.split("/").map((part, i, parts) => textWidth(i < parts.length - 1 ? `${part}/` : part, font))));
+}
+
 /** The plan for one division's label: what to draw and how much room it has. */
 interface LabelPlan {
   text: string;
   band: "above" | "below";
   wrap: boolean;
   maxWidth: number | null;
+  /** Ends at its tick instead of starting there: the last name in a band, with no room left to its right */
+  endAligned: boolean;
 }
 
 interface RowPlan {
@@ -137,36 +145,30 @@ export default function OudFretboard({
 }: {
   highlightPitchClasses?: PitchClass[];
 }) {
-  const { allPitchClasses, selectedTuningSystem, sourceOud } = useAppContext();
+  const { allPitchClasses, selectedTuningSystem, sourceOud, duzanChoice, setDuzanChoice } = useAppContext();
   const { t, getDisplayName, language } = useLanguageContext();
 
   const [labelMode, setLabelMode] = useState<LabelMode>("pao");
-  const [presetId, setPresetId] = useState<string>(sourceOud ? SOURCE_PRESET_ID : DEFAULT_PRESET_ID);
-
   /**
-   * A tuning system whose source describes its ʿūd opens on that ʿūd, so what is
-   * drawn is what the theorist gives; any other opens on the default dūzān.
+   * The dūzān (see DuzanChoice, kept in the app context so the URL carries it).
+   * Without a choice for this tuning system, one whose source describes its ʿūd
+   * opens on that ʿūd, so what is drawn is what the theorist gives; any other
+   * opens on the default dūzān. A "source" choice whose ʿūd has since been
+   * removed in the admin falls to the default too.
    */
-  const tuningSystemId = selectedTuningSystem?.getId();
-  useEffect(() => {
-    setPresetId(sourceOud ? SOURCE_PRESET_ID : DEFAULT_PRESET_ID);
-    setOpenStringNoteNames(fretboardPresets.find((p) => p.id === DEFAULT_PRESET_ID)!.openStringNoteNames);
-  }, [tuningSystemId]);
-
-  // The source's ʿūd removed in the admin while it is showing: back to the default dūzān
-  const hasSourceOud = !!sourceOud;
-  useEffect(() => {
-    if (!hasSourceOud && presetId === SOURCE_PRESET_ID) selectPreset(DEFAULT_PRESET_ID);
-  }, [hasSourceOud]);
+  const tuningSystemId = selectedTuningSystem?.getId() ?? "";
+  const { presetId, openStringNoteNames } = useMemo(
+    () => resolveDuzan(duzanChoice, tuningSystemId, !!sourceOud),
+    [duzanChoice, tuningSystemId, sourceOud]
+  );
 
   const showingSource = presetId === SOURCE_PRESET_ID && !!sourceOud;
   const fretName = useCallback(
     (fret: SourceOudFret) => (language === "ar" ? fret.nameArabic : fret.nameEnglish),
     [language]
   );
-  const [openStringNoteNames, setOpenStringNoteNames] = useState<NoteName[]>(
-    () => fretboardPresets.find((p) => p.id === DEFAULT_PRESET_ID)!.openStringNoteNames
-  );
+  const choose = (nextPresetId: string, customOpenStrings: NoteName[] = []) =>
+    setDuzanChoice({ tuningSystemId, presetId: nextPresetId, customOpenStrings });
 
   /** Open-string names that actually resolve in this tanghīm, lowest first. */
   const availableOpenNotes = useMemo(() => {
@@ -331,6 +333,7 @@ export default function OudFretboard({
           band: labelSequence++ % 2 === 0 ? ("above" as const) : ("below" as const),
           wrap: false,
           maxWidth: null,
+          endAligned: false,
         };
       });
 
@@ -347,6 +350,21 @@ export default function OudFretboard({
           }
         });
 
+        /* At the far end a name would run past the band. That last name is
+           settled first: it reads leftward from its tick, at its full width,
+           and the name before it gets room only up to where it begins. */
+        const lastEntry = band[band.length - 1];
+        const previousEntry = band.length > 1 ? band[band.length - 2] : null;
+        const lastNatural = lastEntry && !isNumeric ? textWidth(labels[lastEntry.index]!.text, font) : 0;
+        const lastEndAligned = !!lastEntry && !isNumeric && lastNatural > trackWidth + tail - lastEntry.x - LABEL_CLEARANCE;
+        /* The last name and the one before it share what is left between the
+           earlier tick and the band's end: the last name at most half of it
+           (more only if one word needs it), wrapping onto lines as needed */
+        const sharedSpan = previousEntry ? trackWidth + tail - previousEntry.x : Infinity;
+        const lastWidth = lastEndAligned
+          ? Math.min(lastNatural, MAX_LABEL_WIDTH, Math.max(sharedSpan / 2, longestWordWidth(labels[lastEntry.index]!.text, font)))
+          : 0;
+        const lastStart = lastEndAligned ? lastEntry.x - lastWidth : Infinity;
         band.forEach((entry, position) => {
           const label = labels[entry.index]!;
           let height: number;
@@ -357,13 +375,13 @@ export default function OudFretboard({
                 ? FRACTION_LABEL_HEIGHT
                 : NUMERIC_LABEL_HEIGHT;
           } else {
-            const roomRight =
-              position < band.length - 1 ? band[position + 1].x - entry.x : trackWidth + tail - entry.x;
-            const width = Math.max(
-              MIN_LABEL_WIDTH,
-              Math.min(roomRight - LABEL_CLEARANCE, MAX_LABEL_WIDTH)
-            );
-            if (textWidth(label.text, font) > width + 0.5) {
+            const last = position === band.length - 1;
+            label.endAligned = last && lastEndAligned;
+            const nextStart = last ? trackWidth + tail : position === band.length - 2 ? Math.min(band[position + 1].x, lastStart) : band[position + 1].x;
+            const room = label.endAligned ? lastWidth + LABEL_CLEARANCE : nextStart - entry.x;
+            const natural = textWidth(label.text, font);
+            const width = Math.max(MIN_LABEL_WIDTH, Math.min(room - LABEL_CLEARANCE, MAX_LABEL_WIDTH));
+            if (natural > width + 0.5) {
               label.wrap = true;
               label.maxWidth = Math.ceil(width);
               height = wrappedLineCount(label.text, width, font) * NAME_LINE_HEIGHT;
@@ -382,21 +400,28 @@ export default function OudFretboard({
     });
   }, [fretboard, windowEnd, labelFor, isNumeric, labelMode, plotMetrics, fontsReady]);
 
+  /** A preset's name in the picker (see FretboardPreset.label). */
+  function presetName(preset: FretboardPreset): string {
+    if ("key" in preset.label) return t(preset.label.key);
+    const notes = preset.openStringNoteNames;
+    const name = t(`fretboard.preset.range.${notes.length}`)
+      .replace("{first}", getDisplayName(notes[0], "note"))
+      .replace("{last}", getDisplayName(notes[notes.length - 1], "note"));
+    const shown = preset.label.showString;
+    if (!shown) return name;
+    // Tablature numbering: string n is the n-th from the top, so the lowest is string notes.length
+    const note = notes[notes.length - shown];
+    return `${name} ${t("fretboard.preset.withString").replace("{note}", getDisplayName(note, "note")).replace("{string}", String(shown))}`;
+  }
+
   function selectPreset(id: string) {
-    setPresetId(id);
-    if (id === SOURCE_PRESET_ID) return;
-    if (id === CUSTOM_PRESET_ID) {
-      setOpenStringNoteNames(customTuning(MIN_STRINGS));
-      return;
-    }
-    const preset = fretboardPresets.find((p) => p.id === id);
-    if (preset) setOpenStringNoteNames(preset.openStringNoteNames);
+    choose(id, id === CUSTOM_PRESET_ID ? customTuning(MIN_STRINGS) : []);
   }
 
   /** Changing the count is a customisation of whatever preset was showing. */
   function selectStringCount(count: number) {
-    setPresetId(CUSTOM_PRESET_ID);
-    setOpenStringNoteNames((current) => {
+    choose(CUSTOM_PRESET_ID, (() => {
+      const current = openStringNoteNames;
       if (count <= current.length) return current.slice(0, count);
       const grown = [...current];
       while (grown.length < count) {
@@ -412,12 +437,11 @@ export default function OudFretboard({
         );
       }
       return grown;
-    });
+    })());
   }
 
   function selectOpenString(index: number, noteName: NoteName) {
-    setPresetId(CUSTOM_PRESET_ID);
-    setOpenStringNoteNames((current) => current.map((n, i) => (i === index ? noteName : n)));
+    choose(CUSTOM_PRESET_ID, openStringNoteNames.map((n, i) => (i === index ? noteName : n)));
   }
 
   function reasonText(reason: FretboardUnavailability): string {
@@ -436,7 +460,7 @@ export default function OudFretboard({
   }
 
   return (
-    <div className="oud-fretboard">
+    <div className={"oud-fretboard" + (showingSource ? "" : " oud-fretboard_choosing-notes")}>
       <div className="oud-fretboard__controls">
         <div className="oud-fretboard__control">
           <span className="oud-fretboard__control-label">{t("fretboard.duzan")}</span>
@@ -449,7 +473,7 @@ export default function OudFretboard({
             <option value={CUSTOM_PRESET_ID}>{t("fretboard.custom")}</option>
             {fretboardPresets.map((preset) => (
               <option key={preset.id} value={preset.id}>
-                {t(`fretboard.preset.${preset.id}`)}
+                {presetName(preset)}
               </option>
             ))}
           </select>
@@ -491,10 +515,6 @@ export default function OudFretboard({
         </div>
       </div>
 
-      {fretboard.ok &&
-        fretboard.strings.some((s) => s.divisions.some((d) => !isExactOctave(allPitchClasses, d.pitchClass))) && (
-          <p className="oud-fretboard__not-exact-octave-legend">{t("octave.notExactOctaveLegend")}</p>
-        )}
 
       {!fretboard.ok ? (
         <div className="oud-fretboard__unavailable">
@@ -534,6 +554,9 @@ export default function OudFretboard({
                 <span className="oud-fretboard__scale-head" />
                 <span className="oud-fretboard__fret-names-track">
                   {scaleMarks}
+                  {/* The anf and the half-string get the frets' marker too, at their exact place */}
+                  <span className="oud-fretboard__fret-name" style={{ left: 0 }} />
+                  {HALF_STRING <= windowEnd + 1e-9 && <span className="oud-fretboard__fret-name" style={{ left: `${(HALF_STRING / windowEnd) * 100}%` }} />}
                   {sourceOud?.frets.map((fret) => (
                     <span
                       key={fret.id}
@@ -561,10 +584,14 @@ export default function OudFretboard({
             return (
               <div className="oud-fretboard__row" key={stringIndex}>
                 <div className="oud-fretboard__gutter">
+                  {/* The open note is chosen only in a custom dūzān; the source's ʿūd
+                      shows its own string names, a preset its open notes */}
                   {string.sourceString ? (
                     <span className="oud-fretboard__string-name">
                       {language === "ar" ? string.sourceString.nameArabic : string.sourceString.nameEnglish}
                     </span>
+                  ) : presetId !== CUSTOM_PRESET_ID ? (
+                    <span className="oud-fretboard__string-name">{getDisplayName(string.openPitchClass.noteName, "note")}</span>
                   ) : (
                   <select
                     className="oud-fretboard__open-select"
@@ -627,7 +654,8 @@ export default function OudFretboard({
                               (isNumeric ? " oud-fretboard__label_numeric" : "") +
                               (label.band === "above"
                                 ? " oud-fretboard__label_above"
-                                : " oud-fretboard__label_below")
+                                : " oud-fretboard__label_below") +
+                              (label.endAligned ? " oud-fretboard__label_end" : "")
                             }
                             style={
                               label.wrap
@@ -667,6 +695,12 @@ export default function OudFretboard({
           })}
         </div>
       )}
+
+      {/* The key to the marks, read after the strings it explains */}
+      {fretboard.ok &&
+        fretboard.strings.some((s) => s.divisions.some((d) => !isExactOctave(allPitchClasses, d.pitchClass))) && (
+          <p className="oud-fretboard__not-exact-octave-legend">{t("octave.notExactOctaveLegend")}</p>
+        )}
     </div>
   );
 }

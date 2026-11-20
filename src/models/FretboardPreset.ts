@@ -18,6 +18,14 @@ import NoteName from "@/models/NoteName";
 export interface FretboardPreset {
   /** Stable ASCII id, used as the <select> value and React key. */
   id: string;
+  /**
+   * How the picker names it: by a fixed label (its translation key), or by
+   * its range, from its lowest open note to its highest (the five- and
+   * six-string ʿūds, which differ in where they start and end). Two ʿūds with
+   * the same range are told apart by the open note of one string, named by
+   * its tablature number (the lowest string carries the highest number).
+   */
+  label: { key: string } | { range: true; showString?: number };
   /** Open notes, LOWEST FIRST — index 0 renders as the top row. */
   openStringNoteNames: NoteName[];
 }
@@ -48,6 +56,9 @@ export const openStringNoteNameOptions: NoteName[] = [
 /** The custom option, which is not a preset but sits at the top of the picker. */
 export const CUSTOM_PRESET_ID = "custom";
 
+/** The source's own ʿūd (SourceOud), offered when the tuning system records one. */
+export const SOURCE_PRESET_ID = "source";
+
 /** Fewest and most awtār the picker offers. */
 export const MIN_STRINGS = 1;
 export const MAX_STRINGS = 7;
@@ -68,13 +79,41 @@ export const customTuningLadder: NoteName[] = [
   "rāst",
 ] as NoteName[];
 
+// In the picker's order: fewest strings first; within a string count, lowest first
 export const fretboardPresets: FretboardPreset[] = [
-  { id: "four-strings", openStringNoteNames: ["ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
-  { id: "two-strings", openStringNoteNames: ["yegāh", "rāst"] as NoteName[] },
-  { id: "five-strings-1", openStringNoteNames: ["ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
-  { id: "five-strings-2", openStringNoteNames: ["yegāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
-  { id: "five-strings-3", openStringNoteNames: ["qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "two-strings-fourth", label: { key: "fretboard.preset.two-strings-fourth" }, openStringNoteNames: ["yegāh", "rāst"] as NoteName[] },
+  { id: "two-strings", label: { key: "fretboard.preset.two-strings" }, openStringNoteNames: ["yegāh", "dūgāh"] as NoteName[] },
+  { id: "four-strings", label: { key: "fretboard.preset.four-strings" }, openStringNoteNames: ["ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "five-strings-qarar-buselik", label: { range: true }, openStringNoteNames: ["qarār būselīk/ʿushshāq", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "five-strings-3", label: { range: true }, openStringNoteNames: ["qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "five-strings-2", label: { range: true }, openStringNoteNames: ["yegāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "five-strings-1", label: { range: true }, openStringNoteNames: ["ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
+  { id: "six-strings-yegah", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār rāst", "yegāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "six-strings-qarar-chahargah", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār rāst", "qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
+  { id: "six-strings-qarar-buselik", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār būselīk/ʿushshāq", "ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
+  { id: "six-strings-ushayran", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
 ];
 
 /** The dūzān shown before the reader chooses anything. */
 export const DEFAULT_PRESET_ID = "four-strings";
+
+/**
+ * The dūzān in force for a tuning system: the reader's choice made on that
+ * tuning system, else the source's ʿūd when the tuning system records one,
+ * else the default. A "source" choice whose ʿūd no longer exists falls back
+ * the same way. Custom keeps its own open notes; a preset's come from it.
+ */
+export function resolveDuzan(
+  choice: { tuningSystemId: string; presetId: string; customOpenStrings: NoteName[] } | null,
+  tuningSystemId: string,
+  hasSourceOud: boolean
+): { presetId: string; openStringNoteNames: NoteName[] } {
+  const own = choice?.tuningSystemId === tuningSystemId ? choice : null;
+  const automatic = hasSourceOud ? SOURCE_PRESET_ID : DEFAULT_PRESET_ID;
+  const presetId = !own || (own.presetId === SOURCE_PRESET_ID && !hasSourceOud) ? automatic : own.presetId;
+  const openStringNoteNames =
+    presetId === CUSTOM_PRESET_ID
+      ? own!.customOpenStrings
+      : (fretboardPresets.find((p) => p.id === presetId) ?? fretboardPresets.find((p) => p.id === DEFAULT_PRESET_ID)!).openStringNoteNames;
+  return { presetId, openStringNoteNames };
+}

@@ -3,12 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import useLanguageContext from "@/contexts/language-context";
 import { SourceOud, SourceOudAttribution, SourceOudFret, SourceOudString } from "@/models/SourceOud";
-import { Source, SourcePageReference } from "@/models/bibliography/Source";
-import { compareNormalized } from "@/functions/normalizeForSort";
+import { Source } from "@/models/bibliography/Source";
+import PageReferenceChips from "./page-reference-chips";
 
-/** An item being edited: its attribution may not be chosen yet. */
-type Draft<T> = Omit<T, "attribution"> & { attribution: SourceOudAttribution | "" };
-type DraftOud = Omit<SourceOud, "strings" | "frets"> & { strings: Draft<SourceOudString>[]; frets: Draft<SourceOudFret>[] };
+/** The ʿūd being edited: who gives the strings and the frets may not be chosen yet. */
+type Attribution = SourceOudAttribution | "";
+type DraftOud = Omit<SourceOud, "stringsAttribution" | "fretsAttribution"> & { stringsAttribution: Attribution; fretsAttribution: Attribution };
 
 const RATIO = /^[1-9]\d*\/[1-9]\d*$/;
 
@@ -34,13 +34,14 @@ function uniqueId(base: string, taken: string[]): string {
 function problemOf(draft: DraftOud, t: (key: string) => string): string | null {
   if (!draft.strings.length) return t("sourceOud.needsString");
   if (!draft.frets.length) return t("sourceOud.needsFret");
+  if (draft.pageReferences.some((ref) => !ref.sourceId)) return t("sourceOud.needsSource");
+  if (!draft.stringsAttribution) return t("sourceOud.needsAttribution").replace("{item}", t("sourceOud.strings"));
+  if (!draft.fretsAttribution) return t("sourceOud.needsAttribution").replace("{item}", t("sourceOud.frets"));
   for (const item of [...draft.strings, ...draft.frets]) {
     const ratio = "openRatio" in item ? item.openRatio : item.ratio;
     const label = item.nameEnglish || item.id;
     if (!item.nameEnglish.trim() || !item.nameArabic.trim()) return t("sourceOud.needsNames").replace("{item}", label);
     if (!RATIO.test(ratio.trim())) return t("sourceOud.needsRatio").replace("{item}", label).replace("{value}", ratio);
-    if (!item.attribution) return t("sourceOud.needsAttribution").replace("{item}", label);
-    if (item.pageReferences.some((ref) => !ref.sourceId)) return t("sourceOud.needsSource").replace("{item}", label);
   }
   return null;
 }
@@ -48,7 +49,7 @@ function problemOf(draft: DraftOud, t: (key: string) => string): string | null {
 /**
  * The admin editor for the ʿūd a tuning system's source describes: its strings
  * with their names and open ratios, its frets with their names and ratios, who
- * gives each one, and where. A string or fret keeps every field this editor
+ * gives the strings and who gives the frets, and where the whole ʿūd is given. A string or fret keeps every field this editor
  * does not show (the construction quotes, which strings carry which frets), and
  * keeps its id; only a new one is given an id, from its English name.
  *
@@ -84,8 +85,7 @@ export default function SourceOudEditor({
   if (!draft) {
     return (
       <div className="source-oud-editor">
-        <h3 className="source-oud-editor__heading">{t("sourceOud.heading")}</h3>
-        <button type="button" className="tuning-system-manager__source-add-button" onClick={() => commit({ strings: [], frets: [], noteEnglish: "", noteArabic: "" })}>
+        <button type="button" className="source-oud-editor__add" onClick={() => commit({ strings: [], frets: [], pageReferences: [], stringsAttribution: "", fretsAttribution: "", noteEnglish: "", noteArabic: "" })}>
           {t("sourceOud.add")}
         </button>
       </div>
@@ -94,7 +94,7 @@ export default function SourceOudEditor({
 
   const allIds = () => [...draft.strings.map((s) => s.id), ...draft.frets.map((f) => f.id)];
 
-  function updateString(index: number, change: Partial<Draft<SourceOudString>>) {
+  function updateString(index: number, change: Partial<SourceOudString>) {
     const strings = [...draft!.strings];
     const before = strings[index];
     const next = { ...before, ...change };
@@ -107,7 +107,7 @@ export default function SourceOudEditor({
     commit({ ...draft!, strings });
   }
 
-  function updateFret(index: number, change: Partial<Draft<SourceOudFret>>) {
+  function updateFret(index: number, change: Partial<SourceOudFret>) {
     const frets = [...draft!.frets];
     const before = frets[index];
     const next = { ...before, ...change };
@@ -125,7 +125,7 @@ export default function SourceOudEditor({
   function addString() {
     const id = uniqueId("string", allIds());
     newIds.current.add(id);
-    commit({ ...draft!, strings: [...draft!.strings, { id, nameEnglish: "", nameArabic: "", openRatio: "", attribution: "", pageReferences: [] }] });
+    commit({ ...draft!, strings: [...draft!.strings, { id, nameEnglish: "", nameArabic: "", openRatio: "" }] });
   }
 
   function addFret() {
@@ -133,7 +133,7 @@ export default function SourceOudEditor({
     newIds.current.add(id);
     commit({
       ...draft!,
-      frets: [...draft!.frets, { id, nameEnglish: "", nameArabic: "", ratio: "", constructionEnglish: "", constructionArabic: "", attribution: "", pageReferences: [] }],
+      frets: [...draft!.frets, { id, nameEnglish: "", nameArabic: "", ratio: "", constructionEnglish: "", constructionArabic: "" }],
     });
   }
 
@@ -146,90 +146,100 @@ export default function SourceOudEditor({
     });
   }
 
-  const sortedSources = [...sources].sort((a, b) => compareNormalized(a.getTitleEnglish(), b.getTitleEnglish()));
+  /** One table row's last cell: remove */
+  const removeCell = (remove: () => void, removeLabel: string) => (
+    <td>
+      <button type="button" className="source-oud-editor__remove" aria-label={removeLabel} title={removeLabel} onClick={remove}>
+        ×
+      </button>
+    </td>
+  );
 
-  /** Attribution and page references, the same for strings and frets */
-  const provenance = (item: Draft<SourceOudString> | Draft<SourceOudFret>, update: (change: { attribution?: SourceOudAttribution | ""; pageReferences?: SourcePageReference[] }) => void) => (
-    <>
-      <select
-        className="tuning-system-manager__source-select"
-        value={item.attribution}
-        aria-label={t("sourceOud.attribution")}
-        onChange={(e) => update({ attribution: e.target.value as SourceOudAttribution | "" })}
-      >
-        <option value="">{t("sourceOud.attribution")}</option>
+  /** Who gives the strings, or the frets: one choice for the whole group */
+  const givenBy = (value: Attribution, onChange: (next: Attribution) => void) => (
+    <label className="source-oud-editor__given-by">
+      {t("sourceOud.attribution")}
+      <select className="source-oud-editor__field" value={value} onChange={(e) => onChange(e.target.value as Attribution)}>
+        <option value="">{t("sourceOud.chooseAttribution")}</option>
         <option value="source">{t("sourceOud.attributionSource")}</option>
         <option value="secondary">{t("sourceOud.attributionSecondary")}</option>
       </select>
-      {item.pageReferences.map((ref, r) => (
-        <span key={r} className="source-oud-editor__reference">
-          <select
-            className="tuning-system-manager__source-select"
-            value={ref.sourceId}
-            onChange={(e) => update({ pageReferences: item.pageReferences.map((x, i) => (i === r ? { ...x, sourceId: e.target.value } : x)) })}
-          >
-            <option value="">{t("tuningSystem.selectSource")}</option>
-            {sortedSources.map((s) => (
-              <option key={s.getId()} value={s.getId()}>
-                {s.getTitleEnglish()}
-              </option>
-            ))}
-          </select>
-          <input
-            className="tuning-system-manager__source-input"
-            type="text"
-            value={ref.page}
-            placeholder={t("tuningSystem.page")}
-            onChange={(e) => update({ pageReferences: item.pageReferences.map((x, i) => (i === r ? { ...x, page: e.target.value } : x)) })}
-          />
-          <button type="button" className="jins-manager__source-delete-button" onClick={() => update({ pageReferences: item.pageReferences.filter((_, i) => i !== r) })}>
-            {t("tuningSystem.delete")}
-          </button>
-        </span>
-      ))}
-      <button type="button" className="tuning-system-manager__source-add-button" onClick={() => update({ pageReferences: [...item.pageReferences, { sourceId: "", page: "" }] })}>
-        {t("tuningSystem.addSource")}
-      </button>
-    </>
+    </label>
+  );
+
+  const head = (ratioLabel: string) => (
+    <thead>
+      <tr>
+        <th>{t("sourceOud.nameEnglish")}</th>
+        <th>{t("sourceOud.nameArabic")}</th>
+        <th>{ratioLabel}</th>
+        <th />
+      </tr>
+    </thead>
   );
 
   return (
     <div className="source-oud-editor">
-      <h3 className="source-oud-editor__heading">{t("sourceOud.heading")}</h3>
+      <div className="tuning-system-manager__input-container">
+        <span className="tuning-system-manager__label">{t("adminSection.references")}</span>
+        <PageReferenceChips references={draft.pageReferences} sources={sources} onChange={(pageReferences) => commit({ ...draft, pageReferences })} />
+      </div>
 
-      <h4 className="source-oud-editor__subheading">{t("sourceOud.strings")}</h4>
-      {draft.strings.map((string, i) => (
-        <div key={i} className="source-oud-editor__row">
-          <input className="tuning-system-manager__input" placeholder={t("sourceOud.nameEnglish")} value={string.nameEnglish} onChange={(e) => updateString(i, { nameEnglish: e.target.value })} />
-          <input className="tuning-system-manager__input" dir="rtl" placeholder={t("sourceOud.nameArabic")} value={string.nameArabic} onChange={(e) => updateString(i, { nameArabic: e.target.value })} />
-          <input className="tuning-system-manager__input source-oud-editor__ratio" placeholder={t("sourceOud.openRatio")} value={string.openRatio} onChange={(e) => updateString(i, { openRatio: e.target.value })} />
-          {provenance(string, (change) => updateString(i, change))}
-          <button type="button" className="jins-manager__source-delete-button" onClick={() => commit({ ...draft, strings: draft.strings.filter((_, j) => j !== i) })}>
-            {t("sourceOud.removeString")}
-          </button>
-        </div>
-      ))}
-      <button type="button" className="tuning-system-manager__source-add-button" onClick={addString}>
+      <div className="source-oud-editor__group-head">
+        <h4 className="source-oud-editor__subheading">{t("sourceOud.strings")}</h4>
+        {givenBy(draft.stringsAttribution, (stringsAttribution) => commit({ ...draft, stringsAttribution }))}
+      </div>
+      <table className="source-oud-editor__table">
+        {head(t("sourceOud.openRatio"))}
+        <tbody>
+          {draft.strings.map((string, i) => (
+            <tr key={i}>
+              <td>
+                <input className="source-oud-editor__field" value={string.nameEnglish} onChange={(e) => updateString(i, { nameEnglish: e.target.value })} />
+              </td>
+              <td>
+                <input className="source-oud-editor__field" dir="rtl" value={string.nameArabic} onChange={(e) => updateString(i, { nameArabic: e.target.value })} />
+              </td>
+              <td>
+                <input className="source-oud-editor__field" value={string.openRatio} onChange={(e) => updateString(i, { openRatio: e.target.value })} />
+              </td>
+              {removeCell(() => commit({ ...draft, strings: draft.strings.filter((_, j) => j !== i) }), t("sourceOud.removeString"))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button type="button" className="source-oud-editor__add" onClick={addString}>
         {t("sourceOud.addString")}
       </button>
 
-      <h4 className="source-oud-editor__subheading">{t("sourceOud.frets")}</h4>
-      {draft.frets.map((fret, i) => (
-        <div key={i} className="source-oud-editor__row">
-          <input className="tuning-system-manager__input" placeholder={t("sourceOud.nameEnglish")} value={fret.nameEnglish} onChange={(e) => updateFret(i, { nameEnglish: e.target.value })} />
-          <input className="tuning-system-manager__input" dir="rtl" placeholder={t("sourceOud.nameArabic")} value={fret.nameArabic} onChange={(e) => updateFret(i, { nameArabic: e.target.value })} />
-          <input className="tuning-system-manager__input source-oud-editor__ratio" placeholder={t("sourceOud.fretRatio")} value={fret.ratio} onChange={(e) => updateFret(i, { ratio: e.target.value })} />
-          {provenance(fret, (change) => updateFret(i, change))}
-          <button type="button" className="jins-manager__source-delete-button" onClick={() => removeFret(i)}>
-            {t("sourceOud.removeFret")}
-          </button>
-        </div>
-      ))}
-      <button type="button" className="tuning-system-manager__source-add-button" onClick={addFret}>
+      <div className="source-oud-editor__group-head">
+        <h4 className="source-oud-editor__subheading">{t("sourceOud.frets")}</h4>
+        {givenBy(draft.fretsAttribution, (fretsAttribution) => commit({ ...draft, fretsAttribution }))}
+      </div>
+      <table className="source-oud-editor__table">
+        {head(t("sourceOud.fretRatio"))}
+        <tbody>
+          {draft.frets.map((fret, i) => (
+            <tr key={i}>
+              <td>
+                <input className="source-oud-editor__field" value={fret.nameEnglish} onChange={(e) => updateFret(i, { nameEnglish: e.target.value })} />
+              </td>
+              <td>
+                <input className="source-oud-editor__field" dir="rtl" value={fret.nameArabic} onChange={(e) => updateFret(i, { nameArabic: e.target.value })} />
+              </td>
+              <td>
+                <input className="source-oud-editor__field" value={fret.ratio} onChange={(e) => updateFret(i, { ratio: e.target.value })} />
+              </td>
+              {removeCell(() => removeFret(i), t("sourceOud.removeFret"))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button type="button" className="source-oud-editor__add" onClick={addFret}>
         {t("sourceOud.addFret")}
       </button>
 
-      <div className="tuning-system-manager__group">
+      <div className="tuning-system-manager__group source-oud-editor__notes">
         <div className="tuning-system-manager__input-container">
           <label className="tuning-system-manager__label">{t("sourceOud.noteEnglish")}</label>
           <textarea className="tuning-system-manager__input" rows={3} value={draft.noteEnglish} onChange={(e) => commit({ ...draft, noteEnglish: e.target.value })} />
@@ -245,7 +255,7 @@ export default function SourceOudEditor({
           {problem}
         </p>
       )}
-      <button type="button" className="jins-manager__source-delete-button" onClick={() => commit(null)}>
+      <button type="button" className="source-oud-editor__remove-all" onClick={() => commit(null)}>
         {t("sourceOud.remove")}
       </button>
     </div>

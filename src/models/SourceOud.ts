@@ -15,9 +15,10 @@ import { SourcePageReference } from "./bibliography/Source";
  */
 
 /**
- * Who gives an item. "source": the theorist's own text states it. "secondary":
- * a modern author supplies or reports it (e.g. Farmer's tuning in fourths, which
- * Ibn Sīnā's printed text does not state).
+ * Who gives the strings or the frets. "source": the primary source's text
+ * states them. "secondary": the secondary source's author supplies or reports
+ * them (e.g. Farmer's tuning in fourths, which Ibn Sīnā's printed text does
+ * not state).
  */
 export type SourceOudAttribution = "source" | "secondary";
 
@@ -34,8 +35,6 @@ export interface SourceOudFret {
   constructionEnglish: string;
   /** How the source places the fret, in the source's own Arabic where it is printed */
   constructionArabic: string;
-  attribution: SourceOudAttribution;
-  pageReferences: SourcePageReference[];
 }
 
 export interface SourceOudString {
@@ -49,8 +48,6 @@ export interface SourceOudString {
   openRatio: string;
   /** The frets this string carries, by id; lowest first. Absent means every fret. */
   frets?: string[];
-  attribution: SourceOudAttribution;
-  pageReferences: SourcePageReference[];
 }
 
 export interface SourceOud {
@@ -58,6 +55,15 @@ export interface SourceOud {
   strings: SourceOudString[];
   /** Frets nearest the nut first */
   frets: SourceOudFret[];
+  /**
+   * Where the ʿūd is given: one list for the whole instrument, since its
+   * strings and frets always come from the same source
+   */
+  pageReferences: SourcePageReference[];
+  /** Who gives the strings' names and tuning: always one for all the strings */
+  stringsAttribution: SourceOudAttribution;
+  /** Who gives the frets' names and places: always one for all the frets */
+  fretsAttribution: SourceOudAttribution;
   /** How the source's ʿūd is attested overall: what the text gives and what is supplied */
   noteEnglish: string;
   noteArabic: string;

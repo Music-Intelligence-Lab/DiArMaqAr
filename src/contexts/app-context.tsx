@@ -31,6 +31,21 @@ export interface ModulationChainHop {
   ajnasMode: boolean;
 }
 
+/** How the tanghīm is presented on the tuning-system page: the dīwān tables or the awtār */
+export type TuningView = "tables" | "strings";
+
+/**
+ * The dūzān chosen in the strings view, for the tuning system it was chosen on:
+ * a preset id, "source" or "custom" (with the custom open notes, lowest first).
+ * Kept per tuning system, so choosing another tuning system starts from its own
+ * default (its source's ʿūd when it has one) without any reset step.
+ */
+export interface DuzanChoice {
+  tuningSystemId: string;
+  presetId: string;
+  customOpenStrings: NoteName[];
+}
+
 interface AppContextInterface {
   tuningSystems: TuningSystem[];
   setTuningSystems: React.Dispatch<React.SetStateAction<TuningSystem[]>>;
@@ -60,6 +75,10 @@ interface AppContextInterface {
   /** The source's ʿūd as currently shown: the admin's unsaved edit, else the saved one */
   sourceOud: SourceOud | null;
   setSourceOud: (sourceOud: SourceOud | null) => void;
+  tuningView: TuningView;
+  setTuningView: (view: TuningView) => void;
+  duzanChoice: DuzanChoice | null;
+  setDuzanChoice: (choice: DuzanChoice | null) => void;
   originalIndices: number[];
   setOriginalIndices: React.Dispatch<React.SetStateAction<number[]>>;
   mapIndices: (notesToMap: NoteName[], givenNumberOfPitchClasses: number, setOriginal: boolean) => void;
@@ -120,6 +139,9 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
   // The admin's unsaved edits to stored-octave names, for the system they were made on
   const [storedOctavesEdit, setStoredOctavesEdit] = useState<{ tuningSystemId: string; storedOctaves: StoredOctaves | null } | null>(null);
   // The admin's unsaved edits to the source's ʿūd, for the system they were made on
+  // Shared (not local to the tuning-system page) so the URL can carry it
+  const [tuningView, setTuningView] = useState<TuningView>("tables");
+  const [duzanChoice, setDuzanChoice] = useState<DuzanChoice | null>(null);
   const [sourceOudEdit, setSourceOudEdit] = useState<{ tuningSystemId: string; sourceOud: SourceOud | null } | null>(null);
   const [referenceFrequencies, setReferenceFrequencies] = useState<{
     [noteName: string]: number;
@@ -634,6 +656,10 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       setStoredOctaveValues,
       sourceOud,
       setSourceOud,
+      tuningView,
+      setTuningView,
+      duzanChoice,
+      setDuzanChoice,
       originalIndices,
       setOriginalIndices,
       mapIndices,
@@ -689,6 +715,8 @@ export function AppContextProvider({ children }: { children: React.ReactNode }) 
       setStoredOctaveValues,
       sourceOud,
       setSourceOud,
+      tuningView,
+      duzanChoice,
       originalIndices,
       mapIndices,
       tuningSystemStringLength,

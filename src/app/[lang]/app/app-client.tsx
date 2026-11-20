@@ -20,6 +20,8 @@ import Modulations from "@/components/modulations";
 import { Sayr } from "@/models/Maqam";
 import Footer from "@/components/footer";
 import { createEntityToken, resolveEntityId, standardizeText } from "@/functions/export";
+import NoteName, { allNotes } from "@/models/NoteName";
+import { CUSTOM_PRESET_ID, SOURCE_PRESET_ID, fretboardPresets, resolveDuzan } from "@/models/FretboardPreset";
 
 // URL parameter helper functions
 //
@@ -97,7 +99,7 @@ function parseModulationsParameter(param: string, maqamat: MaqamData[]): Modulat
 }
 
 export default function AppClient() {
-  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, setModulationChain, centsTolerance } = useAppContext();
+  const { tuningSystems, ajnas, maqamat, handleUrlParams, selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, setModulationChain, centsTolerance, tuningView, setTuningView, duzanChoice, setDuzanChoice, sourceOud } = useAppContext();
 
   const { setSelectedMenu, selectedMenu } = useMenuContext();
 
@@ -162,6 +164,24 @@ export default function AppClient() {
     if (centsToleranceParam) {
       const parsed = parseFloat(centsToleranceParam);
       if (!isNaN(parsed) && parsed >= 0) urlCentsTolerance = parsed;
+    }
+
+    // Parse the view parameter: the tuning-system page shows the tables or the strings
+    const viewParam = searchParams.get("view");
+    if (viewParam === "tables" || viewParam === "strings") setTuningView(viewParam);
+
+    // Parse the dūzān: a preset, the source's ʿūd, or custom with its open notes
+    // (lowest first, as note-name ids). An id or note that does not exist is
+    // ignored, like any other unreadable parameter.
+    const duzanParam = searchParams.get("duzan");
+    const urlTuningSystemId = searchParams.get("tuningSystem");
+    if (duzanParam && urlTuningSystemId) {
+      if (duzanParam === CUSTOM_PRESET_ID) {
+        const notes = (searchParams.get("openStrings") ?? "").split(",").map((id) => allNotes.find((n) => standardizeText(n) === id));
+        if (notes.length && notes.every(Boolean)) setDuzanChoice({ tuningSystemId: urlTuningSystemId, presetId: CUSTOM_PRESET_ID, customOpenStrings: notes as NoteName[] });
+      } else if (duzanParam === SOURCE_PRESET_ID || fretboardPresets.some((p) => p.id === duzanParam)) {
+        setDuzanChoice({ tuningSystemId: urlTuningSystemId, presetId: duzanParam, customOpenStrings: [] });
+      }
     }
 
     // Parse the maqam parameter if present
@@ -239,7 +259,7 @@ export default function AppClient() {
   else if (maqamId && sayrId) setSelectedMenu("sayr");
   else if (maqamId) setSelectedMenu("maqam");
   else setSelectedMenu("tuningSystem"); // Default to tuning system when no specific data is loaded
-  }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu, setModulationChain]);
+  }, [tuningSystems, ajnas, maqamat, searchParams, handleUrlParams, setSelectedMenu, setModulationChain, setTuningView, setDuzanChoice]);
 
   useEffect(() => {
     const params: string[] = [];
@@ -261,6 +281,17 @@ export default function AppClient() {
       }
 
       params.push(`centsTolerance=${centsTolerance}`);
+
+      // Only where the tables/strings choice exists: the tuning-system pages
+      if (selectedMenu === "tuningSystem" || selectedMenu === "tuningSystem-admin") {
+        params.push(`view=${tuningView}`);
+        // The dūzān belongs to the strings view
+        if (tuningView === "strings") {
+          const duzan = resolveDuzan(duzanChoice, selectedTuningSystem.getId(), !!sourceOud);
+          params.push(`duzan=${duzan.presetId}`);
+          if (duzan.presetId === CUSTOM_PRESET_ID) params.push(`openStrings=${duzan.openStringNoteNames.map((n) => standardizeText(n)).join(",")}`);
+        }
+      }
     }
 
     // A selected transposition contributes its tonic to the token; the base form is
@@ -291,7 +322,7 @@ export default function AppClient() {
       const urlParams = params.join("&");
       router.replace(`/${lang}/app?${urlParams}`, { scroll: false });
     }
-  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, selectedMenu, maqamat, centsTolerance, router, pathname, lang]);
+  }, [selectedTuningSystem, selectedJinsData, selectedMaqamData, maqamSayrId, selectedIndices, selectedMaqam, selectedJins, referenceFrequencies, modulationChain, selectedMenu, maqamat, centsTolerance, tuningView, duzanChoice, sourceOud, router, pathname, lang]);
 
   return (
     <div className="main-content">

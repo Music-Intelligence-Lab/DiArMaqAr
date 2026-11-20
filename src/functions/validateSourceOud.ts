@@ -37,6 +37,11 @@ export default function validateSourceOud(tuningSystem: TuningSystem): void {
 
   if (!oud.strings.length) fail("it has no strings");
   if (!oud.frets.length) fail("it has no frets");
+  if (!Array.isArray(oud.pageReferences)) fail("it has no list of page references");
+  if (oud.pageReferences.some((ref) => !ref.sourceId)) fail("a page reference names no source");
+  for (const [field, value] of [["stringsAttribution", oud.stringsAttribution], ["fretsAttribution", oud.fretsAttribution]] as const) {
+    if (value !== "source" && value !== "secondary") fail(`${field} is "${value}", not "source" or "secondary"`);
+  }
 
   const fretIds = new Set<string>();
   let previousFret = 1;
