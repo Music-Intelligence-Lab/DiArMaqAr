@@ -33,6 +33,14 @@
     @include manager-groupby-label;
   }
 
+  /* The shared cents-tolerance box (cents-tolerance-input.tsx); the ± beside it
+     reads as part of the label */
+  &__tolerance {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
   &__select {
     @include form-control;
     height: 27px;
@@ -339,10 +347,10 @@
 
   /**
    * A dastān is a gut fret tied right across the neck, so it crosses awtār on
-   * which it lands on no pitch of the tanghīm. Drawn, but not interactive.
+   * which it lands on no pitch of the tanghīm. Hovering it reads how far it
+   * falls from the watar's nearest pitch (&__probe).
    */
   &__division_phantom {
-    pointer-events: none;
 
     .oud-fretboard__tick {
       background: none;
@@ -443,6 +451,52 @@
 
   &__division_beyond.oud-fretboard__division_unnamed &__tick {
     background: rgba(255, 255, 255, 0.09);
+  }
+
+  /**
+   * Hovering a dotted fret marks it in gold and names the watar's nearest
+   * pitch with the difference in cents.
+   */
+  &__probe {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  &__probe-line {
+    position: absolute;
+    top: 50%;
+    height: 26px;
+    margin-top: -13px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: $gold;
+  }
+
+  &__probe-reading {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: -24px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    background: $background;
+    border: 1px solid $gold;
+    color: $text;
+    font-size: $font-size-xs;
+    line-height: 1.3;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+
+    &_start {
+      transform: translate(0, -50%);
+    }
+
+    &_end {
+      transform: translate(-100%, -50%);
+    }
   }
 
   /* 2px → 4px keeps the growth symmetrical about the tick's centre. */

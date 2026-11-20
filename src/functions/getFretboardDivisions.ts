@@ -80,7 +80,11 @@ export interface FretboardString {
   divisions: FretboardDivision[];
   /** Cents of the note shared with the watar below, or null if unknown. */
   handoverCents: number | null;
-  /** Frets tied across the neck that land on no pitch of this watar. */
+  /**
+   * Frets tied across the neck that land on no pitch of this watar: none within
+   * the cents tolerance of one of its pitches, and none within the tolerance of
+   * another one drawn (see withFretsAcrossTheNeck).
+   */
   phantomPositions: number[];
   /** The source's string, when drawing the source's own ʿūd */
   sourceString?: SourceOudString;
@@ -149,10 +153,14 @@ export function resolveOpenStrings(
  * @param allPitchClasses - the tuning system's pitch classes, as produced by
  *   getTuningSystemPitchClasses for the selected starting note
  * @param openStringNoteNames - the open note of each watar, LOWEST FIRST
+ * @param centsTolerance - how close, in cents, a fret tied for another watar
+ *   must come to a pitch of this one to count as that pitch (the app's cents
+ *   tolerance, as used to match jins and maqām forms)
  */
 export default function getFretboardDivisions(
   allPitchClasses: PitchClass[],
-  openStringNoteNames: string[]
+  openStringNoteNames: string[],
+  centsTolerance: number
 ): FretboardResult {
   /**
    * Octave shifting is not implemented for fret-division input (see the TODO in
@@ -212,15 +220,27 @@ export default function getFretboardDivisions(
     return { openPitchClass, octavePitchClass, courseNumber: open.length - stringIndex, divisions, handoverCents, phantomPositions: [] };
   });
 
-  return withFretsAcrossTheNeck(strings);
+  return withFretsAcrossTheNeck(strings, centsTolerance);
 }
+
+/**
+ * Cents above the open watar of a stop at this position. The cents between two
+ * positions are therefore the same on every watar, which is what lets one
+ * tolerance compare frets across the neck.
+ */
+export const centsAtPosition = (position: number) => -1200 * Math.log2(1 - position);
 
 /**
  * A dastān is a gut fret tied right across the neck, so it crosses every watar —
  * including those on which it lands on no pitch of the tanghīm, or which do not
  * use it. Fills each string's phantom positions and the drawn window.
+ *
+ * A fret that comes within the cents tolerance of one of a watar's own pitches
+ * counts as that pitch, so it is not drawn as a phantom: a gap the ear does not
+ * hear as a different pitch is not shown as one. Frets from different awtār that
+ * lie within the tolerance of each other are drawn once, at the lowest of them.
  */
-function withFretsAcrossTheNeck(strings: FretboardString[]): FretboardResult {
+function withFretsAcrossTheNeck(strings: FretboardString[], centsTolerance: number): FretboardResult {
   const fretPositions: number[] = [];
   strings
     .flatMap((s) => s.divisions.map((d) => d.position))
@@ -230,11 +250,16 @@ function withFretsAcrossTheNeck(strings: FretboardString[]): FretboardResult {
       if (last === undefined || p - last > 1e-9) fretPositions.push(p);
     });
 
+  const near = (p: number, q: number) => Math.abs(centsAtPosition(p) - centsAtPosition(q)) <= centsTolerance + CENTS_EPSILON;
   strings.forEach((string) => {
     const owned = string.divisions.map((d) => d.position);
-    string.phantomPositions = fretPositions.filter(
-      (p) => !owned.some((q) => Math.abs(q - p) < 1e-9)
-    );
+    const phantoms: number[] = [];
+    fretPositions.forEach((p) => {
+      if (owned.some((q) => near(p, q))) return;
+      if (phantoms.length && near(p, phantoms[phantoms.length - 1])) return;
+      phantoms.push(p);
+    });
+    string.phantomPositions = phantoms;
   });
 
   const maxPosition = Math.max(...strings.map((string) => string.divisions[string.divisions.length - 1]?.position ?? 0), 0);
@@ -258,8 +283,9 @@ export function ratioValue(ratio: string): number {
  *
  * @param allPitchClasses - the tuning system's pitch classes, as produced by
  *   getTuningSystemPitchClasses
+ * @param centsTolerance - as for getFretboardDivisions
  */
-export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: SourceOud): FretboardResult {
+export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: SourceOud, centsTolerance: number): FretboardResult {
   const unison = allPitchClasses.find((pc) => pc.octave === 1 && pc.pitchClassIndex === 0);
   if (!unison) return { ok: false, reasons: [] };
   const base = centsOf(unison);
@@ -314,5 +340,5 @@ export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: Source
     });
   });
 
-  return reasons.length ? { ok: false, reasons } : withFretsAcrossTheNeck(strings);
+  return reasons.length ? { ok: false, reasons } : withFretsAcrossTheNeck(strings, centsTolerance);
 }

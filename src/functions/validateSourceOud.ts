@@ -72,7 +72,8 @@ export default function validateSourceOud(tuningSystem: TuningSystem): void {
   if (!startingNote) fail("the tuning system has no note-name set to read its pitches from");
   const pitchClasses = getTuningSystemPitchClasses(tuningSystem, startingNote);
 
-  const layout = getSourceOudDivisions(pitchClasses, oud);
+  // Only whether the ʿūd lays out is checked, not the frets crossing each string, so any tolerance will do
+  const layout = getSourceOudDivisions(pitchClasses, oud, 0);
   if (!layout.ok) {
     const missing = layout.reasons.map((r) => (r.kind === "sourcePitchNotInSystem" ? `${r.stringName} at ${r.fretName} (${r.ratio})` : r.kind));
     fail(`these pitches of the ʿūd are not pitches of the tuning system: ${missing.join("; ")}`);

@@ -6,12 +6,15 @@ import useLanguageContext from "@/contexts/language-context";
 import PitchClass from "@/models/PitchClass";
 import NoteName from "@/models/NoteName";
 import getFretboardDivisions, {
+  centsAtPosition,
   FRETBOARD_MAX_POSITION,
+  FretboardString,
   FretboardUnavailability,
   getSourceOudDivisions,
   ratioValue,
 } from "@/functions/getFretboardDivisions";
 import { SourceOudFret } from "@/models/SourceOud";
+import CentsToleranceInput from "./cents-tolerance-input";
 import {
   CUSTOM_PRESET_ID,
   MAX_STRINGS,
@@ -145,7 +148,9 @@ export default function OudFretboard({
 }: {
   highlightPitchClasses?: PitchClass[];
 }) {
-  const { allPitchClasses, selectedTuningSystem, sourceOud, duzanChoice, setDuzanChoice } = useAppContext();
+  const { allPitchClasses, selectedTuningSystem, sourceOud, duzanChoice, setDuzanChoice, centsTolerance } = useAppContext();
+  /** The dotted fret being hovered, read off on its own watar */
+  const [probe, setProbe] = useState<{ stringIndex: number; position: number } | null>(null);
   const { t, getDisplayName, language } = useLanguageContext();
 
   const [labelMode, setLabelMode] = useState<LabelMode>("pao");
@@ -220,9 +225,9 @@ export default function OudFretboard({
   const fretboard = useMemo(
     () =>
       showingSource
-        ? getSourceOudDivisions(allPitchClasses, sourceOud!)
-        : getFretboardDivisions(allPitchClasses, openStringNoteNames),
-    [allPitchClasses, openStringNoteNames, showingSource, sourceOud]
+        ? getSourceOudDivisions(allPitchClasses, sourceOud!, centsTolerance)
+        : getFretboardDivisions(allPitchClasses, openStringNoteNames, centsTolerance),
+    [allPitchClasses, openStringNoteNames, showingSource, sourceOud, centsTolerance]
   );
 
   /**
@@ -459,6 +464,26 @@ export default function OudFretboard({
     return `${watar} — ${note} ${why}`;
   }
 
+  /**
+   * How far a dotted fret (tied for another watar) falls from this watar's
+   * nearest pitch: the pitch, and how many cents the fret sounds above (+) or
+   * below (−) it.
+   */
+  function probeReading(string: FretboardString, position: number) {
+    const cents = centsAtPosition(position);
+    const nearest = string.divisions.reduce((best, d) =>
+      Math.abs(centsAtPosition(d.position) - cents) < Math.abs(centsAtPosition(best.position) - cents) ? d : best
+    );
+    const difference = cents - centsAtPosition(nearest.position);
+    const { pitchClass } = nearest;
+    const name =
+      pitchClass.noteName && pitchClass.noteName !== "none"
+        ? getDisplayName(pitchClass.noteName, "note")
+        : pitchClass.fraction || `${Math.round(parseFloat(pitchClass.cents))}¢`;
+    const rounded = Math.round(difference * 10) / 10;
+    return `${name} ${rounded > 0 ? "+" : "−"}${Math.abs(rounded).toFixed(1)}¢`;
+  }
+
   return (
     <div className={"oud-fretboard" + (showingSource ? "" : " oud-fretboard_choosing-notes")}>
       <div className="oud-fretboard__controls">
@@ -493,6 +518,13 @@ export default function OudFretboard({
               )
             )}
           </select>
+        </div>
+
+        <div className="oud-fretboard__control">
+          <span className="oud-fretboard__control-label">{t("maqam.centsTolerance")}</span>
+          <span className="oud-fretboard__tolerance">
+            <CentsToleranceInput />
+          </span>
         </div>
 
         <div className="oud-fretboard__control">
@@ -683,10 +715,32 @@ export default function OudFretboard({
                       key={`p${i}`}
                       className="oud-fretboard__division oud-fretboard__division_phantom"
                       style={{ left: `${(position / windowEnd) * 100}%` }}
+                      onMouseEnter={() => setProbe({ stringIndex, position })}
+                      onMouseLeave={() => setProbe(null)}
                     >
+                      <span className="oud-fretboard__hit" />
                       <span className="oud-fretboard__tick" />
                     </span>
                   ))}
+
+                  {/* The hovered dotted fret, read off on this watar */}
+                  {probe && probe.stringIndex === stringIndex && (() => {
+                    const reading = probeReading(string, probe.position);
+                    const at = probe.position / windowEnd;
+                    return (
+                      <span className="oud-fretboard__probe" style={{ left: `${at * 100}%` }}>
+                        <span className="oud-fretboard__probe-line" />
+                        <span
+                          className={
+                            "oud-fretboard__probe-reading" +
+                            (at < 0.1 ? " oud-fretboard__probe-reading_start" : at > 0.9 ? " oud-fretboard__probe-reading_end" : "")
+                          }
+                        >
+                          {reading}
+                        </span>
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 <div className="oud-fretboard__tail" />
