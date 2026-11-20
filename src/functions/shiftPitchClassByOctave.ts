@@ -2,6 +2,7 @@ import PitchClass from "@/models/PitchClass";
 import NoteName, { getNoteNameIndexAndOctave, getNoteNameFromIndexAndOctave } from "@/models/NoteName";
 import { getEnglishNoteName, getSolfegeFromEnglishName } from "@/functions/noteNameMappings";
 import { shiftPitchClassBaseValue } from "@/functions/convertPitchClass";
+import { octaveEquivalentIndex } from "@/functions/octaveLayout";
 
 /**
  * Empty pitch class object used as a fallback when shifting operations fail.
@@ -29,8 +30,8 @@ const emptyPitchClass: PitchClass = {
  * Shifts a pitch class by a specified number of octaves using array lookup.
  * 
  * This is the preferred method for shifting pitch classes as it uses the
- * pre-computed pitch class array for accuracy. It finds the target pitch
- * class in a different octave by calculating the appropriate array index.
+ * pre-computed pitch class array for accuracy. It finds the same note in the
+ * target octave through octaveLayout, the one definition of octave equivalence.
  * 
  * @param allPitchClasses - Complete array of all available pitch classes
  * @param pitchClass - The pitch class to shift (can be undefined)
@@ -51,22 +52,15 @@ export default function shiftPitchClassByOctave(allPitchClasses: PitchClass[], p
     return emptyPitchClass;
   }
 
-  // Find the pitch class in the array using pitchClassIndex and octave
-  const pitchClassIndex = allPitchClasses.findIndex((c) => c.pitchClassIndex === pitchClass.pitchClassIndex && c.octave === pitchClass.octave);
-  if (pitchClassIndex === -1) return emptyPitchClass;
-
-  // Calculate the new array index after octave shift
-  // Assumes 4 octaves total, so numberOfPitchClasses = total length / 4
-  const numberOfPitchClasses = allPitchClasses.length / 4;
-  const newIndex = pitchClassIndex + octaveShift * numberOfPitchClasses;
-
-  // Check if the new index is within bounds
-  if (newIndex < 0 || newIndex >= allPitchClasses.length) {
-    // Return empty pitch class if out of bounds - octave shift not possible within system
+  // The same note in the target octave (see octaveLayout): by position where the
+  // octaves are halvings or doublings, by name across a stored octave 2
+  const newIndex = octaveEquivalentIndex(allPitchClasses, pitchClass, octaveShift);
+  if (newIndex === -1) {
+    // Octave shift not possible within the system
     return emptyPitchClass;
   }
 
-  // Return the pitch class at the calculated index with updated octave
+  // Return the pitch class at the target with updated octave
   return { ...allPitchClasses[newIndex], octave: pitchClass.octave + octaveShift };
 }
 
@@ -84,6 +78,10 @@ export default function shiftPitchClassByOctave(allPitchClasses: PitchClass[], p
 export function shiftPitchClassByOctaveExtended(allPitchClasses: PitchClass[], pitchClass: PitchClass | undefined, octaveShift: number): PitchClass {
   const found = shiftPitchClassByOctave(allPitchClasses, pitchClass, octaveShift);
   if (found.noteName !== "" || !pitchClass?.noteName) return found;
+  // Only registers beyond the table are synthesized. Inside it, a missing octave
+  // equivalent is real (a stored octave 2 can lack one) and stays missing.
+  const targetOctave = pitchClass.octave + octaveShift;
+  if (targetOctave >= 0 && targetOctave <= 3) return found;
 
   const cell = getNoteNameIndexAndOctave(pitchClass.noteName as NoteName);
   if (cell.index === -1) return found;

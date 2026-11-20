@@ -45,6 +45,7 @@ import { Maqam } from "@/models/Maqam";
 import { Jins } from "@/models/Jins";
 import PitchClass, { calculateInterval } from "@/models/PitchClass";
 import { shiftPitchClassByOctaveExtended } from "@/functions/shiftPitchClassByOctave";
+import { pitchClassFamilyKey } from "@/functions/octaveLayout";
 import transpositionsScrollMargin from "@/functions/transpositionsScrollMargin";
 import smoothScrollIntoPosition, { SCROLL_DURATION_MS as SHARED_SCROLL_DURATION_MS, SCROLL_SCHEDULE_DELAY_MS } from "@/functions/smoothScrollIntoPosition";
 import noteNameWithBreaks from "@/functions/noteNameWithBreaks";
@@ -827,13 +828,15 @@ const MaqamTranspositions: React.FC = () => {
         (ac) => !pitchClasses.some((cell, cellIndex) => isDegreeCell(cellIndex) && cell.pitchClassIndex === ac.pitchClassIndex && cell.octave === ac.octave)
       );
 
+      // "Same pitch class" is the tuning system's own octave equivalence (octaveLayout)
+      const family = (pc: PitchClass) => pitchClassFamilyKey(allPitchClasses, pc);
       const isPitchClassActive = (pitchClass: PitchClass, cellIndex: number) => {
         if (!isDegreeCell(cellIndex)) return false;
         if (rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave)) return true;
-        const sameIndexCells = pitchClasses.filter((cell, i) => isDegreeCell(i) && cell.pitchClassIndex === pitchClass.pitchClassIndex);
+        const sameIndexCells = pitchClasses.filter((cell, i) => isDegreeCell(i) && family(cell) === family(pitchClass));
         const lowestOctave = Math.min(...sameIndexCells.map((cell) => cell.octave));
         if (pitchClass.octave !== lowestOctave) return false;
-        return unmatchedActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
+        return unmatchedActives.some((ac) => family(ac) === family(pitchClass));
       };
 
       // One source of truth for the ghammāz column, so the note name and its

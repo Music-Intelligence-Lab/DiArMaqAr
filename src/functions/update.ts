@@ -3,6 +3,7 @@ import MaqamData, { Sayr } from "@/models/Maqam";
 import Pattern from "@/models/Pattern";
 import { Source, urlSafeSourceId, SourcePageReference } from "@/models/bibliography/Source";
 import TuningSystem from "@/models/TuningSystem";
+import validateTuningSystem from "@/functions/validateTuningSystem";
 import { getSources } from "@/functions/import";
 
 /**
@@ -95,6 +96,8 @@ function convertSuyurSourceIdsToUrlSafe(suyur: Sayr[], sources: Source[]): Sayr[
  * @throws Error if the API request fails or returns a non-OK status
  */
 export async function updateTuningSystems(newSystems: TuningSystem[], modifiedIds?: string[]) {
+  // Refuse to write a tuning system that could not be read back
+  newSystems.forEach(validateTuningSystem);
   newSystems.sort((a, b) => compareStringNumbers(a.getId(), b.getId()));
   const currentTimestamp = new Date().toISOString();
 
@@ -143,6 +146,12 @@ export async function updateTuningSystems(newSystems: TuningSystem[], modifiedId
           defaultReferenceFrequency: ts.getDefaultReferenceFrequency(),
           referenceFrequencies: ts.getReferenceFrequencies(),
           version: ts.getVersion(),
+          // Only systems with octaves stored as the source gives them carry these keys
+          ...(ts.getStoredOctaves() && {
+            tuningSystemPitchClassesByOctave: ts.getStoredOctaves()!.pitchClassValues,
+            noteNamesByOctave: ts.getStoredOctaves()!.noteNames,
+          }),
+          ...(ts.getSourceOud() && { sourceOud: ts.getSourceOud() }),
         }))
       ),
     });

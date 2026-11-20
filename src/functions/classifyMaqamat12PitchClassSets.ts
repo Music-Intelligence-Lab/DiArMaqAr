@@ -8,6 +8,7 @@ import { chooseSetNamesake, maqamFamilyReader, setNamedAfter } from "@/functions
 import { getIpnReferenceNoteName } from "@/functions/getIpnReferenceNoteName";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
+import { pitchClassFamilyKey } from "@/functions/octaveLayout";
 
 /**
  * Represents a 12-pitch-class set created from al-Kindi base with replacements
@@ -160,14 +161,20 @@ export function getMaqamForms(
   return calculateMaqamForms(allPitchClasses, ajnas, maqamData, 5);
 }
 
-/** The same pitch in every octave of a tuning system, lowest first. */
+/**
+ * The same pitch in every octave of a tuning system, lowest first: the tuning
+ * system's own octave equivalents (see octaveLayout), which are exact doublings
+ * except where the source gives an octave of its own.
+ */
 function octavesOf(pitchClass: PitchClass, tuningSystemPitchClasses: PitchClass[]): PitchClass[] {
-  const pitch = centsInOctave(parseFloat(pitchClass.cents));
+  const cents = parseFloat(pitchClass.cents);
+  const cell = tuningSystemPitchClasses.find(
+    (candidate) => candidate.noteName === pitchClass.noteName && Math.abs(parseFloat(candidate.cents) - cents) < 1e-6
+  );
+  if (!cell) throw new Error(`${pitchClass.noteName} (${pitchClass.cents} cents) is not a pitch of the tuning system`);
+  const family = pitchClassFamilyKey(tuningSystemPitchClasses, cell);
   return tuningSystemPitchClasses
-    .filter((pc) => {
-      const diff = Math.abs(centsInOctave(parseFloat(pc.cents)) - pitch);
-      return Math.min(diff, 1200 - diff) < 1e-6;
-    })
+    .filter((pc) => pitchClassFamilyKey(tuningSystemPitchClasses, pc) === family)
     .sort((a, b) => parseFloat(a.cents) - parseFloat(b.cents));
 }
 

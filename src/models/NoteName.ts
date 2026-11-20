@@ -1,11 +1,13 @@
 export const octaveZeroNoteNames = [
   "qarār yegāh",
+  "qarār tīk yegāh",
   "qarār qarār nīm ḥiṣār",
   "qarār shūrī",
   "qarār qarār ḥiṣār",
   "qarār qarār tīk ḥiṣār/shūrī",
   "qarār nīm ʿushayrān",
   "qarār ʿushayrān",
+  "qarār tīk ʿushayrān",
   "qarār nīm ʿajam ʿushayrān",
   "qarār nayrūz",
   "qarār ʿajam ʿushayrān",
@@ -21,6 +23,7 @@ export const octaveZeroNoteNames = [
   "qarār zīrgūleh",
   "qarār tīk zīrgūleh",
   "qarār dūgāh",
+  "qarār tīk dūgāh",
   "qarār nīm kurdī/nahāwand",
   "qarār nahāwand",
   "qarār kurdī",
@@ -39,51 +42,56 @@ export const octaveZeroNoteNames = [
 ];
 export const octaveOneNoteNames = [
   "yegāh", // 0
-  "qarār nīm ḥiṣār", // 1
-  "shūrī", //2
-  "qarār ḥiṣār", // 3
-  "qarār tīk ḥiṣār/shūrī", // 4
-  "nīm ʿushayrān", //5
-  "ʿushayrān", //6
-  "nīm ʿajam ʿushayrān", // 7
-  "nayrūz", // 8 — one comma below ʿajam ʿushayrān (al-Shawwā 1946:13)
-  "ʿajam ʿushayrān", // 9
-  "tīk ʿajam ʿushayrān",
-  "ʿirāq", // 11
-  "rahāwī", //12
-  "nīm kawasht", // 13
-  "kawasht", // 14
-  "tīk kawasht", //15
-  "rāst", // 16
-  "tīk rāst", //17
-  "nīm zīrgūleh", // 18
-  "zīrgūleh", // 19
-  "tīk zīrgūleh", // 20
-  "dūgāh", // 21
-  "nīm kurdī/nahāwand", // 22
-  "nahāwand", // 23
-  "kurdī", // 24
-  "tīk kūrdī", // 25
-  "segāh", // 26
-  "nīm būselīk", // 27
-  "būselīk/ʿushshāq", // 28
-  "tīk būselīk", // 29
-  "chahārgāh", // 30
-  "tīk chahārgāh", // 31
-  "nīm ḥijāz", // 32
-  "ṣabā", // 33
-  "ḥijāz", // 34
-  "tīk ḥijāz/ṣabā", // 35
-  "nīm nawā", // 36
+  "tīk yegāh", // 1
+  "qarār nīm ḥiṣār", // 2
+  "shūrī", // 3
+  "qarār ḥiṣār", // 4
+  "qarār tīk ḥiṣār/shūrī", // 5
+  "nīm ʿushayrān", // 6
+  "ʿushayrān", // 7
+  "tīk ʿushayrān", // 8
+  "nīm ʿajam ʿushayrān", // 9
+  "nayrūz", // 10 — one comma below ʿajam ʿushayrān (al-Shawwā 1946:13)
+  "ʿajam ʿushayrān", // 11
+  "tīk ʿajam ʿushayrān", // 12
+  "ʿirāq", // 13
+  "rahāwī", // 14
+  "nīm kawasht", // 15
+  "kawasht", // 16
+  "tīk kawasht", // 17
+  "rāst", // 18
+  "tīk rāst", // 19
+  "nīm zīrgūleh", // 20
+  "zīrgūleh", // 21
+  "tīk zīrgūleh", // 22
+  "dūgāh", // 23
+  "tīk dūgāh", // 24
+  "nīm kurdī/nahāwand", // 25
+  "nahāwand", // 26
+  "kurdī", // 27
+  "tīk kūrdī", // 28
+  "segāh", // 29
+  "nīm būselīk", // 30
+  "būselīk/ʿushshāq", // 31
+  "tīk būselīk", // 32
+  "chahārgāh", // 33
+  "tīk chahārgāh", // 34
+  "nīm ḥijāz", // 35
+  "ṣabā", // 36
+  "ḥijāz", // 37
+  "tīk ḥijāz/ṣabā", // 38
+  "nīm nawā", // 39
 ];
 export const octaveTwoNoteNames = [
   "nawā",
+  "tīk nawā",
   "nīm ḥiṣār",
   "jawāb shūrī",
   "ḥiṣār",
   "tīk ḥiṣār",
   "nīm ḥusaynī",
   "ḥusaynī",
+  "tīk ḥusaynī",
   "nīm ʿajam",
   "jawāb nayrūz",
   "ʿajam",
@@ -99,6 +107,7 @@ export const octaveTwoNoteNames = [
   "shahnāz",
   "jawāb tīk zīrgūleh",
   "muḥayyar",
+  "tīk muḥayyar",
   "nīm sunbuleh",
   "jawāb nahāwand",
   "sunbuleh/zawāl",
@@ -117,12 +126,14 @@ export const octaveTwoNoteNames = [
 ];
 export const octaveThreeNoteNames = [
   "saham/ramal tūtī",
+  "tīk saham/ramal tūtī",
   "jawāb nīm ḥiṣār",
   "jawāb jawāb shūrī",
   "jawāb ḥiṣār",
   "jawāb tīk ḥiṣār",
   "jawāb nīm ḥusaynī",
   "jawāb ḥusaynī",
+  "jawāb tīk ḥusaynī",
   "jawāb nīm ʿajam",
   "jawāb jawāb nayrūz",
   "jawāb ʿajam",
@@ -138,6 +149,7 @@ export const octaveThreeNoteNames = [
   "jawāb shahnāz",
   "jawāb jawāb tīk zīrgūleh",
   "jawāb muḥayyar",
+  "jawāb tīk muḥayyar",
   "jawāb nīm sunbuleh",
   "jawāb jawāb nahāwand",
   "jawāb sunbuleh/zawāl",
@@ -157,12 +169,14 @@ export const octaveThreeNoteNames = [
 
 export const octaveFourNoteNames = [
   "jawāb saham/ramal tūtī",
+  "jawāb tīk saham/ramal tūtī",
   "jawāb jawāb nīm ḥiṣār",
   "jawāb jawāb jawāb shūrī",
   "jawāb jawāb ḥiṣār",
   "jawāb jawāb tīk ḥiṣār",
   "jawāb jawāb nīm ḥusaynī",
   "jawāb jawāb ḥusaynī",
+  "jawāb jawāb tīk ḥusaynī",
   "jawāb jawāb nīm ʿajam",
   "jawāb jawāb jawāb nayrūz",
   "jawāb jawāb ʿajam",
@@ -178,6 +192,7 @@ export const octaveFourNoteNames = [
   "jawāb jawāb shahnāz",
   "jawāb jawāb jawāb tīk zīrgūleh",
   "jawāb jawāb muḥayyar",
+  "jawāb jawāb tīk muḥayyar",
   "jawāb jawāb nīm sunbuleh",
   "jawāb jawāb jawāb nahāwand",
   "jawāb jawāb sunbuleh/zawāl",
@@ -238,8 +253,8 @@ export function getNoteNameIndexAndOctave(noteName: NoteName): Cell {
 /**
  * Position of the note each nīm and tīk position varies, by index within an
  * octave. In the PAO note naming nīm X is X lowered and tīk X is X raised;
- * every octave array shares one 37-position layout, so the parents are read
- * once from octave one's names. 37 means position 0 of the next octave
+ * every octave array shares one position layout, so the parents are read
+ * once from octave one's names. octaveOneNoteNames.length means position 0 of the next octave
  * (nīm nawā → nawā).
  */
 const PARENT_POSITION: Map<number, number> = (() => {
@@ -251,8 +266,10 @@ const PARENT_POSITION: Map<number, number> = (() => {
     const match = variant(name);
     if (!match) return;
     const target = match[2].split("/")[0].trim();
-    const position = octaveOneNoteNames.findIndex(
-      (candidate) => !variant(candidate) && plain(candidate).split("/").map((part) => part.trim()).includes(target)
+    // The varied note is plain (tīk ḥiṣār → ḥiṣār) or itself a variant (nīm tīk ḥiṣār → tīk ḥiṣār)
+    const parts = (candidate: string) => plain(candidate).split("/").map((part) => part.trim());
+    const position = octaveOneNoteNames.findIndex((candidate) =>
+      variant(match[2]) ? candidate !== name && parts(candidate)[0] === target : !variant(candidate) && parts(candidate).includes(target)
     );
     if (position !== -1) parents.set(index, position);
     else if (plain(octaveTwoNoteNames[0]) === target) parents.set(index, octaveOneNoteNames.length);

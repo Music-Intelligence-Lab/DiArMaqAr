@@ -9,6 +9,7 @@ import { getEnglishNoteName } from "@/functions/noteNameMappings";
 import { entityToken, standardizeText } from "@/functions/export";
 import { calculateIpnReferenceMidiNote } from "@/functions/calculateIpnReferenceMidiNote";
 import { getIpnReferenceNoteNameWithOctave } from "@/functions/getIpnReferenceNoteName";
+import { pitchClassFamilyKey } from "@/functions/octaveLayout";
 import { renderPitchClassSpellings } from "@/functions/renderPitchClassIpnSpellings";
 import CentsToleranceInput from "@/components/cents-tolerance-input";
 import EntitySourceNote from "@/components/entity-source-note";
@@ -562,12 +563,14 @@ export default function JinsTranspositions() {
       // degrees. Same rule as the maqām table (see maqam-transpositions.tsx),
       // minus the octave-completion cell — a jins never grows one.
       const unmatchedActives = rowActives.filter((ac) => !pitchClasses.some((cell) => cell.pitchClassIndex === ac.pitchClassIndex && cell.octave === ac.octave));
+      // "Same pitch class" is the tuning system's own octave equivalence (octaveLayout)
+      const family = (pc: PitchClass) => pitchClassFamilyKey(allPitchClasses, pc);
       const isPitchClassActive = (pitchClass: PitchClass) => {
         if (rowActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex && ac.octave === pitchClass.octave)) return true;
-        const sameIndexCells = pitchClasses.filter((rowPitchClass) => rowPitchClass.pitchClassIndex === pitchClass.pitchClassIndex);
+        const sameIndexCells = pitchClasses.filter((rowPitchClass) => family(rowPitchClass) === family(pitchClass));
         const lowestOctave = Math.min(...sameIndexCells.map((cell) => cell.octave));
         if (pitchClass.octave !== lowestOctave) return false;
-        return unmatchedActives.some((ac) => ac.pitchClassIndex === pitchClass.pitchClassIndex);
+        return unmatchedActives.some((ac) => family(ac) === family(pitchClass));
       };
       // Octave renderings share transposition=false but only the canonical
       // tonic in its proper octave gets the base-form-style title (PAO name + badge)

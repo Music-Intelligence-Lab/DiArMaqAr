@@ -1,0 +1,16 @@
+@use "./variables" as *;
+
+// Editorial comments (CommentText with editorial): our NOTE and the source's
+// quoted words. Suyūr render without these.
+.comment-text__note {
+  @include comment-note;
+}
+
+.comment-text__note-label {
+  font-weight: $font-weight-semibold;
+  margin-inline-end: 0.3em;
+}
+
+.comment-text__quote {
+  color: $comment-quote-ink;
+}

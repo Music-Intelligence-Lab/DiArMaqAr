@@ -23,7 +23,7 @@ import { useLocalizedHref } from "@/hooks/use-localized-href";
  * The commentary column is currently HIDDEN (Khyam's ruling) — the block shows
  * sources only, and the lone sources section spans the full width. The comments
  * half was a `__comments-section` div holding an `<h3>{commentsLabel}:</h3>` and
- * a `<CommentText text={comments?.trim() ?? ""} className="maqam-jins-transpositions-shared__comments-text" />`,
+ * a `<CommentText editorial text={comments?.trim() ?? ""} className="maqam-jins-transpositions-shared__comments-text" />`,
  * at flex 3 against the sources column's flex 1. Its SCSS rules are still in
  * place (`_maqam-jins-shared-ui.scss`), as is the language pick the two call
  * sites made for the prop:

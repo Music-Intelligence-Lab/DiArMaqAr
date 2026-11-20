@@ -1,4 +1,4 @@
-import TuningSystem from "@/models/TuningSystem";
+import TuningSystem, { StorableOctave, StoredOctaves } from "@/models/TuningSystem";
 import NoteName, {
   TransliteratedNoteNameOctaveOne,
   TransliteratedNoteNameOctaveTwo,
@@ -7,6 +7,7 @@ import NoteName, {
   octaveTwoNoteNames,
   octaveThreeNoteNames,
   octaveFourNoteNames,
+  shiftNoteName,
 } from "@/models/NoteName";
 import detectPitchClassValueType from "@/functions/detectPitchClassType";
 import convertPitchClassValue, { shiftPitchClassBaseValue, frequencyToMidiNoteNumber } from "@/functions/convertPitchClass";
@@ -39,6 +40,8 @@ import PitchClass from "@/models/PitchClass";
  * @param inputReferenceFrequencies - Optional custom reference frequencies
  * @param inputNoteNameIndices - Optional custom note-name selection, as combined
  *   octave-one/octave-two indices (the admin's live grid; see below)
+ * @param inputStoredOctaves - Optional live stored octaves (the admin's edits);
+ *   when omitted, the tuning system's saved ones
  * @returns Complete array of PitchClass objects spanning multiple octaves
  */
 export default function getTuningSystemPitchClasses(
@@ -47,7 +50,8 @@ export default function getTuningSystemPitchClasses(
   tuningSystemPitchClasses: string[] = [],
   inputStringLength: number = 0,
   inputReferenceFrequencies: { [noteName: string]: number } = {},
-  inputNoteNameIndices: number[] = []
+  inputNoteNameIndices: number[] = [],
+  inputStoredOctaves?: StoredOctaves | null
 ): PitchClass[] {
   const pitchArr = tuningSystemPitchClasses.length ? tuningSystemPitchClasses : tuningSystem.getOriginalPitchClassValues();
   const nPC = pitchArr.length;
@@ -111,29 +115,76 @@ export default function getTuningSystemPitchClasses(
 
   const pitchClasses: PitchClass[] = [];
 
-  for (let octave = 0; octave < 4; octave++) {
-    for (let idx = 0; idx < nPC; idx++) {
-      const basePc = pitchArr[idx];
-      const shifted = shiftPitchClassBaseValue(basePc, type, octave as 0 | 1 | 2 | 3);
-      const conv = convertPitchClassValue(shifted, type, stringLength, actualReferenceFrequency);
-      if (!conv) continue;
+  // Octave 1 is always the stored list. Octaves 0, 2 and 3 come from their own
+  // stored lists when the source gives them (see StoredOctaves), and are
+  // otherwise derived as always: octave 0 is octave 1 halved, octave 2 is
+  // octave 1 doubled, octave 3 is octave 2 (stored or derived) doubled.
+  const stored = inputStoredOctaves !== undefined ? inputStoredOctaves : tuningSystem.getStoredOctaves();
+  const storedValues = (octave: StorableOctave) => stored?.pitchClassValues[octave];
+  const storedNames = (octave: StorableOctave): NoteName[] => {
+    const names = stored?.noteNames[startingNote]?.[octave];
+    if (!names) {
+      throw new Error(
+        `getTuningSystemPitchClasses: tuning system "${tuningSystem.getId()}" stores octave ${octave} but has no octave-${octave} names for the "${startingNote}" set.`
+      );
+    }
+    return names;
+  };
 
-      // noteName
-      const ci = selectedIndices[idx];
-      let noteName = "none";
-      if (ci >= 0) {
-        if (ci < O1) {
-          noteName = [octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames][octave][ci] ?? "none";
-        } else {
-          const loc = ci - O1;
-          noteName = [octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames][octave][loc] ?? "none";
-        }
+  /** Octave-1-derived name of a column, by the combined octave-one/octave-two index (unchanged logic). */
+  const derivedName = (octave: number, idx: number): string => {
+    const ci = selectedIndices[idx];
+    if (ci < 0) return "none";
+    if (ci < O1) return [octaveZeroNoteNames, octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames][octave][ci] ?? "none";
+    return [octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames][octave][ci - O1] ?? "none";
+  };
+  const fromOctaveOne = (octave: 0 | 1 | 2 | 3) => ({
+    values: pitchArr.map((value) => shiftPitchClassBaseValue(value, type, octave)),
+    name: (idx: number) => derivedName(octave, idx),
+    // abjad names cover octaves 1 and 2; octave 0 reads octave 1's, octave 3 octave 2's
+    abjad: (idx: number) => abjadArr[(octave <= 1 ? 0 : nPC) + idx] || "",
+  });
+  const fromStored = (octave: StorableOctave, values: string[]) => {
+    const names = storedNames(octave);
+    return {
+      values,
+      name: (idx: number) => names[idx] ?? "none",
+      // the abjad list's second half belongs to octave 2, whatever its source
+      abjad: (idx: number) => (octave === 2 ? abjadArr[nPC + idx] || "" : ""),
+    };
+  };
+
+  const storedTwo = storedValues(2);
+  const octaves = [
+    storedValues(0) ? fromStored(0, storedValues(0)!) : fromOctaveOne(0),
+    fromOctaveOne(1),
+    storedTwo ? fromStored(2, storedTwo) : fromOctaveOne(2),
+    storedValues(3)
+      ? fromStored(3, storedValues(3)!)
+      : storedTwo
+        ? (() => {
+            const names = storedNames(2);
+            return {
+              values: storedTwo.map((value) => shiftPitchClassBaseValue(value, type, 2)),
+              name: (idx: number) => (names[idx] && names[idx] !== "none" ? shiftNoteName(names[idx], 1) : "none"),
+              abjad: (idx: number) => abjadArr[nPC + idx] || "",
+            };
+          })()
+        : fromOctaveOne(3),
+  ];
+
+  for (let octave = 0; octave < 4; octave++) {
+    const spec = octaves[octave];
+    for (let idx = 0; idx < spec.values.length; idx++) {
+      const shifted = spec.values[idx];
+      const conv = convertPitchClassValue(shifted, type, stringLength, actualReferenceFrequency);
+      // A skipped cell would shift every later cell's position, so refuse instead
+      if (!conv) {
+        throw new Error(`getTuningSystemPitchClasses: "${shifted}" (octave ${octave}, position ${idx + 1}) in tuning system "${tuningSystem.getId()}" cannot be read as a ${type} value.`);
       }
 
-      // abjadName (only for octaves 1 & 2)
-      let abjadName = "";
-      const offset = octave <= 1 ? 0 : nPC;
-      abjadName = abjadArr[offset + idx] || "";
+      const noteName = spec.name(idx);
+      const abjadName = spec.abjad(idx);
 
       // fretDivision
       const thisLen = parseFloat(conv.stringLength);

@@ -1,4 +1,5 @@
 import PitchClass from "@/models/PitchClass";
+import { octaveRepeatStartIndex, pitchClassFamilyKey } from "@/functions/octaveLayout";
 
 /**
  * Extends a selection of pitch classes to include related pitches across octaves.
@@ -19,32 +20,18 @@ import PitchClass from "@/models/PitchClass";
 export default function extendSelectedPitchClasses(allPitchClasses: PitchClass[], selectedPitchClasses: PitchClass[]) {
   const extendedPitchClasses = [];
 
-  // Find the cutoff point for octave extension
-  // This determines which pitches qualify for octave duplication
-  let sliceIndex = 0;
-  const lastPitchClass = selectedPitchClasses[selectedPitchClasses.length - 1];
-
-  // Calculate the slice index based on frequency doubling relationship
-  // Pitches whose frequency doubled is still within the selection range
-  // are candidates for extension
-  for (let i = 0; i < selectedPitchClasses.length; i++) {
-    const currentFreq = parseFloat(selectedPitchClasses[i].frequency);
-    const lastFreq = parseFloat(lastPitchClass.frequency);
-
-    // If doubling this frequency keeps it within the last pitch's frequency,
-    // it's within the octave extension range
-    if (currentFreq * 2 <= lastFreq) {
-      sliceIndex = i + 1;
-    }
-  }
+  // Find the cutoff point for octave extension: pitches whose octave above is
+  // still within the selection range qualify for octave duplication
+  const sliceIndex = octaveRepeatStartIndex(allPitchClasses, selectedPitchClasses);
 
   // Process each pitch class in the complete set
+  const family = (pc: PitchClass) => pitchClassFamilyKey(allPitchClasses, pc);
   for (const pitchClass of allPitchClasses) {
-    const currentIndex = pitchClass.pitchClassIndex;
+    const currentFamily = family(pitchClass);
 
-    // Find all selected pitch classes that share the same pitchClassIndex
+    // Find all selected pitch classes that are this note in some octave
     // (same pitch class, different octaves)
-    const filteredPitchClassIndices = selectedPitchClasses.filter((pc) => pc.pitchClassIndex === currentIndex);
+    const filteredPitchClassIndices = selectedPitchClasses.filter((pc) => family(pc) === currentFamily);
 
     if (filteredPitchClassIndices.length > 0) {
       // Check if this exact pitch class (same pitchClassIndex and octave) exists in selection

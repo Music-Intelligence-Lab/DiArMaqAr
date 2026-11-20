@@ -23,10 +23,10 @@ import {
   SourcePageReference,
   stringifySource,
 } from "@/models/bibliography/Source";
-import { compareNormalized } from "@/functions/normalizeForSort";
 import { matchesSearchQuery } from "@/functions/searchMatch";
 import useRememberedCarouselScroll from "@/hooks/use-remembered-carousel-scroll";
 import TuningSystemOctaveTables from "./tuning-system-octave-tables";
+import OudFretboard from "./oud-fretboard";
 import JinsData from "@/models/Jins";
 import MaqamData, { Maqam } from "@/models/Maqam";
 import ExportModal from "./export-modal";
@@ -38,6 +38,25 @@ import FrequencyKnob from "./frequency-knob";
 import { useLocalizedHref } from "@/hooks/use-localized-href";
 import scrollCarouselByColumns from "@/functions/scrollCarouselByColumns";
 import CommentText from "./comment-text";
+import validateTuningSystem from "@/functions/validateTuningSystem";
+import deriveOctavesFromSourceOud from "@/functions/deriveOctavesFromSourceOud";
+import { STORABLE_OCTAVES, StorableOctave } from "@/models/TuningSystem";
+import SourceOudEditor from "./source-oud-editor";
+import AdminSection from "./admin-section";
+import PageReferenceChips from "./page-reference-chips";
+import { detailsSummary, octaveCounts, paragraphCount } from "@/functions/adminSummaries";
+
+/**
+ * Reads one stored-octave box: one value per line, in octave 1's unit. An
+ * empty box means the octave is worked out automatically (null). A line that
+ * does not read is a problem, and the box's values are not used until it is fixed.
+ */
+function readOctaveBox(text: string, type: string): { values: string[] | null; problem: string | null } {
+  const lines = text.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
+  if (!lines.length) return { values: null, problem: null };
+  const bad = lines.find((line) => (type === "fraction" ? !/^[1-9]\d*[/:][1-9]\d*$/.test(line) : !isFinite(Number(line))));
+  return bad === undefined ? { values: lines, problem: null } : { values: null, problem: bad };
+}
 
 function isTuningSystemDisabled(
   tuningSystem: TuningSystem,
@@ -87,6 +106,12 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const lh = useLocalizedHref();
 
   const {
+    storedOctaves,
+    setStoredOctaveValues,
+    sourceOud,
+    setSourceOud,
+    tuningView,
+    setTuningView,
     tuningSystems,
     setTuningSystems,
     selectedTuningSystem,
@@ -113,6 +138,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     selectedJinsData,
     selectedMaqamData,
     selectedMaqam,
+    selectedPitchClasses,
   } = useAppContext();
 
   const { tuningSystemsFilter, setTuningSystemsFilter } = useFilterContext();
@@ -121,6 +147,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
   const { listRef, onScroll } = useRememberedCarouselScroll("tuningSystems", language === "ar");
 
   const [searchQuery, setSearchQuery] = useState("");
+
 
   const {
     clearHangingNotes,
@@ -391,27 +418,44 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
     clearHangingNotes();
   };
 
-  const updateSourceRefs = (
-    index: number,
-    newRef: Partial<SourcePageReference>
-  ) => {
-    const list = [...sourcePageReferences];
-    list[index] = { ...list[index], ...newRef } as SourcePageReference;
-    setSourcePageReferences(list);
-  };
+  /** Why the last save was refused, shown above the buttons */
+  const [saveError, setSaveError] = useState<string | null>(null);
 
-  const removeSourceRef = (index: number) => {
-    const refs = sourcePageReferences;
-    const newList = refs.filter((_, i) => i !== index);
-    setSourcePageReferences(newList);
-  };
+  /**
+   * The text of the octave 0, 2 and 3 boxes as typed, for the tuning system it
+   * was typed on. Without a draft a box shows the octave's stored values.
+   */
+  const [octaveDrafts, setOctaveDrafts] = useState<{ tuningSystemId: string; text: Record<StorableOctave, string> } | null>(null);
+  const [sourceOudValid, setSourceOudValid] = useState(true);
+  const [deriveError, setDeriveError] = useState<string | null>(null);
+  const octaveOneType = detectPitchClassValueType(tuningSystemPitchClassesArray);
+  const canStoreOctaves = octaveOneType !== "unknown" && octaveOneType !== "fretDivision";
+  const octaveText = (octave: StorableOctave) =>
+    octaveDrafts && octaveDrafts.tuningSystemId === selectedTuningSystem?.getId()
+      ? octaveDrafts.text[octave]
+      : (storedOctaves?.pitchClassValues[octave] ?? []).join("\n");
+  const octaveProblems = STORABLE_OCTAVES.map((octave) => ({ octave, problem: readOctaveBox(octaveText(octave), octaveOneType).problem })).filter((p) => p.problem);
 
-  const addSourceRef = () => {
-    const refs = sourcePageReferences;
-    const newRef: SourcePageReference = { sourceId: "", page: "" };
-    const newList = [...refs, newRef];
-    setSourcePageReferences(newList);
-  };
+  function setOctaveBoxes(changes: Partial<Record<StorableOctave, string>>) {
+    if (!selectedTuningSystem) return;
+    const text = Object.fromEntries(STORABLE_OCTAVES.map((octave) => [octave, changes[octave] ?? octaveText(octave)])) as Record<StorableOctave, string>;
+    setOctaveDrafts({ tuningSystemId: selectedTuningSystem.getId(), text });
+    const readable = Object.entries(changes).map(([octave, value]) => [octave, readOctaveBox(value!, octaveOneType)] as const);
+    if (readable.some(([, read]) => read.problem)) return;
+    setStoredOctaveValues(Object.fromEntries(readable.map(([octave, read]) => [octave, read.values])));
+  }
+
+  /** Fills octaves 0 and 3 from the source's ʿūd, continued in fourths. */
+  function deriveOuterOctaves() {
+    if (!sourceOud) return;
+    try {
+      const derived = deriveOctavesFromSourceOud(tuningSystemPitchClassesArray, storedOctaves?.pitchClassValues[2] ?? null, sourceOud);
+      setDeriveError(null);
+      setOctaveBoxes({ 0: derived[0].join("\n"), 3: derived[3].join("\n") });
+    } catch (error) {
+      setDeriveError(error instanceof Error ? error.message : String(error));
+    }
+  }
 
   // Handle creating or updating a system:
   const handleSaveTuningSystem = (givenNoteNames: NoteName[][] = []) => {
@@ -420,7 +464,20 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         ? givenNoteNames
         : selectedTuningSystem?.getNoteNameSets() || [[]];
 
+    // Never save the last readable state behind a box that no longer reads
+    if (octaveProblems.length || !sourceOudValid) {
+      setSaveError(t("tuningSystem.fixBeforeSaving"));
+      return;
+    }
+
     if (selectedTuningSystem) {
+      // Stored-octave names as edited, kept only for sets that are being saved
+      const savedStoredOctaves = storedOctaves && {
+        pitchClassValues: storedOctaves.pitchClassValues,
+        noteNames: Object.fromEntries(
+          Object.entries(storedOctaves.noteNames).filter(([startingNote]) => usedNoteNames.some((set) => set[0] === startingNote))
+        ),
+      };
       const updated = new TuningSystem(
         titleEnglish,
         titleArabic,
@@ -439,8 +496,18 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
         referenceFrequencies,
         Number(defaultReferenceFrequency),
         true,
-        selectedTuningSystem.getVersion()
+        selectedTuningSystem.getVersion(),
+        savedStoredOctaves,
+        sourceOud
       );
+      // Refuse to save stored octaves that would not load back, and say why
+      try {
+        validateTuningSystem(updated);
+      } catch (error) {
+        setSaveError(error instanceof Error ? error.message : String(error));
+        return;
+      }
+      setSaveError(null);
       const updatedList = selectedTuningSystem.isSaved()
         ? tuningSystems.map((ts) =>
             ts.getId() === selectedTuningSystem.getId() ? updated : ts
@@ -569,8 +636,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
     setSelectedIndices(newSelectedIndices);
 
-    // 5. Re‐pad selectedAbjadNames to length = newArr.length * 2
-    const totalAbjadSlots = newArr.length * 2;
+    // 5. Re‐pad selectedAbjadNames: octave 1's slots then octave 2's, which is
+    // its own count when the source gives octave 2 (see StoredOctaves)
+    const totalAbjadSlots = newArr.length + (storedOctaves?.pitchClassValues[2]?.length ?? newArr.length);
     const padded = Array(totalAbjadSlots).fill("");
     setSelectedAbjadNames(padded);
   }
@@ -740,212 +808,123 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
 
       {admin && selectedTuningSystem && (
         <div className="tuning-system-manager__form">
-          {/* Identification / Titles */}
-          <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="titleEnglishField"
-              >
-                {t("tuningSystem.titleEnglish")}
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="titleEnglishField"
-                type="text"
-                value={titleEnglish ?? ""}
-                onChange={(e) => setTitleEnglish(e.target.value)}
-              />
-            </div>
-
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="titleArabicField"
-              >
-                {t("tuningSystem.titleArabic")}
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="titleArabicField"
-                type="text"
-                dir="rtl"
-                value={titleArabic ?? ""}
-                onChange={(e) => setTitleArabic(e.target.value)}
-              />
-            </div>
-
-            {/* Year / Source / Creator */}
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="yearField"
-              >
-                {t("tuningSystem.year")}
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="yearField"
-                type="text"
-                value={year ?? ""}
-                onChange={(e) => setYear(e.target.value)}
-              />
-            </div>
+          {/* Save first: the form is long and the octave tables follow it */}
+          <div className="tuning-system-manager__buttons">
+            <button
+              className="tuning-system-manager__save-button"
+              onClick={() => handleSaveTuningSystem()}
+              disabled={!(!haveIndicesChanged() || getFirstNoteName(selectedIndices) === "none")}
+            >
+              {selectedTuningSystem.isSaved() ? t("tuningSystem.save") : t("tuningSystem.create")}
+            </button>
+            <button className="tuning-system-manager__delete-button" type="button" onClick={handleDelete}>
+              {t("tuningSystem.deleteTuningSystem")}
+            </button>
           </div>
+          {saveError && (
+            <p className="tuning-system-manager__save-error" role="alert">
+              {saveError}
+            </p>
+          )}
 
-          <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__sources-select-container">
-              {sourcePageReferences.length < 6 && (
-                <button
-                  className="tuning-system-manager__source-add-button"
-                  onClick={addSourceRef}
-                >
-                  {t("tuningSystem.addSource")}
-                </button>
-              )}
-              {sourcePageReferences.map((ref, idx) => (
-                <div
-                  key={idx}
-                  className="tuning-system-manager__source-select-item"
-                >
-                  <select
-                    className="tuning-system-manager__source-select"
-                    value={ref.sourceId}
-                    onChange={(e) =>
-                      updateSourceRefs(idx, { sourceId: e.target.value })
-                    }
-                  >
-                    <option value="">{t("tuningSystem.selectSource")}</option>
-                    {[...sources]
-                      .sort((a, b) => compareNormalized(a.getTitleEnglish(), b.getTitleEnglish()))
-                      .map((s) => (
-                        <option key={s.getId()} value={s.getId()}>
-                          {s.getTitleEnglish()}
-                        </option>
-                      ))}
-                  </select>
-                  <input
-                    className="tuning-system-manager__source-input"
-                    type="text"
-                    value={ref.page}
-                    placeholder={t("tuningSystem.page")}
-                    onChange={(e) =>
-                      updateSourceRefs(idx, { page: e.target.value })
-                    }
-                  />
-                  <button
-                    className="jins-manager__source-delete-button"
-                    onClick={() => removeSourceRef(idx)}
-                  >
-                    {t("tuningSystem.delete")}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="creatorEnglishField"
-              >
-                {t("tuningSystem.creatorEnglish")}
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="creatorEnglishField"
-                type="text"
-                value={creatorEnglish ?? ""}
-                onChange={(e) => setCreatorEnglish(e.target.value)}
-              />
-            </div>
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="creatorArabicField"
-              >
-                {t("tuningSystem.creatorArabic")}
-              </label>
-              <input
-                className="tuning-system-manager__input"
-                id="creatorArabicField"
-                type="text"
-                dir="rtl"
-                value={creatorArabic ?? ""}
-                onChange={(e) => setCreatorArabic(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Comments */}
-          <div className="tuning-system-manager__group">
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="commentsEnglishField"
-              >
-                {t("tuningSystem.commentsEnglish")}
-              </label>
-              <textarea
-                rows={5}
-                className="tuning-system-manager__input"
-                id="commentsEnglishField"
-                value={commentsEnglish}
-                onChange={(e) => setCommentsEnglish(e.target.value)}
-              />
-            </div>
-
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="commentsArabicField"
-              >
-                {t("tuningSystem.commentsArabic")}
-              </label>
-              <textarea
-                rows={5}
-                className="tuning-system-manager__input"
-                id="commentsArabicField"
-                dir="rtl"
-                value={commentsArabic}
-                onChange={(e) => setCommentsArabic(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="tuning-system-manager__group">
-            {/* Pitch Classes (textarea, each line => one element in string[]) */}
-            <div className="tuning-system-manager__input-container">
-              <label
-                className="tuning-system-manager__label"
-                htmlFor="pitchClassesField"
-              >
-                {t("tuningSystem.pitchClasses")}{" "}
-                {detectPitchClassValueType(
-                  tuningSystemPitchClasses.split("\n")
-                ) !== "unknown" && (
-                  <span className="tuning-system-manager__pitch-class-type">
-                    {"// " +
-                      detectPitchClassValueType(
-                        tuningSystemPitchClasses.split("\n")
-                      )}
-                  </span>
-                )}
-              </label>
-              <textarea
-                className="tuning-system-manager__textarea"
-                id="pitchClassesField"
-                rows={5}
-                value={tuningSystemPitchClasses}
-                onChange={handlePitchClassesChange}
-              />
-            </div>
-
-            {/* Numeric fields */}
-            <div className="tuning-system-manager__input-container">
+          <AdminSection
+            id="tuningSystem.details"
+            title={t("adminSection.details")}
+            summary={detailsSummary(language === "ar" ? creatorArabic : creatorEnglish, year, t("adminSection.referenceCount").replace("{count}", String(sourcePageReferences.length)))}
+            defaultOpen={false}
+            forceOpen={!selectedTuningSystem.isSaved()}
+          >
+            <div className="tuning-system-manager__group">
               <div className="tuning-system-manager__input-container">
-                <label
-                  className="tuning-system-manager__label"
-                  htmlFor="stringLengthField"
-                >
+                <label className="tuning-system-manager__label" htmlFor="titleEnglishField">
+                  {t("tuningSystem.titleEnglish")}
+                </label>
+                <input className="tuning-system-manager__input" id="titleEnglishField" type="text" value={titleEnglish ?? ""} onChange={(e) => setTitleEnglish(e.target.value)} />
+              </div>
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="titleArabicField">
+                  {t("tuningSystem.titleArabic")}
+                </label>
+                <input className="tuning-system-manager__input" id="titleArabicField" type="text" dir="rtl" value={titleArabic ?? ""} onChange={(e) => setTitleArabic(e.target.value)} />
+              </div>
+              <div className="tuning-system-manager__input-container tuning-system-manager__input-container_narrow">
+                <label className="tuning-system-manager__label" htmlFor="yearField">
+                  {t("tuningSystem.year")}
+                </label>
+                <input className="tuning-system-manager__input" id="yearField" type="text" value={year ?? ""} onChange={(e) => setYear(e.target.value)} />
+              </div>
+            </div>
+            <div className="tuning-system-manager__group">
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="creatorEnglishField">
+                  {t("tuningSystem.creatorEnglish")}
+                </label>
+                <input className="tuning-system-manager__input" id="creatorEnglishField" type="text" value={creatorEnglish ?? ""} onChange={(e) => setCreatorEnglish(e.target.value)} />
+              </div>
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="creatorArabicField">
+                  {t("tuningSystem.creatorArabic")}
+                </label>
+                <input className="tuning-system-manager__input" id="creatorArabicField" type="text" dir="rtl" value={creatorArabic ?? ""} onChange={(e) => setCreatorArabic(e.target.value)} />
+              </div>
+            </div>
+            <div className="tuning-system-manager__input-container">
+              <span className="tuning-system-manager__label">{t("adminSection.references")}</span>
+              <PageReferenceChips references={sourcePageReferences} sources={sources} onChange={setSourcePageReferences} />
+            </div>
+          </AdminSection>
+
+          <AdminSection
+            id="tuningSystem.values"
+            title={t("adminSection.values")}
+            summary={t("adminSection.valueCounts").replace("{counts}", octaveCounts(tuningSystemPitchClassesArray, storedOctaves).join(" · "))}
+            defaultOpen
+            // Kept open while it holds a problem, so a refused save never points at a folded section
+            forceOpen={!selectedTuningSystem.isSaved() || octaveProblems.length > 0 || !!deriveError}
+          >
+            <p className="tuning-system-manager__hint">
+              {canStoreOctaves ? t("tuningSystem.storedOctavesHint") : t("tuningSystem.storedOctavesUnavailable").replace("{type}", octaveOneType)}
+            </p>
+            <div className="tuning-system-manager__values-grid">
+              {([0, 1, 2, 3] as const).map((octave) => {
+                if (octave === 1) {
+                  return (
+                    <div key={octave} className="tuning-system-manager__input-container">
+                      <label className="tuning-system-manager__label" htmlFor="pitchClassesField">
+                        {t("tuningSystem.octaveValues").replace("{octave}", "1")}{" "}
+                        {octaveOneType !== "unknown" && <span className="tuning-system-manager__pitch-class-type">{"// " + octaveOneType}</span>}
+                      </label>
+                      <textarea className="tuning-system-manager__textarea" id="pitchClassesField" rows={10} value={tuningSystemPitchClasses} onChange={handlePitchClassesChange} />
+                    </div>
+                  );
+                }
+                if (!canStoreOctaves) return null;
+                const problem = octaveProblems.find((p) => p.octave === octave)?.problem;
+                return (
+                  <div key={octave} className="tuning-system-manager__input-container">
+                    <label className="tuning-system-manager__label" htmlFor={`octave${octave}Field`}>
+                      {t("tuningSystem.octaveValues").replace("{octave}", String(octave))}
+                    </label>
+                    <textarea
+                      className="tuning-system-manager__textarea"
+                      id={`octave${octave}Field`}
+                      rows={10}
+                      placeholder={t(`tuningSystem.octave${octave}Automatic`)}
+                      value={octaveText(octave)}
+                      onChange={(e) => setOctaveBoxes({ [octave]: e.target.value })}
+                    />
+                    {problem && (
+                      <p className="tuning-system-manager__save-error" role="alert">
+                        {t("tuningSystem.octaveValueProblem").replace("{value}", problem).replace("{type}", octaveOneType)}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="tuning-system-manager__group">
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="stringLengthField">
                   {t("tuningSystem.stringLength")}
                 </label>
                 <input
@@ -954,17 +933,11 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   type="number"
                   onFocus={(e) => e.target.select()}
                   value={tuningSystemStringLength ?? 0}
-                  onChange={(e) =>
-                    setTuningSystemStringLength(Number(e.target.value))
-                  }
+                  onChange={(e) => setTuningSystemStringLength(Number(e.target.value))}
                 />
               </div>
-
               <div className="tuning-system-manager__input-container">
-                <label
-                  className="tuning-system-manager__label"
-                  htmlFor="refFreqField"
-                >
+                <label className="tuning-system-manager__label" htmlFor="refFreqField">
                   {t("tuningSystem.defaultReferenceFrequency")}
                 </label>
                 <input
@@ -973,40 +946,67 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                   type="number"
                   onFocus={(e) => e.target.select()}
                   value={defaultReferenceFrequency ?? 0}
-                  onChange={(e) =>
-                    setDefaultReferenceFrequency(Number(e.target.value))
-                  }
+                  onChange={(e) => setDefaultReferenceFrequency(Number(e.target.value))}
                 />
               </div>
             </div>
-          </div>
-
-          {/* Buttons */}
-          <div className="tuning-system-manager__buttons">
-            <button
-              className="tuning-system-manager__save-button"
-              onClick={() => handleSaveTuningSystem()}
-              disabled={
-                !(
-                  !haveIndicesChanged() ||
-                  getFirstNoteName(selectedIndices) === "none"
-                )
-              }
-            >
-              {selectedTuningSystem.isSaved()
-                ? t("tuningSystem.save")
-                : t("tuningSystem.create")}
-            </button>
-            {selectedTuningSystem && (
-              <button
-                className="tuning-system-manager__delete-button"
-                type="button"
-                onClick={handleDelete}
-              >
-                {t("tuningSystem.deleteTuningSystem")}
-              </button>
+            {canStoreOctaves && sourceOud && (
+              <div className="tuning-system-manager__derive">
+                <button
+                  type="button"
+                  className="tuning-system-manager__source-add-button"
+                  onClick={deriveOuterOctaves}
+                  disabled={octaveOneType !== "fraction" || !sourceOudValid || octaveProblems.length > 0}
+                >
+                  {t("tuningSystem.deriveOuterOctaves")}
+                </button>
+                <span className="tuning-system-manager__hint">
+                  {octaveOneType === "fraction" ? t("tuningSystem.deriveOuterOctavesHint") : t("tuningSystem.deriveNeedsRatios")}
+                </span>
+              </div>
             )}
-          </div>
+            {deriveError && (
+              <p className="tuning-system-manager__save-error" role="alert">
+                {deriveError}
+              </p>
+            )}
+          </AdminSection>
+
+          <AdminSection
+            id="tuningSystem.comments"
+            title={t("adminSection.comments")}
+            summary={t("adminSection.paragraphs").replace("{en}", String(paragraphCount(commentsEnglish))).replace("{ar}", String(paragraphCount(commentsArabic)))}
+            defaultOpen={false}
+          >
+            <div className="tuning-system-manager__group">
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="commentsEnglishField">
+                  {t("tuningSystem.commentsEnglish")}
+                </label>
+                <textarea rows={14} className="tuning-system-manager__input" id="commentsEnglishField" value={commentsEnglish} onChange={(e) => setCommentsEnglish(e.target.value)} />
+              </div>
+              <div className="tuning-system-manager__input-container">
+                <label className="tuning-system-manager__label" htmlFor="commentsArabicField">
+                  {t("tuningSystem.commentsArabic")}
+                </label>
+                <textarea rows={14} className="tuning-system-manager__input" id="commentsArabicField" dir="rtl" value={commentsArabic} onChange={(e) => setCommentsArabic(e.target.value)} />
+              </div>
+            </div>
+          </AdminSection>
+
+          <AdminSection
+            id="tuningSystem.oud"
+            title={t("adminSection.oud")}
+            summary={
+              sourceOud
+                ? t("adminSection.oudCounts").replace("{strings}", String(sourceOud.strings.length)).replace("{frets}", String(sourceOud.frets.length))
+                : t("sourceOud.none")
+            }
+            defaultOpen={false}
+            forceOpen={!sourceOudValid}
+          >
+            <SourceOudEditor key={selectedTuningSystem.getId()} sourceOud={sourceOud} onChange={setSourceOud} onValidityChange={setSourceOudValid} sources={sources} />
+          </AdminSection>
         </div>
       )}
 
@@ -1317,6 +1317,9 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
               </div>
             </div>
 
+            {/* String length and view top-aligned with the notes' header; export on
+                the line below, level with the second line of notes */}
+            <div className="tuning-system-manager__options-group">
             <div className="tuning-system-manager__options-column tuning-system-manager__options-column--string-length">
               <label
                 className="tuning-system-manager__options-header"
@@ -1336,6 +1339,39 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 className="tuning-system-manager__starting-note-input"
               />
             </div>
+
+            {/* Which presentation of the tanghīm is showing. It sits with the
+                starting note and string length because it belongs to the same
+                decision — how this tanghīm is being read — rather than to the
+                presentation it selects. */}
+            <div className="tuning-system-manager__options-column tuning-system-manager__options-column--view">
+              <span className="tuning-system-manager__options-header">
+                {t("fretboard.view")}
+              </span>
+              <div className="tuning-system-manager__view-segments" role="group">
+                <button
+                  className={
+                    "tuning-system-manager__view-segment" +
+                    (tuningView === "tables" ? " tuning-system-manager__view-segment_active" : "")
+                  }
+                  aria-pressed={tuningView === "tables"}
+                  onClick={() => setTuningView("tables")}
+                >
+                  {t("fretboard.viewTables")}
+                </button>
+                <button
+                  className={
+                    "tuning-system-manager__view-segment" +
+                    (tuningView === "strings" ? " tuning-system-manager__view-segment_active" : "")
+                  }
+                  aria-pressed={tuningView === "strings"}
+                  onClick={() => setTuningView("strings")}
+                >
+                  {t("fretboard.viewFretboard")}
+                </button>
+              </div>
+            </div>
+
 
             {admin && (
               <div className="tuning-system-manager__starting-note-right">
@@ -1370,15 +1406,34 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
                 </button>
               </div>
             )}
+            </div>
           </div>
         )}
       </div>
 
-      {/* TUNING OCTAVES TABLES GRID */}
+      {/* TUNING OCTAVES TABLES GRID, or the same pitches as dasātīn on awtār.
+          Mutually exclusive: one presentation of the tanghīm at a time. The
+          taḥlīl below is downstream analysis of the selection, so it stays. */}
 
-      <TuningSystemOctaveTables admin={admin} />
+      {tuningView === "tables" ? (
+        <TuningSystemOctaveTables admin={admin} />
+      ) : (
+        <OudFretboard highlightPitchClasses={selectedPitchClasses} />
+      )}
 
       <SelectedPitchClassesAnalysis />
+
+      {/* The source's ʿūd note, in the strings view only: it describes how
+          the strings view represents the source, so it sits with that view,
+          above the comments and sources, in the same comment layout. */}
+      {selectedTuningSystem && tuningView === "strings" && sourceOud && (sourceOud.noteEnglish.trim() || sourceOud.noteArabic.trim()) && (
+        <div className="tuning-system-manager__comments-sources-container">
+          <div className="tuning-system-manager__comments-section">
+            <h3>{t("sourceOud.noteHeading")}</h3>
+            <CommentText editorial text={language === "ar" && sourceOud.noteArabic.trim() ? sourceOud.noteArabic : sourceOud.noteEnglish} />
+          </div>
+        </div>
+      )}
 
       {/* COMMENTS AND SOURCES — closes the page, sitting under the taḥlīl
           table: the tables are the argument, these are its attribution.
@@ -1391,6 +1446,7 @@ export default function TuningSystemManager({ admin }: { admin: boolean }) {
             <div className="tuning-system-manager__comments-section">
               <h3>{t("tuningSystem.comments")}</h3>
               <CommentText
+                editorial
                 text={
                   language === "ar" && selectedTuningSystem.getCommentsArabic().trim()
                     ? selectedTuningSystem.getCommentsArabic()

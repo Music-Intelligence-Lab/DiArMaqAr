@@ -1634,7 +1634,7 @@
   },
   {
     "id": "ibnsina_1037",
-    "titleEnglish": "7-Fret Oud 17-Tone",
+    "titleEnglish": "7-Fret Oud",
     "titleArabic": "7 نغمات 17 دستان على العود",
     "year": "1037",
     "sourceEnglish": "",
@@ -1642,13 +1642,13 @@
     "sourcePageReferences": [
       {
         "sourceId": "farmer_1937",
-        "page": "256"
+        "page": "251-256"
       }
     ],
     "creatorEnglish": "Ibn Sīnā ",
     "creatorArabic": "إبن سينا",
-    "commentsEnglish": "Farmer, H.G. (1937) ‘The Lute Scale of Avicenna’, The Journal of the Royal Asiatic Society of Great Britain and Ireland, pp. 249.\n\nAbū-ʿAlī al-Ḥusayn ibn-ʿAbdallāh Ibn-Sīnā [Avicenna] (ca. 970–1037) https://plato.stanford.edu/entries/ibn-sina/",
-    "commentsArabic": "",
+    "commentsEnglish": "Ibn Sīnā describes the frets of the ʿūd in the chapter on music of his Kitāb al-Shifāʾ. Farmer edited this passage from three manuscripts, printed it in the original Arabic and translated it (1937:251–255).\n\nNOTE: In this tanghīm (tuning system), the pitch classes of the first dīwān (octave) do not all have an exact double (octave equivalent) in the second dīwān. Farmer points this out (1937:256), as explained below, and gives it as the reason for the alternative tuning of the open strings that Ibn Sīnā also describes, a tuning that gives the two Zalzalian wusṭā pitches their exact doubles (see the tanghīm Ibn Sīnā (1037b)). For example, the octave equivalent of the mujannab fret on the bamm string, 273/256, would be 273/128. On the mathnā string this would need a fret at 2457/2048, between the old Persian wusṭā (which gives 512/243) and the Zalzalian wusṭā (which gives 13/6), where Ibn Sīnā ties no fret. So the nearest pitch class in the second dīwān is 512/243, which is lower than the exact octave equivalent by the ratio 66339/65536, approx. 21.08 cents. This happens because every string carries the same frets while each string is tuned a fourth above the string below it. Of the 17 pitch classes of the first dīwān, 10 have an exact double in the second dīwān.\nTo give PAO note names to these pitch classes, particularly in our extended dawāwīn (octaves) 0 and 3, the PAO note-naming convention is extended. A pitch class that is the exact double or the exact half of a named pitch class takes the octave-equivalent name of that pitch class, and so does a pitch class within 3 cents of that position. For example, in the tuning system with ʿushayrān as its starting note name, yegāh (8/9, −203.91 cents) and nawā (16/9, 996.09 cents) are exact octave equivalents, while shahnāz (91/36, 1605.44 cents), which would be 81/32 (1607.82 cents) if it were an exact octave equivalent of zīrgūleh (81/64, 407.82 cents), lies 2.38 cents below that position (1605.44 cents instead of 1607.82 cents) and so still takes the name shahnāz.\nAny other pitch class takes the name of the nearest named pitch class with tīk (raised) when it lies above that pitch class, or with nīm (lowered) when it lies below that pitch class. For example, 512/243 (1290.22 cents) lies 21.08 cents below 273/128 (1311.31 cents), the exact double of ʿajam ʿushayrān (273/256, 111.31 cents), so it is named nīm ʿajam. In the same way, in dīwān 0, 1053/2048 (−1151.65 cents) lies 48.35 cents above qarār ʿushayrān (1/2, −1200 cents), so it is named qarār tīk ʿushayrān. Three names were added to the PAO note names for this, tīk yegāh, tīk ʿushayrān and tīk dūgāh.\n\nIbn Sīnā places each fret (dastān) by dividing the string between the nut (anf) and the bridge (musht). His words are quoted below in Farmer's translation (1937:254–255). Everything in square brackets inside these quotations is Farmer's, as printed in his translation. Nothing in square brackets is added here.\n\nFor the 4th-finger fret (khinṣir) Ibn Sīnā writes, \"Verily the lute (ʿūd) is divided between the bridge-tail-piece (musht) and the nut (anf) upon a quarter of the whole [length], and there is tied upon it [the place of the division] the lowest fret called the 4th finger [khinṣir) fret. So there will be between its open string (muṭlaq) and its 4th finger fret the interval of the 4th [3 : 4 = 498 cents]\" (Farmer 1937:254). Therefore, the khinṣir stops the string a quarter of the way along, and the remaining three quarters of the string sound a fourth (4/3) above the open string.\n\nFor the 1st-finger fret (sabbāba) he writes, \"We then take a ninth of the length from the nut and there is tied upon it the 1st finger (sabbāba) fret, and there will be between its open string and its first finger fret the interval of the tone [8 : 9 = 204 cents]\" (Farmer 1937:254). Therefore, the sabbāba stops the string a ninth of the way along, and the remaining eight ninths of the string sound a whole tone (9/8) above the open string.\n\nFor the 3rd-finger fret (binṣir) he writes, \"We then divide what is between its first finger fret and the bridge-tail-piece upon another tone [8 : 9 = 204 cents] and there is tied upon it the 3rd finger (binṣir) fret [at 64 : 81 = 408 cents]\" (Farmer 1937:254). Therefore, the binṣir lies a further whole tone above the sabbāba, at 81/64. Ibn Sīnā adds that \"between its 3rd finger fret and its 4th finger fret is the minor semitone (baqiyya [243 : 256 = 90 cents])\" (Farmer 1937:254). Therefore, the remainder (baqiyya) between the binṣir and the khinṣir is 256/243.\n\nFor the old Persian 2nd-finger fret (wusṭā) he writes, \"We then further divide what is between the 4th finger fret and the bridge-tail-piece into eight parts, and one of these parts is laid off from the 4th finger fret [towards the nut end] and there is tied upon it the Old Persian 2nd finger fret\" (Farmer 1937:254–255). Therefore, the old Persian wusṭā sounds 32/27 above the open string. The working is as follows. Three quarters of the string lie between the khinṣir and the bridge. One eighth of those three quarters is three thirty-seconds of the string. Laying it off towards the nut leaves twenty-seven thirty-seconds of the string sounding, which is 32/27 above the open string.\n\nFor the Zalzalian wusṭā he writes, \"Later the moderns came and tied another 2nd finger fret [the Zalzalian] about midway between the 1st finger fret and the 4th finger fret\" (Farmer 1937:255). He then gives its accepted place, \"And that which is most generally accepted is that the 1st finger fret should be from the [Zalzalian] 2nd finger fret upon the ratio of 12 : 13 [= 139 cents] and the [Zalzalian] 2nd finger fret should be from the 4th finger fret upon the ratio of 11 : 12 [= 151 cents] nearly, not actually, because the ratio is 117 : 128 [= 155 cents]\" (Farmer 1937:255). Therefore, the Zalzalian wusṭā lies 13/12 above the sabbāba, at 39/32. It follows that the khinṣir lies 128/117 above the Zalzalian wusṭā, the ratio Ibn Sīnā calls nearly but not actually 12/11.\n\nFor the anterior fret (mujannab) of the Zalzalian wusṭā he writes, \"Next they tied above the 1st finger fret, [towards the nut end], another fret, at the distance of a tone [8 : 9 = 204 cents] from this [new] tied 2nd finger fret [32 : 39 = 343 cents]. It will be an anterior (mujannab) fret [12 : 13 = 139 cents], being the lower octave (isjāḥ) of the [new 2nd finger fret on the] mathnā string\" (Farmer 1937:255). Therefore, this mujannab lies a whole tone below the Zalzalian wusṭā, at 13/12. This agrees with Ibn Sīnā's lower octave (isjāḥ), because on the mathnā, which sounds 16/9 above the bamm, the Zalzalian wusṭā sounds 13/6, exactly double 13/12.\n\nFor the last fret he writes, \"Then they tied above this a[nother] fret which most people consider to be an anterior (mujannab) fret [at 243 : 256 = 90 cents] of the Old [Persian] 2nd finger fret [27 : 32 = 294 cents]. Yet it is not so, but is upon the ratio of 7 : 8 [= 231 cents] from this new 2nd finger fret [32 : 39 = 343 cents] known as the Zalzalian fret, [and therefore the ratio of this anterior fret is 256 : 273 = 112 cents]. So these are the frets of the lute\" (Farmer 1937:255). Therefore, this fret lies 8/7 below the Zalzalian wusṭā, at 273/256. According to Farmer's gloss, the anterior fret of the old wusṭā that most people had in mind would lie at 256/243. No fret at 256/243 appears among the frets Ibn Sīnā lists, and Farmer marks a fret at 256/243 as excluded (1937:256).\n\nThe seven frets and the open string give eight notes on every string. The Arabic text printed by Farmer does not state how the strings are tuned. Farmer lays the frets out on five strings (bamm, mathlath, mathnā, zīr and ḥadd), each string a fourth above the string below it, which he calls the normal method of tuning (1937:256). The values of this tuning system follow Farmer's table.\n\nThe first dīwān, from 1/1 up to 2/1, comes from the bamm, the mathlath and the lower frets of the mathnā. The first dīwān has 17 pitches, stored as exact ratios.\n\nEvery string carries the same frets, but the strings are a fourth apart. So a pitch of the second dīwān is not always the exact double of a pitch of the first dīwān. Of the 17 pitches of the first dīwān, 10 have an exact double in the second dīwān.\n\nFive pitches of the first dīwān have no exact double in the second dīwān, only a pitch close to where the exact double would be. For 273/256, 91/64 and 91/48, the nearest pitch in the second dīwān is about 21 cents lower than the exact double. For 81/64 and 27/16, the nearest pitch in the second dīwān is about 2 cents lower than the exact double, and the next nearest pitch is about 25 cents higher than the exact double.\n\nThe two Zalzalian wusṭā pitches of the first dīwān, 39/32 and 13/8, have no exact double in the second dīwān. No pitch of the second dīwān lies within 48 cents of where their exact doubles would be. Farmer makes the same point, that this fretting \"does not embrace the Zalzalian third (343 cents) in the second octave\" (1937:256).\n\nIn turn, 7 pitches of the second dīwān are not the exact double of any pitch of the first dīwān. So the 17 pitches of the second dīwān are stored as their own list, not worked out by doubling the first dīwān.\n\nThe lowest and highest dīwāns (octaves 0 and 3) are not in Ibn Sīnā's text. They are completed by the same method, by adding strings tuned a fourth apart below the bamm and above the ḥadd, each string carrying the same frets, until each dīwān is full. Each of the two dīwāns has 17 pitches. In the lowest dīwān, only 9 pitches are exactly half a pitch of the first dīwān. In the highest dīwān, only 10 pitches are exactly double a pitch of the second dīwān.\n\nFarmer's cents are rounded to whole numbers, and a few differ by one cent from the cents of the exact ratios. For example, Farmer gives 343 cents for 39/32, whose exact value is 342.48 cents. Farmer's \"2049 : 2187\" (1937:255) is a misprint for the ratio 2048 to 2187.\n\nIbn Sīnā also gives an alternative tuning, with the zīr tuned to the binṣir of the mathnā (9/4). The alternative tuning is entered separately as Ibn Sīnā (1037b).",
+    "commentsArabic": "يصف ابن سينا دساتين العود في فصل الموسيقى من كتاب الشفاء. حقّق فارمر هذا النص عن ثلاث مخطوطات، ونشره بالعربية الأصلية وترجمه (فارمر 1937: 251–255).\n\nملاحظة: في هذا التنغيم لا يكون لكل نغمات الديوان الأول (الأوكتاف) ضعف دقيق (جواب مطابق) في الديوان الثاني. يذكر فارمر ذلك (فارمر 1937: 256)، كما يأتي شرحه أدناه، ويجعله سبب الدوزان البديل للأوتار المطلقة الذي يقدّمه ابن سينا أيضاً، وهو دوزان يعطي نغمتي الوسطى الزلزلية ضعفيهما الدقيقين (انظروا تنغيم ابن سينا (1037b)). مثال ذلك أن جواب دستان المجنّب على وتر البم، 273/256، يكون 273/128. يحتاج ذلك على وتر المثنى إلى دستان على 2457/2048، بين الوسطى القديمة الفارسية (التي تعطي 512/243) والوسطى الزلزلية (التي تعطي 13/6)، حيث لا يشدّ ابن سينا دستاناً. لذلك أقرب نغمة في الديوان الثاني هي 512/243، وهي أخفض من الجواب الدقيق بنسبة 66339/65536، أي بنحو 21.08 سنت. يحدث ذلك لأن على كل وتر الدساتين نفسها، بينما كل وتر مدوزن على بعد رابعة فوق الوتر الذي تحته. من نغمات الديوان الأول السبع عشرة، 10 لها ضعف دقيق في الديوان الثاني.\nلتسمية هذه النغمات بأسماء PAO، ولا سيما في الدواوين الممتدة 0 و3، تُوسَّع طريقة PAO في التسمية. النغمة التي هي ضعف دقيق أو نصف دقيق لنغمة مسمّاة تأخذ اسم جواب تلك النغمة أو قرارها، وكذلك النغمة التي تقع على أقل من 3 سنت من ذلك الموضع. مثال ذلك أن يكاه (8/9، ‎−203.91 سنت) ونوى (16/9، 996.09 سنت) جواب وقرار دقيقان في التنغيم الذي تكون عُشَيران أول نغماته، أما شَهناز (91/36، 1605.44 سنت)، التي تكون 81/32 (1607.82 سنت) لو كانت جواباً دقيقاً لنغمة زيركولِه (81/64، 407.82 سنت)، فتقع أخفض من ذلك الموضع بنحو 2.38 سنت (1605.44 سنت بدل 1607.82 سنت)، لذلك تبقى باسم شَهناز.\nتأخذ كل نغمة أخرى اسم أقرب نغمة مسمّاة مع تيك (مرفوعة) إذا كانت أعلى من تلك النغمة، أو مع نيم (مخفوضة) إذا كانت أخفض من تلك النغمة. مثال ذلك أن 512/243 (1290.22 سنت) تقع أخفض بنحو 21.08 سنت من 273/128 (1311.31 سنت)، وهي الضعف الدقيق لنغمة عَجَم عُشَيران (273/256، 111.31 سنت)، لذلك تُسمّى نيم عَجَم. بالطريقة نفسها، في الديوان 0، تقع 1053/2048 (‎−1151.65 سنت) أعلى بنحو 48.35 سنت من قَرار عُشَيران (1/2، ‎−1200 سنت)، لذلك تُسمّى قَرار تيك عُشَيران. أُضيفت لهذا الغرض ثلاثة أسماء إلى أسماء PAO، هي تيك يكاه وتيك عُشَيران وتيك دوكاه.\n\nيضع ابن سينا كل دستان بقسمة الوتر بين الأنف والمشط. نصّه مقتبس أدناه كما نشره فارمر (فارمر 1937: 251–253)، دون أي إضافة داخل الاقتباس.\n\nيقول ابن سينا في دستان الخنصر «فنقول انّ العود قد قسم طول ما بين مشطه وانف ملاويه على الربع من جهة الملاوي وشدّ عليه الدستان الاسفل وهو الدستان المنسوب الى الخنصر فيكون بين مطلقه وبين خنصره الذى بالاربعة» (فارمر 1937: 251–252). لذلك يقف الخنصر على ربع الوتر، وتعطي الأرباع الثلاثة الباقية من الوتر بعد الرابعة (4/3) فوق الوتر المطلق.\n\nيقول في دستان السبابة «ثم قسم طوله واخذ تسع الطول الى الانف وشدّ عليه دستان السبابة فيكون بين مطلقه وبين سبابته الطنينى» (فارمر 1937: 252). لذلك تقف السبابة على تسع الوتر، وتعطي الأتساع الثمانية الباقية من الوتر بعداً طنينياً (9/8) فوق الوتر المطلق.\n\nيقول في دستان البنصر «ثم قسم ما بين سبابته الى المشط على طنينى آخر وشدّ عليه دستان البنصر» (فارمر 1937: 252). لذلك يقع البنصر على طنيني آخر فوق السبابة، على 81/64. يضيف ابن سينا «وحصل بين بنصره وخنصره البقيّة» (فارمر 1937: 252). لذلك البعد الباقي بين البنصر والخنصر هو البقيّة، 256/243.\n\nيقول في دستان الوسطى القديم الفارسي «وايضاً قسم مابين الخنصر والمشط بثمنية اقسام وزيد واحد منها على الخنصر وشدّ عليه دستان الوسطى القديم الفارسي» (فارمر 1937: 252). لذلك تعطي الوسطى القديمة الفارسية 32/27 فوق الوتر المطلق. الحساب كالتالي. بين الخنصر والمشط ثلاثة أرباع الوتر. ثُمن هذه الأرباع الثلاثة ثلاثة أجزاء من اثنين وثلاثين جزءاً من الوتر. زيادتها على الخنصر نحو الأنف تُبقي سبعة وعشرين جزءاً من اثنين وثلاثين يرنّ بها الوتر، أي 32/27 فوق الوتر المطلق.\n\nيقول في الوسطى الزلزلية «ثم جاء المتاخّرون وشدّوا للوسطى دستاناً آخر في قريب من الوسط بين السبابة والخنصر» (فارمر 1937: 252). ثم يذكر موضعها المقبول «والاقرب من ذلك ان تكون السبابة من ذلك الوسطى على نسبه الزائد جزءاً من اثنا عشر والوسطى من الخنصر على نسبه الزائد جزءاً من احد عشر تقريباً لا بالحقيقة لانه يخرج حينئذ على نسبة ١٢٨ الى ١١٧» (فارمر 1937: 253). لذلك تقع الوسطى الزلزلية فوق السبابة بنسبة 13/12، على 39/32. يترتّب على ذلك أن الخنصر فوق الوسطى الزلزلية بنسبة 128/117، وهي النسبة التي يعدّها ابن سينا 12/11 تقريباً لا بالحقيقة.\n\nيقول في مجنّب الوسطى الزلزلية «ثم انهم شدّوا فوق السبابة دستاناً آخر على الطنينى من هذا الدستان المشدود للوسطى يكون كالمجنّب له ليوخذ اسجاحه من الوتر الثالث له» (فارمر 1937: 253). لذلك يقع هذا المجنّب على طنيني دون الوسطى الزلزلية، على 13/12. يوافق ذلك قول ابن سينا إنه إسجاح الوسطى الزلزلية، لأن الوسطى الزلزلية على المثنى، الذي يرنّ على 16/9 فوق البم، تعطي 13/6، وهي ضعف 13/12 بالضبط.\n\nيقول في الدستان الأخير «ثم انهم شدّوا فوق ذلك دستاناً يظنه اكثرهم انه كالمجنّب للوسطى القديمة وليس كذلك بل هو من هذا الوسطى الحديثة المعروفة بالزلزلية على نسبة مثل وسبع فهذه هى دساتين العود» (فارمر 1937: 253). لذلك يقع هذا الدستان دون الوسطى الزلزلية بنسبة 8/7، على 273/256. بحسب شرح فارمر، يكون مجنّب الوسطى القديمة الذي ظنّه أكثرهم على 256/243. لا يرد بين الدساتين التي يعدّها ابن سينا دستان على 256/243، ويعدّ فارمر الدستان على 256/243 مستبعداً (فارمر 1937: 256).\n\nتعطي الدساتين السبعة مع الوتر المطلق ثماني نغمات على كل وتر. لا يذكر النص العربي الذي نشره فارمر دوزان الأوتار. يرتّب فارمر الدساتين على خمسة أوتار (البم والمثلث والمثنى والزير والحاد)، كل وتر منها على بعد رابعة فوق الوتر الذي تحته، ويسمّي ذلك الطريقة المعتادة في الدوزان (فارمر 1937: 256). تتبع قيم هذا التنغيم جدول فارمر.\n\nيتكوّن الديوان الأول، من 1/1 إلى 2/1، من البم والمثلث والدساتين السفلى للمثنى. في الديوان الأول 17 نغمة، مدوّنة بنسبها الدقيقة.\n\nعلى كل وتر الدساتين نفسها، لكن الأوتار متباعدة بأبعاد الرابعة. لذلك لا تكون نغمة الديوان الثاني دائماً ضعف نغمة من الديوان الأول بالضبط. من نغمات الديوان الأول السبع عشرة، 10 لها ضعف دقيق في الديوان الثاني.\n\nخمس نغمات من الديوان الأول ليس لها ضعف دقيق في الديوان الثاني، بل نغمة قريبة من موضع الضعف الدقيق فقط. لكل من 273/256 و91/64 و91/48، أقرب نغمة في الديوان الثاني أخفض من الضعف الدقيق بنحو 21 سنت. لكل من 81/64 و27/16، أقرب نغمة في الديوان الثاني أخفض من الضعف الدقيق بنحو 2 سنت، والنغمة التالية في القرب أعلى من الضعف الدقيق بنحو 25 سنت.\n\nنغمتا الوسطى الزلزلية في الديوان الأول، 39/32 و13/8، ليس لهما ضعف دقيق في الديوان الثاني. لا تقع أي نغمة من الديوان الثاني على بعد أقل من 48 سنت من موضع ضعفيهما الدقيقين. يقول فارمر الأمر نفسه، فهذا التدستين بحسب قوله لا يشمل الثالثة الزلزلية (343 سنت) في الديوان الثاني (فارمر 1937: 256).\n\nفي المقابل، 7 نغمات من الديوان الثاني ليست ضعفاً دقيقاً لأي نغمة من الديوان الأول. لذلك تُدوَّن نغمات الديوان الثاني السبع عشرة قائمةً مستقلة، لا بمضاعفة الديوان الأول.\n\nالديوانان الأدنى والأعلى (الديوان 0 والديوان 3) ليسا في نص ابن سينا. استُكملا بالطريقة نفسها، بإضافة أوتار متباعدة بأبعاد الرابعة تحت البم وفوق الحاد، على كل وتر منها الدساتين نفسها، حتى اكتمل كل ديوان. في كل من الديوانين 17 نغمة. في الديوان الأدنى، 9 نغمات فقط هي نصف نغمة من الديوان الأول بالضبط. في الديوان الأعلى، 10 نغمات فقط هي ضعف نغمة من الديوان الثاني بالضبط.\n\nأرقام السنت عند فارمر مقرّبة إلى أعداد صحيحة، وبعضها يختلف بسنت واحد عن سنت النسب الدقيقة. مثلاً يعطي فارمر 343 سنت للنسبة 39/32، وقيمتها الدقيقة 342.48 سنت. أما قول فارمر «2049 : 2187» (فارمر 1937: 255) فخطأ مطبعي، صوابه النسبة 2048 إلى 2187.\n\nيذكر ابن سينا أيضاً دوزاناً بديلاً يكون فيه الزير مدوزناً على بنصر المثنى (9/4). الدوزان البديل مدوّن منفصلاً باسم ابن سينا (1037b).",
     "tuningSystemPitchClasses": [
       "1/1",
       "273/256",
@@ -1706,25 +1706,6 @@
         "chahārgāh",
         "ḥijāz",
         "tīk ḥijāz/ṣabā"
-      ],
-      [
-        "rāst",
-        "zīrgūleh",
-        "tīk zīrgūleh",
-        "dūgāh",
-        "kurdī",
-        "segāh",
-        "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz",
-        "tīk ḥijāz/ṣabā",
-        "nawā",
-        "ḥiṣār",
-        "tīk ḥiṣār",
-        "ḥusaynī",
-        "ʿajam",
-        "māhūr",
-        "tīk māhūr"
       ]
     ],
     "abjadNames": [
@@ -1767,10 +1748,695 @@
     "defaultReferenceFrequency": 98,
     "referenceFrequencies": {
       "yegāh": 98,
-      "ʿushayrān": 110,
-      "rāst": 130.37
+      "ʿushayrān": 110
     },
-    "version": "2026-08-16T22:20:52.549Z"
+    "version": "2026-11-20T06:37:23.600Z",
+    "tuningSystemPitchClassesByOctave": {
+      "0": [
+        "1/2",
+        "1053/2048",
+        "2187/4096",
+        "9/16",
+        "2457/4096",
+        "39/64",
+        "81/128",
+        "2/3",
+        "351/512",
+        "729/1024",
+        "3/4",
+        "819/1024",
+        "13/16",
+        "27/32",
+        "8/9",
+        "117/128",
+        "243/256"
+      ],
+      "2": [
+        "2/1",
+        "512/243",
+        "13/6",
+        "9/4",
+        "64/27",
+        "91/36",
+        "208/81",
+        "8/3",
+        "2048/729",
+        "26/9",
+        "3/1",
+        "256/81",
+        "91/27",
+        "832/243",
+        "32/9",
+        "8192/2187",
+        "104/27"
+      ],
+      "3": [
+        "4/1",
+        "1024/243",
+        "364/81",
+        "3328/729",
+        "128/27",
+        "32768/6561",
+        "416/81",
+        "16/3",
+        "4096/729",
+        "1456/243",
+        "13312/2187",
+        "512/81",
+        "131072/19683",
+        "1664/243",
+        "64/9",
+        "16384/2187",
+        "5824/729"
+      ]
+    },
+    "noteNamesByOctave": {
+      "ʿushayrān": {
+        "0": [
+          "qarār ʿushayrān",
+          "qarār tīk ʿushayrān",
+          "qarār ʿajam ʿushayrān",
+          "qarār kawasht",
+          "qarār tīk rāst",
+          "qarār nīm zīrgūleh",
+          "qarār zīrgūleh",
+          "qarār dūgāh",
+          "qarār tīk dūgāh",
+          "qarār kurdī",
+          "qarār būselīk/ʿushshāq",
+          "qarār tīk chahārgāh",
+          "qarār nīm ḥijāz",
+          "qarār ḥijāz",
+          "yegāh",
+          "tīk yegāh",
+          "qarār ḥiṣār"
+        ],
+        "2": [
+          "ḥusaynī",
+          "nīm ʿajam",
+          "awj",
+          "māhūr",
+          "kurdān",
+          "shahnāz",
+          "jawāb tīk zīrgūleh",
+          "muḥayyar",
+          "nīm sunbuleh",
+          "buzurk",
+          "jawāb būselīk",
+          "māhūrān",
+          "jawāb ḥijāz",
+          "jawāb tīk ḥijāz",
+          "saham/ramal tūtī",
+          "jawāb nīm ḥiṣār",
+          "jawāb tīk ḥiṣār"
+        ],
+        "3": [
+          "jawāb ḥusaynī",
+          "jawāb nīm ʿajam",
+          "jawāb māhūr",
+          "jawāb tīk māhūr",
+          "jawāb kurdān",
+          "jawāb nīm shahnāz",
+          "jawāb jawāb tīk zīrgūleh",
+          "jawāb muḥayyar",
+          "jawāb nīm sunbuleh",
+          "jawāb jawāb būselīk",
+          "jawāb jawāb tīk būselīk",
+          "jawāb māhūrān",
+          "jawāb jawāb nīm ḥijāz",
+          "jawāb jawāb tīk ḥijāz",
+          "jawāb saham/ramal tūtī",
+          "jawāb jawāb nīm ḥiṣār",
+          "jawāb jawāb ḥusaynī"
+        ]
+      },
+      "yegāh": {
+        "0": [
+          "qarār yegāh",
+          "qarār tīk yegāh",
+          "qarār qarār ḥiṣār",
+          "qarār ʿushayrān",
+          "qarār tīk ʿajam ʿushayrān",
+          "qarār ʿirāq",
+          "qarār kawasht",
+          "qarār rāst",
+          "qarār tīk rāst",
+          "qarār zīrgūleh",
+          "qarār dūgāh",
+          "qarār tīk kūrdī",
+          "qarār segāh",
+          "qarār būselīk/ʿushshāq",
+          "qarār chahārgāh",
+          "qarār tīk chahārgāh",
+          "qarār ḥijāz"
+        ],
+        "2": [
+          "nawā",
+          "nīm ḥiṣār",
+          "tīk ḥiṣār",
+          "ḥusaynī",
+          "ʿajam",
+          "māhūr",
+          "tīk māhūr",
+          "kurdān",
+          "nīm shahnāz",
+          "jawāb tīk zīrgūleh",
+          "muḥayyar",
+          "sunbuleh/zawāl",
+          "jawāb būselīk",
+          "jawāb tīk būselīk",
+          "māhūrān",
+          "jawāb nīm ḥijāz",
+          "jawāb tīk ḥijāz"
+        ],
+        "3": [
+          "saham/ramal tūtī",
+          "jawāb nīm ḥiṣār",
+          "jawāb ḥusaynī",
+          "jawāb tīk ḥusaynī",
+          "jawāb ʿajam",
+          "jawāb nīm māhūr",
+          "jawāb tīk māhūr",
+          "jawāb kurdān",
+          "jawāb nīm shahnāz",
+          "jawāb muḥayyar",
+          "jawāb tīk muḥayyar",
+          "jawāb sunbuleh/zawāl",
+          "jawāb jawāb nīm būselīk",
+          "jawāb jawāb tīk būselīk",
+          "jawāb māhūrān",
+          "jawāb jawāb nīm ḥijāz",
+          "jawāb saham/ramal tūtī"
+        ]
+      }
+    },
+    "sourceOud": {
+      "strings": [
+        {
+          "id": "bamm",
+          "nameEnglish": "bamm",
+          "nameArabic": "البم",
+          "openRatio": "1/1"
+        },
+        {
+          "id": "mathlath",
+          "nameEnglish": "mathlath",
+          "nameArabic": "المثلث",
+          "openRatio": "4/3"
+        },
+        {
+          "id": "mathna",
+          "nameEnglish": "mathnā",
+          "nameArabic": "المثنى",
+          "openRatio": "16/9"
+        },
+        {
+          "id": "zir",
+          "nameEnglish": "zīr",
+          "nameArabic": "الزير",
+          "openRatio": "64/27"
+        },
+        {
+          "id": "hadd",
+          "nameEnglish": "ḥadd",
+          "nameArabic": "الحاد",
+          "openRatio": "256/81"
+        }
+      ],
+      "frets": [
+        {
+          "id": "mujannab_mithl_wa_sub",
+          "nameEnglish": "mujannab",
+          "nameArabic": "المجنّب",
+          "ratio": "273/256",
+          "constructionEnglish": "Then they tied above this a[nother] fret which most people consider to be an anterior (mujannab) fret [at 243 : 256 = 90 cents] of the Old [Persian] 2nd finger fret [27 : 32 = 294 cents]. Yet it is not so, but is upon the ratio of 7 : 8 [= 231 cents] from this new 2nd finger fret [32 : 39 = 343 cents] known as the Zalzalian fret, [and therefore the ratio of this anterior fret is 256 : 273 = 112 cents].",
+          "constructionArabic": "ثم انهم شدّوا فوق ذلك دستاناً يظنه اكثرهم انه كالمجنّب للوسطى القديمة وليس كذلك بل هو من هذا الوسطى الحديثة المعروفة بالزلزلية على نسبة مثل وسبع"
+        },
+        {
+          "id": "mujannab_zalzal",
+          "nameEnglish": "mujannab al-zalzaliyya",
+          "nameArabic": "مجنّب الزلزلية",
+          "ratio": "13/12",
+          "constructionEnglish": "Next they tied above the 1st finger fret, [towards the nut end], another fret, at the distance of a tone [8 : 9 = 204 cents] from this [new] tied 2nd finger fret [32 : 39 = 343 cents]. It will be an anterior (mujannab) fret [12 : 13 = 139 cents], being the lower octave (isjāḥ) of the [new 2nd finger fret on the] mathnā string.",
+          "constructionArabic": "ثم انهم شدّوا فوق السبابة دستاناً آخر على الطنينى من هذا الدستان المشدود للوسطى يكون كالمجنّب له ليوخذ اسجاحه من الوتر الثالث له"
+        },
+        {
+          "id": "sabbaba",
+          "nameEnglish": "sabbāba",
+          "nameArabic": "السبابة",
+          "ratio": "9/8",
+          "constructionEnglish": "We then take a ninth of the length from the nut and there is tied upon it the 1st finger (sabbāba) fret, and there will be between its open string and its first finger fret the interval of the tone [8 : 9 = 204 cents].",
+          "constructionArabic": "ثم قسم طوله واخذ تسع الطول الى الانف وشدّ عليه دستان السبابة فيكون بين مطلقه وبين سبابته الطنينى"
+        },
+        {
+          "id": "wusta_farisiyya",
+          "nameEnglish": "wusṭā fārisiyya",
+          "nameArabic": "الوسطى الفارسية",
+          "ratio": "32/27",
+          "constructionEnglish": "We then further divide what is between the 4th finger fret and the bridge-tail-piece into eight parts, and one of these parts is laid off from the 4th finger fret [towards the nut end] and there is tied upon it the Old Persian 2nd finger fret.",
+          "constructionArabic": "وايضاً قسم مابين الخنصر والمشط بثمنية اقسام وزيد واحد منها على الخنصر وشدّ عليه دستان الوسطى القديم الفارسي"
+        },
+        {
+          "id": "wusta_zalzaliyya",
+          "nameEnglish": "wusṭā zalzaliyya",
+          "nameArabic": "الوسطى الزلزلية",
+          "ratio": "39/32",
+          "constructionEnglish": "Later the moderns came and tied another 2nd finger fret [the Zalzalian] about midway between the 1st finger fret and the 4th finger fret. … And that which is most generally accepted is that the 1st finger fret should be from the [Zalzalian] 2nd finger fret upon the ratio of 12 : 13 [= 139 cents] and the [Zalzalian] 2nd finger fret should be from the 4th finger fret upon the ratio of 11 : 12 [= 151 cents] nearly, not actually, because the ratio is 117 : 128 [= 155 cents].",
+          "constructionArabic": "ثم جاء المتاخّرون وشدّوا للوسطى دستاناً آخر في قريب من الوسط بين السبابة والخنصر … والاقرب من ذلك ان تكون السبابة من ذلك الوسطى على نسبه الزائد جزءاً من اثنا عشر والوسطى من الخنصر على نسبه الزائد جزءاً من احد عشر تقريباً لا بالحقيقة لانه يخرج حينئذ على نسبة ١٢٨ الى ١١٧"
+        },
+        {
+          "id": "binsir",
+          "nameEnglish": "binṣir",
+          "nameArabic": "البنصر",
+          "ratio": "81/64",
+          "constructionEnglish": "We then divide what is between its first finger fret and the bridge-tail-piece upon another tone [8 : 9 = 204 cents] and there is tied upon it the 3rd finger (binṣir) fret [at 64 : 81 = 408 cents]",
+          "constructionArabic": "ثم قسم ما بين سبابته الى المشط على طنينى آخر وشدّ عليه دستان البنصر"
+        },
+        {
+          "id": "khinsir",
+          "nameEnglish": "khinṣir",
+          "nameArabic": "الخنصر",
+          "ratio": "4/3",
+          "constructionEnglish": "Verily the lute (ʿūd) is divided between the bridge-tail-piece (musht) and the nut (anf) upon a quarter of the whole [length], and there is tied upon it [the place of the division] the lowest fret called the 4th finger [khinṣir) fret. So there will be between its open string (muṭlaq) and its 4th finger fret the interval of the 4th [3 : 4 = 498 cents].",
+          "constructionArabic": "فنقول انّ العود قد قسم طول ما بين مشطه وانف ملاويه على الربع من جهة الملاوي وشدّ عليه الدستان الاسفل وهو الدستان المنسوب الى الخنصر فيكون بين مطلقه وبين خنصره الذى بالاربعة"
+        }
+      ],
+      "pageReferences": [
+        {
+          "sourceId": "farmer_1937",
+          "page": "251–256"
+        }
+      ],
+      "stringsAttribution": "secondary",
+      "fretsAttribution": "source",
+      "noteEnglish": "The frets are Ibn Sīnā's own, quoted in his Arabic as printed by Farmer (1937:251–253) and in Farmer's translation (1937:254–255). Everything in square brackets inside the English quotations is Farmer's, as printed in his translation. A … marks words left out of a quotation. The printed Arabic does not state how the strings are tuned. The five strings, each a fourth above the string below it, are Farmer's table (1937:256).",
+      "noteArabic": "الدساتين هي دساتين ابن سينا نفسه، مقتبسة بنصه العربي كما نشره فارمر (فارمر 1937: 251–253) وبترجمة فارمر (فارمر 1937: 254–255). كل ما بين معقوفين في الاقتباسات الإنجليزية هو من فارمر كما طُبع في ترجمته. تدل … على كلمات حُذفت من الاقتباس. لا يذكر النص العربي المنشور دوزان الأوتار. الأوتار الخمسة، كل وتر منها على بعد رابعة فوق الوتر الذي تحته، من جدول فارمر (فارمر 1937: 256)."
+    }
+  },
+  {
+    "id": "ibnsina_1037b",
+    "titleEnglish": "7-Fret Oud (Zīr tuned to binṣir of mathnā)",
+    "titleArabic": "عود بسبعة دساتين و17 نغمة، الزير على بعد ثالثة كبيرة فوق المثنى",
+    "year": "1037b",
+    "sourceEnglish": "",
+    "sourceArabic": "",
+    "sourcePageReferences": [
+      {
+        "sourceId": "farmer_1937",
+        "page": "257"
+      }
+    ],
+    "creatorEnglish": "Ibn Sīnā ",
+    "creatorArabic": "إبن سينا",
+    "commentsEnglish": "Farmer reports an alternative tuning of the ʿūd that Ibn Sīnā gives (1937:257). The Arabic passage for this tuning is not printed in Farmer's extract. The values of this tanghīm (tuning system) follow Farmer's table on p.257.\n\nNOTE: In this tanghīm, the pitch classes of the first dīwān (octave) do not all have an exact double (octave equivalent) in the second dīwān. This tuning gives the two Zalzalian wusṭā pitch classes an exact double, which the tuning of Ibn Sīnā (1037) does not, but 6 of the 17 pitch classes of the first dīwān still have no exact double (see below). Retuning the zīr also takes away the exact double of three pitch classes that have one in Ibn Sīnā (1037), segāh (13/9), chahārgāh (128/81) and tīk ḥiṣār (52/27). So compared with Ibn Sīnā (1037), this tuning gains four exact doubles, for nīm zīrgūleh (39/32), zīrgūleh (81/64), nīm ḥijāz (13/8) and ḥijāz (27/16), and loses three, and so it does not resolve the octave issue as a whole. For example, the octave equivalent of the mujannab fret on the bamm string, 273/256, would be 273/128. On the mathnā string this would need a fret at 2457/2048, between the old Persian wusṭā (which gives 512/243) and the Zalzalian wusṭā (which gives 13/6), where Ibn Sīnā ties no fret. So the nearest pitch class in the second dīwān is 512/243, which is lower than the exact octave equivalent by the ratio 66339/65536, approx. 21.08 cents. This happens because every string carries the same frets while the strings are tuned at different distances from one another, the zīr to the binṣir fret of the mathnā and the other strings a fourth apart. Of the 17 pitch classes of the first dīwān, 11 have an exact double in the second dīwān.\nTo give PAO note names to these pitch classes, particularly in our extended dawāwīn (octaves) 0 and 3, the PAO note-naming convention is extended. A pitch class that is the exact double or the exact half of a named pitch class takes the octave-equivalent name of that pitch class, and so does a pitch class within 3 cents of that position. For example, in the tuning system with ʿushayrān as its starting note name, yegāh (8/9, −203.91 cents) and nawā (16/9, 996.09 cents) are exact octave equivalents, while sunbuleh/zawāl (729/256, 1811.73 cents), which would be 91/32 (1809.35 cents) if it were an exact octave equivalent of kurdī (91/64, 609.35 cents), lies 2.38 cents above that position (1811.73 cents instead of 1809.35 cents) and so still takes the name sunbuleh/zawāl.\nAny other pitch class takes the name of the nearest named pitch class with tīk (raised) when it lies above that pitch class, or with nīm (lowered) when it lies below that pitch class. For example, 512/243 (1290.22 cents) lies 21.08 cents below 273/128 (1311.31 cents), the exact double of ʿajam ʿushayrān (273/256, 111.31 cents), so it is named nīm ʿajam. In the same way, in dīwān 0, 1053/2048 (−1151.65 cents) lies 48.35 cents above qarār ʿushayrān (1/2, −1200 cents), so it is named qarār tīk ʿushayrān. Three names were added to the PAO note names for this, tīk yegāh, tīk ʿushayrān and tīk dūgāh.\n\nFarmer explains why this tuning was needed. Of the tuning in fourths, Farmer writes that Ibn Sīnā's \"system of fretting does not embrace the Zalzalian third (343 cents) in the second octave\" (1937:256). Farmer adds that \"there was an easy way out of the difficulty by adopting a different system of tuning (taswiya)\" (1937:256). Of this alternative tuning, Farmer writes that \"Ibn Sīnā gives an alternative system of tuning which regularized the admission of the Zalzalian notes in the second octave, which were excluded under the system of tuning by fourths\" (1937:257). Farmer judges the alternative tuning \"certainly an improvement on Al-Fārābī's scale and tuning, because it embraced the elusive Zalzalian notes in the second octave\" (1937:257). Therefore, according to Farmer, the purpose of this tuning is to give the two Zalzalian wusṭā pitches of the first dīwān an exact double in the second dīwān. Farmer's extract does not print Ibn Sīnā's own words on this tuning, so this reason is Farmer's.\n\nThe frets are the same as in Ibn Sīnā (1037). These are the khinṣir (4/3), sabbāba (9/8), binṣir (81/64), old Persian wusṭā (32/27), Zalzalian wusṭā (39/32) and two anterior frets (13/12 and 273/256). The comment of Ibn Sīnā (1037) describes how Ibn Sīnā places each fret.\n\nOnly the tuning of the strings changes. Farmer describes the change in these words, \"By tuning the zīr string a major third (408 cents) from the mathnā string, the frets produced the following\" (1937:257). Therefore, the open zīr is tuned to the binṣir fret of the mathnā (9/4), which is 81/64 above the open mathnā instead of a fourth (4/3). Farmer's text does not say how the ḥadd is tuned. Farmer's table on p.257 puts the open zīr at 204 cents and the open ḥadd at 702 cents, both counted within one octave, so the ḥadd is a fourth (498 cents) above the zīr.\n\nThe first dīwān is the same as in Ibn Sīnā (1037). The bamm, mathlath and mathnā are each still tuned a fourth above the string below, so they give the same 17 pitch classes.\n\nThe second dīwān has 18 pitch classes, not 17. The zīr is tuned to the binṣir fret of the mathnā, only 81/64 above the open mathnā, so the highest frets of the mathnā reach into the range of the zīr. The binṣir fret on the mathnā (9/4, 1403.91 cents) gives the same pitch class as the open zīr. The khinṣir fret on the mathnā (64/27, 1494.13 cents) gives a pitch class between the open zīr (9/4, 1403.91 cents) and the zīr's first fret (2457/1024, 1515.22 cents), and no fret of the zīr gives that pitch class.\n\nFarmer writes cents within one octave. So his table prints the mathnā's 4th-finger fret at 294 cents, between the open zīr at 204 cents and the zīr's first fret at 316 cents.\n\nThis tuning gives the two Zalzalian wusṭā pitches of the first dīwān, 39/32 and 13/8, an exact double in the second dīwān, 39/16 and 13/4. Of the 17 pitches of the first dīwān, 11 have an exact double in the second dīwān.\n\nSix pitch classes of the first dīwān have no exact double in the second dīwān, only a pitch class close to where the exact double would be. For ʿajam ʿushayrān (273/256), the exact double would be 273/128 (1311.31 cents), and the nearest pitch class, nīm ʿajam (512/243, 1290.22 cents), is 21.08 cents lower. For kurdī (91/64), the exact double would be 91/32 (1809.35 cents), and the nearest pitch class, sunbuleh/zawāl (729/256, 1811.73 cents), is 2.38 cents higher. For ḥiṣār (91/48), the exact double would be 91/24 (2307.40 cents), and the nearest pitch class, jawāb ḥiṣār (243/64, 2309.78 cents), is 2.38 cents higher. For segāh (13/9), the exact double would be 26/9 (1836.62 cents), and the nearest pitch class, sunbuleh/zawāl (729/256, 1811.73 cents), is 24.89 cents lower. For tīk ḥiṣār (52/27), the exact double would be 104/27 (2334.66 cents), and the nearest pitch class, jawāb ḥiṣār (243/64, 2309.78 cents), is 24.89 cents lower. For chahārgāh (128/81), the exact double would be 256/81 (1992.18 cents), and the nearest pitch class, tīk māhūrān (819/256, 2013.26 cents), is 21.08 cents higher.\n\nIn turn, 7 pitches of the second dīwān are not the exact double of any pitch of the first dīwān. So the 18 pitches of the second dīwān are stored as their own list.\n\nThe lowest and highest dawāwīn (dīwān 0 and dīwān 3) are not in Farmer's account. They are completed by the same method as in Ibn Sīnā (1037), by adding strings tuned a fourth apart below the bamm and above the ḥadd, each string carrying the same frets. Dīwān 0 is the same as dīwān 0 of Ibn Sīnā (1037).\n\nThe highest dīwān has 17 pitches. The strings added above the ḥadd sound exactly four times the pitches of the bamm, the mathlath and the mathnā. So every pitch of the highest dīwān is exactly four times a pitch of the first dīwān. Only 11 pitches of the highest dīwān are exactly double a pitch of the second dīwān.\n\nFarmer's table prints the open mathlath at 408 cents. This is a misprint for 498 cents, since every fret on the mathlath in that table is 498 cents plus the fret's own interval. Farmer's cents are rounded to whole numbers, and some differ by one cent from the cents of the exact ratios.",
+    "commentsArabic": "يذكر فارمر دوزاناً بديلاً للعود يقدّمه ابن سينا (فارمر 1937: 257). لا يرد النص العربي لهذا الدوزان في المقتطف الذي نشره فارمر. تتبع قيم هذا التنغيم جدول فارمر في الصفحة 257.\n\nملاحظة: في هذا التنغيم لا يكون لكل نغمات الديوان الأول (الأوكتاف) ضعف دقيق (جواب مطابق) في الديوان الثاني. يعطي هذا الدوزان نغمتي الوسطى الزلزلية ضعفاً دقيقاً، وهو ما لا يعطيه دوزان ابن سينا (1037)، لكن 6 من نغمات الديوان الأول السبع عشرة ما زالت بلا ضعف دقيق (انظروا أدناه). يُفقد تغيير دوزان الزير أيضاً الضعفَ الدقيق لثلاث نغمات لها ضعف دقيق في ابن سينا (1037)، هي سيكاه (13/9) وجَهاركاه (128/81) وتيك حِصار (52/27). لذلك يكسب هذا الدوزان، مقارنةً بابن سينا (1037)، أربعة أضعاف دقيقة، لنغمات نيم زيركولِه (39/32) وزيركولِه (81/64) ونيم حِجاز (13/8) وحِجاز (27/16)، ويخسر ثلاثة، فلا يحلّ مسألة الدواوين كلها. مثال ذلك أن جواب دستان المجنّب على وتر البم، 273/256، يكون 273/128. يحتاج ذلك على وتر المثنى إلى دستان على 2457/2048، بين الوسطى القديمة الفارسية (التي تعطي 512/243) والوسطى الزلزلية (التي تعطي 13/6)، حيث لا يشدّ ابن سينا دستاناً. لذلك أقرب نغمة في الديوان الثاني هي 512/243، وهي أخفض من الجواب الدقيق بنسبة 66339/65536، أي بنحو 21.08 سنت. يحدث ذلك لأن على كل وتر الدساتين نفسها، بينما الأوتار مدوزنة على أبعاد مختلفة بعضها من بعض، فالزير مدوزن على دستان البنصر في المثنى والأوتار الأخرى على بعد رابعة بعضها من بعض. من نغمات الديوان الأول السبع عشرة، 11 لها ضعف دقيق في الديوان الثاني.\nلتسمية هذه النغمات بأسماء PAO، ولا سيما في الدواوين الممتدة 0 و3، تُوسَّع طريقة PAO في التسمية. النغمة التي هي ضعف دقيق أو نصف دقيق لنغمة مسمّاة تأخذ اسم جواب تلك النغمة أو قرارها، وكذلك النغمة التي تقع على أقل من 3 سنت من ذلك الموضع. مثال ذلك أن يكاه (8/9، ‎−203.91 سنت) ونوى (16/9، 996.09 سنت) جواب وقرار دقيقان في التنغيم الذي تكون عُشَيران أول نغماته، أما سُنبُله/زَوال (729/256، 1811.73 سنت)، التي تكون 91/32 (1809.35 سنت) لو كانت جواباً دقيقاً لنغمة كُردي (91/64، 609.35 سنت)، فتقع أعلى من ذلك الموضع بنحو 2.38 سنت (1811.73 سنت بدل 1809.35 سنت)، لذلك تبقى باسم سُنبُله/زَوال.\nتأخذ كل نغمة أخرى اسم أقرب نغمة مسمّاة مع تيك (مرفوعة) إذا كانت أعلى من تلك النغمة، أو مع نيم (مخفوضة) إذا كانت أخفض من تلك النغمة. مثال ذلك أن 512/243 (1290.22 سنت) تقع أخفض بنحو 21.08 سنت من 273/128 (1311.31 سنت)، وهي الضعف الدقيق لنغمة عَجَم عُشَيران (273/256، 111.31 سنت)، لذلك تُسمّى نيم عَجَم. بالطريقة نفسها، في الديوان 0، تقع 1053/2048 (‎−1151.65 سنت) أعلى بنحو 48.35 سنت من قَرار عُشَيران (1/2، ‎−1200 سنت)، لذلك تُسمّى قَرار تيك عُشَيران. أُضيفت لهذا الغرض ثلاثة أسماء إلى أسماء PAO، هي تيك يكاه وتيك عُشَيران وتيك دوكاه.\n\nيشرح فارمر سبب الحاجة إلى هذا الدوزان. يقول فارمر عن الدوزان على أبعاد الرابعة إن نظام الدساتين عند ابن سينا لا يشمل الثالثة الزلزلية (343 سنت) في الديوان الثاني (فارمر 1937: 256). يضيف فارمر أن الخروج من هذه الصعوبة كان سهلاً باعتماد تسوية أخرى للأوتار (فارمر 1937: 256). يقول فارمر عن هذا الدوزان البديل إن ابن سينا يقدّم تسوية بديلة تُدخل نغمات الزلزلية في الديوان الثاني على نحو منتظم، بعد أن كان الدوزان على أبعاد الرابعة يستبعدها (فارمر 1937: 257). يعدّ فارمر الدوزان البديل تحسيناً أكيداً على سلّم الفارابي ودوزانه، لأنه شمل نغمات الزلزلية العصيّة في الديوان الثاني (فارمر 1937: 257). لذلك، بحسب فارمر، الغاية من هذا الدوزان أن يكون لنغمتي الوسطى الزلزلية في الديوان الأول ضعف دقيق في الديوان الثاني. لا يطبع مقتطف فارمر كلام ابن سينا نفسه عن هذا الدوزان، لذلك هذا السبب من فارمر.\n\nالدساتين هي نفسها في ابن سينا (1037). هي الخنصر (4/3) والسبابة (9/8) والبنصر (81/64) والوسطى القديمة الفارسية (32/27) والوسطى الزلزلية (39/32) ومجنّبان (13/12 و273/256). يشرح تعليق ابن سينا (1037) كيف يضع ابن سينا كل دستان.\n\nالذي يتغيّر هو دوزان الأوتار وحده. يصف فارمر هذا التغيير بقوله إن الدساتين تعطي جدوله حين يُدوزن الزير على 408 سنت من المثنى (فارمر 1937: 257). لذلك يُدوزن الزير المطلق على دستان البنصر في المثنى (9/4)، أي على 81/64 فوق المثنى المطلق بدل الرابعة (4/3). لا يذكر نص فارمر دوزان الحاد. يضع جدول فارمر في الصفحة 257 الزير المطلق على 204 سنت والحاد المطلق على 702 سنت، وكلاهما محسوب داخل ديوان واحد، لذلك الحاد على بعد رابعة (498 سنت) فوق الزير.\n\nالديوان الأول هو نفسه في ابن سينا (1037). ما زال كل من البم والمثلث والمثنى مدوزناً على بعد رابعة فوق الوتر الذي تحته، فتعطي هذه الأوتار النغمات السبع عشرة نفسها.\n\nفي الديوان الثاني 18 نغمة لا 17. الزير مدوزن على دستان البنصر في المثنى، على 81/64 فقط فوق المثنى المطلق، لذلك تمتد أعلى دساتين المثنى إلى مجال الزير. دستان البنصر على المثنى (9/4، 1403.91 سنت) يعطي نغمة الزير المطلق نفسها. دستان الخنصر على المثنى (64/27، 1494.13 سنت) يعطي نغمة بين الزير المطلق (9/4، 1403.91 سنت) وأول دساتين الزير (2457/1024، 1515.22 سنت)، ولا يعطي أي دستان على الزير هذه النغمة.\n\nيكتب فارمر السنت داخل ديوان واحد. لذلك يطبع في جدوله خنصر المثنى على 294 سنت، بين الزير المطلق على 204 سنت وأول دساتين الزير على 316 سنت.\n\nبهذا الدوزان يصبح لنغمتي الوسطى الزلزلية في الديوان الأول، 39/32 و13/8، ضعف دقيق في الديوان الثاني، هو 39/16 و13/4. من نغمات الديوان الأول السبع عشرة، 11 لها ضعف دقيق في الديوان الثاني.\n\nست نغمات من الديوان الأول ليس لها ضعف دقيق في الديوان الثاني، بل نغمة قريبة من موضع الضعف الدقيق فقط. لنغمة عَجَم عُشَيران (273/256)، يكون الضعف الدقيق 273/128 (1311.31 سنت)، وأقرب نغمة إليه، نيم عَجَم (512/243، 1290.22 سنت)، أخفض منه بنحو 21.08 سنت. لنغمة كُردي (91/64)، يكون الضعف الدقيق 91/32 (1809.35 سنت)، وأقرب نغمة إليه، سُنبُله/زَوال (729/256، 1811.73 سنت)، أعلى منه بنحو 2.38 سنت. لنغمة حِصار (91/48)، يكون الضعف الدقيق 91/24 (2307.40 سنت)، وأقرب نغمة إليه، جَواب حِصار (243/64، 2309.78 سنت)، أعلى منه بنحو 2.38 سنت. لنغمة سيكاه (13/9)، يكون الضعف الدقيق 26/9 (1836.62 سنت)، وأقرب نغمة إليه، سُنبُله/زَوال (729/256، 1811.73 سنت)، أخفض منه بنحو 24.89 سنت. لنغمة تيك حِصار (52/27)، يكون الضعف الدقيق 104/27 (2334.66 سنت)، وأقرب نغمة إليه، جَواب حِصار (243/64، 2309.78 سنت)، أخفض منه بنحو 24.89 سنت. لنغمة جَهاركاه (128/81)، يكون الضعف الدقيق 256/81 (1992.18 سنت)، وأقرب نغمة إليه، تيك ماهوران (819/256، 2013.26 سنت)، أعلى منه بنحو 21.08 سنت.\n\nفي المقابل، 7 نغمات من الديوان الثاني ليست ضعفاً دقيقاً لأي نغمة من الديوان الأول. لذلك تُدوَّن نغمات الديوان الثاني الثماني عشرة قائمةً مستقلة.\n\nالديوانان الأدنى والأعلى (الديوان 0 والديوان 3) ليسا فيما ينقله فارمر. استُكملا بالطريقة نفسها المتبعة في ابن سينا (1037)، بإضافة أوتار متباعدة بأبعاد الرابعة تحت البم وفوق الحاد، على كل وتر منها الدساتين نفسها. الديوان 0 هو نفسه الديوان 0 في ابن سينا (1037).\n\nفي الديوان الأعلى 17 نغمة. الأوتار المضافة فوق الحاد تعطي نغمات البم والمثلث والمثنى مضروبة في أربعة بالضبط. لذلك كل نغمة في الديوان الأعلى هي نغمة من الديوان الأول مضروبة في أربعة بالضبط. 11 نغمة فقط من الديوان الأعلى هي ضعف نغمة من الديوان الثاني بالضبط.\n\nيطبع فارمر في جدوله المثلث المطلق على 408 سنت. هذا خطأ مطبعي صوابه 498 سنت، لأن كل دستان على المثلث في ذلك الجدول هو 498 سنت مضافاً إليها بعد الدستان نفسه. أرقام السنت عند فارمر مقرّبة إلى أعداد صحيحة، وبعضها يختلف بسنت واحد عن سنت النسب الدقيقة.",
+    "tuningSystemPitchClasses": [
+      "1/1",
+      "273/256",
+      "13/12",
+      "9/8",
+      "32/27",
+      "39/32",
+      "81/64",
+      "4/3",
+      "91/64",
+      "13/9",
+      "3/2",
+      "128/81",
+      "13/8",
+      "27/16",
+      "16/9",
+      "91/48",
+      "52/27"
+    ],
+    "noteNames": [
+      [
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "rāst",
+        "nīm zīrgūleh",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "nīm ḥijāz",
+        "ḥijāz",
+        "nawā",
+        "ḥiṣār",
+        "tīk ḥiṣār"
+      ],
+      [
+        "yegāh",
+        "qarār ḥiṣār",
+        "qarār tīk ḥiṣār/shūrī",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "ʿirāq",
+        "kawasht",
+        "rāst",
+        "zīrgūleh",
+        "tīk zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "segāh",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz",
+        "tīk ḥijāz/ṣabā"
+      ]
+    ],
+    "abjadNames": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "stringLength": 1000,
+    "defaultReferenceFrequency": 98,
+    "referenceFrequencies": {
+      "yegāh": 98,
+      "ʿushayrān": 110
+    },
+    "version": "2026-11-20T06:41:28.184Z",
+    "tuningSystemPitchClassesByOctave": {
+      "0": [
+        "1/2",
+        "1053/2048",
+        "2187/4096",
+        "9/16",
+        "2457/4096",
+        "39/64",
+        "81/128",
+        "2/3",
+        "351/512",
+        "729/1024",
+        "3/4",
+        "819/1024",
+        "13/16",
+        "27/32",
+        "8/9",
+        "117/128",
+        "243/256"
+      ],
+      "2": [
+        "2/1",
+        "512/243",
+        "13/6",
+        "9/4",
+        "64/27",
+        "2457/1024",
+        "39/16",
+        "81/32",
+        "8/3",
+        "351/128",
+        "729/256",
+        "3/1",
+        "819/256",
+        "13/4",
+        "27/8",
+        "32/9",
+        "117/32",
+        "243/64"
+      ],
+      "3": [
+        "4/1",
+        "273/64",
+        "13/3",
+        "9/2",
+        "128/27",
+        "39/8",
+        "81/16",
+        "16/3",
+        "91/16",
+        "52/9",
+        "6/1",
+        "512/81",
+        "13/2",
+        "27/4",
+        "64/9",
+        "91/12",
+        "208/27"
+      ]
+    },
+    "noteNamesByOctave": {
+      "ʿushayrān": {
+        "0": [
+          "qarār ʿushayrān",
+          "qarār tīk ʿushayrān",
+          "qarār ʿajam ʿushayrān",
+          "qarār kawasht",
+          "qarār tīk rāst",
+          "qarār nīm zīrgūleh",
+          "qarār zīrgūleh",
+          "qarār dūgāh",
+          "qarār tīk dūgāh",
+          "qarār kurdī",
+          "qarār būselīk/ʿushshāq",
+          "qarār tīk chahārgāh",
+          "qarār nīm ḥijāz",
+          "qarār ḥijāz",
+          "yegāh",
+          "tīk yegāh",
+          "qarār ḥiṣār"
+        ],
+        "2": [
+          "ḥusaynī",
+          "nīm ʿajam",
+          "awj",
+          "māhūr",
+          "kurdān",
+          "tīk kurdān",
+          "nīm shahnāz",
+          "shahnāz",
+          "muḥayyar",
+          "tīk muḥayyar",
+          "sunbuleh/zawāl",
+          "jawāb būselīk",
+          "tīk māhūrān",
+          "jawāb nīm ḥijāz",
+          "jawāb ḥijāz",
+          "saham/ramal tūtī",
+          "tīk saham/ramal tūtī",
+          "jawāb ḥiṣār"
+        ],
+        "3": [
+          "jawāb ḥusaynī",
+          "jawāb ʿajam",
+          "jawāb awj",
+          "jawāb māhūr",
+          "jawāb kurdān",
+          "jawāb nīm shahnāz",
+          "jawāb shahnāz",
+          "jawāb muḥayyar",
+          "jawāb sunbuleh/zawāl",
+          "jawāb buzurk",
+          "jawāb jawāb būselīk",
+          "jawāb māhūrān",
+          "jawāb jawāb nīm ḥijāz",
+          "jawāb jawāb ḥijāz",
+          "jawāb saham/ramal tūtī",
+          "jawāb jawāb ḥiṣār",
+          "jawāb jawāb tīk ḥiṣār"
+        ]
+      },
+      "yegāh": {
+        "0": [
+          "qarār yegāh",
+          "qarār tīk yegāh",
+          "qarār qarār ḥiṣār",
+          "qarār ʿushayrān",
+          "qarār tīk ʿajam ʿushayrān",
+          "qarār ʿirāq",
+          "qarār kawasht",
+          "qarār rāst",
+          "qarār tīk rāst",
+          "qarār zīrgūleh",
+          "qarār dūgāh",
+          "qarār tīk kūrdī",
+          "qarār segāh",
+          "qarār būselīk/ʿushshāq",
+          "qarār chahārgāh",
+          "qarār tīk chahārgāh",
+          "qarār ḥijāz"
+        ],
+        "2": [
+          "nawā",
+          "nīm ḥiṣār",
+          "tīk ḥiṣār",
+          "ḥusaynī",
+          "ʿajam",
+          "tīk ʿajam",
+          "awj",
+          "māhūr",
+          "kurdān",
+          "tīk kurdān",
+          "shahnāz",
+          "muḥayyar",
+          "jawāb tīk kūrdī",
+          "buzurk",
+          "jawāb būselīk",
+          "māhūrān",
+          "tīk māhūrān",
+          "jawāb ḥijāz"
+        ],
+        "3": [
+          "saham/ramal tūtī",
+          "jawāb ḥiṣār",
+          "jawāb tīk ḥiṣār",
+          "jawāb ḥusaynī",
+          "jawāb ʿajam",
+          "jawāb awj",
+          "jawāb māhūr",
+          "jawāb kurdān",
+          "jawāb shahnāz",
+          "jawāb jawāb tīk zīrgūleh",
+          "jawāb muḥayyar",
+          "jawāb sunbuleh/zawāl",
+          "jawāb buzurk",
+          "jawāb jawāb būselīk",
+          "jawāb māhūrān",
+          "jawāb jawāb ḥijāz",
+          "jawāb jawāb tīk ḥijāz"
+        ]
+      }
+    },
+    "sourceOud": {
+      "strings": [
+        {
+          "id": "bamm",
+          "nameEnglish": "bamm",
+          "nameArabic": "البم",
+          "openRatio": "1/1"
+        },
+        {
+          "id": "mathlath",
+          "nameEnglish": "mathlath",
+          "nameArabic": "المثلث",
+          "openRatio": "4/3"
+        },
+        {
+          "id": "mathna",
+          "nameEnglish": "mathnā",
+          "nameArabic": "المثنى",
+          "openRatio": "16/9"
+        },
+        {
+          "id": "zir",
+          "nameEnglish": "zīr",
+          "nameArabic": "الزير",
+          "openRatio": "9/4"
+        },
+        {
+          "id": "hadd",
+          "nameEnglish": "ḥadd",
+          "nameArabic": "الحاد",
+          "openRatio": "3/1"
+        }
+      ],
+      "frets": [
+        {
+          "id": "mujannab_mithl_wa_sub",
+          "nameEnglish": "mujannab",
+          "nameArabic": "المجنّب",
+          "ratio": "273/256",
+          "constructionEnglish": "Then they tied above this a[nother] fret which most people consider to be an anterior (mujannab) fret [at 243 : 256 = 90 cents] of the Old [Persian] 2nd finger fret [27 : 32 = 294 cents]. Yet it is not so, but is upon the ratio of 7 : 8 [= 231 cents] from this new 2nd finger fret [32 : 39 = 343 cents] known as the Zalzalian fret, [and therefore the ratio of this anterior fret is 256 : 273 = 112 cents].",
+          "constructionArabic": "ثم انهم شدّوا فوق ذلك دستاناً يظنه اكثرهم انه كالمجنّب للوسطى القديمة وليس كذلك بل هو من هذا الوسطى الحديثة المعروفة بالزلزلية على نسبة مثل وسبع"
+        },
+        {
+          "id": "mujannab_zalzal",
+          "nameEnglish": "mujannab al-zalzaliyya",
+          "nameArabic": "مجنّب الزلزلية",
+          "ratio": "13/12",
+          "constructionEnglish": "Next they tied above the 1st finger fret, [towards the nut end], another fret, at the distance of a tone [8 : 9 = 204 cents] from this [new] tied 2nd finger fret [32 : 39 = 343 cents]. It will be an anterior (mujannab) fret [12 : 13 = 139 cents], being the lower octave (isjāḥ) of the [new 2nd finger fret on the] mathnā string.",
+          "constructionArabic": "ثم انهم شدّوا فوق السبابة دستاناً آخر على الطنينى من هذا الدستان المشدود للوسطى يكون كالمجنّب له ليوخذ اسجاحه من الوتر الثالث له"
+        },
+        {
+          "id": "sabbaba",
+          "nameEnglish": "sabbāba",
+          "nameArabic": "السبابة",
+          "ratio": "9/8",
+          "constructionEnglish": "We then take a ninth of the length from the nut and there is tied upon it the 1st finger (sabbāba) fret, and there will be between its open string and its first finger fret the interval of the tone [8 : 9 = 204 cents].",
+          "constructionArabic": "ثم قسم طوله واخذ تسع الطول الى الانف وشدّ عليه دستان السبابة فيكون بين مطلقه وبين سبابته الطنينى"
+        },
+        {
+          "id": "wusta_farisiyya",
+          "nameEnglish": "wusṭā fārisiyya",
+          "nameArabic": "الوسطى الفارسية",
+          "ratio": "32/27",
+          "constructionEnglish": "We then further divide what is between the 4th finger fret and the bridge-tail-piece into eight parts, and one of these parts is laid off from the 4th finger fret [towards the nut end] and there is tied upon it the Old Persian 2nd finger fret.",
+          "constructionArabic": "وايضاً قسم مابين الخنصر والمشط بثمنية اقسام وزيد واحد منها على الخنصر وشدّ عليه دستان الوسطى القديم الفارسي"
+        },
+        {
+          "id": "wusta_zalzaliyya",
+          "nameEnglish": "wusṭā zalzaliyya",
+          "nameArabic": "الوسطى الزلزلية",
+          "ratio": "39/32",
+          "constructionEnglish": "Later the moderns came and tied another 2nd finger fret [the Zalzalian] about midway between the 1st finger fret and the 4th finger fret. … And that which is most generally accepted is that the 1st finger fret should be from the [Zalzalian] 2nd finger fret upon the ratio of 12 : 13 [= 139 cents] and the [Zalzalian] 2nd finger fret should be from the 4th finger fret upon the ratio of 11 : 12 [= 151 cents] nearly, not actually, because the ratio is 117 : 128 [= 155 cents].",
+          "constructionArabic": "ثم جاء المتاخّرون وشدّوا للوسطى دستاناً آخر في قريب من الوسط بين السبابة والخنصر … والاقرب من ذلك ان تكون السبابة من ذلك الوسطى على نسبه الزائد جزءاً من اثنا عشر والوسطى من الخنصر على نسبه الزائد جزءاً من احد عشر تقريباً لا بالحقيقة لانه يخرج حينئذ على نسبة ١٢٨ الى ١١٧"
+        },
+        {
+          "id": "binsir",
+          "nameEnglish": "binṣir",
+          "nameArabic": "البنصر",
+          "ratio": "81/64",
+          "constructionEnglish": "We then divide what is between its first finger fret and the bridge-tail-piece upon another tone [8 : 9 = 204 cents] and there is tied upon it the 3rd finger (binṣir) fret [at 64 : 81 = 408 cents]",
+          "constructionArabic": "ثم قسم ما بين سبابته الى المشط على طنينى آخر وشدّ عليه دستان البنصر"
+        },
+        {
+          "id": "khinsir",
+          "nameEnglish": "khinṣir",
+          "nameArabic": "الخنصر",
+          "ratio": "4/3",
+          "constructionEnglish": "Verily the lute (ʿūd) is divided between the bridge-tail-piece (musht) and the nut (anf) upon a quarter of the whole [length], and there is tied upon it [the place of the division] the lowest fret called the 4th finger [khinṣir) fret. So there will be between its open string (muṭlaq) and its 4th finger fret the interval of the 4th [3 : 4 = 498 cents].",
+          "constructionArabic": "فنقول انّ العود قد قسم طول ما بين مشطه وانف ملاويه على الربع من جهة الملاوي وشدّ عليه الدستان الاسفل وهو الدستان المنسوب الى الخنصر فيكون بين مطلقه وبين خنصره الذى بالاربعة"
+        }
+      ],
+      "pageReferences": [
+        {
+          "sourceId": "farmer_1937",
+          "page": "251–255, 257"
+        }
+      ],
+      "stringsAttribution": "secondary",
+      "fretsAttribution": "source",
+      "noteEnglish": "The frets are Ibn Sīnā's own, as in Ibn Sīnā (1037). The tuning, with the zīr tuned to the binṣir fret above the mathnā (9/4) and the ḥadd a fourth above the zīr, is Farmer's table of Ibn Sīnā's alternative tuning (1937:257). The Arabic for this tuning is not printed in Farmer's extract.",
+      "noteArabic": "الدساتين هي دساتين ابن سينا نفسه، كما في ابن سينا (1037). الدوزان، حيث الزير مدوزن على دستان البنصر فوق المثنى (9/4) والحاد على بعد رابعة فوق الزير، من جدول فارمر للدوزان البديل عند ابن سينا (فارمر 1937: 257). لا يرد النص العربي لهذا الدوزان في المقتطف الذي نشره فارمر."
+    }
   },
   {
     "id": "almawsili_850",
@@ -1808,19 +2474,6 @@
     ],
     "noteNames": [
       [
-        "yegāh",
-        "ʿushayrān",
-        "ʿajam ʿushayrān",
-        "kawasht",
-        "rāst",
-        "zīrgūleh",
-        "dūgāh",
-        "kurdī",
-        "būselīk/ʿushshāq",
-        "chahārgāh",
-        "ḥijāz"
-      ],
-      [
         "ʿushayrān",
         "kawasht",
         "rāst",
@@ -1832,6 +2485,19 @@
         "ḥijāz",
         "nawā",
         "ḥiṣār"
+      ],
+      [
+        "yegāh",
+        "ʿushayrān",
+        "ʿajam ʿushayrān",
+        "kawasht",
+        "rāst",
+        "zīrgūleh",
+        "dūgāh",
+        "kurdī",
+        "būselīk/ʿushshāq",
+        "chahārgāh",
+        "ḥijāz"
       ]
     ],
     "abjadNames": [

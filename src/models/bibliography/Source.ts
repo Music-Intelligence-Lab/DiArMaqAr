@@ -57,6 +57,18 @@ export interface SourcePageReference {
  * reference saved with an empty page rendered as "abbas-(1986)" in the
  * attribution line.
  */
+/**
+ * Page references in the archive's citation form: a range with an en dash
+ * (251–256), separate pages with commas (62, 70). Stored page strings are
+ * typed by hand as "251-256" or "62/70"; this is the one place they are set.
+ */
+export function formatPages(page: string): string {
+  return page
+    .trim()
+    .replace(/\s*\/\s*(?=\d)/g, ", ")
+    .replace(/(?<=\d)\s*-\s*(?=\d)/g, "–");
+}
+
 export function stringifySource(source: Source, english: boolean, page: string | null): string {
   if (source.getContributors().length === 0) return "";
 
@@ -91,7 +103,7 @@ export function stringifySource(source: Source, english: boolean, page: string |
   const year = yearMatch ? yearMatch[0] : pubDate;
   resultString += year;
 
-  if (page) resultString += ":" + page + ")";
+  if (page) resultString += ":" + formatPages(page) + ")";
   else resultString += ")";
 
   return resultString;

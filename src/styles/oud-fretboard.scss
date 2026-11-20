@@ -1,0 +1,572 @@
+@use "./variables" as *;
+
+/**
+ * Dasātīn (ʿūd) view of a tanghīm.
+ *
+ * The plot is direction-locked: the anf is always at the left and the octave
+ * always at the right, in every language, because the geometry reads from the
+ * nut outward and mirroring it would misrepresent the instrument. Only the
+ * chrome above it follows the page direction. Nothing here may use logical
+ * properties for a division's offset — plain `left`, always.
+ */
+.oud-fretboard {
+  width: 100%;
+  // Same inset as the controls above (starting-note row), so the strings
+  // view's controls, legend and plot start on the page's content edge
+  box-sizing: border-box;
+  padding: 0 20px;
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: $space-block;
+  }
+
+  &__control {
+    @include manager-groupby;
+    flex-wrap: wrap;
+  }
+
+  &__control-label {
+    @include manager-groupby-label;
+  }
+
+  /* The shared cents-tolerance box (cents-tolerance-input.tsx); the ± beside it
+     reads as part of the label */
+  &__tolerance {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__select {
+    @include form-control;
+    height: 27px;
+
+    &_narrow {
+      min-width: 56px;
+    }
+  }
+
+  &__segments {
+    @include manager-groupby-segments;
+  }
+
+  &__segment {
+    @include manager-groupby-segment;
+
+    &_active {
+      @include manager-groupby-segment-active;
+    }
+  }
+
+  // ---------------------------------------------------------------- plot
+
+  /* Never scrolls: the layout keeps every label inside the band (see the
+     end-aligned labels), so the strings always fit the page's width */
+  &__plot {
+    direction: ltr;
+    width: 100%;
+  }
+
+  &__scale {
+    display: flex;
+    margin-bottom: 6px;
+  }
+
+  &__scale-gutter {
+    flex: 0 0 var(--fretboard-gutter);
+  }
+
+  &__scale-head {
+    flex: 0 0 var(--fretboard-head);
+  }
+
+  &__scale-tail {
+    flex: 0 0 var(--fretboard-tail);
+  }
+
+  &__scale-track {
+    flex: 1 1 auto;
+    position: relative;
+    height: 14px;
+  }
+
+  /*
+   * The source's fret names, once, above the awtār at the anf line. Names sit
+   * at an angle from their fret so close frets (the two mujannabs are under a
+   * centimetre apart on a real neck) never collide; a short marker under each
+   * name shows exactly where its fret lies.
+   */
+  &__fret-names {
+    display: flex;
+    margin-bottom: 4px;
+  }
+
+  &__fret-names-track {
+    flex: 1 1 auto;
+    position: relative;
+    height: 96px;
+  }
+
+  &__fret-name {
+    position: absolute;
+    bottom: 0;
+    height: 10px;
+    margin-left: -1px;
+    border-left: 2px solid rgba($text, 0.5);
+  }
+
+  /* On the fret names' line: the same baseline as the names, above the markers. */
+  &__fret-names-track &__scale-mark {
+    top: auto;
+    bottom: 14px;
+  }
+
+  &__fret-name-text {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 0;
+    font-size: $font-size-xs;
+    white-space: nowrap;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+  }
+
+  &__scale-mark {
+    @include type-eyebrow;
+    position: absolute;
+    top: 0;
+    color: silver;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    text-transform: none;
+    letter-spacing: 0;
+
+    &_start {
+      transform: none;
+      left: 0;
+    }
+
+    &_end {
+      transform: none;
+      right: 0;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /**
+   * Stacked rather than side by side: the open note sits above its course
+   * number, which buys back horizontal room for the neck itself.
+   */
+  /* Flush with the page's text edge, so the strings get the width */
+  &__gutter {
+    flex: 0 0 var(--fretboard-gutter);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    padding-inline-end: 8px;
+    padding-block: 12px;
+  }
+
+  /* The open note of each watar, chosen per string: the same control as the
+     dūzān select, at the gutter's small size */
+  &__open-select {
+    @include form-control;
+    height: 24px;
+    width: 100%;
+    font-size: $font-size-xs;
+    padding-inline: 6px 2px;
+    text-overflow: ellipsis;
+  }
+
+  /* The source's own name for the watar (bamm, mathlath…), where the open-note
+     select sits for a dūzān the reader chooses: same box, not editable. */
+  &__string-name {
+    display: flex;
+    align-items: center;
+    // At least the select's height; a long name (qarār būselīk/ʿushshāq) wraps
+    // and the box grows with it rather than spilling onto the course number
+    min-height: 22px;
+    line-height: 1.2;
+    width: 100%;
+    font-size: $font-size-xs;
+  }
+
+  /**
+   * Tablature numbering: the lowest-pitched watar carries the highest number,
+   * so a four-course ʿūd reads 4-3-2-1 from top to bottom.
+   */
+  &__course {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  &__course-number {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid $light-grey;
+    color: $text;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-xs;
+    line-height: 1;
+  }
+
+  &__course-value {
+    font-size: $font-size-xs;
+    color: silver;
+    line-height: 1.1;
+  }
+
+  /** Room for a centred label sitting on the anf, and past the octave. */
+  &__head {
+    flex: 0 0 var(--fretboard-head);
+  }
+
+  &__tail {
+    flex: 0 0 var(--fretboard-tail);
+  }
+
+  &__track {
+    flex: 1 1 auto;
+    position: relative;
+    min-width: 420px;
+    /* Pre-measurement height; the component sets the measured lane height
+       inline once the track width is known. */
+    height: 96px;
+  }
+
+  /* One band per watar across head, track and tail, so the anf and the
+     octave terminal sit inside it rather than on its edges */
+  &__head,
+  &__track,
+  &__tail {
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  &__row:nth-child(even) &__head,
+  &__row:nth-child(even) &__track,
+  &__row:nth-child(even) &__tail {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &__string {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.28));
+  }
+
+  /**
+   * The anf and the octave terminal are centred on their exact positions.
+   * Edge-aligning them put them a pixel off the ticks they coincide with,
+   * which showed as a jump when the matching note was hovered.
+   */
+  &__anf,
+  &__octave-end {
+    position: absolute;
+    top: 50%;
+    height: 36px;
+    margin-top: -18px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: $light-grey;
+  }
+
+  &__anf {
+    left: 0;
+  }
+
+  &__octave-end {
+    left: 100%;
+  }
+
+  &__division {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /** A 2px tick is far too small a hover target; this widens the hit area. */
+  &__hit {
+    position: absolute;
+    left: -7px;
+    width: 15px;
+    top: 50%;
+    height: 34px;
+    margin-top: -17px;
+  }
+
+  /**
+   * `left: 0` is load-bearing. Without it the static position inside a centred
+   * flex box is used, and that position is itself width-dependent — so
+   * translateX(-50%) applied twice and the tick grew to one side on hover.
+   */
+  &__tick {
+    position: absolute;
+    top: 50%;
+    height: 18px;
+    margin-top: -9px;
+    width: 2px;
+    left: 0;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  &__division_unnamed &__tick {
+    background: rgba(255, 255, 255, 0.22);
+    height: 10px;
+    margin-top: -5px;
+  }
+
+  /** The terminals already draw those two positions. */
+  &__division_open &__tick,
+  &__division_octave &__tick {
+    width: 0;
+  }
+
+  /**
+   * A dastān is a gut fret tied right across the neck, so it crosses awtār on
+   * which it lands on no pitch of the tanghīm. Hovering it reads how far it
+   * falls from the watar's nearest pitch (&__probe).
+   */
+  &__division_phantom {
+
+    .oud-fretboard__tick {
+      background: none;
+      width: 0;
+      border-left: 2px dotted rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  &__label {
+    position: absolute;
+    font-size: $font-size-xs;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: $text;
+    cursor: default;
+    /* A name starts AT its tick and reads rightward, so which name belongs to
+       which dastān is never ambiguous. */
+    left: 0;
+    text-align: left;
+
+    /* The last name at the far end reads leftward, ending at its tick */
+    &_end {
+      left: auto;
+      right: 0;
+      text-align: right;
+    }
+
+    &_above {
+      top: auto;
+      /* Anchored by its bottom, so a name that wraps to two lines grows upward
+         and its last line stays the same distance from the string. */
+      bottom: calc(50% + 22px);
+    }
+
+    &_below {
+      top: calc(50% + 22px);
+    }
+
+    /* Numeric labels are narrow and symmetrical, so they centre on their tick.
+       Digit ink measures the same as the lowercase names, but every digit is
+       full cap-height with no x-height body, so a run of them reads heavier —
+       one step down optically matches it. */
+    &_numeric {
+      left: 0;
+      right: auto;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 10px;
+    }
+  }
+
+  /** Ratios read as a true fraction: numerator over denominator with a rule. */
+  &__fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.05;
+  }
+
+  &__fraction-denominator {
+    border-top: 1px solid currentColor;
+    padding-top: 1px;
+  }
+
+  /**
+   * Past the note this watar shares with the next one down. Those pitches are
+   * reachable lower on that next watar, so the undimmed span is the range for
+   * which this watar is the practical choice.
+   */
+  &__division_not-exact-octave &__tick {
+    background: $not-exact-octave;
+  }
+
+  &__not-exact-octave-legend {
+    // Aligned with the strings' band, not the string names beside it
+    margin: $space-block-half 0 0;
+    margin-inline-start: var(--fretboard-gutter);
+    font-size: $font-size-xs;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 3px;
+      margin-inline-end: 6px;
+      vertical-align: middle;
+      background: $not-exact-octave;
+    }
+  }
+
+  /* The next watar's open note, boxed: where the player can move across. An
+     outline, so the box takes no room from the label layout. */
+  &__division_handover &__label {
+    outline: 1px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  &__division_handover:hover &__label {
+    outline-color: $gold;
+  }
+
+  /**
+   * Hovering a division marks it in gold and names the pitch its gap is
+   * measured from, with the gap in cents: a dotted fret from the watar's
+   * nearest pitch, a pitch from the one before it.
+   */
+  &__probe {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  &__probe-line {
+    position: absolute;
+    top: 50%;
+    height: 26px;
+    margin-top: -13px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: $gold;
+  }
+
+  /* Level with the string, just to the right of the division; near the end of
+     the string, just to its left */
+  &__probe-reading {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%);
+    padding: 1px 5px;
+    border-radius: 2px;
+    background: $background;
+    border: 1px solid $gold;
+    color: $text;
+    font-size: $font-size-xs;
+    line-height: 1.3;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+
+    &_end {
+      left: auto;
+      right: 6px;
+    }
+  }
+
+  /* Under a dotted fret's gap: why it has no name or value of its own */
+  &__probe-note {
+    display: block;
+    color: rgba(238, 238, 238, 0.6);
+  }
+
+  /* 2px → 4px keeps the growth symmetrical about the tick's centre. */
+  &__division:hover &__tick {
+    background: $gold;
+    width: 4px;
+  }
+
+  &__division:hover &__label {
+    color: $gold;
+  }
+
+  /* A terminal that coincides with a hovered note goes gold itself, rather
+     than a second tick appearing on top of it. */
+  &__track:has(&__division_open:hover) &__anf,
+  &__track:has(&__division_octave:hover) &__octave-end {
+    background: $gold;
+  }
+
+  /** What a jins or maqām selection will drive, once those pass a highlight set. */
+  &__division_highlighted &__tick {
+    background: $tertiary;
+    width: 4px;
+  }
+
+  &__division_highlighted &__label {
+    color: color-mix(in srgb, $tertiary 55%, $text);
+  }
+
+  // -------------------------------------------------------- unavailable
+
+  &__unavailable {
+    padding: $space-block 0;
+  }
+
+  &__unavailable-title {
+    color: $gold;
+    margin-bottom: 6px;
+  }
+
+  &__unavailable-item {
+    font-size: $font-size-sm;
+    color: silver;
+    line-height: 1.6;
+  }
+}
+
+/**
+ * Set on the block rather than :root so the plot's spacing tokens stay scoped
+ * to it. These are role widths, not places: gutter carries the open-note
+ * chrome, head and tail carry label overhang past the anf and the octave.
+ */
+.oud-fretboard {
+  --fretboard-gutter: 72px;
+  // Room past the octave end for the names at the far end of each watar
+  // (they wrap onto lines, see the label plan); the anf gets the same, so both
+  // terminals sit equally far from the band's edges
+  --fretboard-head: 64px;
+  // The octave end sits as far from the band's edge as the anf does
+  --fretboard-tail: var(--fretboard-head);
+}
+
+/* A dūzān whose open notes are chosen per string needs room for a note
+   select in the gutter; the source's ʿūd only shows short names */
+.oud-fretboard_choosing-notes {
+  --fretboard-gutter: 120px;
+}

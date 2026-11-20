@@ -76,8 +76,8 @@ The Persian-Arab-Ottoman note naming convention compiled in DiArMaqAr totals **3
 The compiled note names are drawn from:
 
 - Meshshāqa (1899:18)
-- Al-Khulaʿī (1904/2011:50-54 and 77-78)
-- Al-Shawwā (1946:11-12)
+- Al-Khulaʿī (1904/2011:50–54, 77–78)
+- Al-Shawwā (1946:11–12)
 - Allāh Wīrdī (1949:58, 153, 157, 177, 198, 203, 207)
 - Al-Ṣabbāgh (1954:47)
 - Al-Ḥilū (1961:69)
@@ -87,6 +87,15 @@ The compiled note names are drawn from:
 - Allāh Wīrdī (1949:203)
 - Al-Ḥilū (1961:70)
 - Arel (1968:1) — extended four-octave Turkish makam equivalents
+
+### Names Added in DiArMaqAr
+
+Four note names are used in DiArMaqAr that are not in the compiled sources. Each was added because a tanghīm in the archive contains a pitch class that the compiled names could not name without giving two different pitch classes the same name. All four follow the PAO convention that tīk raises a note and nīm lowers it.
+
+- **tīk rāst** names pitch classes above rāst and below nīm zīrgūleh for the sake of al-Fārābī's tanāghīm (see al-Fārābī 950g, 950h) and the ʿushayrān-based version of al-Ṣabbāgh's tanghīm, where his own kurdī falls there (see al-Ṣabbāgh 1950).
+- **tīk yegāh**, **tīk ʿushayrān**, **tīk dūgāh**: pitch classes above yegāh, ʿushayrān and dūgāh and below the next name in the list, for the sake of tanāghīm whose octaves are not exact (see Ibn Sīnā 1037).
+
+With these, the app uses 40 note names per octave. A name is added only when a tanghīm in the archive uses it. The full list, with the source of every name, is on the [PAO Note Names](/guide/note-names) page.
 
 ## Source Selection Methodology
 
@@ -143,13 +152,25 @@ All data is ready for academic citation with:
 - **Transparent methodology**: How data was derived
 - **Version tracking**: Platform version and data version
 
-### Citation Format
+### Citation Formats Used in DiArMaqAr
 
-Citations follow international scholarly standards:
-- Library of Congress Arabic Romanization
-- Standard academic citation formats
-- Multilingual support (Arabic/English/French)
-- DOI links where available
+DiArMaqAr cites its sources in the author-date form with a colon between the year and the page, the form common in ethnomusicology.
+
+**Sources list.** Each tanghīm, jins and maqām lists its sources by author, year and pages, for example Farmer (1937:251–256). Where a book has an original and a later edition, both years are given, original first, for example al-Khulaʿī (1904/2011).
+
+**In-text citations in commentary.** Commentary cites the page of every claim and every quotation:
+
+- one page: (Farmer 1937:254)
+- a range of pages, with an en dash: (al-Ḥilū 1961:120–121)
+- separate pages, with commas: (ʿAbbās 1986:62, 70)
+- when the author is already named in the sentence, only the year and page: al-Shawwā (1946:80)
+- a remark about the citation follows a semicolon: (1961:123; the square brackets are printed in the original)
+
+Arabic commentary uses the same form with Arabic punctuation: (فارمر 1937: 254), (1986: 62، 70). Numerals are western digits in both languages.
+
+**Quotations.** Text inside quotation marks, "…" in English and «…» in Arabic, is the source's own words, quoted exactly and followed by its citation. Where a quotation contains square brackets, the commentary says whose they are, for example the translator's. In the app, quoted text is shown in a different colour from the commentary around it, and a paragraph that opens with "NOTE:" is shown as a separate note.
+
+**Romanization.** Arabic names and terms follow the Library of Congress romanization.
 
 ## Historical Context
 

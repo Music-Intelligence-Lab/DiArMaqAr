@@ -1,6 +1,10 @@
 @use "sass:color";
 @use "./variables" as *;
 
+// The gap between lines of starting notes, which the export line beside
+// them shares so the two stay level
+$starting-note-row-gap: 16px;
+
 .tuning-system-manager {
   width: 100%;
   margin-top: 0px;
@@ -225,10 +229,15 @@
     }
   }
 
+  // When the row is too narrow, the String Length / View / Export columns
+  // move to a line of their own rather than squeezing the notes into a
+  // column of one note per line
   &__starting-note-container {
     display: flex;
-    align-items: flex-end;
-    gap: 32px;
+    flex-wrap: wrap;
+    // Every column's header on the same top line
+    align-items: flex-start;
+    gap: $space-block-half 32px;
     width: 100%;
     box-sizing: border-box;
     // Symmetric horizontal padding: the gap to the left of the Starting Note
@@ -244,15 +253,27 @@
     min-width: 0;
   }
 
-  // String Length column: its 27px input sits in a 30px content band (matching
-  // the notes column's dial height) so its header lines up with the notes header
-  &__options-column--string-length {
-    .tuning-system-manager__starting-note-input {
-      align-self: flex-start;
-      margin-bottom: 0;
-      // 3px extra below the 27px box → 30px band, matching the dial column
-      margin-top: 3px;
-    }
+  // The notes column takes the free width, and asks for enough of it to
+  // keep two notes on a line before the row wraps
+  &__options-column--notes {
+    flex: 1 1 400px;
+  }
+
+  // The String Length, View and Export columns keep their content's width
+  &__options-column--string-length,
+  &__options-column--view,
+  &__options-column--export {
+    flex-shrink: 0;
+  }
+
+  // Every 27px control below a header sits in a 30px band (the dial column's
+  // height), so all the column headers line up
+  &__options-column--string-length .tuning-system-manager__starting-note-input,
+  &__options-column--view .tuning-system-manager__view-segments,
+  &__options-column--export .tuning-system-manager__export-button {
+    align-self: flex-start;
+    margin-bottom: 0;
+    margin-top: 3px;
   }
 
   // Shared small uppercase header above each column's content
@@ -264,13 +285,36 @@
 
   // Export column has no header — center its button against the other columns'
   // content rows (which sit below their headers)
-  &__options-column--export {
-    margin-left: auto;
-    justify-content: flex-end;
+  // String length and view on the first line; export alone on the second,
+  // at the end. The line gap is the notes' own, and both first lines are a
+  // header over a 30px band, so export sits level with the second line of notes
+  &__options-group {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: start;
+    column-gap: 32px;
+    row-gap: $starting-note-row-gap;
+    margin-inline-start: auto;
+  }
 
-    [dir="rtl"] & {
-      margin-left: 0;
-      margin-right: auto;
+  // Export, and in admin the note-configuration buttons, each take a whole
+  // line of the group, at its end
+  &__options-column--export,
+  &__options-group > &__starting-note-right {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+
+  // On a wide screen the notes fit on one line, so export joins string
+  // length and view on theirs, level with their controls
+  @media (min-width: 1280px) {
+    &__options-group {
+      grid-template-columns: auto auto auto;
+    }
+
+    &__options-column--export {
+      grid-column: auto;
+      align-self: end;
     }
   }
 
@@ -283,7 +327,7 @@
     // Group-to-group gap stays larger than the 8px within a group so each
     // note's button/dial/Hz set reads as one unit — but tight enough that
     // three groups fit per line at the 1024px minimum viewport
-    gap: 16px;
+    gap: $starting-note-row-gap;
     flex-wrap: wrap;
   }
 
@@ -380,6 +424,20 @@
 
   &__item-grid {
     @include manager-item-grid;
+  }
+
+  /* Dīwān tables vs dasātīn: one presentation of the tanghīm at a time.
+     Lives in the options row beside the starting note and string length. */
+  &__view-segments {
+    @include manager-groupby-segments;
+  }
+
+  &__view-segment {
+    @include manager-groupby-segment;
+
+    &_active {
+      @include manager-groupby-segment-active;
+    }
   }
 
   &__carousel {
@@ -843,6 +901,38 @@
       background-color: $black !important;
       color: $text !important;
     }
+
+    &_not-exact-octave {
+      @include not-exact-octave-mark;
+    }
+  }
+
+  // Key to the marks on the source-value row; each swatch is drawn with the
+  // same mixin as the mark it explains
+  &__legend {
+    margin: 0 0 $space-block-half;
+  }
+
+  &__legend-item {
+    margin: 0;
+    font-size: $font-size-xs;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 10px;
+      margin-inline-end: 6px;
+      vertical-align: middle;
+    }
+
+    &_source-values::before {
+      @include structural-mark;
+    }
+
+    &_not-exact-octave::before {
+      @include not-exact-octave-mark;
+    }
   }
 
   &__select-note {
@@ -987,4 +1077,180 @@
 
 [dir="rtl"] .tuning-system-manager__row-header {
   text-align: right; // RTL alignment for Arabic
+}
+
+.tuning-system-manager__save-error {
+  @include type-data-value;
+  margin: 0 0 $space-block-half;
+  color: $delete;
+}
+
+// Admin: octaves 0, 2 and 3, and the source's ʿūd. Fields reuse the manager
+// form roles; only the row layout is particular to these lists.
+// Octaves 0, 1, 2 and 3 side by side, in octave order; two by two on
+// narrow screens
+.tuning-system-manager__values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: $space-block-half;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tuning-system-manager__input-container_narrow {
+  flex: 0 0 8rem;
+}
+
+.tuning-system-manager__derive {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-top: $space-block-half;
+
+  .tuning-system-manager__hint {
+    margin: 0;
+  }
+}
+
+.tuning-system-manager__hint {
+  @include type-settings-description;
+  margin: 0 0 $space-block-half;
+}
+
+.source-oud-editor {
+  &__subheading {
+    @include manager-form-label;
+    margin: $space-block-half 0 0.4rem;
+  }
+
+  // One row per string or fret
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.5rem;
+
+    th {
+      @include manager-section-summary;
+      font-weight: normal;
+      text-align: start;
+      padding: 0 0.5rem 0.25rem 0;
+    }
+
+    td {
+      padding: 0.2rem 0.5rem 0.2rem 0;
+      vertical-align: middle;
+    }
+
+    // Fixed widths for ratio and remove, so the strings and frets
+    // tables line up; the two name columns share what is left
+    table-layout: fixed;
+
+    th:nth-child(3) {
+      width: 8rem;
+    }
+
+    th:nth-child(4) {
+      width: 3rem;
+    }
+  }
+
+  &__field {
+    @include manager-source-field;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  // A group's heading with its one "given by" choice beside it
+  &__group-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+  }
+
+  &__given-by {
+    @include manager-section-summary;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .source-oud-editor__field {
+      width: auto;
+    }
+  }
+
+  &__add {
+    @include manager-source-add-button;
+  }
+
+  &__remove,
+  &__remove-all {
+    @include manager-source-delete-button;
+  }
+
+  &__remove {
+    min-width: 0;
+    padding: 2px 10px;
+  }
+
+  &__notes {
+    margin-top: $space-block;
+  }
+}
+
+.admin-section {
+  @include manager-section;
+
+  &__title {
+    @include manager-section-title;
+  }
+
+  &__summary {
+    @include manager-section-summary;
+  }
+}
+
+.reference-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+
+  &__chip {
+    @include manager-reference-chip;
+
+    &_unset {
+      border-color: $delete;
+    }
+  }
+
+  &__editor {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__field {
+    @include manager-source-field;
+    max-width: 22rem;
+  }
+
+  &__page {
+    width: 6rem;
+  }
+
+  &__done {
+    @include manager-source-add-button;
+  }
+
+  &__remove {
+    @include manager-source-delete-button;
+  }
 }

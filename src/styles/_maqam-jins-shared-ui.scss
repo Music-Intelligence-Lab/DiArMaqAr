@@ -123,7 +123,9 @@
   &__analysis-header {
     width: 100%;
     @include transpositions-header-surface;
-    margin-top: 0px;
+    // One block gap from whatever presents the tanghīm above it (the dīwān
+    // tables or the awtār), as everywhere a block meets the next
+    margin-top: $space-block;
     // Same compact frame as the sticky variant (had drifted to 10px)
     padding: 8px 20px;
   }
