@@ -143,13 +143,25 @@ All data is ready for academic citation with:
 - **Transparent methodology**: How data was derived
 - **Version tracking**: Platform version and data version
 
-### Citation Format
+### Citation Formats Used in DiArMaqAr
 
-Citations follow international scholarly standards:
-- Library of Congress Arabic Romanization
-- Standard academic citation formats
-- Multilingual support (Arabic/English/French)
-- DOI links where available
+DiArMaqAr cites its sources in the author-date form with a colon between the year and the page, the form common in ethnomusicology.
+
+**Sources list.** Each tanghīm, jins and maqām lists its sources by author, year and pages, for example Farmer (1937:251–256). Where a book has an original and a later edition, both years are given, original first, for example al-Khulaʿī (1904/2011).
+
+**In-text citations in commentary.** Commentary cites the page of every claim and every quotation:
+
+- one page: (Farmer 1937:254)
+- a range of pages, with an en dash: (al-Ḥilū 1961:120–121)
+- separate pages, with commas: (ʿAbbās 1986:62, 70)
+- when the author is already named in the sentence, only the year and page: al-Shawwā (1946:80)
+- a remark about the citation follows a semicolon: (1961:123; the square brackets are printed in the original)
+
+Arabic commentary uses the same form with Arabic punctuation: (فارمر 1937: 254), (1986: 62، 70). Numerals are western digits in both languages.
+
+**Quotations.** Text inside quotation marks, "…" in English and «…» in Arabic, is the source's own words, quoted exactly and followed by its citation. Where a quotation contains square brackets, the commentary says whose they are, for example the translator's. In the app, quoted text is shown in a different colour from the commentary around it, and a paragraph that opens with "NOTE:" is shown as a separate note.
+
+**Romanization.** Arabic names and terms follow the Library of Congress romanization.
 
 ## Historical Context
 

@@ -69,6 +69,32 @@ The starting note affects available maqāmāt, transposition possibilities, and 
 
 Each pitch class is automatically converted to multiple formats including frequency ratios, cents, absolute frequencies, MIDI values, string lengths, and cents deviations from 12-EDO reference notes.
 
+## Tanāghīm Whose Octaves Are Not Exact
+
+In most tanāghīm each octave repeats the first exactly, so the pitch classes of the second octave are the first octave's pitch classes doubled. Some historical tanāghīm do not work this way. In the tuning of Ibn Sīnā (1037), every string of the ʿūd carries the same frets while the strings are tuned a fourth apart, so a pitch class of the first dīwān does not always have an exact double in the second. For example, the exact double of 273/256 would be 273/128, but the nearest pitch class of the second dīwān is 512/243, about 21.08 cents lower.
+
+For such tanāghīm, DiArMaqAr stores the values of dīwān 0, 2 and 3 as the source gives them (or as its ʿūd produces them), instead of halving and doubling the first dīwān. The tables mark every value that is not an exact double or half of a value in the neighbouring dīwān.
+
+Note names in these dawāwīn follow one rule. A pitch class that is an exact double or half of a named pitch class, or within 3 cents of one, takes that note's name in the higher or lower register. Any other pitch class takes the name of the nearest named pitch class with tīk when it lies above it, or nīm when it lies below it. When that tīk name already belongs to another pitch class, a pitch class between a note and its tīk is named nīm tīk. The note names tīk yegāh, tīk ʿushayrān, tīk dūgāh and nīm tīk ḥiṣār were added for this rule.
+
+## Viewing a Tanghīm: Jadāwel and Awtār
+
+A tanghīm can be viewed in two ways, chosen under **View**.
+
+**Jadāwel (tables)** shows each dīwān as a table of its pitch classes, with their note names and their values in every unit (ratios, cents, decimal ratios, string lengths, frequencies, MIDI and more). The row in the unit the source uses is marked as the source values.
+
+**Awtār (strings)** shows the same pitch classes on the strings of an ʿūd, from the anf (nut) to half the string length, with every pitch class at its exact position on each string. The labels above and below each string can show the note names (PAO), IPN names, solfège, ratios, cents or fret divisions.
+
+**Dūzān/Taswīya** sets how the open strings are tuned:
+
+- **Source ʿūd**: for a tanghīm whose source describes its ʿūd, such as Ibn Sīnā (1037), the strings, their tuning and the frets are drawn exactly as the source gives them, with the source's own string and fret names. This is the default for those tanāghīm. Each fret's name sits above the strings, at its exact position.
+- **Custom**: choose the number of strings and the open note of each string.
+- **Presets**: two strings (a fourth apart or a fifth apart), four strings tuned in fourths, and five- and six-string ʿūds named by their lowest and highest open strings.
+
+Positions on a string that are not an exact octave of a value in the neighbouring dīwān are marked, with a legend under the strings. For a tanghīm with a source ʿūd, a note on how the strings represent the source is shown above the commentary.
+
+The view and the dūzān are part of the page address, so a shared link opens the same view: `view=tables` or `view=strings`, and `duzan=` with the preset (for example `duzan=source`), or `duzan=custom&openStrings=yegah,dugah,kurdan` for a custom tuning.
+
 ## Using Tanāghīm
 
 ### Via REST API
