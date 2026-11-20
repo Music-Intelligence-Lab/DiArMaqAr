@@ -22,8 +22,9 @@ import React from "react";
  *     single line break starts a new paragraph of the note.
  *   - a quotation: text inside "…" (English) or «…» (Arabic) is the source's
  *     words (the comment rules reserve those marks for verbatim quotation), so it
- *     is styled apart from ours. A quotation may run across paragraphs (al-Ṣabbāgh
- *     1954), so the open/closed state is carried through the whole comment.
+ *     is styled apart from ours. A quotation may quote something itself, and may
+ *     run across paragraphs (al-Ṣabbāgh 1954), so the depth is carried through
+ *     the whole comment.
  *
  * Suyūr stay plain: a sayr is entirely a quotation, and its own « » and ملاحظه
  * belong to the source (several open a « the printed page never closes).
@@ -34,46 +35,61 @@ import React from "react";
  */
 const NOTE_OPENING = /^\s*(NOTE:|Note:|ملاحظة:)/;
 
-/** Quotation state carried across lines and paragraphs. */
-type QuoteState = { straight: boolean; guillemets: number };
+/** Quotation depth carried across lines and paragraphs: 0 is our own words. */
+type QuoteState = { depth: number };
+
+const OPENING_MARKS = new Set(["«", "“"]);
+const CLOSING_MARKS = new Set(["»", "”"]);
+
+/**
+ * Whether a straight " opens a quotation or closes one. The same mark does both,
+ * so it is read from its surroundings as a reader does: outside any quotation it
+ * opens; inside one it opens a quotation within the quotation when it follows a
+ * space (or the start, or an opening bracket or dash) and comes before a
+ * character, and otherwise closes. Telling the two apart is what lets a quoted
+ * passage quote something itself (the note "rāst" inside Shawqī's words).
+ */
+function straightQuoteOpens(previous: string | undefined, next: string | undefined, depth: number): boolean {
+  if (depth === 0) return true;
+  const afterBreak = previous === undefined || /[\s(\[«“—–]/.test(previous);
+  const beforeCharacter = next !== undefined && !/[\s.,;:!?)\]]/.test(next);
+  return afterBreak && beforeCharacter;
+}
 
 /** Splits one line into runs of our words and the source's (quoted) words. */
 function quoteRuns(line: string, state: QuoteState): { text: string; quoted: boolean }[] {
   const runs: { text: string; quoted: boolean }[] = [];
+  const characters = Array.from(line);
   let current = "";
-  const inside = () => state.straight || state.guillemets > 0;
   const flush = (quoted: boolean) => {
     if (current) runs.push({ text: current, quoted });
     current = "";
   };
-  for (const ch of line) {
-    if (ch === '"' && !state.straight && state.guillemets === 0) {
-      flush(false);
-      state.straight = true;
-      current = ch;
-    } else if (ch === '"' && state.straight) {
-      current += ch;
-      state.straight = false;
-      flush(true);
-    } else if (ch === "«") {
-      if (!inside()) flush(false);
-      current += ch;
-      state.guillemets += 1;
-    } else if (ch === "»" && state.guillemets > 0) {
-      current += ch;
-      state.guillemets -= 1;
-      if (!inside()) flush(true);
-    } else {
-      current += ch;
-    }
-  }
-  flush(inside());
+  const open = (ch: string) => {
+    if (state.depth === 0) flush(false);
+    current += ch;
+    state.depth += 1;
+  };
+  const close = (ch: string) => {
+    current += ch;
+    state.depth -= 1;
+    if (state.depth === 0) flush(true);
+  };
+  characters.forEach((ch, i) => {
+    if (ch === '"') {
+      if (straightQuoteOpens(characters[i - 1], characters[i + 1], state.depth)) open(ch);
+      else close(ch);
+    } else if (OPENING_MARKS.has(ch)) open(ch);
+    else if (CLOSING_MARKS.has(ch) && state.depth > 0) close(ch);
+    else current += ch;
+  });
+  flush(state.depth > 0);
   return runs;
 }
 
 export default function CommentText({ text, className, editorial = false }: { text: string; className?: string; editorial?: boolean }) {
   const paragraphs = text.split(/\n\s*\n/).filter((paragraph) => paragraph.trim() !== "");
-  const state: QuoteState = { straight: false, guillemets: 0 };
+  const state: QuoteState = { depth: 0 };
 
   const renderLine = (line: string, key: React.Key) =>
     editorial ? (
