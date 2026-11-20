@@ -1,0 +1,89 @@
+@use "./variables" as *;
+
+// The change log sits in the app's .main-content frame, as the statistics and
+// bibliography pages do: one reading column, each entry a card in the app's
+// $dark-grey on $grey idiom, date over title over prose.
+.changelog {
+  .changelog__body {
+    max-width: 760px;
+    margin: $space-block 0;
+  }
+
+  .changelog__title {
+    @include type-heading-page-title;
+    margin: 0 0 12px;
+  }
+
+  .changelog__intro {
+    @include type-body-prose;
+    color: $text-quiet;
+    margin-bottom: $space-block;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .changelog__entry {
+    padding: 16px 20px;
+    border: 1px solid $grey;
+    background: $dark-grey;
+
+    & + & {
+      margin-top: 16px;
+    }
+  }
+
+  .changelog__date {
+    @include type-eyebrow;
+    display: block;
+    color: $text-quiet;
+  }
+
+  .changelog__entry-title {
+    @include type-heading-h3;
+    margin: 6px 0 10px;
+  }
+
+  .changelog__entry-body {
+    @include type-body-prose;
+
+    p,
+    ul {
+      margin: 0;
+    }
+
+    p + p,
+    p + ul,
+    ul + p {
+      margin-top: 10px;
+    }
+
+    // Keep a Changelog's Added / Changed / Fixed sections
+    .changelog__section {
+      @include type-eyebrow;
+      color: $gold;
+      margin: 16px 0 8px;
+    }
+
+    .changelog__section:first-child {
+      margin-top: 0;
+    }
+
+    ul {
+      padding-inline-start: 1.2em;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    strong {
+      font-weight: $font-weight-medium;
+    }
+  }
+
+  a {
+    color: $gold;
+  }
+}

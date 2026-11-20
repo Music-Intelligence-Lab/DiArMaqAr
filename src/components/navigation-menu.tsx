@@ -96,6 +96,7 @@ const NavigationMenu = () => {
     { href: "/docs/", key: "nav.documentation" },
     { href: "/statistics", key: "nav.statistics" },
     { href: "/bibliography", key: "nav.bibliography" },
+    { href: "/changelog", key: "nav.changelog" },
   ];
 
   const menuContent = (

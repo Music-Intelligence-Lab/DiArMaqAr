@@ -30,6 +30,11 @@ The browser-based platform requires no specialized software or technical experti
 - **Music Notation**: VexFlow for staff notation rendering
 - **Documentation**: TypeDoc for API documentation generation
 
+## Change Log
+
+Major changes and additions, both new features and new data entered from the sources, are recorded in [CHANGELOG.md](CHANGELOG.md), newest first. The same entries appear on the [Change Log page](https://diarmaqar.net/en/changelog) of the app, which is built from that file. Every new feature and every ingestion of new data gets an entry there.
+
 ## Links
 
 - **Live Application**: [https://diarmaqar.net/](https://diarmaqar.net/)
+- **Change Log**: [https://diarmaqar.net/en/changelog](https://diarmaqar.net/en/changelog)

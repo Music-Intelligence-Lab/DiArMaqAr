@@ -37,6 +37,7 @@ const translations = {
     "nav.tools": "Tools",
     "nav.bibliography": "Bibliography",
     "nav.statistics": "Statistics",
+    "nav.changelog": "Change Log",
     "nav.documentation": "Documentation",
 
     // Navbar Tabs
@@ -492,6 +493,7 @@ const translations = {
     "nav.tools": "الأدوات",
     "nav.bibliography": "المراجع",
     "nav.statistics": "الإحصائيات",
+    "nav.changelog": "سجلّ التغييرات",
     "nav.documentation": "التوثيق",
 
     // Navbar Tabs
@@ -942,6 +944,7 @@ const translations = {
     "nav.tools": "Outils",
     "nav.bibliography": "Bibliographie",
     "nav.statistics": "Statistiques",
+    "nav.changelog": "Journal des modifications",
     "nav.documentation": "Documentation",
 
     // Navbar Tabs

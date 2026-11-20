@@ -97,6 +97,13 @@ export default function LandingPage() {
           ? "Accéder au code source"
           : "Access the Source Code"}
       </a>
+      <Link className="button" href={lh("/changelog")}>
+        {language === "ar"
+          ? "اطّلعوا على سجلّ التغييرات"
+          : language === "fr"
+          ? "Accéder au journal des modifications"
+          : "Access the Change Log"}
+      </Link>
     </div>
   );
 
