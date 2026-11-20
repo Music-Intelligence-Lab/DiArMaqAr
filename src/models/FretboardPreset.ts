@@ -79,7 +79,16 @@ export const customTuningLadder: NoteName[] = [
   "rāst",
 ] as NoteName[];
 
-// In the picker's order: fewest strings first; within a string count, lowest first
+// In the picker's order: the ʿūds, fewest strings first and within a string count
+// lowest first; then the bowed instruments, which are tuned in fifths.
+//
+// Violin and cello are named as Arabic practice names their open strings, within
+// the octaves a tanghīm holds (an open string needs its octave above, so the
+// highest open note is in octave 2). The violin's Anglo-European G, D, A, E is
+// yegāh, dūgāh, ḥusaynī, jawāb būselīk; its Arabic G, D, G, D lowers the two upper
+// strings a tone to nawā and muḥayyar. The cello's C, G, D, A starts from qarār
+// rāst, the lowest rāst the archive holds, so it sits a fifth below the violin
+// here rather than an octave and a fifth.
 export const fretboardPresets: FretboardPreset[] = [
   { id: "two-strings-fourth", label: { key: "fretboard.preset.two-strings-fourth" }, openStringNoteNames: ["yegāh", "rāst"] as NoteName[] },
   { id: "two-strings", label: { key: "fretboard.preset.two-strings" }, openStringNoteNames: ["yegāh", "dūgāh"] as NoteName[] },
@@ -92,6 +101,9 @@ export const fretboardPresets: FretboardPreset[] = [
   { id: "six-strings-qarar-chahargah", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār rāst", "qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān"] as NoteName[] },
   { id: "six-strings-qarar-buselik", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār būselīk/ʿushshāq", "ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
   { id: "six-strings-ushayran", label: { range: true, showString: 5 }, openStringNoteNames: ["qarār chahārgāh", "ʿushayrān", "dūgāh", "nawā", "kurdān", "māhūrān"] as NoteName[] },
+  { id: "violin-anglo-european", label: { key: "fretboard.preset.violin-anglo-european" }, openStringNoteNames: ["yegāh", "dūgāh", "ḥusaynī", "jawāb būselīk"] as NoteName[] },
+  { id: "violin-arabic", label: { key: "fretboard.preset.violin-arabic" }, openStringNoteNames: ["yegāh", "dūgāh", "nawā", "muḥayyar"] as NoteName[] },
+  { id: "cello", label: { key: "fretboard.preset.cello" }, openStringNoteNames: ["qarār rāst", "yegāh", "dūgāh", "ḥusaynī"] as NoteName[] },
 ];
 
 /** The dūzān shown before the reader chooses anything. */

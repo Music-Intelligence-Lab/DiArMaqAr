@@ -89,7 +89,7 @@ A tanghīm can be viewed in two ways, chosen under **View**.
 
 - **Source ʿūd**: for a tanghīm whose source describes its ʿūd, such as Ibn Sīnā (1037), the strings, their tuning and the frets are drawn exactly as the source gives them, with the source's own string and fret names. This is the default for those tanāghīm. Each fret's name sits above the strings, at its exact position.
 - **Custom**: choose the number of strings and the open note of each string.
-- **Presets**: two strings (a fourth apart or a fifth apart), four strings tuned in fourths, and five- and six-string ʿūds named by their lowest and highest open strings.
+- **Presets**: two strings (a fourth apart or a fifth apart), four strings tuned in fourths, five- and six-string ʿūds named by their lowest and highest open strings, and the violin and the cello. The violin comes with its Anglo-European open strings (yegāh, dūgāh, ḥusaynī, jawāb būselīk) and its Arabic open strings (yegāh, dūgāh, nawā, muḥayyar). The cello's open strings are qarār rāst, yegāh, dūgāh and ḥusaynī; qarār rāst is the lowest rāst the archive holds, so the cello sits a fifth below the violin here rather than an octave and a fifth.
 
 Positions on a string that are not an exact octave of a value in the neighbouring dīwān are marked, with a legend under the strings. For a tanghīm with a source ʿūd, a note on how the strings represent the source is shown above the commentary.
 
