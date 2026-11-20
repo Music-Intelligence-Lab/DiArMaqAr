@@ -130,6 +130,7 @@ export default defineConfig({
             { text: 'Research Applications', link: '/guide/research-applications' },
             { text: 'Cultural Framework', link: '/guide/cultural-framework' },
             { text: 'Bibliographic Sources', link: '/guide/bibliographic-sources' },
+            { text: 'PAO Note Names', link: '/guide/note-names' },
           ]
         }
       ],

@@ -76,8 +76,8 @@ The Persian-Arab-Ottoman note naming convention compiled in DiArMaqAr totals **3
 The compiled note names are drawn from:
 
 - Meshshāqa (1899:18)
-- Al-Khulaʿī (1904/2011:50-54 and 77-78)
-- Al-Shawwā (1946:11-12)
+- Al-Khulaʿī (1904/2011:50–54, 77–78)
+- Al-Shawwā (1946:11–12)
 - Allāh Wīrdī (1949:58, 153, 157, 177, 198, 203, 207)
 - Al-Ṣabbāgh (1954:47)
 - Al-Ḥilū (1961:69)
@@ -87,6 +87,15 @@ The compiled note names are drawn from:
 - Allāh Wīrdī (1949:203)
 - Al-Ḥilū (1961:70)
 - Arel (1968:1) — extended four-octave Turkish makam equivalents
+
+### Names Added in DiArMaqAr
+
+Four note names are used in DiArMaqAr that are not in the compiled sources. Each was added because a tanghīm in the archive contains a pitch class that the compiled names could not name without giving two different pitch classes the same name. All four follow the PAO convention that tīk raises a note and nīm lowers it.
+
+- **tīk rāst** names pitch classes above rāst and below nīm zīrgūleh for the sake of al-Fārābī's tanāghīm (see al-Fārābī 950g, 950h) and the ʿushayrān-based version of al-Ṣabbāgh's tanghīm, where his own kurdī falls there (see al-Ṣabbāgh 1950).
+- **tīk yegāh**, **tīk ʿushayrān**, **tīk dūgāh**: pitch classes above yegāh, ʿushayrān and dūgāh and below the next name in the list, for the sake of tanāghīm whose octaves are not exact (see Ibn Sīnā 1037).
+
+With these, the app uses 40 note names per octave. A name is added only when a tanghīm in the archive uses it. The full list, with the source of every name, is on the [PAO Note Names](/guide/note-names) page.
 
 ## Source Selection Methodology
 

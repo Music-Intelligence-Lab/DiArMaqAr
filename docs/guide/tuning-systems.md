@@ -75,7 +75,7 @@ In most tanāghīm each octave repeats the first exactly, so the pitch classes o
 
 For such tanāghīm, DiArMaqAr stores the values of dīwān 0, 2 and 3 as the source gives them (or as its ʿūd produces them), instead of halving and doubling the first dīwān. The tables mark every value that is not an exact double or half of a value in the neighbouring dīwān.
 
-Note names in these dawāwīn follow one rule. A pitch class that is an exact double or half of a named pitch class, or within 3 cents of one, takes that note's name in the higher or lower register. Any other pitch class takes the name of the nearest named pitch class with tīk when it lies above it, or nīm when it lies below it. When that tīk name already belongs to another pitch class, a pitch class between a note and its tīk is named nīm tīk. The note names tīk yegāh, tīk ʿushayrān, tīk dūgāh and nīm tīk ḥiṣār were added for this rule.
+Note names in these dawāwīn follow one rule. A pitch class that is an exact double or half of a named pitch class, or within 3 cents of one, takes that note's name in the higher or lower register. Any other pitch class takes the name of the nearest named pitch class with tīk when it lies above it, or nīm when it lies below it. The note names tīk yegāh, tīk ʿushayrān and tīk dūgāh were added for this rule. If a tīk name already belongs to another pitch class of the same tanghīm, a pitch class between a note and its tīk is named nīm tīk; such a name is added when a tanghīm first needs one.
 
 ## Viewing a Tanghīm: Jadāwel and Awtār
 
