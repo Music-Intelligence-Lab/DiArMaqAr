@@ -34,7 +34,7 @@ Notes in the last column refer to the register named at their start. IPN names m
 | 4 | Ab- | qarār shūrī | shūrī | jawāb shūrī | jawāb jawāb shūrī | Octave 1: Extended note given by al-Shawwā as one comma below qarār ḥiṣār (1946:13) |
 | 5 | Ab | qarār qarār ḥiṣār | qarār ḥiṣār | ḥiṣār | jawāb ḥiṣār | Octave 2: Al-Ḥilū names this ḥiṣār/shūrī (1961:69)<br>Octave 3: Used by al-Ḥilū (1961:70) |
 | 6 | A-b | qarār qarār tīk ḥiṣār/shūrī | qarār tīk ḥiṣār/shūrī | tīk ḥiṣār | jawāb tīk ḥiṣār | Octave 0: Al-Khulaʿī names this tīk qabā ḥiṣār/shūrī based on information from Idrīs Rāgheb (1904/2011:51)<br>Octave 3: Used by al-Ḥilū (1961:70) |
-| 7 | A- | qarār nīm ʿushayrān | nīm ʿushayrān | nīm ḥusaynī | jawāb nīm ḥusaynī | Octave 1: Not present in al-Ḥilū (1961:69) |
+| 7 | A- | qarār nīm ʿushayrān | nīm ʿushayrān | nīm ḥusaynī | jawāb nīm ḥusaynī | Octave 1: Not present in al-Ḥilū (1961:69)<br>Octave 2: Yaḥyā al-Laythī Kāmil names this ḥusaynī ṭabīʿī (the natural ḥusaynī), 5/3, below his ḥusaynī (27/16) by the ratio 81/80 (Shawqī 1969:190) |
 | 8 | A | qarār ʿushayrān | ʿushayrān | ḥusaynī | jawāb ḥusaynī | Octave 3: Used by al-Ḥilū (1961:70) |
 | 9 | A+ | qarār tīk ʿushayrān | tīk ʿushayrān | tīk ḥusaynī | jawāb tīk ḥusaynī | **Added in DiArMaqAr, for pitch classes above ʿushayrān and below nīm ʿajam ʿushayrān for the sake of tanāghīm whose octaves are not exact (see Ibn Sīnā 1037).** |
 | 10 | A-# | qarār nīm ʿajam ʿushayrān | nīm ʿajam ʿushayrān | nīm ʿajam | jawāb nīm ʿajam | Octave 1: Al-Ḥilū names this qarār nīm ʿajam (1961:69)<br>Octave 3: Used by al-Ḥilū (1961:70) |
