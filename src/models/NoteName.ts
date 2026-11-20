@@ -4,7 +4,6 @@ export const octaveZeroNoteNames = [
   "qarār qarār nīm ḥiṣār",
   "qarār shūrī",
   "qarār qarār ḥiṣār",
-  "qarār qarār nīm tīk ḥiṣār",
   "qarār qarār tīk ḥiṣār/shūrī",
   "qarār nīm ʿushayrān",
   "qarār ʿushayrān",
@@ -47,42 +46,41 @@ export const octaveOneNoteNames = [
   "qarār nīm ḥiṣār", // 2
   "shūrī", // 3
   "qarār ḥiṣār", // 4
-  "qarār nīm tīk ḥiṣār", // 5
-  "qarār tīk ḥiṣār/shūrī", // 6
-  "nīm ʿushayrān", // 7
-  "ʿushayrān", // 8
-  "tīk ʿushayrān", // 9
-  "nīm ʿajam ʿushayrān", // 10
-  "nayrūz", // 11 — one comma below ʿajam ʿushayrān (al-Shawwā 1946:13)
-  "ʿajam ʿushayrān", // 12
-  "tīk ʿajam ʿushayrān", // 13
-  "ʿirāq", // 14
-  "rahāwī", // 15
-  "nīm kawasht", // 16
-  "kawasht", // 17
-  "tīk kawasht", // 18
-  "rāst", // 19
-  "tīk rāst", // 20
-  "nīm zīrgūleh", // 21
-  "zīrgūleh", // 22
-  "tīk zīrgūleh", // 23
-  "dūgāh", // 24
-  "tīk dūgāh", // 25
-  "nīm kurdī/nahāwand", // 26
-  "nahāwand", // 27
-  "kurdī", // 28
-  "tīk kūrdī", // 29
-  "segāh", // 30
-  "nīm būselīk", // 31
-  "būselīk/ʿushshāq", // 32
-  "tīk būselīk", // 33
-  "chahārgāh", // 34
-  "tīk chahārgāh", // 35
-  "nīm ḥijāz", // 36
-  "ṣabā", // 37
-  "ḥijāz", // 38
-  "tīk ḥijāz/ṣabā", // 39
-  "nīm nawā", // 40
+  "qarār tīk ḥiṣār/shūrī", // 5
+  "nīm ʿushayrān", // 6
+  "ʿushayrān", // 7
+  "tīk ʿushayrān", // 8
+  "nīm ʿajam ʿushayrān", // 9
+  "nayrūz", // 10 — one comma below ʿajam ʿushayrān (al-Shawwā 1946:13)
+  "ʿajam ʿushayrān", // 11
+  "tīk ʿajam ʿushayrān", // 12
+  "ʿirāq", // 13
+  "rahāwī", // 14
+  "nīm kawasht", // 15
+  "kawasht", // 16
+  "tīk kawasht", // 17
+  "rāst", // 18
+  "tīk rāst", // 19
+  "nīm zīrgūleh", // 20
+  "zīrgūleh", // 21
+  "tīk zīrgūleh", // 22
+  "dūgāh", // 23
+  "tīk dūgāh", // 24
+  "nīm kurdī/nahāwand", // 25
+  "nahāwand", // 26
+  "kurdī", // 27
+  "tīk kūrdī", // 28
+  "segāh", // 29
+  "nīm būselīk", // 30
+  "būselīk/ʿushshāq", // 31
+  "tīk būselīk", // 32
+  "chahārgāh", // 33
+  "tīk chahārgāh", // 34
+  "nīm ḥijāz", // 35
+  "ṣabā", // 36
+  "ḥijāz", // 37
+  "tīk ḥijāz/ṣabā", // 38
+  "nīm nawā", // 39
 ];
 export const octaveTwoNoteNames = [
   "nawā",
@@ -90,7 +88,6 @@ export const octaveTwoNoteNames = [
   "nīm ḥiṣār",
   "jawāb shūrī",
   "ḥiṣār",
-  "nīm tīk ḥiṣār",
   "tīk ḥiṣār",
   "nīm ḥusaynī",
   "ḥusaynī",
@@ -133,7 +130,6 @@ export const octaveThreeNoteNames = [
   "jawāb nīm ḥiṣār",
   "jawāb jawāb shūrī",
   "jawāb ḥiṣār",
-  "jawāb nīm tīk ḥiṣār",
   "jawāb tīk ḥiṣār",
   "jawāb nīm ḥusaynī",
   "jawāb ḥusaynī",
@@ -177,7 +173,6 @@ export const octaveFourNoteNames = [
   "jawāb jawāb nīm ḥiṣār",
   "jawāb jawāb jawāb shūrī",
   "jawāb jawāb ḥiṣār",
-  "jawāb jawāb nīm tīk ḥiṣār",
   "jawāb jawāb tīk ḥiṣār",
   "jawāb jawāb nīm ḥusaynī",
   "jawāb jawāb ḥusaynī",
