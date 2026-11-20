@@ -649,7 +649,9 @@ body {
       }
 
       .language-selector__select {
-        padding: 0.35rem 0.6rem;
+        // The end padding stays the shared chevron's (select-chevron)
+        padding-block: 0.35rem;
+        padding-inline-start: 0.6rem;
         background-color: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 4px;

@@ -38,6 +38,15 @@ html {
   overflow-y: auto;
 }
 
+// Every dropdown draws the one chevron (select-chevron in variables.scss).
+// "select[class]" outranks a component's single-class rule, so a component's
+// padding or background shorthand cannot push the text under the arrow or
+// remove it.
+select,
+select[class] {
+  @include select-chevron;
+}
+
 // The text alternative for facts the design draws rather than writes (the
 // ghammāz mark). Removed from the visual flow, still read aloud and still
 // found by in-page search.
