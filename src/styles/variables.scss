@@ -110,6 +110,10 @@ $surface-selected:        $tertiary;           // the selected item — solid ro
 // converge onto these as files are touched.)
 $text-quiet:    rgba($text, 0.65); // furniture — inline labels, units, counts, note-identity lines
 $text-disabled: rgba($text, 0.35); // disabled content (pairs with interactive-disabled)
+// The source's words inside our commentary (CommentText, editorial): quoted
+// text reads in a warm ink apart from our own explanation. Colour, not
+// italic, so it works the same in Arabic.
+$comment-quote-ink: color-mix(in srgb, $gold 45%, $text);
 
 // ---------------------------------------------------------------------------
 // Typography
@@ -991,6 +995,94 @@ $not-exact-octave: $quaternary;
     }
 }
 
+// A foldable admin section (AdminSection): a resting panel whose header
+// line carries the section's title and, folded or open, a one-line summary
+// of what is inside. Same panel and title furniture as the dīwān rows.
+@mixin manager-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    background-color: $surface-rest;
+
+    > summary {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &::before {
+            content: "▸";
+            color: $text-quiet;
+
+            [dir="rtl"] & {
+                content: "◂";
+            }
+        }
+    }
+
+    &[open] > summary {
+        margin-bottom: 16px;
+
+        &::before {
+            content: "▾";
+        }
+    }
+}
+
+@mixin manager-section-title {
+    @include section-furniture($font-size-lg);
+    margin: 0;
+}
+
+@mixin manager-section-summary {
+    font-size: $font-size-sm;
+    color: $text-quiet;
+}
+
+// A page reference as a short chip (PageReferenceChips): the archive's
+// citation form on a resting pill; an unset one is outlined in the delete
+// role so it reads as unfinished.
+@mixin manager-reference-chip {
+    padding: 2px 10px;
+    border: 1px solid rgba($text, 0.25);
+    border-radius: 999px;
+    background-color: $surface-rest;
+    color: $text;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+        border-color: $text;
+    }
+}
+
+// Our NOTE paragraph inside a comment (CommentText, editorial): a resting
+// panel with the structural pink rule on its leading edge, so it reads as an
+// aside before the commentary proper.
+@mixin comment-note {
+    // Space on both sides, so the leading rule never touches the paragraph above
+    margin: 1em 0;
+    padding: 0.6em 1em;
+    background-color: $surface-rest;
+    border-inline-start: 3px solid $secondary;
+
+    p {
+        margin: 0 0 0.6em;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
 @mixin manager-form-field {
     padding: 0.4rem;
     resize: vertical;
@@ -1438,6 +1530,9 @@ $not-exact-octave: $quaternary;
 }
 
 @mixin manager-groupby-segment {
+    // A segment is a one-line control of fixed height: wrapping its label
+    // would cut the second line off
+    white-space: nowrap;
     font-size: $font-size-sm;
     font-weight: $font-weight-regular;
     color: $text;
