@@ -452,7 +452,6 @@ export default function OudFretboard({
   }
 
   function reasonText(reason: FretboardUnavailability): string {
-    if (reason.kind === "fretDivisionValueType") return t("fretboard.fretDivisionUnsupported");
     if (reason.kind === "sourcePitchNotInSystem")
       return `${reason.stringName}, ${reason.fretName} (${reason.ratio}) ${t("fretboard.sourcePitchNotInSystem")}`;
     const watar = `${t("fretboard.watar")} ${openStringNoteNames.length - reason.stringIndex}`;

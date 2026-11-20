@@ -49,7 +49,6 @@ export function divisionPosition(openCents: number, pitchCents: number): number 
 
 /** Why a tuning cannot be laid out. Never a reason to substitute something. */
 export type FretboardUnavailability =
-  | { kind: "fretDivisionValueType" }
   | { kind: "noteNotInSystem"; stringIndex: number; noteName: string }
   | { kind: "notAscending"; stringIndex: number; noteName: string }
   | { kind: "noOctaveAbove"; stringIndex: number; noteName: string }
@@ -159,16 +158,6 @@ export default function getFretboardDivisions(
   openStringNoteNames: string[],
   centsTolerance: number
 ): FretboardResult {
-  /**
-   * Octave shifting is not implemented for fret-division input (see the TODO in
-   * convertPitchClass), so such a system yields four identical octaves and the
-   * geometry would silently collapse onto the nut. One accurate sentence beats
-   * a drawing that is quietly wrong.
-   */
-  if (allPitchClasses.length && allPitchClasses[0].originalValueType === "fretDivision") {
-    return { ok: false, reasons: [{ kind: "fretDivisionValueType" }] };
-  }
-
   const resolved = resolveOpenStrings(allPitchClasses, openStringNoteNames);
   if (!resolved.ok) return resolved;
 

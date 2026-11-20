@@ -201,12 +201,34 @@ export default function convertPitchClassValue(inputValue: string, inputType: "f
  * shiftPitchClassBaseValue("701.955", "cents", 2) // Returns "1901.955" (+1200 cents)
  * 
  * @example
- * // Shift fret division up one octave
- * shiftPitchClassBaseValue("102", "fretDivision", 2) // Adjusts fret position for higher octave
+ * // Shift a fret division up one octave on a string of 3600
+ * shiftPitchClassBaseValue("102", "fretDivision", 2, 3600) // Returns "1851"
+ *
+ * A fret division is a distance from the nut, so it can only be shifted on the
+ * string it is measured on: `stringLength` is required for "fretDivision" and
+ * its absence throws rather than returning the value unshifted.
  */
-export function shiftPitchClassBaseValue(baseValue: string, inputType: "fraction" | "fretDivision" | "decimalRatio" | "cents" | "stringLength", targetOctave: 0 | 1 | 2 | 3 | 4): string {
+export function shiftPitchClassBaseValue(
+  baseValue: string,
+  inputType: "fraction" | "fretDivision" | "decimalRatio" | "cents" | "stringLength",
+  targetOctave: 0 | 1 | 2 | 3 | 4,
+  stringLength?: number
+): string {
   // Octave 1 is the reference - no shift needed
   if (targetOctave === 1) return baseValue;
+
+  if (inputType === "fretDivision") {
+    // The vibrating length is stringLength − f. An octave halves it (doubles it
+    // going down), measured from the same nut, so f' = L − (L − f) / 2^steps.
+    // Below the open string the stop falls behind the nut and f' is negative.
+    if (!(stringLength && stringLength > 0)) {
+      throw new Error(`shiftPitchClassBaseValue: the fret division "${baseValue}" cannot be shifted without the string length it is measured on`);
+    }
+    const fret = parseFloat(baseValue);
+    if (!Number.isFinite(fret)) throw new Error(`shiftPitchClassBaseValue: "${baseValue}" is not a fret division`);
+    const shifted = stringLength - (stringLength - fret) / Math.pow(2, targetOctave - 1);
+    return `${parseFloat(shifted.toFixed(6))}`;
+  }
 
   // Calculate octave steps from the reference octave 1
   // octave 0 => -1 step (-12 semitones)
@@ -255,23 +277,6 @@ export function shiftPitchClassBaseValue(baseValue: string, inputType: "fraction
       const multiplier = Math.pow(2, -octaveSteps);
       const shifted = slVal * multiplier;
       return shifted.toString();
-    } else if (inputType === "fretDivision") {
-      // For fret division: need to convert to string length, shift, then convert back
-      // This requires knowledge of the reference string length, which we don't have here
-      // So we treat it similarly to string length but with the understanding that
-      // fret division increases as pitch goes up (opposite of string length)
-      // 
-      // fretDivision = stringLength - actualStringLength
-      // To shift octaves, we need to adjust the actual string length
-      // actualStringLength_shifted = actualStringLength / 2^octaveSteps
-      // fretDivision_shifted = stringLength - actualStringLength_shifted
-      //
-      // However, without knowing stringLength, we approximate:
-      // The fret division change follows a logarithmic pattern
-      // For simplicity, we'll convert via cents and back
-      // This is a placeholder - in practice, this should go through full conversion
-      // For now, return as-is with a note that this needs reference string length
-      return baseValue; // TODO: Proper fret division shifting requires reference string length
     }
   } catch (err) {
     console.error("Error shifting pitch class:", err);

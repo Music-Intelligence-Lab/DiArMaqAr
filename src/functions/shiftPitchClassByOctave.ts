@@ -112,7 +112,13 @@ export function shiftPitchClassByOctaveExtended(allPitchClasses: PitchClass[], p
     abjadName: "",
     octave: pitchClass.octave + octaveShift,
     originalValue: canShiftBaseValue
-      ? shiftPitchClassBaseValue(pitchClass.originalValue, pitchClass.originalValueType as "fraction" | "fretDivision" | "decimalRatio" | "cents" | "stringLength", valueTargetOctave as 0 | 1 | 2 | 3 | 4)
+      ? shiftPitchClassBaseValue(
+          pitchClass.originalValue,
+          pitchClass.originalValueType as "fraction" | "fretDivision" | "decimalRatio" | "cents" | "stringLength",
+          valueTargetOctave as 0 | 1 | 2 | 3 | 4,
+          // A fret division's string is its own value plus the length still vibrating
+          parseFloat(pitchClass.originalValue) + parseFloat(pitchClass.stringLength)
+        )
       : pitchClass.originalValue,
     fraction: canShiftBaseValue && pitchClass.fraction ? shiftPitchClassBaseValue(pitchClass.fraction, "fraction", valueTargetOctave as 0 | 1 | 2 | 3 | 4) : pitchClass.fraction,
     cents: `${parseFloat(pitchClass.cents) + 1200 * octaveShift}`,

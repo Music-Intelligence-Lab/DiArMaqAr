@@ -108,7 +108,7 @@ export default function getTuningSystemPitchClasses(
 
   const stringLength = inputStringLength > 0 ? inputStringLength : tuningSystem.getStringLength();
   const actualReferenceFrequency = inputReferenceFrequencies[startingNote] ?? tuningSystem.getReferenceFrequencies()[startingNote] ?? tuningSystem.getDefaultReferenceFrequency();
-  const openConv = convertPitchClassValue(shiftPitchClassBaseValue(pitchArr[0], type, 1), type, stringLength, actualReferenceFrequency)!;
+  const openConv = convertPitchClassValue(shiftPitchClassBaseValue(pitchArr[0], type, 1, stringLength), type, stringLength, actualReferenceFrequency)!;
   const openLen = parseFloat(openConv.stringLength);
 
   const abjadArr = tuningSystem?.getAbjadNames();
@@ -139,7 +139,7 @@ export default function getTuningSystemPitchClasses(
     return [octaveOneNoteNames, octaveTwoNoteNames, octaveThreeNoteNames, octaveFourNoteNames][octave][ci - O1] ?? "none";
   };
   const fromOctaveOne = (octave: 0 | 1 | 2 | 3) => ({
-    values: pitchArr.map((value) => shiftPitchClassBaseValue(value, type, octave)),
+    values: pitchArr.map((value) => shiftPitchClassBaseValue(value, type, octave, stringLength)),
     name: (idx: number) => derivedName(octave, idx),
     // abjad names cover octaves 1 and 2; octave 0 reads octave 1's, octave 3 octave 2's
     abjad: (idx: number) => abjadArr[(octave <= 1 ? 0 : nPC) + idx] || "",
@@ -165,7 +165,7 @@ export default function getTuningSystemPitchClasses(
         ? (() => {
             const names = storedNames(2);
             return {
-              values: storedTwo.map((value) => shiftPitchClassBaseValue(value, type, 2)),
+              values: storedTwo.map((value) => shiftPitchClassBaseValue(value, type, 2, stringLength)),
               name: (idx: number) => (names[idx] && names[idx] !== "none" ? shiftNoteName(names[idx], 1) : "none"),
               abjad: (idx: number) => abjadArr[nPC + idx] || "",
             };
