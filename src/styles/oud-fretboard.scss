@@ -441,21 +441,22 @@
     }
   }
 
-  &__division_beyond &__tick {
-    background: rgba(255, 255, 255, 0.17);
+  /* The next watar's open note, boxed: where the player can move across. An
+     outline, so the box takes no room from the label layout. */
+  &__division_handover &__label {
+    outline: 1px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
+    border-radius: 1px;
   }
 
-  &__division_beyond &__label {
-    color: rgba(238, 238, 238, 0.34);
-  }
-
-  &__division_beyond.oud-fretboard__division_unnamed &__tick {
-    background: rgba(255, 255, 255, 0.09);
+  &__division_handover:hover &__label {
+    outline-color: $gold;
   }
 
   /**
-   * Hovering a dotted fret marks it in gold and names the watar's nearest
-   * pitch with the difference in cents.
+   * Hovering a division marks it in gold and names the pitch its gap is
+   * measured from, with the gap in cents: a dotted fret from the watar's
+   * nearest pitch, a pitch from the one before it.
    */
   &__probe {
     position: absolute;
@@ -475,11 +476,13 @@
     background: $gold;
   }
 
+  /* Level with the string, just to the right of the division; near the end of
+     the string, just to its left */
   &__probe-reading {
     position: absolute;
     top: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: -24px;
+    left: 6px;
+    transform: translateY(-50%);
     padding: 1px 5px;
     border-radius: 2px;
     background: $background;
@@ -490,13 +493,16 @@
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
 
-    &_start {
-      transform: translate(0, -50%);
-    }
-
     &_end {
-      transform: translate(-100%, -50%);
+      left: auto;
+      right: 6px;
     }
+  }
+
+  /* Under a dotted fret's gap: why it has no name or value of its own */
+  &__probe-note {
+    display: block;
+    color: rgba(238, 238, 238, 0.6);
   }
 
   /* 2px → 4px keeps the growth symmetrical about the tick's centre. */

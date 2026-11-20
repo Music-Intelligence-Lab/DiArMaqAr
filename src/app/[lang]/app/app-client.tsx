@@ -174,13 +174,12 @@ export default function AppClient() {
     // (lowest first, as note-name ids). An id or note that does not exist is
     // ignored, like any other unreadable parameter.
     const duzanParam = searchParams.get("duzan");
-    const urlTuningSystemId = searchParams.get("tuningSystem");
-    if (duzanParam && urlTuningSystemId) {
+    if (duzanParam) {
       if (duzanParam === CUSTOM_PRESET_ID) {
         const notes = (searchParams.get("openStrings") ?? "").split(",").map((id) => allNotes.find((n) => standardizeText(n) === id));
-        if (notes.length && notes.every(Boolean)) setDuzanChoice({ tuningSystemId: urlTuningSystemId, presetId: CUSTOM_PRESET_ID, customOpenStrings: notes as NoteName[] });
+        if (notes.length && notes.every(Boolean)) setDuzanChoice({ presetId: CUSTOM_PRESET_ID, customOpenStrings: notes as NoteName[] });
       } else if (duzanParam === SOURCE_PRESET_ID || fretboardPresets.some((p) => p.id === duzanParam)) {
-        setDuzanChoice({ tuningSystemId: urlTuningSystemId, presetId: duzanParam, customOpenStrings: [] });
+        setDuzanChoice({ presetId: duzanParam, customOpenStrings: [] });
       }
     }
 
@@ -287,7 +286,7 @@ export default function AppClient() {
         params.push(`view=${tuningView}`);
         // The dūzān belongs to the strings view
         if (tuningView === "strings") {
-          const duzan = resolveDuzan(duzanChoice, selectedTuningSystem.getId(), !!sourceOud);
+          const duzan = resolveDuzan(duzanChoice, !!sourceOud);
           params.push(`duzan=${duzan.presetId}`);
           if (duzan.presetId === CUSTOM_PRESET_ID) params.push(`openStrings=${duzan.openStringNoteNames.map((n) => standardizeText(n)).join(",")}`);
         }

@@ -110,22 +110,21 @@ export const fretboardPresets: FretboardPreset[] = [
 export const DEFAULT_PRESET_ID = "four-strings";
 
 /**
- * The dūzān in force for a tuning system: the reader's choice made on that
- * tuning system, else the source's ʿūd when the tuning system records one,
- * else the default. A "source" choice whose ʿūd no longer exists falls back
- * the same way. Custom keeps its own open notes; a preset's come from it.
+ * The dūzān in force: the reader's choice, kept from one tuning system to the
+ * next, else the source's ʿūd when the tuning system records one, else the
+ * default. A "source" choice on a tuning system without a source ʿūd shows the
+ * default there and the source's ʿūd again on the next tuning system that has
+ * one. Custom keeps its own open notes; a preset's come from it.
  */
 export function resolveDuzan(
-  choice: { tuningSystemId: string; presetId: string; customOpenStrings: NoteName[] } | null,
-  tuningSystemId: string,
+  choice: { presetId: string; customOpenStrings: NoteName[] } | null,
   hasSourceOud: boolean
 ): { presetId: string; openStringNoteNames: NoteName[] } {
-  const own = choice?.tuningSystemId === tuningSystemId ? choice : null;
   const automatic = hasSourceOud ? SOURCE_PRESET_ID : DEFAULT_PRESET_ID;
-  const presetId = !own || (own.presetId === SOURCE_PRESET_ID && !hasSourceOud) ? automatic : own.presetId;
+  const presetId = !choice || (choice.presetId === SOURCE_PRESET_ID && !hasSourceOud) ? automatic : choice.presetId;
   const openStringNoteNames =
     presetId === CUSTOM_PRESET_ID
-      ? own!.customOpenStrings
+      ? choice!.customOpenStrings
       : (fretboardPresets.find((p) => p.id === presetId) ?? fretboardPresets.find((p) => p.id === DEFAULT_PRESET_ID)!).openStringNoteNames;
   return { presetId, openStringNoteNames };
 }

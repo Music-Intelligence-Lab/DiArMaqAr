@@ -8,6 +8,7 @@ import NoteName from "@/models/NoteName";
 import getFretboardDivisions, {
   centsAtPosition,
   FRETBOARD_MAX_POSITION,
+  FretboardDivision,
   FretboardString,
   FretboardUnavailability,
   getSourceOudDivisions,
@@ -148,23 +149,24 @@ export default function OudFretboard({
 }: {
   highlightPitchClasses?: PitchClass[];
 }) {
-  const { allPitchClasses, selectedTuningSystem, sourceOud, duzanChoice, setDuzanChoice, centsTolerance } = useAppContext();
-  /** The dotted fret being hovered, read off on its own watar */
-  const [probe, setProbe] = useState<{ stringIndex: number; position: number } | null>(null);
+  const { allPitchClasses, sourceOud, duzanChoice, setDuzanChoice, centsTolerance } = useAppContext();
+  /**
+   * The hovered division and the division its gap is measured from: for a
+   * dotted fret the watar's nearest pitch, for a pitch the one before it
+   */
+  const [probe, setProbe] = useState<{ stringIndex: number; position: number; from: FretboardDivision; phantom: boolean } | null>(null);
   const { t, getDisplayName, language } = useLanguageContext();
 
   const [labelMode, setLabelMode] = useState<LabelMode>("pao");
   /**
-   * The dūzān (see DuzanChoice, kept in the app context so the URL carries it).
-   * Without a choice for this tuning system, one whose source describes its ʿūd
-   * opens on that ʿūd, so what is drawn is what the theorist gives; any other
-   * opens on the default dūzān. A "source" choice whose ʿūd has since been
-   * removed in the admin falls to the default too.
+   * The dūzān (see DuzanChoice, kept in the app context so the URL carries it
+   * and it stays chosen across tuning systems). Before any choice, a tuning
+   * system whose source describes its ʿūd opens on that ʿūd, so what is drawn is
+   * what the theorist gives; any other opens on the default dūzān.
    */
-  const tuningSystemId = selectedTuningSystem?.getId() ?? "";
   const { presetId, openStringNoteNames } = useMemo(
-    () => resolveDuzan(duzanChoice, tuningSystemId, !!sourceOud),
-    [duzanChoice, tuningSystemId, sourceOud]
+    () => resolveDuzan(duzanChoice, !!sourceOud),
+    [duzanChoice, sourceOud]
   );
 
   const showingSource = presetId === SOURCE_PRESET_ID && !!sourceOud;
@@ -173,7 +175,7 @@ export default function OudFretboard({
     [language]
   );
   const choose = (nextPresetId: string, customOpenStrings: NoteName[] = []) =>
-    setDuzanChoice({ tuningSystemId, presetId: nextPresetId, customOpenStrings });
+    setDuzanChoice({ presetId: nextPresetId, customOpenStrings });
 
   /** Open-string names that actually resolve in this tanghīm, lowest first. */
   const availableOpenNotes = useMemo(() => {
@@ -464,18 +466,22 @@ export default function OudFretboard({
     return `${watar} — ${note} ${why}`;
   }
 
-  /**
-   * How far a dotted fret (tied for another watar) falls from this watar's
-   * nearest pitch: the pitch, and how many cents the fret sounds above (+) or
-   * below (−) it.
-   */
-  function probeReading(string: FretboardString, position: number) {
+  /** The watar's pitch nearest a fret, which a dotted fret's gap is measured from. */
+  function nearestDivision(string: FretboardString, position: number): FretboardDivision {
     const cents = centsAtPosition(position);
-    const nearest = string.divisions.reduce((best, d) =>
+    return string.divisions.reduce((best, d) =>
       Math.abs(centsAtPosition(d.position) - cents) < Math.abs(centsAtPosition(best.position) - cents) ? d : best
     );
-    const difference = cents - centsAtPosition(nearest.position);
-    const { pitchClass } = nearest;
+  }
+
+  /**
+   * A hovered division's gap from another division of its watar: that
+   * division's pitch, and how many cents the hovered one sounds above (+) or
+   * below (−) it. One reading for dotted frets and pitches alike.
+   */
+  function gapReading(position: number, from: FretboardDivision): string {
+    const difference = centsAtPosition(position) - centsAtPosition(from.position);
+    const { pitchClass } = from;
     const name =
       pitchClass.noteName && pitchClass.noteName !== "none"
         ? getDisplayName(pitchClass.noteName, "note")
@@ -483,6 +489,7 @@ export default function OudFretboard({
     const rounded = Math.round(difference * 10) / 10;
     return `${name} ${rounded > 0 ? "+" : "−"}${Math.abs(rounded).toFixed(1)}¢`;
   }
+
 
   return (
     <div className={"oud-fretboard" + (showingSource ? "" : " oud-fretboard_choosing-notes")}>
@@ -669,13 +676,19 @@ export default function OudFretboard({
                         className={
                           "oud-fretboard__division" +
                           (label ? "" : " oud-fretboard__division_unnamed") +
-                          (division.beyondHandover ? " oud-fretboard__division_beyond" : "") +
+                          (division.isHandover ? " oud-fretboard__division_handover" : "") +
                           (division.isOpen ? " oud-fretboard__division_open" : "") +
                           (division.isOctave ? " oud-fretboard__division_octave" : "") +
                           (isHighlighted ? " oud-fretboard__division_highlighted" : "") +
                           (isExactOctave(allPitchClasses, pitchClass) ? "" : " oud-fretboard__division_not-exact-octave")
                         }
                         style={{ left: `${(division.position / windowEnd) * 100}%` }}
+                        onMouseEnter={
+                          divisionIndex > 0
+                            ? () => setProbe({ stringIndex, position: division.position, from: string.divisions[divisionIndex - 1], phantom: false })
+                            : undefined
+                        }
+                        onMouseLeave={divisionIndex > 0 ? () => setProbe(null) : undefined}
                       >
                         <span className="oud-fretboard__hit" />
                         <span className="oud-fretboard__tick" />
@@ -715,7 +728,7 @@ export default function OudFretboard({
                       key={`p${i}`}
                       className="oud-fretboard__division oud-fretboard__division_phantom"
                       style={{ left: `${(position / windowEnd) * 100}%` }}
-                      onMouseEnter={() => setProbe({ stringIndex, position })}
+                      onMouseEnter={() => setProbe({ stringIndex, position, from: nearestDivision(string, position), phantom: true })}
                       onMouseLeave={() => setProbe(null)}
                     >
                       <span className="oud-fretboard__hit" />
@@ -723,9 +736,9 @@ export default function OudFretboard({
                     </span>
                   ))}
 
-                  {/* The hovered dotted fret, read off on this watar */}
+                  {/* The hovered division's gap, on its own watar */}
                   {probe && probe.stringIndex === stringIndex && (() => {
-                    const reading = probeReading(string, probe.position);
+                    const reading = gapReading(probe.position, probe.from);
                     const at = probe.position / windowEnd;
                     return (
                       <span className="oud-fretboard__probe" style={{ left: `${at * 100}%` }}>
@@ -733,10 +746,11 @@ export default function OudFretboard({
                         <span
                           className={
                             "oud-fretboard__probe-reading" +
-                            (at < 0.1 ? " oud-fretboard__probe-reading_start" : at > 0.9 ? " oud-fretboard__probe-reading_end" : "")
+                            (at > 0.85 ? " oud-fretboard__probe-reading_end" : "")
                           }
                         >
                           {reading}
+                          {probe.phantom && <span className="oud-fretboard__probe-note">{t("fretboard.phantomNote")}</span>}
                         </span>
                       </span>
                     );

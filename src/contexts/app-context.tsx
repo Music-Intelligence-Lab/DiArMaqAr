@@ -35,13 +35,11 @@ export interface ModulationChainHop {
 export type TuningView = "tables" | "strings";
 
 /**
- * The dūzān chosen in the strings view, for the tuning system it was chosen on:
- * a preset id, "source" or "custom" (with the custom open notes, lowest first).
- * Kept per tuning system, so choosing another tuning system starts from its own
- * default (its source's ʿūd when it has one) without any reset step.
+ * The dūzān chosen in the strings view: a preset id, "source" or "custom" (with
+ * the custom open notes, lowest first). It stays chosen when another tuning
+ * system is selected (see resolveDuzan).
  */
 export interface DuzanChoice {
-  tuningSystemId: string;
   presetId: string;
   customOpenStrings: NoteName[];
 }

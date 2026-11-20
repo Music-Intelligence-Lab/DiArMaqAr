@@ -62,11 +62,10 @@ export interface FretboardDivision {
   isOpen: boolean;
   isOctave: boolean;
   /**
-   * Past the note this watar shares with the next one down. Those pitches are
-   * reachable lower on that next watar, so this watar is not where a player
-   * would take them — and not where they need naming.
+   * The note this watar shares with the next one up: that watar's open note,
+   * where the player can move across to it (see withFretsAcrossTheNeck).
    */
-  beyondHandover: boolean;
+  isHandover: boolean;
   /** The source's fret this division is, when drawing the source's own ʿūd */
   fret?: SourceOudFret;
 }
@@ -78,8 +77,6 @@ export interface FretboardString {
   /** Tablature numbering: the lowest-pitched watar carries the highest number. */
   courseNumber: number;
   divisions: FretboardDivision[];
-  /** Cents of the note shared with the watar below, or null if unknown. */
-  handoverCents: number | null;
   /**
    * Frets tied across the neck that land on no pitch of this watar: none within
    * the cents tolerance of one of its pitches, and none within the tolerance of
@@ -184,18 +181,6 @@ export default function getFretboardDivisions(
     const octaveCents = centsOf(octavePitchClass);
     const octavePosition = divisionPosition(openCents, octaveCents);
 
-    /**
-     * The note shared with the watar below. The bottom watar has none, so it
-     * carries the span forward by repeating the interval above it — otherwise
-     * it would be the one row with nothing marked as beyond.
-     */
-    let handoverCents: number | null = null;
-    if (stringIndex + 1 < open.length) {
-      handoverCents = centsOf(open[stringIndex + 1]);
-    } else if (stringIndex > 0) {
-      handoverCents = openCents + (openCents - centsOf(open[stringIndex - 1]));
-    }
-
     const divisions = allPitchClasses
       .filter(
         (pc) =>
@@ -212,12 +197,11 @@ export default function getFretboardDivisions(
           position,
           isOpen: position === 0,
           isOctave: position === octavePosition,
-          beyondHandover:
-            handoverCents !== null && centsOf(pitchClass) > handoverCents + CENTS_EPSILON,
+          isHandover: false,
         };
       });
 
-    return { openPitchClass, octavePitchClass, courseNumber: open.length - stringIndex, divisions, handoverCents, phantomPositions: [] };
+    return { openPitchClass, octavePitchClass, courseNumber: open.length - stringIndex, divisions, phantomPositions: [] };
   });
 
   return withFretsAcrossTheNeck(strings, centsTolerance);
@@ -239,8 +223,18 @@ export const centsAtPosition = (position: number) => -1200 * Math.log2(1 - posit
  * counts as that pitch, so it is not drawn as a phantom: a gap the ear does not
  * hear as a different pitch is not shown as one. Frets from different awtār that
  * lie within the tolerance of each other are drawn once, at the lowest of them.
+ *
+ * Also marks, on each watar, the note it shares with the next watar up: that
+ * watar's open note. The highest watar has no next one, so marks none.
  */
 function withFretsAcrossTheNeck(strings: FretboardString[], centsTolerance: number): FretboardResult {
+  strings.forEach((string, i) => {
+    const next = strings[i + 1];
+    if (!next) return;
+    const nextOpen = centsOf(next.openPitchClass);
+    string.divisions.forEach((d) => (d.isHandover = Math.abs(centsOf(d.pitchClass) - nextOpen) < CENTS_EPSILON));
+  });
+
   const fretPositions: number[] = [];
   strings
     .flatMap((s) => s.divisions.map((d) => d.position))
@@ -322,7 +316,7 @@ export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: Source
         position: 1 - 1 / stop.ratio,
         isOpen: !stop.fret,
         isOctave: false,
-        beyondHandover: false,
+        isHandover: false,
         fret: stop.fret,
       });
     }
@@ -334,7 +328,6 @@ export function getSourceOudDivisions(allPitchClasses: PitchClass[], oud: Source
       octavePitchClass: divisions[divisions.length - 1].pitchClass,
       courseNumber: oud.strings.length - stringIndex,
       divisions,
-      handoverCents: null,
       phantomPositions: [],
       sourceString,
     });
